@@ -1,0 +1,25 @@
+---
+- name: install consul
+  sudo: yes
+  yum: >
+    name=http://yum-el7.s3-website-us-west-2.amazonaws.com/consul-0.4.1-1.el7.x86_64.rpm
+    state=present
+  notify:
+   - restart consul
+
+- name: enable consul
+  sudo: yes
+  service: >
+    name=consul
+    enabled=true
+
+- name: consul config file
+  sudo: yes
+  template: >
+    src=consul.json.j2
+    dest=/etc/consul.d/consul.json
+    owner=consul
+    group=consul
+    mode=0644
+  notify:
+   - restart consul

@@ -1,0 +1,9 @@
+---
+- name: run hello-world container
+  docker: >
+    name=hello-world
+    image=tutum/hello-world
+    ports=80:80
+    state=running
+  tags:
+    - hello-world

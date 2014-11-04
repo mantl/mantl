@@ -1,0 +1,2 @@
+---
+- include: hosts.yml nova_compute_state="absent"

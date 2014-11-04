@@ -1,0 +1,32 @@
+---
+- hosts:  all
+  gather_facts: no
+  serial: "{{ serial_count | default(1) }}"
+  tasks:
+
+  - name: upgrade kernel package
+    sudo: yes
+    yum: >
+      name=kernel
+      state=latest
+    register: kernel_upgrade_result
+
+  - name: upgrade all packages
+    sudo: yes
+    yum: >
+      name=*
+      state=latest
+
+  - name: reboot host
+    sudo: yes
+    shell: nohup bash -c "sleep 2s && reboot" &
+    when: kernel_upgrade_result|changed
+
+  - name: wait for host boot
+    local_action:
+      module: wait_for
+      host: "{{ ansible_ssh_host }}"
+      port: 22
+      delay: 10
+      state: started
+    when: kernel_upgrade_result|changed

@@ -1,0 +1,23 @@
+---
+- include: playbooks/provision-hosts.yml
+
+- hosts: all
+  roles:
+    - { role: common, tags: common }
+    - { role: docker, tags: docker }
+
+- hosts: all:!consul_servers
+  roles:
+    - { role: consul, tags: consul,consul }
+
+- hosts: consul_servers
+  serial: yes
+  roles:
+    - { role: consul, tags: consul,consul }
+
+- hosts: app_servers
+  gather_facts: no
+  roles:
+    - { role: hello-world, tags: app }
+
+- include: playbooks/upgrade-packages.yml

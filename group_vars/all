@@ -1,0 +1,4 @@
+ansible_ssh_user: centos
+os_image_id: 5f6846d7-d916-45ce-bf79-eff21a943760
+os_net_id: 2d84eaa4-8b81-4dc8-9897-dd8ef4719f8b
+os_flavor_id: bd5c0e9d-672d-4416-8a33-c7a7abe9400b

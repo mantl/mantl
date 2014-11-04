@@ -1,0 +1,2 @@
+consul_is_server: yes
+consul_bootstrap_expect: "{{ groups['consul_servers']|length }}"
