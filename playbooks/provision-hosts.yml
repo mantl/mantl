@@ -25,8 +25,8 @@
 
     - name: set ansible_ssh_host value to host private_ip
       set_fact: ansible_ssh_host={{ nova_compute_result.private_ip }}
-      when: nova_compute_state == "present"
       always_run: yes
+      when: nova_compute_state == "present"
       tags:
         - hosts
 
