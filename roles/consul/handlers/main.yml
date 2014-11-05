@@ -1,5 +1,6 @@
+---
 - name: restart consul
   sudo: yes
-  service: <
+  service:
     name=consul
     state=restarted
