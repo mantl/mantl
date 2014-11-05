@@ -1,2 +1,2 @@
 ---
-- include: hosts.yml nova_compute_state="absent"
+- include: provision-hosts.yml nova_compute_state="absent"
