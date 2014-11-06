@@ -7,8 +7,8 @@
     nova_keypair:
       name=ansible_key
       public_key="{{ lookup('file','~/.ssh/id_rsa.pub') }}"
-      auth_url="{{ lookup('env','OS_AUTH_URL') }}"
-      login_username="{{ lookup('env','OS_USERNAME') }}"
-      login_password="{{ lookup('env','OS_PASSWORD') }}"
-      login_tenant_name="{{ lookup('env','OS_TENANT_NAME') }}"
+      auth_url={{ lookup('env','OS_AUTH_URL') }}
+      login_username={{ lookup('env','OS_USERNAME') }}
+      login_password={{ lookup('env','OS_PASSWORD') }}
+      login_tenant_name={{ lookup('env','OS_TENANT_NAME') }}
       state=present
