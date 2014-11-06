@@ -45,6 +45,6 @@
         delay: 10
         state: started
       always_run: yes
-      when: nova_compute_state == "present"
+      when: nova_compute_result|changed and nova_compute_state == "present"
       tags:
         - hosts
