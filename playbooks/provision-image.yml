@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    - image: CentOS-7-x86_64-GenericCloud-GA-7.0.1406_01.raw
+    - image_url: http://cloud.centos.org/centos/7/devel/{{ image }}
+  tasks:
+    - name: download image
+      local_action: get_url
+        url={{ image_url }}
+        dest={{ ansible_env.PWD }}/{{ image }}
