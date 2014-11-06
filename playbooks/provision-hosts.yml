@@ -6,18 +6,18 @@
     nova_compute_state: present
   tasks:
     - nova_compute:
-        auth_url:          "{{ lookup('env', 'OS_AUTH_URL') }}"
-        login_username:    "{{ lookup('env', 'OS_USERNAME') }}"
-        login_password:    "{{ lookup('env', 'OS_PASSWORD') }}"
+        name: "{{ inventory_hostname }}"
+        auth_url: "{{ lookup('env', 'OS_AUTH_URL') }}"
+        login_username: "{{ lookup('env', 'OS_USERNAME') }}"
+        login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
         login_tenant_name: "{{ lookup('env', 'OS_TENANT_NAME') }}"
-        key_name:          "{{ lookup('env', 'OS_KEY_NAME') }}"
-        state:             "{{ nova_compute_state }}"
-        name:              "{{ inventory_hostname }}"
-        image_id:          "{{ os_image_id }}"
-        flavor_id:         "{{ os_flavor_id }}"
+        key_name: "ansible_key"
+        image_id: "{{ os_image_id }}"
+        flavor_id: "{{ os_flavor_id }}"
         nics:
-          - net-id:        "{{ os_net_id }}"
+          - net-id: "{{ os_net_id }}"
         security_groups: default
+        state: "{{ nova_compute_state }}"
       always_run: yes
       register: nova_compute_result
       tags:
