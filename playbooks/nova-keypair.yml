@@ -4,7 +4,7 @@
   connection: local
   tasks:
   - name: add ssh key to openstack tenant
-    nova_keypair:
+    nova_keypair: >
       name=ansible_key
       public_key="{{ lookup('file','~/.ssh/id_rsa.pub') }}"
       auth_url={{ lookup('env','OS_AUTH_URL') }}
