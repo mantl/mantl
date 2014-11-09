@@ -2,10 +2,52 @@
 - hosts: localhost
   connection: local
   vars:
-    - image: CentOS-7-x86_64-GenericCloud-GA-7.0.1406_01.raw
-    - image_url: http://cloud.centos.org/centos/7/devel/{{ image }}
+    - base_url: http://cloud.centos.org/centos/7/devel
+    - image: CentOS-7-x86_64-GenericCloud-GA-7.0.1406_01
+    - sha256sum: 6a31fa7ad8c5b10d4c58e2dec47bf5971bb21ec730b830d9b6201eada1c9200c
+    - tmp_dir: "{{ ansible_env.PWD }}"/tmp
   tasks:
-    - name: download image
-      local_action: get_url
-        url={{ image_url }}
-        dest={{ ansible_env.PWD }}/{{ image }}
+    - name: enable openstack repo
+      sudo: yes
+      yum: >
+        name=https://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-4.noarch.rpm
+        state=present
+
+    - name: install qemu-img and glance client
+      sudo: yes
+      yum: >
+        name={{ item }}
+        state=latest
+      with_items:
+        - qemu-img
+        - python-glanceclient
+
+    - name: create tmp directory
+      file: >
+        path={{ tmp_dir }}
+        state=directory
+
+    - name: download image from url
+      get_url: >
+        url={{ base_url }}/{{ image }}.qcow2
+        dest={{ tmp_dir }}/{{ image }}.qcow2
+        sha256sum={{ sha256sum }}
+
+    - name: convert image from qcow2 to raw
+      command: >
+        qemu-img convert
+        {{ tmp_dir }}/{{ image }}.qcow2
+        {{ tmp_dir }}/{{ image }}.raw
+        creates={{ tmp_dir }}/{{ image }}.raw
+
+    - name: upload image to glance
+      glance_image: >
+        auth_url={{ lookup('env','OS_AUTH_URL') }}
+        login_username={{ lookup('env','OS_USERNAME') }}
+        login_password={{ lookup('env','OS_PASSWORD') }}
+        login_tenant_name={{ lookup('env','OS_TENANT_NAME') }}
+        name={{ image }}
+        file={{ tmp_dir }}/{{ image }}.raw
+        disk_format=raw
+        is_public=false
+        state=present
