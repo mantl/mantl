@@ -1,18 +1,9 @@
 ---
-- name: enable centos-virt7 repo
-  sudo: yes
-  copy: >
-    src=CentOS-virt7.repo
-    dest=/etc/yum.repos.d/CentOS-virt7.repo
-    owner=root
-    group=root
-    mode=0644
-
 - name: install docker
   sudo: yes
   yum: >
-    name=docker
-    state=latest
+    name=http://cbs.centos.org/repos/virt7-testing/x86_64/os/Packages/docker-1.3.1-1.el7.centos.x86_64.rpm
+    state=present
   notify:
    - restart docker 
 
@@ -26,7 +17,8 @@
   sudo: yes
   service: >
     name=docker
-    enabled=true
+    state=started
+    enabled=yes
 
 - name: add {{ ansible_ssh_user }} to docker group
   sudo: yes

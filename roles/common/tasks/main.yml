@@ -7,17 +7,19 @@
     state=link
     force=yes
 
-- name: enable centos-fasttrack repo
-  sudo: yes
-  copy: >
-    src=CentOS-fasttrack.repo
-    dest=/etc/yum.repos.d/CentOS-fasttrack.repo
-    owner=root
-    group=root
-    mode=0644
-
-- name: enable epel-release repo
+- name: setup latest centos and epel-release repos
   sudo: yes
   yum: >
-    name=epel-release
+    name={{ item }}
     state=latest
+  with_items:
+    - centos-release
+    - epel-release
+
+- name: enable centos-fasttrack repo
+  sudo: yes
+  ini_file: >
+    dest=/etc/yum.repos.d/CentOS-fasttrack.repo
+    section=fasttrack
+    option=enabled
+    value=1

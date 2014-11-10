@@ -1,5 +1,0 @@
-[virt7-testing]
-name=CentOS-7 - virt7-testing
-baseurl=http://cbs.centos.org/repos/virt7-testing/$basearch/os/
-gpgcheck=0
-enabled=1
