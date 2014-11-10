@@ -1,5 +1,6 @@
 ---
 - name: run hello-world container
+  sudo: yes
   docker: >
     name=hello-world
     image=tutum/hello-world
