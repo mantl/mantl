@@ -1,9 +1,9 @@
 ---
-- name: enable centos-bananas repo
+- name: enable centos-virt7 repo
   sudo: yes
   copy: >
-    src=CentOS-bananas.repo
-    dest=/etc/yum.repos.d/CentOS-bananas.repo
+    src=CentOS-virt7.repo
+    dest=/etc/yum.repos.d/CentOS-virt7.repo
     owner=root
     group=root
     mode=0644

@@ -1,5 +1,0 @@
-[bananas]
-name=CentOS-7 - bananas
-baseurl=http://cbs.centos.org/repos/bananas7-testing/$basearch/os/Packages/
-gpgcheck=0
-enabled=1
