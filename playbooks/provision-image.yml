@@ -7,13 +7,19 @@
     - sha256sum: 6a31fa7ad8c5b10d4c58e2dec47bf5971bb21ec730b830d9b6201eada1c9200c
     - tmp_dir: "{{ ansible_env.PWD }}"/tmp
   tasks:
+    - name: enable epel repo
+      sudo: yes
+      yum: >
+        name=epel-release
+        state=latest
+        
     - name: enable openstack repo
       sudo: yes
       yum: >
         name=https://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-4.noarch.rpm
         state=present
 
-    - name: install qemu-img and glance client
+    - name: install qemu-img and python-glanceclient
       sudo: yes
       yum: >
         name={{ item }}
