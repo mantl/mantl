@@ -2,9 +2,9 @@
 - hosts: localhost
   connection: local
   vars:
-    - base_url: http://cloud.centos.org/centos/7/devel
-    - image: CentOS-7-x86_64-GenericCloud-GA-7.0.1406_01
-    - sha256sum: 6a31fa7ad8c5b10d4c58e2dec47bf5971bb21ec730b830d9b6201eada1c9200c
+    - base_url: http://buildlogs.centos.org/rolling/7/
+    - image: CentOS-7-x86_64-GenericCloud-20141029_01
+    - sha256sum: ea37e583c25927e98c1b75432be72b1bda9b8891b478d32849d2ef3467f24c3
     - tmp_dir: "{{ ansible_env.PWD }}"/tmp
   tasks:
     - name: enable epel repo
