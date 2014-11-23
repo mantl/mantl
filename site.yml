@@ -8,12 +8,12 @@
 
 - hosts: all:!consul_servers
   roles:
-    - { role: consul, tags: consul,consul }
+    - { role: consul, tags: consul }
 
 - hosts: consul_servers
   serial: yes
   roles:
-    - { role: consul, tags: consul,consul }
+    - { role: consul, tags: consul }
 
 - hosts: app_servers
   gather_facts: no

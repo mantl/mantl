@@ -1,25 +1,10 @@
 ---
-- name: install consul
+- name: run consul container
   sudo: yes
-  yum: >
-    name=http://yum-el7.s3-website-us-west-2.amazonaws.com/consul-0.4.1-1.el7.x86_64.rpm
-    state=present
-  notify:
-   - restart consul
-
-- name: enable consul
-  sudo: yes
-  service: >
+  docker: >
     name=consul
-    enabled=true
-
-- name: consul config file
-  sudo: yes
-  template: >
-    src=consul.json.j2
-    dest=/etc/consul.d/consul.json
-    owner=consul
-    group=consul
-    mode=0644
-  notify:
-   - restart consul
+    image=progrium/consul
+    state=running
+    hostname={{ inventory_hostname }}
+    ports=8300:8300,8301:8301,8301:8301/udp,8302:8302,8302:8302/udp,8400:8400,8500:8500,8600:53/udp
+    command="{% if consul_is_server is defined %}-server -bootstrap-expect {{ consul_bootstrap_expect }}{% endif %} -advertise {{ ansible_eth0.ipv4.address }} -retry-join {{ consul_retry_join}}"
