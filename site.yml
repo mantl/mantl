@@ -15,6 +15,11 @@
   roles:
     - { role: consul, tags: consul }
 
+- hosts: all
+  gather_facts: no
+  roles:
+    - { role: registrator, tags: registrator }
+
 - hosts: app_servers
   gather_facts: no
   roles:
