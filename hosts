@@ -1,8 +1,8 @@
 [consul_servers]
-host-[05:07]
+host-[01:03]
 
 [load_balancers]
-host-[08:09]
+host-[04:06]
 
 [app_servers]
-host-[10:14]
+host-[07:10]
