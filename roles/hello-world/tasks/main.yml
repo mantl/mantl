@@ -5,6 +5,7 @@
     name=hello-world
     image=tutum/hello-world
     ports=80:80
+    env="SERVICE_80_NAME=hello-world,SERVICE_80_CHECK_HTTP=.,SERVICE_80_CHECK_INTERVAL=15s"
     state=running
   tags:
     - hello-world
