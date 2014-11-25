@@ -8,5 +8,5 @@
     hostname={{ inventory_hostname }}
     volumes=/var/run/docker.sock:/tmp/docker.sock
     privileged=yes
-    links=consul
-    command=consul://{{ ansible_eth0.ipv4.address }}:8500
+    links=consul:consul
+    command=consul://consul:8500

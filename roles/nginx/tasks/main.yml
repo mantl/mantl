@@ -5,5 +5,5 @@
     name=nginx
     image=keithchambers/docker-nginx-consul:latest
     ports=80:80
-    links=consul
+    links=consul:consul
     state=running

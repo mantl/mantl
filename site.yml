@@ -25,4 +25,9 @@
   roles:
     - { role: hello-world, tags: app }
 
+- hosts: load_balancers
+  gather_facts: no
+  roles:
+    - { role: nginx, tags: lb }
+
 - include: playbooks/upgrade-packages.yml
