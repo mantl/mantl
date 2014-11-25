@@ -2,9 +2,10 @@
 - hosts: localhost
   connection: local
   vars:
-    - base_url: http://buildlogs.centos.org/rolling/7/
-    - image: CentOS-7-x86_64-GenericCloud-20141029_01
+    - img_url: http://buildlogs.centos.org/rolling/7/CentOS-7-x86_64-GenericCloud-20141029_01.qcow2
     - sha256sum: ea37e583c25927e98c1b75432be72b1bda9b8891b478d32849d2ef3467f24c3
+    - img_name: "{{ img_url | basename }}"
+    - img_type: "{{ img_name.split('.') | last }}"
     - tmp_dir: "{{ ansible_env.PWD }}"/tmp
   tasks:
     - name: enable epel repo
@@ -35,16 +36,16 @@
 
     - name: download image from url
       get_url: >
-        url={{ base_url }}/{{ image }}.qcow2
-        dest={{ tmp_dir }}/{{ image }}.qcow2
+        url={{ img_url }}
+        dest={{ tmp_dir }}/{{ img_name }}
         sha256sum={{ sha256sum }}
 
     - name: convert image from qcow2 to raw
       command: >
         qemu-img convert
-        {{ tmp_dir }}/{{ image }}.qcow2
-        {{ tmp_dir }}/{{ image }}.raw
-        creates={{ tmp_dir }}/{{ image }}.raw
+        {{ tmp_dir }}/{{ img_name }}.{{ img_type }}
+        {{ tmp_dir }}/{{ img_name }}.raw
+        creates={{ tmp_dir }}/{{ img_name }}.raw
 
     - name: upload image to glance
       glance_image: >
@@ -52,8 +53,8 @@
         login_username={{ lookup('env','OS_USERNAME') }}
         login_password={{ lookup('env','OS_PASSWORD') }}
         login_tenant_name={{ lookup('env','OS_TENANT_NAME') }}
-        name={{ image }}
-        file={{ tmp_dir }}/{{ image }}.raw
+        name={{ img_name }}
+        file={{ tmp_dir }}/{{ img_name }}.raw
         disk_format=raw
         is_public=false
         state=present
