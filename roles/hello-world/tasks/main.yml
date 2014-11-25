@@ -1,11 +1,9 @@
 ---
-- name: run app container
+- name: run hello-world container
   sudo: yes
   docker: >
     name=hello-world
-    image=tutum/hello-world
-    ports=80:80
+    image=tutum/hello-world:latest
+    ports=80
     env="SERVICE_NAME=app,SERVICE_TAGS=production,SERVICE_80_NAME=hello-world,SERVICE_80_CHECK_HTTP=.,SERVICE_80_CHECK_INTERVAL=15s"
     state=running
-  tags:
-    - app
