@@ -6,7 +6,7 @@
     - sha256sum: ea37e583c25927e98c1b75432be72b1bda9b8891b478d32849d2ef3467f24c3
     - img_name: "{{ img_url | basename }}"
     - img_type: "{{ img_name.split('.') | last }}"
-    - tmp_dir: "{{ ansible_env.PWD }}"/tmp
+    - tmp_dir: "{{ ansible_env.PWD }}/tmp"
   tasks:
     - name: enable epel repo
       sudo: yes
