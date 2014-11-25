@@ -5,5 +5,5 @@
     name=hello-world
     image=tutum/hello-world:latest
     ports=80
-    env="SERVICE_NAME=app,SERVICE_TAGS=production,SERVICE_80_NAME=hello-world,SERVICE_80_CHECK_HTTP=.,SERVICE_80_CHECK_INTERVAL=15s"
+    env="SERVICE_NAME=app,SERVICE_TAGS=production,SERVICE_80_NAME=http,SERVICE_80_CHECK_HTTP=.,SERVICE_80_CHECK_INTERVAL=15s"
     state=running
