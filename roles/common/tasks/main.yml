@@ -18,8 +18,9 @@
 
 - name: enable centos-fasttrack repo
   sudo: yes
-  ini_file: >
+  copy: >
+    src=CentOS-fasttrack.repo
     dest=/etc/yum.repos.d/CentOS-fasttrack.repo
-    section=fasttrack
-    option=enabled
-    value=1
+    owner=root
+    group=root
+    mode=0644

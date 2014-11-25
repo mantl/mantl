@@ -3,7 +3,7 @@
   sudo: yes
   docker: >
     name=hello-world
-    image=tutum/hello-world:latest
+    image=keithchambers/docker-hello-world:latest
     ports=80
-    env="SERVICE_NAME=app,SERVICE_TAGS=production,SERVICE_80_NAME=app,SERVICE_80_CHECK_HTTP=.,SERVICE_80_CHECK_INTERVAL=15s"
+    env="SERVICE_80_NAME=app,SERVICE_80_CHECK_HTTP=.,SERVICE_80_CHECK_INTERVAL=15s"
     state=running
