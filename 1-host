@@ -1,5 +1,5 @@
 [all]
-host-01 boot_wait=40
+host-01
 
 [consul_servers]
 host-01
