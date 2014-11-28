@@ -1,0 +1,8 @@
+[consul_servers]
+host-01
+
+[load_balancers]
+host-01
+
+[app_servers]
+host-01
