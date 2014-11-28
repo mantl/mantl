@@ -1,3 +1,6 @@
+[all]
+host-01 boot_wait=40
+
 [consul_servers]
 host-01
 

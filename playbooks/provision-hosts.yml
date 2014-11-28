@@ -42,7 +42,7 @@
         module: wait_for
         host: "{{ ansible_ssh_host }}"
         port: 22
-        delay: 30
+        delay: "{{ boot_wait | default(30) }}"
         state: started
       always_run: yes
       when: nova_compute_result|changed and nova_compute_state == "present"
