@@ -1,5 +1,5 @@
 [all]
-host-[01:10] boot_wait: 20
+host-[01:10] boot_wait=20
 
 [consul_servers]
 host-[01:03]
