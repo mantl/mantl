@@ -1,4 +1,12 @@
 ---
+- name: configure docker dns resolution for consul
+  sudo: yes
+  lineinfile: >
+    dest=/etc/sysconfig/docker
+    line="other_args=\"--dns 127.0.0.1 --dns-search consul\""
+    create=yes
+    state=present
+
 - name: create consul data volume
   sudo: yes
   docker: >
