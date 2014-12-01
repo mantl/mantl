@@ -4,7 +4,7 @@
   - name: get consul wan gossip pool members
     shell: docker exec consul consul members -wan | grep -q {{ ansible_eth0.ipv4.address }}:8302
     register: result
-    changed_when: result.rc != 0
+    changed_when: result.rc == 1
     failed_when: no
 
   - name: join consul wan gossip pool

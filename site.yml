@@ -1,5 +1,6 @@
 ---
 - include: playbooks/provision-hosts.yml
+- include: playbooks/upgrade-packages.yml
 
 - hosts: all
   roles:
