@@ -12,8 +12,9 @@
         login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
         login_tenant_name: "{{ lookup('env', 'OS_TENANT_NAME') }}"
         key_name: "ansible_key"
-        image_id: "{{ os_image_id }}"
-        flavor_id: "{{ os_flavor_id }}"
+        image_name: "{{ os_image_name }}"
+        flavor_ram: "{{ os_flavor_ram }}"
+        flavor_include: "{{ os_flavor_include }}"
         nics:
           - net-id: "{{ os_net_id }}"
         security_groups: default

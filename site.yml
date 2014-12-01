@@ -4,15 +4,16 @@
 - hosts: all
   roles:
     - { role: common, tags: common }
-    - { role: docker, tags: docker }
 
 - hosts: all:!consul_servers
   roles:
+    - { role: docker, tags: docker }
     - { role: consul, tags: consul }
 
 - hosts: consul_servers
   serial: yes
   roles:
+    - { role: docker, tags: docker }
     - { role: consul, tags: consul }
 
 - hosts: all

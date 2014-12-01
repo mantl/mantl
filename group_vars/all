@@ -1,5 +1,6 @@
 ansible_ssh_user: centos
-os_image_id: 82ce3504-f16a-49cf-a6a8-02c668213314
+os_flavor_ram: 4096
+os_flavor_include: Medium
+os_image_name: CentOS-7-x86_64-GenericCloud-20141029_01
 os_net_id: 2d84eaa4-8b81-4dc8-9897-dd8ef4719f8b
-os_flavor_id: bd5c0e9d-672d-4416-8a33-c7a7abe9400b
 consul_retry_join: "{% for host in groups['consul_servers'] %}{{ hostvars[host].ansible_eth0.ipv4.address }}{% if not loop.last %} -retry-join {% endif %}{% endfor %}"
