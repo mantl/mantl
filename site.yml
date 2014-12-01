@@ -24,6 +24,8 @@
   roles:
     - { role: consul, tags: consul }
 
+- include: playbooks/consul-join-wan.yml
+
 - hosts: all
   gather_facts: no
   roles:
@@ -38,5 +40,3 @@
   gather_facts: no
   roles:
     - { role: nginx, tags: lb }
-
-- include: playbooks/upgrade-packages.yml
