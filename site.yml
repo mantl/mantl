@@ -11,7 +11,7 @@
     - { role: consul, tags: consul }
 
 - hosts: consul_servers
-  serial: yes
+  serial: 1
   roles:
     - { role: consul, tags: consul }
 
