@@ -50,10 +50,10 @@
 
     - name: upload image to glance
       glance_image: >
-        auth_url={{ lookup('env','OS_AUTH_URL') }}
+        auth_url={{ os_auth_url }}
         login_username={{ lookup('env','OS_USERNAME') }}
         login_password={{ lookup('env','OS_PASSWORD') }}
-        login_tenant_name={{ lookup('env','OS_TENANT_NAME') }}
+        login_tenant_name={{ os_tenant_name }}
         name={{ img_name }}
         file={{ img_temp }}/{{ img_name }}.raw
         disk_format=raw

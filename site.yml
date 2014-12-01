@@ -6,12 +6,21 @@
     - { role: common, tags: common }
     - { role: docker, tags: docker }
 
-- hosts: all:!consul_servers
+- hosts: dc1:&consul_clients
   roles:
     - { role: consul, tags: consul }
 
-- hosts: consul_servers
-  serial: yes
+- hosts: dc2:&consul_clients
+  roles:
+    - { role: consul, tags: consul }
+
+- hosts: dc1:&consul_servers
+  serial: 1
+  roles:
+    - { role: consul, tags: consul }
+
+- hosts: dc2:&consul_servers
+  serial: 1
   roles:
     - { role: consul, tags: consul }
 

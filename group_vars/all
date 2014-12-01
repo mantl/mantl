@@ -2,5 +2,3 @@ ansible_ssh_user: centos
 os_flavor_ram: 4096
 os_flavor_include: Medium
 os_image_name: centos-7-x86_64_2014-09-22-v5
-os_net_id: 2d84eaa4-8b81-4dc8-9897-dd8ef4719f8b
-consul_retry_join: "{% for host in groups['consul_servers'] %}{{ hostvars[host].ansible_eth0.ipv4.address }}{% if not loop.last %} -retry-join {% endif %}{% endfor %}"

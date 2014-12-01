@@ -7,10 +7,10 @@
   tasks:
     - nova_compute:
         name: "{{ inventory_hostname }}"
-        auth_url: "{{ lookup('env', 'OS_AUTH_URL') }}"
+        auth_url: "{{ os_auth_url }}"
         login_username: "{{ lookup('env', 'OS_USERNAME') }}"
         login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
-        login_tenant_name: "{{ lookup('env', 'OS_TENANT_NAME') }}"
+        login_tenant_name: "{{ os_tenant_name }}"
         key_name: "ansible_key"
         image_name: "{{ os_image_name }}"
         flavor_ram: "{{ os_flavor_ram }}"
@@ -44,6 +44,7 @@
         host: "{{ ansible_ssh_host }}"
         port: 22
         delay: "{{ boot_wait | default(60) }}"
+        timeout: 120
         state: started
       always_run: yes
       when: nova_compute_result|changed and nova_compute_state == "present"
