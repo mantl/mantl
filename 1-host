@@ -1,5 +1,4 @@
 [all]
-localhost
 host-01
 
 [consul_servers]
