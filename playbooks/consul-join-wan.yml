@@ -1,5 +1,12 @@
 ---
 - hosts: consul_servers
   tasks:
+  - name: get consul wan gossip pool members
+    shell: docker exec consul consul members -wan | awk '$4 == "server" {print $2}' | cut -f1 -d":"
+    register: result
+    changed_when: no
+
+  - debug: msg={{ result.stdout }}
+
   - name: join consul wan gossip pool
     command: docker exec consul consul join -wan {{ consul_join_wan }}
