@@ -1,0 +1,11 @@
+---
+- name: run logspout container
+  sudo: yes
+  docker:
+    name: logspout
+    image: progrium/logspout:latest
+    hostname: "{{ inventory_hostname }}"
+    volumes: /var/run/docker.sock:/tmp/docker.sock
+    privileged: yes
+    ports: 8000:8000
+    state: running
