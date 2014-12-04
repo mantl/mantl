@@ -1,26 +1,26 @@
 ---
 - name: install docker
   sudo: yes
-  yum: >
-    name=http://cbs.centos.org/kojifiles/packages/docker/1.3.2/3.el7.centos/x86_64/docker-1.3.2-3.el7.centos.x86_64.rpm
-    state=present
+  yum:
+    name: http://cbs.centos.org/kojifiles/packages/docker/1.3.2/3.el7.centos/x86_64/docker-1.3.2-3.el7.centos.x86_64.rpm
+    state: present
 
 - name: install python-docker-py
   sudo: yes
-  yum: >
-    name=python-docker-py
-    state=latest
+  yum:
+    name: python-docker-py
+    state: latest
 
 - name: enable docker
   sudo: yes
-  service: >
-    name=docker
-    state=started
-    enabled=yes
+  service:
+    name: docker
+    state: started
+    enabled: yes
 
 - name: add {{ ansible_ssh_user }} to docker group
   sudo: yes
-  user: >
-    name={{ ansible_ssh_user }}
-    groups=docker
-    append=yes
+  user:
+    name: "{{ ansible_ssh_user }}"
+    groups: docker
+    append: yes

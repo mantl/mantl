@@ -1,9 +1,9 @@
 ---
 - name: run nginx container
   sudo: yes
-  docker: >
-    name=nginx
-    image=keithchambers/docker-nginx-consul:latest
-    ports=80:80
-    links=consul:consul
-    state=running
+  docker:
+    name: nginx
+    image: keithchambers/docker-nginx-consul:latest
+    ports: 80:80
+    links: consul:consul
+    state: running

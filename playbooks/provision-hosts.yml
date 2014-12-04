@@ -21,22 +21,19 @@
         state: "{{ nova_compute_state }}"
       always_run: yes
       register: nova_compute_result
-      tags:
-        - hosts
+      tags: hosts
 
     - name: set ansible_ssh_host value to host private_ip
       set_fact: ansible_ssh_host={{ nova_compute_result.private_ip }}
       always_run: yes
       when: nova_compute_state == "present"
-      tags:
-        - hosts
+      tags: hosts
 
     - name: print host ip address
       debug: msg={{ ansible_ssh_host }}
       always_run: yes
       when: nova_compute_state == "present"
-      tags:
-        - hosts
+      tags: hosts
 
     - name: wait for host boot
       local_action:
@@ -48,5 +45,4 @@
         state: started
       always_run: yes
       when: nova_compute_result|changed and nova_compute_state == "present"
-      tags:
-        - hosts
+      tags: hosts

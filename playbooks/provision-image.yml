@@ -11,52 +11,52 @@
   tasks:
     - name: enable epel repo
       sudo: yes
-      yum: >
-        name=epel-release
-        state=latest
+      yum:
+        name: epel-release
+        state: latest
         
     - name: enable openstack repo
       sudo: yes
-      yum: >
-        name=https://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-4.noarch.rpm
-        state=present
+      yum:
+        name: https://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-4.noarch.rpm
+        state: present
 
     - name: install qemu-img and python-glanceclient
       sudo: yes
-      yum: >
-        name={{ item }}
-        state=latest
+      yum:
+        name: "{{ item }}"
+        state: latest
       with_items:
         - qemu-img
         - python-glanceclient
 
     - name: create img_temp directory
-      file: >
-        path={{ img_temp }}
-        state=directory
+      file:
+        path: "{{ img_temp }}"
+        state: directory
 
     - name: download image from url
       get_url: >
-        url={{ img_url }}
-        dest={{ img_temp }}/{{ img_file }}
-        sha256sum={{ img_sha256sum }}
+        url: "{{ img_url }}"
+        dest: "{{ img_temp }}/{{ img_file }}"
+        sha256sum: "{{ img_sha256sum }}"
 
     - name: convert image to raw format
-      command: >
+      command:
         qemu-img convert
-        {{ img_temp }}/{{ img_file }}
-        {{ img_temp }}/{{ img_name }}.raw
-        creates={{ img_temp }}/{{ img_name }}.raw
+        "{{ img_temp }}/{{ img_file }}"
+        "{{ img_temp }}/{{ img_name }}.raw"
+        creates: "{{ img_temp }}/{{ img_name }}.raw"
 
     - name: upload image to glance
-      glance_image: >
-        auth_url={{ os_auth_url }}
-        login_username={{ lookup('env','OS_USERNAME') }}
-        login_password={{ lookup('env','OS_PASSWORD') }}
-        login_tenant_name={{ os_tenant_name }}
-        name={{ img_name }}
-        file={{ img_temp }}/{{ img_name }}.raw
-        disk_format=raw
-        is_public=false
-        timeout=1800
-        state=present
+      glance_image:
+        auth_url: "{{ os_auth_url }}"
+        login_username: "{{ lookup('env','OS_USERNAME') }}"
+        login_password: "{{ lookup('env','OS_PASSWORD') }}"
+        login_tenant_name: "{{ os_tenant_name }}"
+        name: "{{ img_name }}"
+        file: "{{ img_temp }}/{{ img_name }}.raw"
+        disk_format: raw
+        is_public: false
+        timeout: 1800
+        state: present

@@ -1,26 +1,26 @@
 ---
 - name: set timezone to etc/utc
   sudo: yes
-  file: >
-    src=/usr/share/zoneinfo/Etc/UTC
-    dest=/etc/localtime
-    state=link
-    force=yes
+  file:
+    src: /usr/share/zoneinfo/Etc/UTC
+    dest: /etc/localtime
+    state: link
+    force: yes
 
 - name: setup latest centos and epel-release repos
   sudo: yes
-  yum: >
-    name={{ item }}
-    state=latest
+  yum:
+    name: "{{ item }}"
+    state: latest
   with_items:
     - centos-release
     - epel-release
 
 - name: enable centos-fasttrack repo
   sudo: yes
-  copy: >
-    src=CentOS-fasttrack.repo
-    dest=/etc/yum.repos.d/CentOS-fasttrack.repo
-    owner=root
-    group=root
-    mode=0644
+  copy:
+    src: CentOS-fasttrack.repo
+    dest: /etc/yum.repos.d/CentOS-fasttrack.repo
+    owner: root
+    group: root
+    mode: 0644

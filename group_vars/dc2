@@ -1,7 +1,7 @@
-os_auth_url: https://eu-amsterdam-1.cloud.cisco.com:5000/v2.0
-os_tenant_name: kechambe-ams-1
-os_tenant_id: 86e97371ad7e450d91b692029ce9a8c2
-os_net_id: e7b1be4f-e0d2-4024-948f-b9e6c4911123
+os_auth_url: https://us-texas-1.cisco.com:5000/v2.0
+os_tenant_name: kechambe-texas-1
+os_tenant_id: 22c95988aac8448cac3601e76645de75
+os_net_id: fd94baf0-b314-453e-9cd6-73c90fc53857
 consul_dc: dc2
 consul_bootstrap_expect: "{{ groups['consul_servers'] | intersect(groups['dc2']) | length }}"
 consul_retry_join: "{% for host in groups['consul_servers'] | intersect(groups['dc2']) %}{{ hostvars[host].ansible_eth0.ipv4.address }}{% if not loop.last %} -retry-join {% endif %}{% endfor %}"

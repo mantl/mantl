@@ -1,21 +1,35 @@
 ---
 - name: create consul data volume
   sudo: yes
-  docker: >
-    name=consul-data-volume
-    image=tianon/true
-    state=present
-    volumes=/data
+  docker:
+    name: consul-data-volume
+    image: tianon/true
+    state: present
+    volumes: /data
 
 - name: run consul container
   sudo: yes
-  docker: >
-    name=consul
-    image=progrium/consul
-    state=running
-    hostname={{ inventory_hostname }}
-    volumes=/var/run/docker.sock:/tmp/docker.sock
-    volumes_from=consul-data-volume
-    privileged=yes
-    ports=8300:8300,8301:8301,8301:8301/udp,8302:8302,8302:8302/udp,8400:8400,8500:8500,8600:8600,8600:8600/udp
-    command="{% if consul_is_server is defined %}-server -bootstrap-expect {{ consul_bootstrap_expect }}{% endif %} -dc {{ consul_dc | default(dc1) }} -advertise {{ ansible_eth0.ipv4.address }} -rejoin -retry-join {{ consul_retry_join }} {% if consul_gossip_key is defined %}-encrypt {{ consul_gossip_key }}{% endif %}"
+  docker:
+    name: consul
+    image: progrium/consul
+    state: running
+    hostname: "{{ inventory_hostname }}"
+    volumes: /var/run/docker.sock:/tmp/docker.sock
+    volumes_from: consul-data-volume
+    privileged: yes
+    ports:
+      - 8300:8300
+      - 8301:8301
+      - 8301:8301/udp
+      - 8302:8302
+      - 8302:8302/udp
+      - 8400:8400
+      - 8500:8500
+      - 8600:8600
+      - 8600:8600/udp
+    command:
+      -dc "{{ consul_dc | default(dc1) }}"
+      -advertise "{{ ansible_eth0.ipv4.address }}"
+      -rejoin -retry-join "{{ consul_retry_join }}"
+      "{% if consul_gossip_key is defined %} -encrypt {{ consul_gossip_key }}{% endif %}"
+      "{% if consul_is_server is defined %}-server -bootstrap-expect {{ consul_bootstrap_expect }}{% endif %}"

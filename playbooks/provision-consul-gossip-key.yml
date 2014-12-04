@@ -8,9 +8,9 @@
       changed_when: no
 
     - name: add consul gossip key to group_vars/consul
-      lineinfile: >
-        dest={{ ansible_env.PWD }}/group_vars/all
-        regexp="^consul_gossip_key:\s[A-Za-z0-9+/]*==$"
-        line="consul_gossip_key: {{ consul_gossip_key.stdout }}"
-        create=yes
-        state=present
+      lineinfile:
+        dest: "{{ ansible_env.PWD }}/group_vars/all"
+        regexp: "^consul_gossip_key:\s[A-Za-z0-9+/]*==$"
+        line: "consul_gossip_key: {{ consul_gossip_key.stdout }}"
+        create: yes
+        state: present

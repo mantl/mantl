@@ -6,16 +6,16 @@
 
   - name: upgrade kernel package
     sudo: yes
-    yum: >
-      name=kernel
-      state=latest
+    yum:
+      name: kernel
+      state: latest
     register: result
 
   - name: upgrade all packages
     sudo: yes
-    yum: >
-      name=*
-      state=latest
+    yum:
+      name: *
+      state: latest
 
   - name: reboot host
     sudo: yes
