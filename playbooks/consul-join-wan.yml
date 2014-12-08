@@ -6,7 +6,8 @@
     register: result
     changed_when: no
 
-  - debug: msg={{ result.stdout }}
+  - set_fact: non_member_count="{{ consul_join_wan.split(' ') | difference(result.stdout_lines | list) | length }}"
 
   - name: join consul wan gossip pool
     command: docker exec consul consul join -wan {{ consul_join_wan }}
+    when: non_member_count != "0"
