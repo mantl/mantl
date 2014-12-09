@@ -5,7 +5,7 @@
     name: consul-data-volume
     image: tianon/true
     volumes: /data
-    state: running
+    state: present
 
 - name: run consul container
   sudo: yes
