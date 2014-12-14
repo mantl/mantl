@@ -16,7 +16,6 @@
     volumes: /var/run/docker.sock:/tmp/docker.sock
     volumes_from: consul-data-volume
     privileged: yes
-    net: bridge
     ports:
       - 8300:8300
       - 8301:8301
