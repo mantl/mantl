@@ -36,13 +36,13 @@
         state: directory
 
     - name: download image from url
-      get_url: >
+      get_url:
         url: "{{ img_url }}"
         dest: "{{ img_temp }}/{{ img_file }}"
         sha256sum: "{{ img_sha256sum }}"
 
     - name: convert image to raw format
-      command:
+      command: >
         qemu-img convert
         "{{ img_temp }}/{{ img_file }}"
         "{{ img_temp }}/{{ img_name }}.raw"
