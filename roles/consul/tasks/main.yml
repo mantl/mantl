@@ -24,8 +24,8 @@
       - 8302:8302/udp
       - 8400:8400
       - 8500:8500
-      - 8600:8600
-      - 8600:8600/udp
+      - 8600:53
+      - 8600:53/udp
     command:
       -dc "{{ consul_dc | default(dc1) }}"
       -advertise "{{ ansible_eth0.ipv4.address }}"
