@@ -36,7 +36,7 @@ class CallbackModule(object):
         )
 
         # Just keep the top 10
-        results = results[:10]
+        # results = results[:10]
 
         # Print the timings
         for name, elapsed in results:
