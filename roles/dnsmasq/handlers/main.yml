@@ -1,6 +1,6 @@
 - name: restart dnsmasq
-  service: >
-    name=dnsmasq
-    state=restarted
-    enabled=yes 
+  service: 
+    name: dnsmasq
+    state: restarted
+    enabled: yes 
   tags: dnsmasq, dnsmasq-restart
