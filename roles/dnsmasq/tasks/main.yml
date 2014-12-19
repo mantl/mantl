@@ -4,7 +4,9 @@
    name: dnsmasq 
    state: latest
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags: dnsmasq, dnsmasq-install-package
+  tags: 
+    - dnsmasq 
+    - dnsmasq-install-package
   
 - name: install dnsmasq via yum
   sudo: yes
@@ -12,7 +14,9 @@
     name: dnsmasq 
     state: latest
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-  tags: dnsmasq, dnsmasq-install-package
+  tags: 
+    - dnsmasq
+    - dnsmasq-install-package
 
 - name: configure dnsmasq consul lookups
   sudo: yes
@@ -21,4 +25,6 @@
     dest: /etc/dnsmasq.d/10-consul
   notify:
     - restart dnsmasq
-  tags: dnsmasq, dnsmasq-consul
+  tags: 
+    - dnsmasq
+    - dnsmasq-consul
