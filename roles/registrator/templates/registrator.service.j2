@@ -13,7 +13,7 @@ ExecStartPre=-/usr/bin/docker rm {{registrator_container_name}}
 ExecStartPre=-/usr/bin/docker pull {{registrator_docker_image}}:{{registrator_docker_tag}}
 
 ExecStart=/usr/bin/docker run --name={{registrator_container_name}} \
-                              --dns={{ansible_eth0.ipv4.address}} \
+                              --link consul:consul
                               --privileged=true \
                               -v /var/run/docker.sock:/tmp/docker.sock \
                               -h {{inventory_hostname}} \
