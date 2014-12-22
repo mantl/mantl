@@ -1,0 +1,26 @@
+[Unit]
+Description=registrator
+Documentation=https://github.com/progrium/registrator
+After=docker.service
+After=dnsmasq.service
+Requires=docker.service
+Requires=dnsmasq.service
+
+[Service]
+Restart=on-failure
+
+ExecStartPre=-/usr/bin/docker rm {{registrator_container_name}}
+ExecStartPre=-/usr/bin/docker pull {{registrator_docker_image}}:{{registrator_docker_tag}}
+
+ExecStart=/usr/bin/docker run --name={{registrator_container_name}} \
+                              --dns={{ansible_eth0.ipv4.address}} \
+                              --privileged=true \
+                              -v /var/run/docker.sock:/tmp/docker.sock \
+                              -h {{inventory_hostname}} \
+                              {{registrator_docker_image }}:{{registrator_docker_tag}} {{registrator_consul_connect}}
+
+ExecStop=/bin/bash -c \
+         "/usr/bin/docker kill {{registrator_container_name}} && /usr/bin/docker rm {{registrator_container_name}}"
+
+[Install]
+WantedBy=multi-user.target
