@@ -1,0 +1,7 @@
+registrator_service: registrator
+
+registrator_container_name: "{{registrator_service}}"
+registrator_docker_image: progrium/registrator
+registrator_docker_tag: latest
+
+registrator_consul_connect: "consul://consul.service.consul:8500"
