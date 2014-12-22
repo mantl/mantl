@@ -1,12 +1,28 @@
 ---
-- name: run registrator container
+- name: generate registrator systemd service file 
   sudo: yes
-  docker:
-    name: registrator
-    image: progrium/registrator:latest
-    state: running
-    hostname: "{{ inventory_hostname }}"
-    volumes: /var/run/docker.sock:/tmp/docker.sock
-    privileged: yes
-    links: consul:consul
-    command: consul://consul:8500
+  template:
+    src: registrator.service.j2 
+    dest: "/usr/lib/systemd/system/{{registrator_service}}.service"
+  register: registrator_unit
+  tags: 
+    - registrator
+    - registrator-docker-create-systemd-sevice
+
+- name: register registrator service with systemd
+  sudo: yes
+  service: 
+    enabled: yes
+    name: "{{registrator_service}}" 
+    state: started
+  tags: 
+    - registrator 
+    - registrator-docker-systemd-start
+
+- name: reload systemd daemon
+  sudo: yes
+  command: /bin/systemctl daemon-reload
+  when: registrator_unit.changed
+  tags: 
+    - registrator 
+    - registrator-docker-systemd-reload-daemon
