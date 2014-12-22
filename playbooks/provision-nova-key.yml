@@ -3,11 +3,12 @@
   gather_facts: no
   tasks:
     - name: add ssh key to openstack tenant
-      local_action: nova_keypair
-        name=ansible_key
-        public_key="{{ lookup('file','~/.ssh/id_rsa.pub') }}"
-        auth_url={{ os_auth_url }}
-        login_username={{ lookup('env','OS_USERNAME') }}
-        login_password={{ lookup('env','OS_PASSWORD') }}
-        login_tenant_name={{ os_tenant_name }}
-        state=present
+      local_action:
+        module: nova_keypair
+        name: ansible_key
+        public_key: "{{ lookup('file','~/.ssh/id_rsa.pub') }}"
+        auth_url: {{ os_auth_url }}
+        login_username: {{ lookup('env','OS_USERNAME') }}
+        login_password: {{ lookup('env','OS_PASSWORD') }}
+        login_tenant_name: {{ os_tenant_name }}
+        state: present
