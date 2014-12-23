@@ -1,0 +1,6 @@
+---
+- name: systemd daemon-reload
+  sudo: yes
+  command: /bin/systemctl daemon-reload
+  tags: 
+    - systemd-daemon-reload 
