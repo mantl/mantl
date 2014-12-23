@@ -9,18 +9,16 @@ Requires=dnsmasq.service
 [Service]
 Restart=on-failure
 
-ExecStartPre=-/usr/bin/docker rm {{registrator_container_name}}
-ExecStartPre=-/usr/bin/docker pull {{registrator_docker_image}}:{{registrator_docker_tag}}
-
-ExecStart=/usr/bin/docker run --name={{registrator_container_name}} \
+ExecStart=/bin/bash -c \
+          "/usr/bin/docker start {{registrator_container_name}} || \
+          /usr/bin/docker run --name={{registrator_container_name}} \
                               --link consul:consul \
                               --privileged=true \
                               -v /var/run/docker.sock:/tmp/docker.sock \
                               -h {{inventory_hostname}} \
-                              {{registrator_docker_image }}:{{registrator_docker_tag}} {{registrator_consul_connect}}
+                              {{registrator_docker_image }}:{{registrator_docker_tag}} {{registrator_consul_connect}}"
 
-ExecStop=/bin/bash -c \
-         "/usr/bin/docker kill {{registrator_container_name}} && /usr/bin/docker rm {{registrator_container_name}}"
+ExecStop=/usr/bin/docker kill {{registrator_container_name}}
 
 [Install]
 WantedBy=multi-user.target

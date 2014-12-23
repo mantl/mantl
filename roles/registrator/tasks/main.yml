@@ -4,6 +4,7 @@
   template:
     src: registrator.service.j2 
     dest: "/usr/lib/systemd/system/{{registrator_service}}.service"
+  notify: systemd daemon-reload
   register: registrator_unit
   tags: 
     - registrator
@@ -18,11 +19,3 @@
   tags: 
     - registrator 
     - registrator-docker-systemd-start
-
-- name: reload systemd daemon
-  sudo: yes
-  command: /bin/systemctl daemon-reload
-  when: registrator_unit.changed
-  tags: 
-    - registrator 
-    - registrator-docker-systemd-reload-daemon
