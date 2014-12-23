@@ -1,19 +1,9 @@
-- name: install dnsmasq via apt
-  sudo: yes
-  apt: 
-   name: dnsmasq 
-   state: latest
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  tags: 
-    - dnsmasq 
-    - dnsmasq-install-package
-  
-- name: install dnsmasq via yum
+
+- name: install dnsmasq
   sudo: yes
   yum: 
     name: dnsmasq 
     state: latest
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   tags: 
     - dnsmasq
     - dnsmasq-install-package
