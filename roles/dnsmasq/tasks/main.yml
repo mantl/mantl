@@ -1,0 +1,30 @@
+- name: install dnsmasq via apt
+  sudo: yes
+  apt: 
+   name: dnsmasq 
+   state: latest
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  tags: 
+    - dnsmasq 
+    - dnsmasq-install-package
+  
+- name: install dnsmasq via yum
+  sudo: yes
+  yum: 
+    name: dnsmasq 
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  tags: 
+    - dnsmasq
+    - dnsmasq-install-package
+
+- name: configure dnsmasq consul lookups
+  sudo: yes
+  copy: 
+    content: 'server=/consul/127.0.0.1#8600'
+    dest: /etc/dnsmasq.d/10-consul
+  notify:
+    - restart dnsmasq
+  tags: 
+    - dnsmasq
+    - dnsmasq-consul

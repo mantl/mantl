@@ -1,0 +1,9 @@
+- name: restart dnsmasq
+  sudo: yes
+  service: 
+    name: dnsmasq
+    state: restarted
+    enabled: yes 
+  tags: 
+    - dnsmasq
+    - dnsmasq-restart
