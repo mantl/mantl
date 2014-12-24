@@ -5,6 +5,7 @@
   roles:
     - { role: common, tags: common }
     - { role: docker, tags: docker }
+    - { role: dnsmasq, tags: dnsmasq }
     - { role: logspout, tags: logspout }
 
 - hosts: dc1:&consul_clients
