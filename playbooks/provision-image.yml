@@ -2,12 +2,11 @@
 - hosts: localhost
   connection: local
   vars:
-    - img_url: http://buildlogs.centos.org/rolling/7/CentOS-7-x86_64-GenericCloud-20141029_01.qcow2
-    - img_sha256sum: ea37e583c25927e98c1b75432be72b1bda9b8891b478d32849d2ef3467f24c31
+    - img_url: http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2c
+    - tmp_dir: "{{ ansible_env.HOME }}/tmp"
     - img_file: "{{ img_url | basename }}"
     - img_name: "{{ img_file.split('.') | first }}"
     - img_type: "{{ img_file.split('.') | last }}"
-    - img_temp: "{{ ansible_env.HOME }}/image_tmp"
   tasks:
     - name: enable epel repo
       sudo: yes
@@ -30,23 +29,22 @@
         - qemu-img
         - python-glanceclient
 
-    - name: create img_temp directory
+    - name: create tmp_dir directory
       file:
-        path: "{{ img_temp }}"
+        path: "{{ tmp_dir }}"
         state: directory
 
     - name: download image from url
       get_url:
         url: "{{ img_url }}"
-        dest: "{{ img_temp }}/{{ img_file }}"
-        sha256sum: "{{ img_sha256sum }}"
+        dest: "{{ tmp_dir }}/{{ img_file }}"
 
     - name: convert image to raw format
-      command: >
+      command:
         qemu-img convert
-        "{{ img_temp }}/{{ img_file }}"
-        "{{ img_temp }}/{{ img_name }}.raw"
-        creates: "{{ img_temp }}/{{ img_name }}.raw"
+        "{{ tmp_dir }}/{{ img_file }}"
+        "{{ tmp_dir }}/{{ img_name }}.raw"
+        creates: "{{ tmp_dir }}/{{ img_name }}.raw"
 
     - name: upload image to glance
       glance_image:
@@ -55,7 +53,7 @@
         login_password: "{{ lookup('env','OS_PASSWORD') }}"
         login_tenant_name: "{{ os_tenant_name }}"
         name: "{{ img_name }}"
-        file: "{{ img_temp }}/{{ img_name }}.raw"
+        file: "{{ tmp_dir }}/{{ img_name }}.raw"
         disk_format: raw
         is_public: false
         timeout: 1800
