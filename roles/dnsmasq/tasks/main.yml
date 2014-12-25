@@ -4,9 +4,6 @@
   yum: 
     name: dnsmasq 
     state: latest
-  tags: 
-    - dnsmasq
-    - dnsmasq-install-package
 
 - name: configure dnsmasq consul lookups
   sudo: yes
@@ -15,6 +12,3 @@
     dest: /etc/dnsmasq.d/10-consul
   notify:
     - restart dnsmasq
-  tags: 
-    - dnsmasq
-    - dnsmasq-consul
