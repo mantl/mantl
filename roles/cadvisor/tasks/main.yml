@@ -1,0 +1,18 @@
+---
+- name: run cadvisor container
+  sudo: yes
+  docker:
+    name: cadvisor
+    image: google/cadvisor:0.7.1
+    volumes:
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /cgroup:/cgroup
+      - /var/run:/var/run:rw
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports: 8080:8080
+    env:
+      SERVICE_8080_NAME: cadvisor
+      SERVICE_8080_CHECK_HTTP: .
+      SERVICE_8080_CHECK_INTERVAL: 15s
+    state: running

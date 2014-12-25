@@ -3,51 +3,39 @@
 
 - hosts: all
   roles:
-    - role: common
-      tags: ['common']
-
-    - role: docker
-      tags: ['docker']
-
-    - role: dnsmasq
-      tags: ['dnsmasq']
-
-    - role: logspout
-      tags: ['logspout']
+    - common
+    - docker
+    - dnsmasq
+    - cadvisor
+    - logspout
 
 - hosts: consul_client
   roles:
-    - role: consul
-      tags: ['consul','consul-client']
+    - consul
 
 - hosts: consul_server:&dc1
   serial: 1
   roles:
-    - role: consul
-      tags: ['consul','consul-server']
+    - consul
 
 - hosts: consul_server:&dc2
   serial: 1
   roles:
-    - role: consul
-      tags: ['consul','consul-server']
+    - consul
 
 - include: playbooks/consul-join-wan.yml
 
 - hosts: all
   gather_facts: no
   roles:
-    - role: registrator
-      tags: ['registrator']
+    - registrator
 
 - hosts: app
   gather_facts: no
   roles:
-    - role: app
-      tags: ['app']
+    - app
 
 - hosts: load_balancer
   gather_facts: no
   roles:
-    - role: load-balancer
-      tags: [load-balancer]
+    - load-balancer
