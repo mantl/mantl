@@ -6,7 +6,7 @@
     image: keithchambers/docker-hello-world:latest
     ports: 80
     env: 
-      SERVICE_80_NAME: app
+      SERVICE_80_NAME: app_server
       SERVICE_80_CHECK_HTTP: .
       SERVICE_80_CHECK_INTERVAL: 15s
     state: running
