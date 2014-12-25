@@ -3,42 +3,51 @@
 
 - hosts: all
   roles:
-    - { role: common, tags: common }
-    - { role: docker, tags: docker }
-    - { role: dnsmasq, tags: dnsmasq }
-    - { role: logspout, tags: logspout }
+    - role: common
+      tags: ['common']
 
-- hosts: dc1:&consul_clients
+    - role: docker
+      tags: ['docker']
+
+    - role: dnsmasq
+      tags: ['dnsmasq']
+
+    - role: logspout
+      tags: ['logspout']
+
+- hosts: consul_client
   roles:
-    - { role: consul, tags: consul }
+    - role: consul
+      tags: ['consul','consul_client']
 
-- hosts: dc2:&consul_clients
-  roles:
-    - { role: consul, tags: consul }
-
-- hosts: dc1:&consul_servers
+- hosts: consul_server:&dc1
   serial: 1
   roles:
-    - { role: consul, tags: consul }
+    - role: consul
+      tags: ['consul','consul_server']
 
-- hosts: dc2:&consul_servers
+- hosts: consul_server:&dc2
   serial: 1
   roles:
-    - { role: consul, tags: consul }
+    - role: consul
+      tags: ['consul','consul_server']
 
 - include: playbooks/consul-join-wan.yml
 
 - hosts: all
   gather_facts: no
   roles:
-    - { role: registrator, tags: registrator }
+    - role: registrator
+      tags: ['registrator']
 
-- hosts: app_servers
+- hosts: app_server
   gather_facts: no
   roles:
-    - { role: hello-world, tags: app }
+    - role: hello-world
+      tags: ['app_server']
 
-- hosts: load_balancers
+- hosts: load_balancer
   gather_facts: no
   roles:
-    - { role: nginx, tags: lb }
+    - role: nginx
+      tags: [load_balancer]

@@ -3,5 +3,5 @@ os_tenant_name: kechambe-texas-1
 os_tenant_id: 22c95988aac8448cac3601e76645de75
 os_net_id: fd94baf0-b314-453e-9cd6-73c90fc53857
 consul_dc: dc2
-consul_bootstrap_expect: "{{ groups['consul_servers'] | intersect(groups['dc2']) | length }}"
-consul_retry_join: "{% for host in groups['consul_servers'] | intersect(groups['dc2']) %}{{ hostvars[host].ansible_eth0.ipv4.address }}{% if not loop.last %} -retry-join {% endif %}{% endfor %}"
+consul_bootstrap_expect: "{{ groups['consul_server'] | intersect(groups['dc2']) | length }}"
+consul_retry_join: "{% for host in groups['consul_server'] | intersect(groups['dc2']) %}{{ hostvars[host].ansible_eth0.ipv4.address }}{% if not loop.last %} -retry-join {% endif %}{% endfor %}"
