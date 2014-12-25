@@ -13,7 +13,7 @@ host-[04:20]
 host-[04:06]
 host-[14:16]
 
-[app_server]
+[app]
 host-[07:10]
 host-[17:20]
 

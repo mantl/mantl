@@ -30,7 +30,7 @@
       tags: host
 
     - name: print host ip address
-      debug: msg:="{{ ansible_ssh_host }}"
+      debug: msg="{{ ansible_ssh_host }}"
       always_run: yes
       when: nova_compute_state == "present"
       tags: host

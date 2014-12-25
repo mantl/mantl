@@ -18,19 +18,19 @@
 - hosts: consul_client
   roles:
     - role: consul
-      tags: ['consul','consul_client']
+      tags: ['consul','consul-client']
 
 - hosts: consul_server:&dc1
   serial: 1
   roles:
     - role: consul
-      tags: ['consul','consul_server']
+      tags: ['consul','consul-server']
 
 - hosts: consul_server:&dc2
   serial: 1
   roles:
     - role: consul
-      tags: ['consul','consul_server']
+      tags: ['consul','consul-server']
 
 - include: playbooks/consul-join-wan.yml
 
@@ -40,14 +40,14 @@
     - role: registrator
       tags: ['registrator']
 
-- hosts: app_server
+- hosts: app
   gather_facts: no
   roles:
-    - role: hello-world
-      tags: ['app_server']
+    - role: app
+      tags: ['app']
 
 - hosts: load_balancer
   gather_facts: no
   roles:
-    - role: nginx
-      tags: [load_balancer]
+    - role: load-balancer
+      tags: [load-balancer]

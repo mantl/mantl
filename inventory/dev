@@ -7,7 +7,7 @@ host-01
 [load_balancer]
 host-01
 
-[app_server]
+[app]
 host-01
 
 [dc1]

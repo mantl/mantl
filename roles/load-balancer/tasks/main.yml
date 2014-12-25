@@ -1,9 +1,11 @@
 ---
-- name: run nginx container
+- name: run load-balancer container
   sudo: yes
   docker:
-    name: nginx
+    name: load-balancer
     image: keithchambers/docker-nginx-consul:latest
     ports: 80:80
+    env:
+      SERVICE_80_NAME: load-balancer
     links: consul:consul
     state: running
