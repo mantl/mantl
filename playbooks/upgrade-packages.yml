@@ -20,7 +20,7 @@
   - name: reboot host
     sudo: yes
     shell: nohup bash -c "sleep 2s && reboot" &
-    when: result|changed
+    when: result.changed
 
   - name: wait for host boot
     local_action:
@@ -29,4 +29,4 @@
       port: 22
       delay: 10
       state: started
-    when: result|changed
+    when: result.changed
