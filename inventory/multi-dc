@@ -7,7 +7,7 @@ host-[11:13]
 
 [consul_client]
 host-[04:10]
-host-[04:20]
+host-[14:20]
 
 [load_balancer]
 host-[04:06]
