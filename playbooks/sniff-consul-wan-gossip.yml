@@ -1,0 +1,55 @@
+---
+- include: provision-hosts.yml
+
+- hosts: localhost
+  tasks:
+    - name: create local directory for sniffer traces
+      file:
+        path: /tmp/traces
+        state: directory
+
+- hosts: consul_server
+  tasks:
+    - name: get list of installed packages before installing wireshark
+      command: rpm -qa
+      register: packages_before
+      changed_when: no
+
+    - name: install wireshark
+      sudo: yes
+      yum:
+        name: wireshark
+        state: present
+      register: wireshark
+
+    - name: get list of installed packages after installing wireshark
+      command: rpm -qa
+      register: rpms-after
+      when: wireshark.changed
+      changed_when: no
+
+    - name: set_fact packages_installed
+      set_fact:
+        packages_installed: "{{ rpms-before.stdout_lines | difference(rpms-after.stdout_lines) | join(' ') }}"
+      when: wireshark.changed
+
+    - name: generate sniffer trace
+      sudo: yes
+      command:
+        tshark -n
+        -a duration:10
+        -f "port 8302"
+        -w "/tmp/wan-gossip.pcap"
+
+    - name: fetch sniffer trace from host and to local directory /tmp/traces/
+      sudo: yes
+      fetch:
+        src: /tmp/wan-gossip.pcap
+        dest: "/tmp/traces/{{ inventory_hostname }}-wan-gossip.pcap" 
+        flat: yes
+        fail_on_missing: yes
+
+    - name: uninstall wireshark and dependency packages
+      sudo: yes
+      command: "yum remove -y {{ packages_installed }}"
+      when: packages_installed is defined and packages_installed != ""
