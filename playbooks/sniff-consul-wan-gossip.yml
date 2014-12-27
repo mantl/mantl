@@ -24,13 +24,13 @@
 
     - name: get list of installed packages after installing wireshark
       command: rpm -qa
-      register: rpms-after
+      register: packages_after
       when: wireshark.changed
       changed_when: no
 
     - name: set_fact packages_installed
       set_fact:
-        packages_installed: "{{ rpms-before.stdout_lines | difference(rpms-after.stdout_lines) | join(' ') }}"
+        packages_installed: "{{ packages_before.stdout_lines | difference(packages_after.stdout_lines) | join(' ') }}"
       when: wireshark.changed
 
     - name: generate sniffer trace
