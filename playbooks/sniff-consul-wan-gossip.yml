@@ -37,7 +37,7 @@
       sudo: yes
       command:
         tshark -n
-        -a duration:10
+        -a duration:120
         -f "port 8302"
         -w "/tmp/wan-gossip.pcap"
 
