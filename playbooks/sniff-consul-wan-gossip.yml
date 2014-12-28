@@ -2,6 +2,7 @@
 - include: provision-hosts.yml
 
 - hosts: localhost
+  gather_facts: no
   tasks:
     - name: create local directory for sniffer traces
       file:
@@ -20,18 +21,11 @@
       yum:
         name: wireshark
         state: present
-      register: wireshark
 
     - name: get list of installed packages after installing wireshark
       command: rpm -qa
       register: packages_after
-      when: wireshark.changed
       changed_when: no
-
-    - name: set_fact packages_installed
-      set_fact:
-        packages_installed: "{{ packages_before.stdout_lines | difference(packages_after.stdout_lines) | join(' ') }}"
-      when: wireshark.changed
 
     - name: generate sniffer trace
       sudo: yes
@@ -45,11 +39,12 @@
       sudo: yes
       fetch:
         src: /tmp/wan-gossip.pcap
-        dest: "/tmp/traces/{{ inventory_hostname }}-wan-gossip.pcap" 
+        dest: "/tmp/traces/{{ ansible_eth0.ipv4.address }}-wan-gossip.pcap"
         flat: yes
-        fail_on_missing: yes
 
-    - name: uninstall wireshark and dependency packages
+    - name: uninstall wireshark and dependencies
       sudo: yes
-      command: "yum remove -y {{ packages_installed }}"
-      when: packages_installed is defined and packages_installed != ""
+      yum:
+        name: "{{ item }}"
+        state: absent
+      with_items: "{{ packages_after.stdout_lines | difference(packages_before.stdout_lines) }}"
