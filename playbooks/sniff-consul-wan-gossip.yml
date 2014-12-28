@@ -35,7 +35,7 @@
         -f "port 8302"
         -w "/tmp/wan-gossip.pcap"
 
-    - name: fetch sniffer trace from host and to local directory /tmp/traces/
+    - name: fetch sniffer trace from host to local directory /tmp/traces/
       sudo: yes
       fetch:
         src: /tmp/wan-gossip.pcap
