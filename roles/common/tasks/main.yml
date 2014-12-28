@@ -7,6 +7,14 @@
     state: link
     force: yes
 
+- name: disable swap
+  sudo: yes
+  sysctl:
+    name: vm.swappiness
+    value: 0
+    relaod: yes  
+    state: present
+
 - name: setup latest centos and epel-release repos
   sudo: yes
   yum:
