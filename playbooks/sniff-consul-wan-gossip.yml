@@ -27,7 +27,7 @@
       register: packages_after
       changed_when: no
 
-    - name: generate sniffer trace
+    - name: capture sniffer trace
       sudo: yes
       command:
         tshark -n
