@@ -12,7 +12,7 @@
   sysctl:
     name: vm.swappiness
     value: 0
-    relaod: yes  
+    reload: yes  
     state: present
 
 - name: setup latest centos and epel-release repos
