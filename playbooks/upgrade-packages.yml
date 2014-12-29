@@ -11,7 +11,7 @@
     yum:
       name: kernel
       state: latest
-    register: result
+    register: kernel
 
   - name: upgrade all packages
     sudo: yes
@@ -22,7 +22,8 @@
   - name: reboot host
     sudo: yes
     shell: nohup bash -c "sleep 2s && reboot" &
-    when: result.changed
+    register: reboot
+    when: kernel.changed
 
   - name: wait for host boot
     local_action:
@@ -32,4 +33,4 @@
       delay: "{{ boot_wait | default(60) }}"
       timeout: 120
       state: started
-    when: result.changed
+    when: reboot.changed

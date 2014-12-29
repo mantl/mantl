@@ -10,13 +10,13 @@
 
     - name: create symmetric key for consul gossip encryption
       shell: openssl rand 16 | base64
-      register: consul_gossip_key
+      register: key
       changed_when: no
 
     - name: add consul gossip key to ../inventory/group_vars/all
       lineinfile:
         dest: "{{ top_dir.stdout }}/inventory/group_vars/all"
         regexp: ^consul_gossip_key:\s[A-Za-z0-9+/]*==$
-        line: "consul_gossip_key: {{ consul_gossip_key.stdout }}"
+        line: "consul_gossip_key: {{ key.stdout }}"
         create: yes
         state: present

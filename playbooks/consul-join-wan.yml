@@ -3,11 +3,11 @@
   tasks:
   - name: get consul wan gossip pool members
     shell: docker exec consul consul members -wan | awk '$4 == "server" {print $2}' | cut -f1 -d":"
-    register: result
+    register: members
     changed_when: no
 
   - name: set_fact non_member_count
-    set_fact: non_member_count="{{ consul_join_wan.split(' ') | difference(result.stdout_lines | list) | length }}"
+    set_fact: non_member_count="{{ consul_join_wan.split(' ') | difference(members.stdout_lines | list) | length }}"
 
   - name: join consul wan gossip pool
     command: docker exec consul consul join -wan "{{ consul_join_wan }}"
