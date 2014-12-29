@@ -14,7 +14,7 @@
   - name: upgrade all packages
     sudo: yes
     yum:
-      name: *
+      name: "*"
       state: latest
 
   - name: reboot host
