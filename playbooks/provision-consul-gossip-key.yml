@@ -2,15 +2,21 @@
 - hosts: localhost
   connection: local
   tasks:
+    - name: base directory
+      command: git rev-parse --show-toplevel
+      register: top_dir
+      always_run: yes
+      changed_when: no
+
     - name: create symmetric key for consul gossip encryption
       shell: openssl rand 16 | base64
       register: consul_gossip_key
       changed_when: no
 
-    - name: add consul gossip key to group_vars/consul
+    - name: add consul gossip key to ../inventory/group_vars/all
       lineinfile:
-        dest: "{{ ansible_env.PWD }}/group_vars/all"
-        regexp: "^consul_gossip_key:\s[A-Za-z0-9+/]*==$"
+        dest: "{{ top_dir.stdout }}/inventory/group_vars/all"
+        regexp: ^consul_gossip_key:\s[A-Za-z0-9+/]*==$
         line: "consul_gossip_key: {{ consul_gossip_key.stdout }}"
         create: yes
         state: present
