@@ -1,4 +1,6 @@
 ---
+- include: provision-hosts.yml
+
 - hosts:  all
   gather_facts: no
   serial: "{{ serial_count | default(1) }}"
@@ -14,7 +16,7 @@
   - name: upgrade all packages
     sudo: yes
     yum:
-      name: *
+      name: "*"
       state: latest
 
   - name: reboot host
