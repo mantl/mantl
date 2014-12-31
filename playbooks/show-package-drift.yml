@@ -10,14 +10,14 @@
         path: "{{ tmp_dir }}"
         state: directory
       delegate_to: localhost
-      run_once: true
+      run_once: yes
 
     - name: get list of existing files in tmp directory
       shell: ls -1 {{ tmp_dir }}
       register: files
       changed_when: no
       delegate_to: localhost 
-      run_once: true
+      run_once: yes
 
     - name: purge existing files
       file:
@@ -26,7 +26,7 @@
       with_items: files.stdout_lines
       when: files.stdout_lines|count > 0
       delegate_to: localhost 
-      run_once: true
+      run_once: yes
 
     - name: get list of packages install on host
       shell: rpm -qa | sort -V
@@ -46,11 +46,11 @@
       register: diff
       changed_when: diff.stdout_lines|count > 1
       delegate_to: localhost
-      run_once: true
+      run_once: yes
 
     - name: print instances of inconsitent packages across hosts
       debug:
         var: "{{ diff.stdout_lines }}"
       when: diff.changed
       delegate_to: localhost
-      run_once: true
+      run_once: yes
