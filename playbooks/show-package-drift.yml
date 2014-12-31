@@ -50,7 +50,7 @@
 
     - name: print instances of inconsitent packages across hosts
       debug:
-        msg: "{{ diff.stdout_lines }}"
+        var: "{{ diff.stdout_lines }}"
       when: diff.changed
       delegate_to: localhost
       run_once: true
