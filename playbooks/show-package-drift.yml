@@ -24,7 +24,7 @@
         path: "{{ tmp_dir }}/{{ item }}"
         state: absent
       with_items: files.stdout_lines
-      when: no # files.stdout_lines|count > 0
+      when: files.stdout_lines|count > 0
       delegate_to: localhost 
       run_once: true
 
