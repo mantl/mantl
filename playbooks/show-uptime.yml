@@ -5,10 +5,10 @@
   gather_facts: no
   tasks:
   - name: get uptime
-    shell: uptime | awk '{ print $3 }'
+    shell: cat /proc/uptime | awk '{ print $1 }'
     register: uptime
     changed_when: no
 
   - name: print uptime
     debug:
-      msg: "{{ uptime.stdout }}"
+      msg: "{{ uptime.stdout }} seconds"
