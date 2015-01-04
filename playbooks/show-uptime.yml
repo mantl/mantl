@@ -5,7 +5,7 @@
   gather_facts: no
   tasks:
   - name: get uptime
-    shell: uptime | awk '{ print $1 }'
+    shell: uptime | awk '{ print $3 }'
     register: uptime
     changed_when: no
 
