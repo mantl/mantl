@@ -1,7 +1,7 @@
 ---
 - include: provision-hosts.yml
 
-- hosts:  all
+- hosts: all
   gather_facts: no
   tasks:
   - name: get list of running containers
@@ -11,4 +11,4 @@
 
   - name: print list of running containers
     debug:
-      var: "{{ containers.stdout_lines }}"
+      msg: "{{ containers.stdout_lines }}"
