@@ -3,7 +3,7 @@
   sudo: yes
   docker:
     name: cadvisor
-    image: google/cadvisor:0.7.1
+    image: google/cadvisor:latest
     volumes:
       - /:/rootfs:ro
       - /sys:/sys:ro
