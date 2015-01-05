@@ -11,4 +11,4 @@
 
   - name: print uptime
     debug:
-      msg: "{{ uptime.stdout }} seconds"
+      msg: "{{ uptime.stdout | int // 3600 }} hours uptime"
