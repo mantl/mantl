@@ -28,7 +28,7 @@
       delegate_to: localhost 
       run_once: yes
 
-    - name: get list of packages install on host
+    - name: get list of packages installed on host
       shell: rpm -qa | sort -V
       register: packages
       changed_when: no
