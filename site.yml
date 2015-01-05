@@ -10,15 +10,18 @@
     - logspout
 
 - hosts: consul_client
+  gather_facts: no
   roles:
     - consul
 
 - hosts: consul_server:&dc1
+  gather_facts: no
   serial: 1
   roles:
     - consul
 
 - hosts: consul_server:&dc2
+  gather_facts: no
   serial: 1
   roles:
     - consul
