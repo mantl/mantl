@@ -41,6 +41,7 @@
         module: wait_for
         host: "{{ ansible_ssh_host }}"
         port: 22
+        search_regex: OpenSSH
         delay: "{{ boot_wait | default(60) }}"
         timeout: 120
         state: started
