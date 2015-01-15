@@ -2,20 +2,11 @@
 - name: install docker
   sudo: yes
   yum:
-    name:  http://cbs.centos.org/kojifiles/packages/docker/1.4.1/5.el7/x86_64/docker-1.4.1-5.el7.x86_64.rpm
-    state: present
-
-- name: install docker-logrotate
-  sudo: yes
-  yum:
-    name: http://cbs.centos.org/kojifiles/packages/docker/1.4.1/5.el7/x86_64/docker-logrotate-1.4.1-5.el7.x86_64.rpm
-    state: present
-
-- name: install python-docker-py
-  sudo: yes
-  yum:
-    name: python-docker-py
+    name: "{{ item }}"
     state: latest
+  with_items:
+    - docker
+    - python-docker-py
 
 - name: enable docker
   sudo: yes
