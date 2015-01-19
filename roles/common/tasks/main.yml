@@ -7,11 +7,11 @@
     state: link
     force: yes
 
-- name: disable swap
+- name: set vm.swappiness to 10
   sudo: yes
   sysctl:
     name: vm.swappiness
-    value: "0"
+    value: "10"
     reload: yes  
     state: present
 
