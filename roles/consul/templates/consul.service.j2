@@ -32,3 +32,7 @@ ExecStart=/usr/bin/docker run --rm \
                                           {%- if is_server is defined %} -server -bootstrap-expect "{{ bootstrap_expect }}"{% endif %}
                                           {%- if gossip_key is defined %} -encrypt "{{ gossip_key }}"{% endif %}
                                           {%- if dc is defined %} -dc "{{ dc }}"{% endif %}
+
+
+[Install]
+WantedBy=multi-user.target
