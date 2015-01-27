@@ -8,12 +8,7 @@
     - consul
     - consul-generate-unit
   notify:
-    - Restart Consul
+    - systemctl daemon-reload
+    - systemctl enable consul
+    - systemctl restart consul 
     - Wait for Consul ports
-
-- name: Enable Consul
-  sudo: yes
-  service:
-    name: consul
-    enabled: yes
-  tags: consul,consul-enable-unit
