@@ -1,0 +1,29 @@
+[Unit]
+Description=Consul
+After=docker
+BindsTo=docker
+
+[Service]
+ExecStartPre=-/usr/bin/docker pull {{ image }}
+ExecStartPre=/usr/bin/bash -c '/usr/bin/docker ps -a | grep -q consul-data-volume || /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
+ExecStart=/usr/bin/docker run --rm \
+                              --name=consul \
+                              --privileged \
+                              --volumes-from=consul-data-volume \
+                              --volume=/var/run/docker.sock:/tmp/docker.sock \
+                              --env=GOMAXPROCS={{ ansible_processor_cores }} \
+                              -p 8300:8300 \
+                              -p 8301:8301 \
+                              -p 8301:8301/udp \
+                              -p 8302:8302 \
+                              -p 8302:8302/udp \
+                              -p 8400:8400 \
+                              -p 8500:8500 \
+                              -p 8600:53 \
+                              -p 8600:53/udp \
+                              {{ image }} -dc "{{ dc }}" \
+                                          -advertise "{{ advertise }}" \
+                                          -rejoin \
+                                          {% if consul_retry_join is defined %}{% for address in consul_retry_join %}-retry-join "{{ address }}" {% endfor %}\{% endif -%}
+                                          {% if consul_gossip_key is defined %}-encrypt "{{ consul_gossip_key }}" \{% endif -%}
+                                          {% if consul_is_server is defined %}-server -bootstrap-expect "{{ consul_bootstrap_expect }}"{% endif -%}

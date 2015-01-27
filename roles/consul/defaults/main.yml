@@ -1,0 +1,8 @@
+---
+image: progrium/consul:consul-0.4
+dc: dc1
+advertise: "{{ ansible_default_ipv4.address }}"
+
+# boostrapping/server
+consul_is_server: true
+consul_bootstrap_expect: 3

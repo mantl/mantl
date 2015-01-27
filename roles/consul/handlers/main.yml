@@ -1,0 +1,14 @@
+---
+- name: Restart Consul
+  sudo: yes
+  service:
+    name: consul
+    state: restarted
+
+- name: Wait for Consul ports
+  wait_for:
+    # host: "{{ advertise }}"
+    port: "{{ item }}"
+  with_items:
+    - 8500
+    - 53
