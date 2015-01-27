@@ -11,3 +11,7 @@
     port: "{{ item }}"
   with_items:
     - 8500
+
+- name: systemctl daemon-reload
+  sudo: yes
+  shell: systemctl daemon-reload
