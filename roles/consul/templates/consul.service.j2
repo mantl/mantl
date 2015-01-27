@@ -23,7 +23,8 @@ ExecStart=/usr/bin/docker run --rm \
                               -p 8600:53/udp \
                               {{ image }} -dc "{{ dc }}" \
                                           -advertise "{{ advertise }}" \
-                                          -rejoin \
-                                          {% if consul_retry_join is defined %}{% for address in consul_retry_join %}-retry-join "{{ address }}" {% endfor %}\{% endif -%}
-                                          {% if consul_gossip_key is defined %}-encrypt "{{ consul_gossip_key }}" \{% endif -%}
-                                          {% if consul_is_server is defined %}-server -bootstrap-expect "{{ consul_bootstrap_expect }}"{% endif -%}
+                                          -rejoin
+                                          {%- if retry_join is defined %} {{ retry_join }}{% endif %}
+                                          {%- if is_server is defined %} -server -bootstrap-expect "{{ bootstrap_expect }}"{% endif %}
+                                          {%- if gossip_key is defined %} -encrypt "{{ gossip_key }}"{% endif %}
+                                          {%- if dc is defiend %} -dc "{{ dc }}"{% endif %}

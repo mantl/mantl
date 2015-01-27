@@ -1,8 +1,14 @@
 ---
-image: progrium/consul:consul-0.4
+# basics
+image: progrium/consul:latest
 dc: dc1
-advertise: "{{ ansible_default_ipv4.address }}"
+
+# interfaces/networking
+group: consul
+interface: ansible_default_ipv4
+advertise: "{{ hostvars[ansible_hostname][interface].address }}"
+retry_join: "{% for host in groups[group] %}-retry-join {{ hostvars[host][interface].address }} {%endfor %}"
 
 # boostrapping/server
-consul_is_server: true
-consul_bootstrap_expect: 3
+is_server: true
+bootstrap_expect: "{{ groups[group] | length }}"

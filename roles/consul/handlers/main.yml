@@ -11,4 +11,3 @@
     port: "{{ item }}"
   with_items:
     - 8500
-    - 53
