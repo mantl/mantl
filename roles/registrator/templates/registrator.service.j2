@@ -3,8 +3,10 @@ Description=registrator
 Documentation=https://github.com/progrium/registrator
 After=docker.service
 After=dnsmasq.service
+After=consul.service
 Requires=docker.service
 Requires=dnsmasq.service
+Requires=consul.service
 
 [Service]
 Restart=on-failure
