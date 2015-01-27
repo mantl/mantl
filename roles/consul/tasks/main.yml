@@ -3,8 +3,10 @@
   sudo: yes
   template:
     src: consul.service.j2
-    dest: /etc/systemd/system/consul.service
-  tags: consul,consul-generate-unit
+    dest: /usr/lib/systemd/system/consul.service
+  tags: 
+    - consul
+    - consul-generate-unit
   notify:
     - Restart Consul
     - Wait for Consul ports
