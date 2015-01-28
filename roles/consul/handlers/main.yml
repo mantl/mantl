@@ -1,8 +1,4 @@
 ---
-- name: systemctl restart consul
-  sudo: yes
-  shell: systemctl restart consul 
-
 - name: systemctl enable consul
   sudo: yes
   shell: systemctl enable consul
@@ -10,6 +6,10 @@
 - name: systemctl daemon-reload
   sudo: yes
   shell: systemctl daemon-reload
+
+- name: systemctl restart consul
+  sudo: yes
+  shell: systemctl restart consul 
 
 - name: Wait for Consul ports
   wait_for:
