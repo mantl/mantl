@@ -4,7 +4,7 @@
   template:
     src: registrator.service.j2 
     dest: "/usr/lib/systemd/system/{{ registrator_service }}.service"
-  notify: systemd daemon-reload
+  notify: relaod systemd daemon
   register: registrator_unit
   tags: 
     - registrator
