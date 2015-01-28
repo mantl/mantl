@@ -8,7 +8,7 @@
   register: registrator_unit
   tags: 
     - registrator
-    - registrator-docker-create-systemd-sevice
+    - registrator-docker-create-systemd-service
 
 - name: register registrator service with systemd
   sudo: yes
