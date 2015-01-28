@@ -1,9 +1,12 @@
 
-- name: install dnsmasq
+- name: install dnsmasq and bind-utils
   sudo: yes
-  yum: 
-    name: dnsmasq 
+  yum:
+    name: "{{ item }}"
     state: latest
+  with_items:
+    - dnsmasq
+    - bind-utils
 
 - name: configure dnsmasq consul lookups
   sudo: yes
