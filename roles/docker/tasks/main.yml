@@ -6,7 +6,6 @@
     state: latest
   with_items:
     - docker
-    - python-docker-py
 
 - name: enable docker
   sudo: yes

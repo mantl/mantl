@@ -31,12 +31,3 @@
   roles:
     - registrator
 
-- hosts: app
-  gather_facts: no
-  roles:
-    - app
-
-- hosts: load_balancer
-  gather_facts: no
-  roles:
-    - load-balancer
