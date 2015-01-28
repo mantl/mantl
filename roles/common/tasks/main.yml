@@ -13,4 +13,4 @@
   sudo: yes
   yum:
     name: epel-release
-    state: latest
+    state: installed
