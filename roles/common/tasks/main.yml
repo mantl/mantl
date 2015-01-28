@@ -1,4 +1,5 @@
 ---
+# default set to Etc/UTC with CentOS 7 image build 20141129 [http://cloud.centos.org/centos/7/images/]
 - name: set timezone to etc/utc
   sudo: yes
   file:
