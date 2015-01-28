@@ -7,7 +7,7 @@ variables:
 |-----|-------------|---------|
 | `image` | docker image to pull and run | `progrium/consul:latest` |
 | `dc` | if set, consul will advertise this datacenter | `dc1` |
-| `group` | group to configure join IPs from | `consul` |
+| `server_group` | group to configure join IPs from | `consul_server` |
 | `interface` | interface on each host from which the IPV4 will be taken | `ansible_default_ipv4` |
 | `advertise` | automatically generated as the interface on the current host | ... |
 | `retry_join` | automatically generated as the `-retry-join` arguments to consul from `group` and `interface` | ... |
