@@ -8,11 +8,8 @@
     state: link
     force: yes
 
-- name: setup latest centos and epel-release repos
+- name: enable epel-release repo
   sudo: yes
   yum:
-    name: "{{ item }}"
+    name: epel-release
     state: latest
-  with_items:
-    - centos-release
-    - epel-release
