@@ -15,4 +15,10 @@
     dest: /etc/dnsmasq.d/10-consul
   notify:
     - restart dnsmasq
+
+- name: add localhost to resolv.conf
+  sudo: yes
+  lineinfile:
+    dest: /etc/resolv.conf
+    line: "nameserver 127.0.0.1"
     insertbefore: "^nameserver"
