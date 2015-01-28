@@ -15,12 +15,3 @@
   with_items:
     - centos-release
     - epel-release
-
-- name: enable centos-fasttrack repo
-  sudo: yes
-  copy:
-    src: CentOS-fasttrack.repo
-    dest: /etc/yum.repos.d/CentOS-fasttrack.repo
-    owner: root
-    group: root
-    mode: 0644
