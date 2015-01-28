@@ -7,14 +7,6 @@
     state: link
     force: yes
 
-- name: set vm.swappiness to 10
-  sudo: yes
-  sysctl:
-    name: vm.swappiness
-    value: "10"
-    reload: yes  
-    state: present
-
 - name: setup latest centos and epel-release repos
   sudo: yes
   yum:
