@@ -6,8 +6,6 @@
     - common
     - docker
     - dnsmasq
-    - cadvisor
-    - logspout
 
 - hosts: consul_client
   gather_facts: no

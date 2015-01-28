@@ -1,4 +1,5 @@
 ---
+# default set to Etc/UTC with CentOS 7 image build 20141129 [http://cloud.centos.org/centos/7/images/]
 - name: set timezone to etc/utc
   sudo: yes
   file:
@@ -7,28 +8,9 @@
     state: link
     force: yes
 
-- name: set vm.swappiness to 10
-  sudo: yes
-  sysctl:
-    name: vm.swappiness
-    value: "10"
-    reload: yes  
-    state: present
-
-- name: setup latest centos and epel-release repos
+# epel provides python-docker-py package
+- name: enable epel-release repo
   sudo: yes
   yum:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - centos-release
-    - epel-release
-
-- name: enable centos-fasttrack repo
-  sudo: yes
-  copy:
-    src: CentOS-fasttrack.repo
-    dest: /etc/yum.repos.d/CentOS-fasttrack.repo
-    owner: root
-    group: root
-    mode: 0644
+    name: epel-release
+    state: installed
