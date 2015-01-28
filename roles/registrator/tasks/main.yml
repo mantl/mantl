@@ -3,7 +3,7 @@
   sudo: yes
   template:
     src: registrator.service.j2 
-    dest: "/usr/lib/systemd/system/{{registrator_service}}.service"
+    dest: "/usr/lib/systemd/system/{{ registrator_service }}.service"
   notify: systemd daemon-reload
   register: registrator_unit
   tags: 
@@ -14,7 +14,7 @@
   sudo: yes
   service: 
     enabled: yes
-    name: "{{registrator_service}}" 
+    name: "{{ registrator_service }}" 
     state: started
   tags: 
     - registrator 
