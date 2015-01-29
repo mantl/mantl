@@ -7,10 +7,3 @@
     dest: /etc/localtime
     state: link
     force: yes
-
-# epel provides python-docker-py package
-- name: enable epel-release repo
-  sudo: yes
-  yum:
-    name: epel-release
-    state: installed
