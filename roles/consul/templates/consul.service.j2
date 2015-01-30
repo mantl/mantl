@@ -9,7 +9,11 @@ RestartSec=20
 TimeoutStartSec=0
 
 ExecStartPre=-/usr/bin/docker pull {{ image }}
-ExecStartPre=/usr/bin/bash -c '/usr/bin/docker ps -a | grep -q consul-data-volume || /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
+# start the data volume iff it doesn't exist. When `docker inspect` runs, it
+# will exit 0 on success and 1 on failure. Since we depend on Docker we can
+# probably assume it's up, so getting a 1 means we need to create the
+# container.
+ExecStartPre=/usr/bin/bash -c 'docker inspect -f "\{\{.Created\}\}" consul-data-volume || /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
 ExecStart=/usr/bin/docker run --rm \
                               --name=consul \
                               --privileged \
