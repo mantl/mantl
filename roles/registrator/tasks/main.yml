@@ -15,7 +15,7 @@
   service: 
     enabled: yes
     name: "{{ registrator_service }}" 
-    state: started
+    state: restarted
   tags: 
     - registrator 
     - registrator-docker-systemd-start
