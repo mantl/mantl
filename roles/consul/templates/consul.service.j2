@@ -9,10 +9,15 @@ RestartSec=20
 TimeoutStartSec=0
 
 ExecStartPre=-/usr/bin/docker pull {{ image }}
-ExecStartPre=/usr/bin/bash -c '/usr/bin/docker ps -a | grep -q consul-data-volume || /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
+# start the data volume iff it doesn't exist. When `docker inspect` runs, it
+# will exit 0 on success and 1 on failure. Since we depend on Docker we can
+# probably assume it's up, so getting a 1 means we need to create the
+# container.
+ExecStartPre=/usr/bin/bash -c 'docker inspect -f "\{\{.Created\}\}" consul-data-volume || /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
 ExecStart=/usr/bin/docker run --rm \
                               --name=consul \
                               --privileged \
+                              --hostname=%H \
                               --volumes-from=consul-data-volume \
                               --volume=/var/run/docker.sock:/tmp/docker.sock \
                               --env=GOMAXPROCS={{ ansible_processor_cores }} \
@@ -27,12 +32,13 @@ ExecStart=/usr/bin/docker run --rm \
                               -p 8600:53/udp \
                               {{ image }} -dc "{{ dc }}" \
                                           -advertise "{{ advertise }}" \
-                                          -rejoin
+                                          -rejoin \
+                                          -data-dir /data
                                           {%- if retry_join is defined %} {{ retry_join }}{% endif %}
                                           {%- if is_server is defined %} -server -bootstrap-expect "{{ bootstrap_expect }}"{% endif %}
                                           {%- if gossip_key is defined %} -encrypt "{{ gossip_key }}"{% endif %}
-                                          {%- if dc is defined %} -dc "{{ dc }}"{% endif %}
 
+ExecStop=/usr/bin/docker exec consul consul leave
 
 [Install]
 WantedBy=multi-user.target

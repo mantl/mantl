@@ -1,11 +1,13 @@
 ---
-- name: systemctl enable consul
+- name: Restart Consul
   sudo: yes
-  shell: systemctl enable consul
-
-- name: systemctl daemon-reload
-  sudo: yes
-  shell: systemctl daemon-reload
+  shell: "{{ item }}"
+  with_items:
+    - systemctl restart consul
+    - systemctl enable consul
+    - systemctl daemon-reload
+  notify:
+    - Wait for Consul ports
 
 - name: systemctl restart consul
   sudo: yes
@@ -13,8 +15,6 @@
 
 - name: Wait for Consul ports
   wait_for:
-    # host: "{{ advertise }}"
     port: "{{ item }}"
   with_items:
     - 8500
-
