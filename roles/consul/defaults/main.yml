@@ -7,7 +7,7 @@ dc: dc1
 server_group: consul_server
 interface: ansible_default_ipv4
 advertise: "{{ hostvars[ansible_hostname][interface].address }}"
-retry_join: "{% for host in groups[server_group] | difference([advertise]) %}-retry-join {{ hostvars[host][interface].address }} {%endfor %}"
+retry_join: "{% for host in groups[server_group] | difference([ansible_hostname]) %}-retry-join {{ hostvars[host][interface].address }} {%endfor %}"
 
 # boostrapping/server
 is_server: true
