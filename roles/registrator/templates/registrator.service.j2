@@ -18,7 +18,6 @@ ExecStart=/bin/bash -c \
     "/usr/bin/docker start -a {{ registrator_container_name }} || \
     /usr/bin/docker run \
         --name={{ registrator_container_name }} \
-        --dns={{ ansible_eth0.ipv4.address }} \
         --privileged=true \
         -v /var/run/docker.sock:/tmp/docker.sock \
         -h {{ inventory_hostname }} \
