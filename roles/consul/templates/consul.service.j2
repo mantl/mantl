@@ -32,8 +32,8 @@ ExecStart=/usr/bin/docker run --rm \
                               -p 8600:53/udp \
                               {{ image }} -dc "{{ dc }}" \
                                           -advertise "{{ advertise }}" \
-                                          -rejoin
-                                          -data /data
+                                          -rejoin \
+                                          -data-dir /data
                                           {%- if retry_join is defined %} {{ retry_join }}{% endif %}
                                           {%- if is_server is defined %} -server -bootstrap-expect "{{ bootstrap_expect }}"{% endif %}
                                           {%- if gossip_key is defined %} -encrypt "{{ gossip_key }}"{% endif %}
