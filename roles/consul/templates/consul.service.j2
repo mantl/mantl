@@ -29,6 +29,7 @@ ExecStart=/usr/bin/docker run --rm \
                               {{ image }} -dc "{{ dc }}" \
                                           -advertise "{{ advertise }}" \
                                           -rejoin
+                                          -data /data
                                           {%- if retry_join is defined %} {{ retry_join }}{% endif %}
                                           {%- if is_server is defined %} -server -bootstrap-expect "{{ bootstrap_expect }}"{% endif %}
                                           {%- if gossip_key is defined %} -encrypt "{{ gossip_key }}"{% endif %}
