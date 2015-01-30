@@ -13,6 +13,7 @@ ExecStartPre=/usr/bin/bash -c '/usr/bin/docker ps -a | grep -q consul-data-volum
 ExecStart=/usr/bin/docker run --rm \
                               --name=consul \
                               --privileged \
+                              --hostname=%H \
                               --volumes-from=consul-data-volume \
                               --volume=/var/run/docker.sock:/tmp/docker.sock \
                               --env=GOMAXPROCS={{ ansible_processor_cores }} \
