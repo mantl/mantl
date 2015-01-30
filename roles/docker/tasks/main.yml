@@ -5,6 +5,14 @@
     name: docker
     state: latest
 
+- name: docker consul dns
+  sudo: yes
+  lineinfile:
+    dest: /etc/sysconfig/docker 
+    state: present
+    regexp: ^OPTIONS
+    line: OPTIONS=--selinux-enabled -H fd:// --dns {{ ansible_eth0.ipv4.address }}  --dns-search service.consul
+
 - name: enable docker
   sudo: yes
   service:
