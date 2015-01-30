@@ -37,8 +37,8 @@ ExecStart=/usr/bin/docker run --rm \
                                           {%- if retry_join is defined %} {{ retry_join }}{% endif %}
                                           {%- if is_server is defined %} -server -bootstrap-expect "{{ bootstrap_expect }}"{% endif %}
                                           {%- if gossip_key is defined %} -encrypt "{{ gossip_key }}"{% endif %}
-ExecStopPre=/usr/bin/docker exec consul consul leave
-ExecStop=/usr/bin/docker rm consul
+
+ExecStop=/usr/bin/docker exec consul consul leave
 
 [Install]
 WantedBy=multi-user.target
