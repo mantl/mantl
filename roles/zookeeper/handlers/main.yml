@@ -1,0 +1,25 @@
+- name: reload systemd daemon
+  sudo: yes
+  command: /bin/systemctl daemon-reload
+  tags: 
+    - zookeeper 
+    - zookeper-docker-systemd-reload-daemon
+
+- name: register zookeeper service with systemd 
+  sudo: yes 
+  service:  
+    enabled: yes 
+    name: "{{zookeeper_service}}"  
+    state: started 
+  tags:  
+    - zookeeper  
+    - zookeper-docker-systemd-start 
+
+- name: restart zookeeper
+  sudo: yes
+  service:
+    name: "{{zookeeper_service}}"
+    state: restarted
+  tags: 
+    - zookeeper 
+    - zookeper-docker-restart-container
