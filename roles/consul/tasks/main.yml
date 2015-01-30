@@ -4,11 +4,8 @@
   template:
     src: consul.service.j2
     dest: /usr/lib/systemd/system/consul.service
-  tags: 
+  tags:
     - consul
     - consul-generate-unit
   notify:
-    - systemctl daemon-reload
-    - systemctl enable consul
-    - systemctl restart consul 
-    - Wait for Consul ports
+    - Restart Consul
