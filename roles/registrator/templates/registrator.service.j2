@@ -6,6 +6,7 @@ After=consul.service
 Requires=docker.service
 Requires=consul.service
 
+
 [Service]
 Restart=on-failure
 RestartSec=20
@@ -19,7 +20,7 @@ ExecStart=/usr/bin/docker run \
                           --link consul:consul \
                           -v /var/run/docker.sock:/tmp/docker.sock \
                           -h {{ inventory_hostname }} \
-                          {{ registrator_docker_image }}:{{ registrator_docker_tag }} {{ registrator_consul_connect }}"
+                          {{ registrator_docker_image }}:{{ registrator_docker_tag }} {{ registrator_consul_connect }}
 
 ExecStop=/usr/bin/docker kill {{ registrator_container_name }}
 
