@@ -19,7 +19,6 @@ ExecStart=/bin/bash -c \
     /usr/bin/docker run \
         --name={{ registrator_container_name }} \
         --dns={{ ansible_eth0.ipv4.address }} \
-        --dns-search=service.consul \ 
         --privileged=true \
         -v /var/run/docker.sock:/tmp/docker.sock \
         -h {{ inventory_hostname }} \
