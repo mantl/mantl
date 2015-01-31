@@ -7,3 +7,15 @@
     dest: /etc/localtime
     state: link
     force: yes
+
+# fix issue where dhclient blows away our resolv.conf
+- name: config resolv.conf script
+  sudo: yes
+  copy:
+    src: dns-config.sh
+    dest: /etc/dhcp/dhclient.d/dns-config.sh
+    owner: root
+    group: root
+    mode: 755 
+
+  
