@@ -33,7 +33,7 @@
   copy: 
     dest: /etc/mesos-slave/attributes
     content: "node_id:{{ inventory_hostname }}"
-  notify: restart Mesos follower
+  notify: remove Mesos follower metadata 
 
 - name: enable Mesos follower task checkpoints
   sudo: yes
@@ -41,3 +41,4 @@
     dest: /etc/mesos-slave/?checkpoint 
     content: ""
   notify: restart Mesos follower
+
