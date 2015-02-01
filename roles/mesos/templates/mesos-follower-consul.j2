@@ -1,0 +1,9 @@
+{
+  "name": "mesos-follower",
+  "tags": ["mesos-follower", "{{ mesos_cluster }}"],
+  "port": {{ mesos_follower_port }},
+  "check": {
+    "script": "curl --silent --show-error  --fail --dump-header /dev/stderr --retry 2 http://{{ ansible_default_ipv4.address }}:{{ mesos_follower_port }}/slave\"(1)\"/health",
+    "interval": "10s"
+  }
+}
