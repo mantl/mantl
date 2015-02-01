@@ -1,0 +1,16 @@
+---
+
+- name: restart Mesos leader
+  sudo: yes
+  shell: /bin/systemctl restart mesos-master
+
+- name: restart Mesos follower
+  sudo: yes
+  shell: /bin/systemctl restart mesos-slave
+
+- name:  register mesos leader with consul
+  shell: curl --fail -v -X PUT --data @/etc/consul/register.d/mesos-leader.json  http://localhost:8500/v1/agent/service/register
+
+- name:  register mesos follower with consul
+  shell: curl --fail -v -X PUT --data @/etc/consul/register.d/mesos-follower.json  http://localhost:8500/v1/agent/service/register
+
