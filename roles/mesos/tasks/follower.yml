@@ -1,0 +1,44 @@
+---
+- name: generate Mesos follower consul service
+  sudo: yes
+  template:
+    src: mesos-follower-consul.j2
+    dest: /etc/consul/register.d/mesos-follower.json
+  notify:
+    - register mesos follower with consul
+
+- name: disable mesos leader
+  sudo: yes
+  service:
+    name: mesos-master
+    enabled: no 
+  when: mesos_mode == "follower" 
+
+- name: set docker as default Mesos follower containerizer
+  sudo: yes
+  copy: 
+    content: "docker,mesos" 
+    dest: /etc/mesos-slave/containerizers
+  notify: restart Mesos follower
+
+- name: set Mesos executor registration timeout for docker
+  sudo: yes
+  copy: 
+    dest: /etc/mesos-slave/executor_registration_timeout
+    content: "5mins"
+  notify: restart Mesos follower
+
+- name: set follower node id
+  sudo: yes
+  copy: 
+    dest: /etc/mesos-slave/attributes
+    content: "node_id:{{ inventory_hostname }}"
+  notify: remove Mesos follower metadata 
+
+- name: enable Mesos follower task checkpoints
+  sudo: yes
+  copy: 
+    dest: /etc/mesos-slave/?checkpoint 
+    content: ""
+  notify: restart Mesos follower
+
