@@ -1,0 +1,16 @@
+---
+- name: generate Mesos follower consul service
+  sudo: yes
+  template:
+    src: mesos-follower-consul.j2
+    dest: /etc/consul/register.d/mesos-follower.json
+  notify:
+    - register mesos follower with consul
+
+- name: disable mesos leader
+  sudo: yes
+  service:
+    name: mesos-master
+    enabled: no 
+  when: mesos_mode == "follower" 
+
