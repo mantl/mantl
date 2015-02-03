@@ -1,4 +1,10 @@
 ---
+- name: Download conntrack
+  sudo: yes
+  yum:
+    name: conntrack
+    state: latest
+
 - name: Generate Consul systemd unit
   sudo: yes
   template:
