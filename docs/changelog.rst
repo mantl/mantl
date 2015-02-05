@@ -11,5 +11,3 @@ Initial release. Adds roles for:
 * Mesos
 * Registrator
 * ZooKeeper
-
-These roles are currently brought up with :ref:`Ansible <ansible:introduction>`.
