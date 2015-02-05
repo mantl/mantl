@@ -13,3 +13,4 @@ Contents:
 
    components/index.rst
    changelog.rst
+   license.rst
