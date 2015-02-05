@@ -11,4 +11,5 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   components/index.rst
    changelog.rst
