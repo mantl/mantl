@@ -1,10 +1,9 @@
-.. Microservices Infrastructure documentation master file, created by
-   sphinx-quickstart on Wed Feb  4 06:59:14 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to Microservices Infrastructure's documentation!
 ========================================================
+
+Microservices Infrastructure provides a platform for running
+microservices (or whatever else you'd like) on top of `Apache Mesos`_
+and `Marathon`_.
 
 Contents:
 
@@ -14,3 +13,7 @@ Contents:
    components/index.rst
    changelog.rst
    license.rst
+
+
+.. _Apache Mesos: https://mesos.apache.org/
+.. _Marathon: https://mesosphere.github.io/marathon/
