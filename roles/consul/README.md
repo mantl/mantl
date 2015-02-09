@@ -9,7 +9,7 @@ Consul role for deploying and managing Consul with Docker and systemd. Variables
 | `consul_is_server` | Consul node is a server | `yes` |
 | `consul_dc` | Consul datacenter | `dc1` |
 | `consul_server_group` | Consul server group for Ansible | `all` |
-| `consul_advertise` | IP address Consul will advertise | `"{{ ansible_default_ipv4.address }}"` |
+| `consul_advertise` | IP address Consul will advertise | `{{ ansible_default_ipv4.address }}`|
 | `consul_retry_join` | list of IP addresses Consul contacts to rejoin the cluster on start | auto-generated list of hosts in `consul_server_group` for each `consul_dc` |
 | `consul_bootstrap_expect` | number of servers to expect | auto-generated count of hosts in `consul_server_group` for each `consul_dc`|
 | `consul_gossip_key` | 16-bytes base64 encoded key used to encrypt gossip communication between nodes | `unset` |
