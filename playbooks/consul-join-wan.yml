@@ -30,5 +30,5 @@
 
   - name: join all consul servers to wan gossip pool
     sudo: yes
-    command: docker exec consul consul join -wan "{{ servers_list }}"
+    command: docker exec consul consul join -wan "{{ servers }}"
     when: non_member_count != "0"

@@ -14,7 +14,9 @@ ExecStartPre=-/usr/bin/docker pull {{ consul_image }}:{{ consul_image_tag }}
 # will exit 0 on success and 1 on failure. Since we depend on Docker we can
 # probably assume it's up, so getting a 1 means we need to create the
 # container.
-ExecStartPre=/usr/bin/bash -c '/usr/bin/docker inspect -f "\{\{.Created\}\}" consul-data-volume || /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
+ExecStartPre=/usr/bin/bash -c ' \
+    /usr/bin/docker inspect -f "\{\{.Created\}\}" consul-data-volume || \
+    /usr/bin/docker run -v /data --name=consul-data-volume tianon/true'
 
 # Clear the connection tracking entries for UDP. See Docker issue #8795.
 ExecStartPre=/usr/sbin/conntrack -D -p udp
