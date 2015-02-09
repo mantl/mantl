@@ -4,15 +4,15 @@ Consul role for deploying and managing Consul with Docker and systemd. Variables
 
 | var | description | default |
 |-----|-------------|---------|
-| `consul_image` | docker image to pull and run | `progrium/consul` |
-| `consul_image_tag` | docker image tag to pull and run | `latest` |
-| `consul_is_server` | consul node is a server | `yes` |
-| `consul_dc` | if set, consul will advertise this datacenter | `dc1` |
-| `consul_server_group` | group of consul servers | `all` |
-| `consul_advertise` | automatically generated as the interface on the current host | ... |
-| `consul_retry_join` | automatically generated as the `-retry-join` arguments to consul from `consul_server_group` | ... |
-| `consul_bootstrap_expect` | number of servers to expect | auto-generated from the amount of hosts in `consul_server_group` |
-| `consul_gossip_key` | 16-bytes base64 encoded key used to encrypt gossip communication between nodes | unset by default |
+| `consul_image` | Docker image to pull and run | `progrium/consul` |
+| `consul_image_tag` | Docker image tag to pull and run | `latest` |
+| `consul_is_server` | Consul node is a server | `yes` |
+| `consul_dc` | Consul datacenter | `dc1` |
+| `consul_server_group` | Consul server group for Ansible | `all` |
+| `consul_advertise` | IP address Consul will advertise | auto-generated |
+| `consul_retry_join` | list of IP addresses Consul contacts to rejoin the cluster on start | auto-generated list of hosts in `consul_server_group` for each `consul_dc` |
+| `consul_bootstrap_expect` | number of servers to expect | auto-generated count of hosts in `consul_server_group` for each `consul_dc`|
+| `consul_gossip_key` | 16-bytes base64 encoded key used to encrypt gossip communication between nodes | unset |
 
 An example playbook:
 
