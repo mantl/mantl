@@ -1,17 +1,24 @@
 ---
-- name: Download conntrack
+# required to install conntrack
+- name: install epel-release
+  sudo: yes
+  yum:
+    name: epel-release
+    state: present
+    
+- name: install conntrack
   sudo: yes
   yum:
     name: conntrack
-    state: latest
+    state: present
 
-- name: Generate Consul systemd unit
+- name: configure consul
   sudo: yes
   template:
     src: consul.service.j2
     dest: /usr/lib/systemd/system/consul.service
+  notify:
+    - reload consul
   tags:
     - consul
-    - consul-generate-unit
-  notify:
-    - Restart Consul
+    - consul-config

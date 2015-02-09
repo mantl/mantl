@@ -1,6 +1,6 @@
 ansible_ssh_user: centos
 os_flavor_ram: 4096
 os_flavor_include: Medium
-os_image_name: centos-7-x86_64_2014-09-22-v5
-consul_join_wan: "{% for host in groups['consul_server'] %}{{ hostvars[host].ansible_eth0.ipv4.address }}{% if not loop.last %} {% endif %}{% endfor %}"
+os_image_name: centos-7_x86_64-2015-01-27-v6
+consul_server_group: consul_server
 consul_gossip_key: xlPbHYLp8khl1qkmrKnU8w==

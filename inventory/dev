@@ -1,14 +1,2 @@
 [all]
 host-01
-
-[consul_server]
-host-01
-
-[load_balancer]
-host-01
-
-[app]
-host-01
-
-[dc1]
-host-01

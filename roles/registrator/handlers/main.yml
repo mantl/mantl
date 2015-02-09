@@ -1,6 +1,8 @@
 ---
-- name: reload systemd daemon
+- name: reload registrator
   sudo: yes
-  command: /bin/systemctl daemon-reload
-  tags: 
-    - systemd-daemon-reload 
+  command: "{{ item }}"
+  with_items:
+    - systemctl restart registrator
+    - systemctl enable registrator
+    - systemctl daemon-reload

@@ -1,21 +1,11 @@
 ---
-- name: generate registrator systemd service file 
+- name: configure registrator
   sudo: yes
   template:
     src: registrator.service.j2 
-    dest: "/usr/lib/systemd/system/{{ registrator_service }}.service"
-  notify: reload systemd daemon
-  register: registrator_unit
+    dest: /usr/lib/systemd/system/registrator.service
+  notify:
+    - reload registrator
   tags: 
     - registrator
-    - registrator-docker-create-systemd-service
-
-- name: register registrator service with systemd
-  sudo: yes
-  service: 
-    enabled: yes
-    name: "{{ registrator_service }}" 
-    state: restarted
-  tags: 
-    - registrator 
-    - registrator-docker-systemd-start
+    - registrator-config

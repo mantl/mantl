@@ -20,7 +20,7 @@ ExecStartPre=/bin/bash -c \
 
 ExecStart=/usr/bin/docker run --name={{ zookeeper_container_name }} \
                               {{ zookeeper_docker_ports }} \
-                              --dns={{ ansible_eth0.ipv4.address }} \
+                              --dns={{ ansible_default_ipv4.address }} \
                               --dns-search=service.consul \
                               --env-file={{ zookeeper_docker_env }} \
                               --volumes-from {{ zookeeper_data_volume }} \

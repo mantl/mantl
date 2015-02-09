@@ -1,19 +1,18 @@
 # Consul
 
-Consul role, for bringing up Consul under systemd. Accepts a number of
-variables:
+Consul role for deploying and managing Consul with Docker and systemd. Variables:
 
 | var | description | default |
 |-----|-------------|---------|
-| `image` | docker image to pull and run | `progrium/consul:latest` |
-| `dc` | if set, consul will advertise this datacenter | `dc1` |
-| `server_group` | group to configure join IPs from | `consul_server` |
-| `interface` | interface on each host from which the IPV4 will be taken | `ansible_default_ipv4` |
-| `advertise` | automatically generated as the interface on the current host | ... |
-| `retry_join` | automatically generated as the `-retry-join` arguments to consul from `group` and `interface` | ... |
-| `is_server` | should this node be a server or an agent? | `true` |
-| `bootstrap_expect` | the number of servers to expect | auto-generated from the amount of hosts in `group` |
-| `gossip_key` | if set, used to encrypt communication between nodes | unset by default |
+| `consul_image` | Docker image to pull and run | `progrium/consul` |
+| `consul_image_tag` | Docker image tag to pull and run | `latest` |
+| `consul_is_server` | Consul node is a server | `yes` |
+| `consul_dc` | Consul datacenter | `dc1` |
+| `consul_server_group` | Consul server group for Ansible | `all` |
+| `consul_advertise` | IP address Consul will advertise | `{{ ansible_default_ipv4.address }}` |
+| `consul_retry_join` | list of IP addresses Consul contacts to rejoin the cluster on start | auto-generated list of hosts in `consul_server_group` for each `consul_dc` |
+| `consul_bootstrap_expect` | number of servers to expect | auto-generated count of hosts in `consul_server_group` for each `consul_dc`|
+| `consul_gossip_key` | 16-bytes base64 encoded key used to encrypt gossip communication between nodes | `unset` |
 
 An example playbook:
 
@@ -24,17 +23,17 @@ An example playbook:
     - common
     - docker
 
-- hosts: dc1
+- hosts: host-01
   roles:
     - role: consul
-      gossip_key: "ggVIrhEzqe7W/65YZ9fYFA=="
-      group: dc1
-      dc: dc1
+  vars:
+    consul_server_group: all
+    consul_dc: dc1
 
-- hosts: dc2
+- hosts: host-02
   roles:
     - role: consul
-      gossip_key: "ggVIrhEzqe7W/65YZ9fYFA=="
-      group: dc2
-      dc: dc2
+  vars:
+    consul_server_group: all
+    consul_dc: dc2
 ```
