@@ -39,7 +39,7 @@
       sudo: yes
       fetch:
         src: /tmp/wan-gossip.pcap
-        dest: "/tmp/traces/{{ ansible_eth0.ipv4.address }}-wan-gossip.pcap"
+        dest: "/tmp/traces/{{ ansible_default_ipv4.address }}-wan-gossip.pcap"
         flat: yes
 
     - name: uninstall wireshark and dependencies

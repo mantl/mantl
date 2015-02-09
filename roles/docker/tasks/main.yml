@@ -3,29 +3,22 @@
   sudo: yes
   yum:
     name: docker
-    state: latest
+    state: present
 
-- name: docker consul dns
+- name: configure docker consul dns
   sudo: yes
   lineinfile:
     dest: /etc/sysconfig/docker 
-    state: present
     regexp: ^OPTIONS
-    line: OPTIONS=--selinux-enabled -H fd:// --dns {{ ansible_eth0.ipv4.address }}  --dns-search service.consul
+    line: OPTIONS=--selinux-enabled -H fd:// --dns {{ ansible_default_ipv4.address }}  --dns-search service.consul
+    state: present
 
 - name: enable docker
   sudo: yes
   service:
     name: docker
-    state: started
     enabled: yes
-
-- name: add {{ ansible_ssh_user }} to docker group
-  sudo: yes
-  user:
-    name: "{{ ansible_ssh_user }}"
-    groups: docker
-    append: yes
+    state: started
 
 # required to install pip
 - name: install epel-release

@@ -1,14 +1,34 @@
 ---
+- include: provision-hosts.yml
+
 - hosts: consul_server
   tasks:
-  - name: get consul wan gossip pool members
+
+  - name: check port 8300 open between all consul servers
+    wait_for:
+      host: "{{ hostvars[item].ansible_default_ipv4.address }}"
+      port: 8300
+    with_items: groups['consul_server']
+
+  - name: check port 8302 open between all consul servers
+    wait_for:
+      host: "{{ hostvars[item].ansible_default_ipv4.address }}"
+      port: 8302
+    with_items: groups['consul_server']
+
+  - name: get list of consul servers that are wan gossip pool members
+    sudo: yes
     shell: docker exec consul consul members -wan | awk '$4 == "server" { print $2 }' | cut -f1 -d":"
     register: members
     changed_when: no
 
-  - name: set_fact non_member_count
-    set_fact: non_member_count="{{ consul_join_wan.split(' ') | difference(members.stdout_lines | list) | length }}"
+  - name: get list of all consul servers for wan gossip pool
+    set_fact: servers="{% for host in groups['consul_server'] %}{{ hostvars[host].ansible_default_ipv4.address }}{% if not loop.last %} {% endif %}{% endfor %}"
 
-  - name: join consul wan gossip pool
-    command: docker exec consul consul join -wan "{{ consul_join_wan }}"
+  - name: get count of consul servers that are not wan gossip pool members
+    set_fact: non_member_count="{{ servers.split(' ') | difference(members.stdout_lines | list) | length }}"
+
+  - name: join all consul servers to wan gossip pool
+    sudo: yes
+    command: docker exec consul consul join -wan "{{ servers_list }}"
     when: non_member_count != "0"
