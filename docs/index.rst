@@ -15,6 +15,13 @@ Contents:
    changelog.rst
    license.rst
 
+.. only:: html 
+
+   Indices and Tables
+   ******************
+
+   * :ref:`genindex`
+   * :ref:`search`
 
 .. _Apache Mesos: https://mesos.apache.org/
 .. _Marathon: https://mesosphere.github.io/marathon/
