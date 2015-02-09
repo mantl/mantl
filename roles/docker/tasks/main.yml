@@ -19,26 +19,3 @@
     name: docker
     enabled: yes
     state: started
-
-# required to install pip
-- name: install epel-release
-  sudo: yes
-  yum:
-    name: epel-release
-    state: present
-
-# required to install docker-py with pip
-- name: install python-pip
-  sudo: yes
-  yum:
-    name: python-pip
-    state: present
-
-# required for ansible docker module
-- name: install docker-py
-  sudo: yes
-  pip:
-    name: docker-py
-    # docker-py 0.4.0 works with ansible 1.8.2
-    version: 0.4.0
-    state: present
