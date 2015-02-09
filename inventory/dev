@@ -1,8 +1,2 @@
 [all]
 host-01
-
-[consul_server]
-host-01
-
-[dc1]
-host-01
