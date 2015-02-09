@@ -1,0 +1,24 @@
+---
+
+- name: restart Mesos leader
+  sudo: yes
+  shell: /bin/systemctl restart mesos-master
+
+- name: remove Mesos follower metadata
+  sudo: yes
+  shell: "{{ item }}"
+  with_items:
+    - /bin/systemctl stop mesos-slave
+    - /bin/rm -rf /tmp/mesos/meta
+    - /bin/systemctl start mesos-slave
+
+- name: restart Mesos follower
+  sudo: yes
+  shell: /bin/systemctl restart mesos-slave
+
+- name:  register mesos leader with consul
+  shell: curl --fail -v -X PUT --data @/etc/consul/register.d/mesos-leader.json  http://localhost:8500/v1/agent/service/register
+
+- name:  register mesos follower with consul
+  shell: curl --fail -v -X PUT --data @/etc/consul/register.d/mesos-follower.json  http://localhost:8500/v1/agent/service/register
+

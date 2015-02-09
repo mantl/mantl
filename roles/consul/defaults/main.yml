@@ -1,0 +1,9 @@
+---
+consul_image: progrium/consul
+consul_image_tag: latest
+consul_is_server: yes
+consul_dc: dc1
+consul_server_group: all
+consul_advertise: "{{ ansible_default_ipv4.address }}"
+consul_retry_join: "{% for host in groups[consul_server_group] | intersect(groups[consul_dc]) %}{{ hostvars[host].ansible_default_ipv4.address }}{% if not loop.last %} -retry-join {% endif %}{% endfor %}"
+consul_bootstrap_expect: "{{ groups[consul_server_group] | intersect(groups[consul_dc]) | length }}"

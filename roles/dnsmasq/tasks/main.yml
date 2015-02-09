@@ -1,9 +1,12 @@
 
-- name: install dnsmasq
+- name: install dnsmasq and bind-utils
   sudo: yes
-  yum: 
-    name: dnsmasq 
+  yum:
+    name: "{{ item }}"
     state: latest
+  with_items:
+    - dnsmasq
+    - bind-utils
 
 - name: configure dnsmasq consul lookups
   sudo: yes
@@ -12,3 +15,10 @@
     dest: /etc/dnsmasq.d/10-consul
   notify:
     - restart dnsmasq
+
+- name: configure /etc/resolv.conf
+  sudo: yes
+  lineinfile:
+    dest: /etc/resolv.conf
+    line: "nameserver 127.0.0.1"
+    insertbefore: "^nameserver"
