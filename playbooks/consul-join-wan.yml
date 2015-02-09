@@ -1,6 +1,4 @@
 ---
-- include: provision-hosts.yml
-
 - hosts: consul_server
   tasks:
 
