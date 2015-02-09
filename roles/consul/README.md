@@ -12,7 +12,7 @@ Consul role for deploying and managing Consul with Docker and systemd. Variables
 | `consul_advertise` | IP address Consul will advertise | auto-generated |
 | `consul_retry_join` | list of IP addresses Consul contacts to rejoin the cluster on start | auto-generated list of hosts in `consul_server_group` for each `consul_dc` |
 | `consul_bootstrap_expect` | number of servers to expect | auto-generated count of hosts in `consul_server_group` for each `consul_dc`|
-| `consul_gossip_key` | 16-bytes base64 encoded key used to encrypt gossip communication between nodes | unset |
+| `consul_gossip_key` | 16-bytes base64 encoded key used to encrypt gossip communication between nodes | `unset` |
 
 An example playbook:
 
