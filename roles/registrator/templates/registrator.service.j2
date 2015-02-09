@@ -20,7 +20,7 @@ ExecStart=/usr/bin/docker run \
     --privileged=true \
     --link consul:consul \
     --volume=/var/run/docker.sock:/tmp/docker.sock \
-    {{ registrator_image }}:{{ registrator_image_tag }} {{ registrator_consul_connect }}
+    {{ registrator_image }}:{{ registrator_image_tag }} consul://consul:8500
 
 ExecStop=/usr/bin/docker kill registrator
 

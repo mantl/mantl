@@ -1,4 +1,3 @@
 ---
 registrator_image: progrium/registrator
 registrator_image_tag: latest
-registrator_consul_connect: "consul://consul:8500"
