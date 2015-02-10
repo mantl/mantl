@@ -1,0 +1,11 @@
+[all]
+host-[01:05]
+
+[consul_server]
+host-[01:03]
+
+[consul_client]
+host-[04:05]
+
+[dc1]
+host-[01:05]
