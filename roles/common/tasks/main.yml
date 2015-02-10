@@ -9,7 +9,7 @@
     force: yes
 
 # fix issue where dhclient blows away our resolv.conf
-- name: config resolv.conf script
+- name: configure resolv.conf script
   sudo: yes
   copy:
     src: dns-config.sh
