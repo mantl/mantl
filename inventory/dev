@@ -1,2 +1,5 @@
 [all]
 host-01
+
+[dc1]
+host-01
