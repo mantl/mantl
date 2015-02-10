@@ -9,14 +9,6 @@ host-[06:08]
 host-[04:05]
 host-[09:10]
 
-[load_balancer]
-host-[04:05]
-host-[09:10]
-
-[app]
-host-[04:05]
-host-[09:10]
-
 [dc1]
 host-[01:05]
 
