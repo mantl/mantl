@@ -1,5 +1,5 @@
 ---
-mesos_mode: leader
+mesos_mode: follower 
 mesos_log_dir: /var/log/mesos
 mesos_work_dir: /var/run/mesos
 mesos_leader_port: 5050
