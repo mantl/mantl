@@ -1,0 +1,9 @@
+{
+  "name": "marathon",
+  "tags": [ "marathon" ],
+  "port": 8080,
+  "check": {
+    "script": "curl --silent --show-error  --fail --dump-header /dev/stderr --retry 2 http://{{ ansible_default_ipv4.address }}:8080/ping",
+    "interval": "10s"
+  }
+}
