@@ -1,0 +1,6 @@
+---
+users:
+  - name: kechambe
+    enable: 1
+    pubkeys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz2jBBcHTOayH0vHIDIn6ifiy9RyxkzxY9osINSkhNUZTKqcy7YNfgWT9A1XlyxjMv0oj767KzohO3nnBly+di63+33wF78SEILo9HRiPcERXHPKrlqTEy3ONgJr0HSwmPODtqtCc9kqknTyR8LXsZwtTB80rCFKZrh7ty04gy8EtKVNSceqRML2SHDfXKeXRtDjINWJYr8L/wcqq7Zoc7z+dFlI4a1zV3lax+mckZdkwQPaWCHOdSxy3gz58Spw72AHVjk0fvi/BU1iDJKcMO35a7VLjFXR56cbJNFLQPJBrbMKSyWa06u++YoRvRjWHHHW8bpkj0k4ZLybebR4a9
