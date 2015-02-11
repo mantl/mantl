@@ -9,4 +9,5 @@ which can be customized, generally using Ansible variables.
 
    consul.rst
    mesos.rst
+   registrator.rst
    zookeeper.rst
