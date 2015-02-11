@@ -6,6 +6,10 @@ scale them up and down, and deploy new versions or roll back. Like
 Mesos' leader mode, Marathon can run on as many servers as you like
 and will elect a leader among nodes using :doc:`zookeeper`.
 
+Keep Marathon servers close to Mesos leaders for best performance;
+they talk back and forth quite a lot to keep the services in the
+cluster in a good state. Placing them on the same machines would work.
+
 Variables
 ---------
 
@@ -19,9 +23,6 @@ Example Playbook
 .. code-block:: yaml+jinja
 
     ---
-    # it would make sense for these servers to be located close to
-    # your Mesos leaders, maybe even on the same nodes. They talk back
-    # and forth quite a lot.
     - hosts: marathon_servers
       roles:
         - marathon
