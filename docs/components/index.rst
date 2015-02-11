@@ -8,3 +8,4 @@ which can be customized, generally using Ansible variables.
    :maxdepth: 2
 
    consul.rst
+   zookeeper.rst
