@@ -18,25 +18,50 @@ The inventory file can look something like this:
 
 .. code-block:: dosini
 
-    node0 ansible_ssh_hostname=10.10.10.10
-    node1 ansible_ssh_hostname=10.10.10.11
-    node2 ansible_ssh_hostname=10.10.10.12
-    node3 ansible_ssh_hostname=10.10.10.13
-    node4 ansible_ssh_hostname=10.10.10.14
-    node5 ansible_ssh_hostname=10.10.10.15
+    node1 ansible_ssh_hostname=10.10.10.10
+    node2 ansible_ssh_hostname=10.10.10.11
+    node3 ansible_ssh_hostname=10.10.10.12
+    node4 ansible_ssh_hostname=10.10.10.13
+    node5 ansible_ssh_hostname=10.10.10.14
+    node6 ansible_ssh_hostname=10.10.10.15
+    zk1 ansible_ssh_hostname=10.10.10.16
+    zk2 ansible_ssh_hostname=10.10.10.17
+    zk3 ansible_ssh_hostname=10.10.10.18
 
     [consul_server]
-    node[0:5]
+    node[1:6]
 
     [dc1]
-    node[0:2]
+    node[1:3]
 
     [dc2]
-    node[3:5]
+    node[4:6]
 
-This sets all nodes to be in the ``consul_server`` group, with the
+    [zookeeper_servers:vars]
+    service_tags=ensemble1
+
+    [zookeeper_servers]
+    zk1 zk_id=1
+    zk2 zk_id=2
+    zk3 zk_id=3
+
+    [mesos_leaders]
+    node1 mesos_mode=leader
+    node2 mesos_mode=leader
+    node3 mesos_mode=leader
+
+    [mesos_followers]
+    node[4:6]
+
+    [marathon_servers]
+    node[1:3]
+
+This sets six nodes to be in the ``consul_server`` group, with the
 first three communicating in the ``dc1`` group, and the second three
-in the ``dc2`` group. This inventory can also be `generated dynamically`_.
+in the ``dc2`` group. It also assigns three zookeeper servers and a
+set :data:`zk_id` for each (which you **must do**), and sets up Mesos
+leaders and followers. This inventory can also be `generated
+dynamically`_.
 
 Once you have your inventory file in place, test your connections
 using the command ``ansible all -i /path/to/your/inventory -m
