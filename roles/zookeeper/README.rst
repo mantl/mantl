@@ -1,7 +1,5 @@
 .. versionadded:: 0.1
 
-.. todo:: make a reference to registrator in the paragraph below.
-
 `ZooKeeper <https://zookeeper.apache.org/>`_ is used for coordination
 among Mesos and Marathon nodes. Rather than storing things in this
 service yourself, you should prefer :doc:`consul`.
