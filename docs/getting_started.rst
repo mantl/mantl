@@ -87,24 +87,18 @@ Once you're able to connect to your nodes, you'll want to use a
       gather_facts: no
       roles:
         - consul
-      # TODO: vars to set consul in client mode
     
     - hosts: consul_server:&dc1
       gather_facts: no
       serial: 1
       roles:
         - consul
-      # TODO: vars to set consul dc1
     
     - hosts: consul_server:&dc2
       gather_facts: no
       serial: 1
       roles:
         - consul
-      # TODO: vars to set consul dc2
-    
-    # TODO: note about this
-    #- include: playbooks/consul-join-wan.yml
     
     - hosts: all
       gather_facts: no
@@ -120,12 +114,10 @@ Once you're able to connect to your nodes, you'll want to use a
       gather_facts: no
       roles: 
         - mesos
-      # TODO: mesos mode
     
     - hosts: mesos_followers
       gather_facts: no
       roles: 
         - mesos
-      # TODO: mesos mode
 
 .. _generated dynamically: http://docs.ansible.com/intro_dynamic_inventory.html
