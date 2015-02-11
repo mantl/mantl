@@ -11,7 +11,7 @@
         login_username: "{{ lookup('env', 'OS_USERNAME') }}"
         login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
         login_tenant_name: "{{ os_tenant_name }}"
-        key_name: "ansible_key"
+        key_name: "{{ ansible_ssh_key }}"
         image_name: "{{ os_image_name }}"
         flavor_ram: "{{ os_flavor_ram }}"
         flavor_include: "{{ os_flavor_include }}"

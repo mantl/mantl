@@ -1,4 +1,5 @@
 ansible_ssh_user: centos
+ansible_ssh_key: ansible_key
 os_flavor_ram: 4096
 os_flavor_include: Medium
 os_image_name: centos-7_x86_64-2015-01-27-v6
