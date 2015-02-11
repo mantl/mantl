@@ -8,6 +8,7 @@ Initial release. Adds roles for:
 
 * Consul
 * Docker
+* Marathon
 * Mesos
 * Registrator
 * ZooKeeper
