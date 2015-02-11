@@ -18,3 +18,16 @@
     name: marathon
     state: started
 
+- name: ensure consul register.d is present
+  sudo: yes
+  file:
+    path: /etc/consul/register.d
+    state: directory
+
+- name: generate marathon consul service
+  sudo: yes
+  template:
+    src: marathon-consul.j2
+    dest: /etc/consul/register.d/marathon.json
+  notify:
+    - register marathon with consul
