@@ -10,3 +10,24 @@
     - registrator
 
 - include: playbooks/consul-join-wan.yml
+
+- hosts: zookeeper_servers
+  gather_facts: no
+  roles:
+    - zookeeper
+
+- hosts: mesos_leaders
+  gather_facts: no
+  roles:
+    - mesos
+
+- hosts: mesos_followers
+  gather_facts: no
+  roles:
+    - mesos
+
+- hosts: marathon_servers
+  gather_facts: no
+  serial: 1
+  roles:
+    - marathon
