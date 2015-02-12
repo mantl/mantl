@@ -1,2 +1,4 @@
 ansible>=1.8
 python-novaclient
+Sphinx==1.2.3
+alabaster==0.6.3
