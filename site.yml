@@ -6,28 +6,28 @@
     - common
     - docker
     - dnsmasq
-
-- hosts: consul_client
-  gather_facts: no
-  roles:
     - consul
-
-- hosts: consul_server:&dc1
-  gather_facts: no
-  serial: 1
-  roles:
-    - consul
-
-- hosts: consul_server:&dc2
-  gather_facts: no
-  serial: 1
-  roles:
-    - consul
+    - registrator
 
 - include: playbooks/consul-join-wan.yml
 
-- hosts: all
+- hosts: zookeeper_servers
   gather_facts: no
   roles:
-    - registrator
+    - zookeeper
 
+- hosts: mesos_leaders
+  gather_facts: no
+  roles:
+    - mesos
+
+- hosts: mesos_followers
+  gather_facts: no
+  roles:
+    - mesos
+
+- hosts: marathon_servers
+  gather_facts: no
+  serial: 1
+  roles:
+    - marathon

@@ -1,5 +1,5 @@
 ---
-# default set to Etc/UTC with CentOS 7 image build 20141129 [http://cloud.centos.org/centos/7/images/]
+# default is etc/utc in build 20141129 [http://cloud.centos.org/centos/7/images/]
 - name: set timezone to etc/utc
   sudo: yes
   file:
@@ -7,3 +7,15 @@
     dest: /etc/localtime
     state: link
     force: yes
+
+# fix issue where dhclient blows away our resolv.conf
+- name: configure resolv.conf script
+  sudo: yes
+  copy:
+    src: dns-config.sh
+    dest: /etc/dhcp/dhclient.d/dns-config.sh
+    owner: root
+    group: root
+    mode: 755 
+
+- include: users.yml  

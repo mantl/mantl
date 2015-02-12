@@ -1,0 +1,14 @@
+---
+mesos_mode: follower 
+mesos_log_dir: /var/log/mesos
+mesos_work_dir: /var/run/mesos
+mesos_leader_port: 5050
+mesos_follower_port: 5051
+mesos_leader_cmd: mesos-master
+mesos_follower_cmd: mesos-slave
+
+mesos_cluster: cluster1
+
+mesos_zk_dns: zookeeper.service.consul
+mesos_zk_port: 2181
+mesos_zk_chroot: mesos

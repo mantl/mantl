@@ -1,0 +1,8 @@
+---
+- name: restart marathon 
+  sudo: yes
+  shell: /bin/systemctl restart marathon
+
+- name:  register marathon with consul
+  shell: curl --fail -v -X PUT --data @/etc/consul/register.d/marathon.json  http://localhost:8500/v1/agent/service/register
+

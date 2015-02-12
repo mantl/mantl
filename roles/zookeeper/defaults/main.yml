@@ -1,0 +1,13 @@
+#override for your cluster for consul service discovery
+zookeeper_service: zookeeper   
+zookeeper_service_tags: "{{ zookeeper_service }}"
+zookeeper_env: dev
+zookeeper_ensemble: cluster1
+zookeeper_container_name: "{{ zookeeper_service }}-{{ zookeeper_env }}-{{ zookeeper_ensemble }}-zkid{{ zk_id }}"
+zookeeper_data_volume: "zookeeperdata-{{ zookeeper_env }}-{{ zookeeper_ensemble }}-zkid{{ zk_id }}"
+
+zookeeper_docker_image: asteris/zookeeper
+zookeeper_docker_tag: latest
+zookeeper_docker_ports: "-p 2181:2181 -p 2888:2888 -p 3888:3888"
+zookeeper_docker_env: "/etc/default/{{ zookeeper_service }}"
+

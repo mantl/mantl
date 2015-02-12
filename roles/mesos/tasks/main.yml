@@ -1,0 +1,44 @@
+---
+- name: add mesosphere repository
+  sudo: yes
+  yum:
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
+    state: present
+
+- name: install mesos package
+  sudo: yes
+  yum:
+    name: mesos
+    state: present
+
+- name: configure /etc/mesos/zk  
+  sudo: yes
+  template:
+    src: zk.j2
+    dest: /etc/mesos/zk
+
+- name: disable mesos leader
+  sudo: yes
+  service:
+    name: mesos-master
+    enabled: no 
+  when: mesos_mode == "follower" 
+
+- name: disable mesos follower 
+  sudo: yes
+  service:
+    name: mesos-slave
+    enabled: no 
+  when: mesos_mode == "leader" 
+
+- name: ensure consul register.d is present
+  sudo: yes
+  file:
+    path: /etc/consul/register.d
+    state: directory
+
+- include: leader.yml
+  when: mesos_mode == "leader" or mesos_mode == "mixed"
+
+- include: follower.yml
+  when: mesos_mode == "follower" or mesos_mode == "mixed"

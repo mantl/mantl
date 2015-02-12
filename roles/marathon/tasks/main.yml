@@ -1,0 +1,33 @@
+---
+- name: add mesosphere repository
+  sudo: yes
+  yum:
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
+    state: present
+
+- name: install marathon package
+  sudo: yes
+  yum:
+    name: marathon 
+    state: present
+
+- name: enable and start marathon
+  sudo: yes
+  service:
+    enabled: yes
+    name: marathon
+    state: started
+
+- name: ensure consul register.d is present
+  sudo: yes
+  file:
+    path: /etc/consul/register.d
+    state: directory
+
+- name: generate marathon consul service
+  sudo: yes
+  template:
+    src: marathon-consul.j2
+    dest: /etc/consul/register.d/marathon.json
+  notify:
+    - register marathon with consul

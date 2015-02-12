@@ -16,7 +16,7 @@
   notify:
     - restart dnsmasq
 
-- name: add localhost to resolv.conf
+- name: configure /etc/resolv.conf
   sudo: yes
   lineinfile:
     dest: /etc/resolv.conf

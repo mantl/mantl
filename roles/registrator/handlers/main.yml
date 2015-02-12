@@ -1,0 +1,8 @@
+---
+- name: reload registrator
+  sudo: yes
+  command: "{{ item }}"
+  with_items:
+    - systemctl restart registrator
+    - systemctl enable registrator
+    - systemctl daemon-reload

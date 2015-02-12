@@ -1,0 +1,28 @@
+[all]
+host-[01:05]
+
+[consul_server]
+host-[01:03]
+
+[consul_client]
+host-[04:05]
+
+[dc1]
+host-[01:05]
+
+[zookeeper_servers:vars]
+service_tags=ensemble1
+
+[zookeeper_servers]
+host-01 zk_id=1
+host-02 zk_id=2
+host-03 zk_id=3
+
+[mesos_leaders]
+host-[01:03] mesos_mode=leader
+
+[mesos_followers]
+host-[04:05]
+
+[marathon_servers]
+host-[01:03]

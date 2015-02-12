@@ -1,24 +1,16 @@
 [all]
-host-[01:20]
+host-[01:10]
 
 [consul_server]
 host-[01:03]
-host-[11:13]
+host-[06:08]
 
 [consul_client]
-host-[04:10]
-host-[14:20]
-
-[load_balancer]
-host-[04:06]
-host-[14:16]
-
-[app]
-host-[07:10]
-host-[17:20]
+host-[04:05]
+host-[09:10]
 
 [dc1]
-host-[01:10]
+host-[01:05]
 
 [dc2]
-host-[11:20]
+host-[06:10]
