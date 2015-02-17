@@ -1,5 +1,2 @@
-os_auth_url: https://us-texas-1.cisco.com:5000/v2.0
-os_tenant_name: kechambe-texas-1
-os_tenant_id: 22c95988aac8448cac3601e76645de75
 os_net_id: fd94baf0-b314-453e-9cd6-73c90fc53857
 consul_dc: dc1
