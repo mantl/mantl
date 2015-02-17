@@ -25,7 +25,7 @@
   sudo: yes
   copy: 
     dest: /etc/mesos-slave/executor_registration_timeout
-    content: "5mins"
+    content: "{{ mesos_executor_registration_timeout }}"
   notify: restart Mesos follower
 
 - name: set follower node id
