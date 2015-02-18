@@ -10,7 +10,7 @@ RestartSec=20
 TimeoutStartSec=20m
 
 ExecStartPre=-/usr/bin/docker rm {{ zookeeper_container_name }}
-ExecStartPre=-/usr/bin/docker pull {{ zookeeper_docker_image }}:{{ zookeeper_docker_tag }}
+ExecStartPre=-/usr/bin/docker pull {{ zookeeper_image }}:{{ zookeeper_tag }}
 ExecStartPre=/bin/bash -c \
             '/usr/bin/docker inspect -f "\{\{.Created\}\}" {{ zookeeper_data_volume }} ||\
              /usr/bin/docker run --name={{ zookeeper_data_volume }} \
@@ -19,12 +19,10 @@ ExecStartPre=/bin/bash -c \
                                  tianon/true' 
 
 ExecStart=/usr/bin/docker run --name={{ zookeeper_container_name }} \
-                              {{ zookeeper_docker_ports }} \
-                              --dns={{ ansible_default_ipv4.address }} \
-                              --dns-search=service.consul \
-                              --env-file={{ zookeeper_docker_env }} \
+                              {{ zookeeper_ports }} \
+                              --env-file={{ zookeeper_env }} \
                               --volumes-from {{ zookeeper_data_volume }} \
-                              {{ zookeeper_docker_image }}:{{ zookeeper_docker_tag }}
+                              {{ zookeeper_image }}:{{ zookeeper_tag }}
 
 ExecStop=/bin/bash -c \
          "/usr/bin/docker kill {{ zookeeper_container_name }} && \
