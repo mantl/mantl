@@ -1,6 +1,6 @@
 {
   "name": "mesos-leader",
-  "tags": ["mesos-leader", "{{ mesos_cluster }}"],
+  "tags": ["{{ mesos_cluster }}"],
   "port": {{ mesos_leader_port }},
   "check": {
     "script": "curl --silent --show-error --fail --dump-header /dev/stderr --retry 2 http://{{ ansible_default_ipv4.address }}:{{ mesos_leader_port }}/master/health",
