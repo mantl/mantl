@@ -1,2 +1,2 @@
 ---
-- include: provision-hosts.yml nova_compute_state=absent
+- include: openstack/provision-hosts.yml nova_compute_state=absent
