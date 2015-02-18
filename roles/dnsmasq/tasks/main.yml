@@ -7,14 +7,18 @@
   with_items:
     - dnsmasq
     - bind-utils
+  tags:
+    - dnsmasq
 
-- name: configure dnsmasq consul lookups
+- name: configure consul lookups
   sudo: yes
   copy: 
     content: 'server=/consul/127.0.0.1#8600'
     dest: /etc/dnsmasq.d/10-consul
   notify:
     - restart dnsmasq
+  tags:
+    - dnsmasq
 
 - name: configure /etc/resolv.conf
   sudo: yes
@@ -22,3 +26,5 @@
     dest: /etc/resolv.conf
     line: "nameserver 127.0.0.1"
     insertbefore: "^nameserver"
+  tags:
+    - dnsmasq
