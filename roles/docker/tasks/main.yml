@@ -8,9 +8,9 @@
 - name: configure docker consul dns
   sudo: yes
   lineinfile:
-    dest: /etc/sysconfig/docker 
-    regexp: ^OPTIONS
-    line: OPTIONS=--selinux-enabled -H fd:// --dns {{ ansible_default_ipv4.address }}  --dns-search service.consul
+    dest: /etc/sysconfig/docker-network
+    regexp: ^DOCKER_NETWORK_OPTIONS
+    line: DOCKER_NETWORK_OPTIONS='--dns {{ ansible_default_ipv4.address }} --dns-search service.consul'
     state: present
 
 - name: enable docker
