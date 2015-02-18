@@ -1,6 +1,4 @@
 ---
-- include: provision-hosts.yml
-
 - hosts: localhost
   gather_facts: no
   tasks:

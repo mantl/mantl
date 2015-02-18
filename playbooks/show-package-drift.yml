@@ -1,6 +1,4 @@
 ---
-- include: provision-hosts.yml
-
 - hosts: all
   vars:
     - tmp_dir: /tmp/packages
