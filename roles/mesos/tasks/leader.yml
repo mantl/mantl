@@ -1,17 +1,20 @@
 ---
-- name: configure Mesos leader defaults
+- name: configure leader defaults
   sudo: yes
   template:
     src: master-defaults.j2
     dest: /etc/default/mesos-master
   notify: 
-    - restart Mesos leader
+    - restart mesos leader
+  tags:
+    - mesos
 
-- name: generate Mesos leader consul service
+- name: generate leader consul service
   sudo: yes
   template:
     src: mesos-leader-consul.j2
     dest: /etc/consul/register.d/mesos-leader.json
   notify:
     - register mesos leader with consul
-
+  tags:
+    - mesos

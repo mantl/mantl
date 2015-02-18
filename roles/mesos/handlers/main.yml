@@ -1,10 +1,10 @@
 ---
 
-- name: restart Mesos leader
+- name: restart mesos leader
   sudo: yes
   shell: /bin/systemctl restart mesos-master
 
-- name: remove Mesos follower metadata
+- name: remove mesos follower metadata
   sudo: yes
   shell: "{{ item }}"
   with_items:
@@ -12,7 +12,7 @@
     - /bin/rm -rf /tmp/mesos/meta
     - /bin/systemctl start mesos-slave
 
-- name: restart Mesos follower
+- name: restart mesos follower
   sudo: yes
   shell: /bin/systemctl restart mesos-slave
 
