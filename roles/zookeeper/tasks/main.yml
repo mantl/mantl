@@ -1,4 +1,4 @@
-- name: generate zookeeper default env file
+- name: generate default env file
   sudo: yes
   template:
     src: zookeeper-env.j2 
@@ -7,16 +7,14 @@
     - restart zookeeper
   tags: 
     - zookeeper
-    - zookeeper-docker-create-default-env
 
-- name: generate zookeeper systemd service file 
+- name: generate systemd service file 
   sudo: yes
   template:
     src: zookeeper-service.j2 
     dest: "/usr/lib/systemd/system/{{zookeeper_service}}.service"
   notify: 
-    - register zookeeper service with systemd 
+    - register zookeeper service
     - reload systemd daemon 
   tags: 
     - zookeeper
-    - zookeeper-docker-create-systemd-sevice
