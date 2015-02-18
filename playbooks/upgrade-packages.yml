@@ -1,5 +1,5 @@
 ---
-- hosts:  all
+- hosts:  "{{ dc | default('all') }}"
   gather_facts: no
   serial: "{{ serial_count | default(1) }}"
   tasks:
