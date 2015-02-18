@@ -1,6 +1,4 @@
 ---
-- include: provision-hosts.yml
-
 - hosts:  all
   gather_facts: no
   serial: "{{ serial_count | default(1) }}"
