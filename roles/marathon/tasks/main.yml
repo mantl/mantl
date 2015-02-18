@@ -4,12 +4,16 @@
   yum:
     name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
     state: present
+  tags:
+    - marathon
 
 - name: install marathon package
   sudo: yes
   yum:
     name: marathon 
     state: present
+  tags:
+    - marathon
 
 - name: enable and start marathon
   sudo: yes
@@ -17,12 +21,16 @@
     enabled: yes
     name: marathon
     state: started
+  tags:
+    - marathon
 
 - name: ensure consul register.d is present
   sudo: yes
   file:
     path: /etc/consul/register.d
     state: directory
+  tags:
+    - marathon
 
 - name: generate marathon consul service
   sudo: yes
@@ -31,3 +39,5 @@
     dest: /etc/consul/register.d/marathon.json
   notify:
     - register marathon with consul
+  tags:
+    - marathon
