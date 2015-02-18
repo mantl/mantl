@@ -1,5 +1,5 @@
 ---
-- include: playbooks/provision-hosts.yml
+- include:openstack/provision-hosts.yml
 
 - hosts: all
   roles:
