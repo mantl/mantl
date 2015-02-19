@@ -1,5 +1,5 @@
 ---
-- hosts: "{{ dc | default('all') }}"
+- hosts: all
   gather_facts: no
   connection: local
   vars:
@@ -7,10 +7,10 @@
   tasks:
     - nova_compute:
         name: "{{ inventory_hostname }}"
-        auth_url: "{{ lookup('env', 'OS_AUTH_URL') }}"
+        auth_url: "{{ os_auth_url }}"
         login_username: "{{ lookup('env', 'OS_USERNAME') }}"
         login_password: "{{ lookup('env', 'OS_PASSWORD') }}"
-        login_tenant_name: "{{ lookup('env', 'OS_TENANT_NAME') }}"
+        login_tenant_name: "{{ os_tenant_name }}"
         key_name: "{{ ansible_ssh_key }}"
         image_name: "{{ os_image_name }}"
         flavor_ram: "{{ os_flavor_ram }}"
