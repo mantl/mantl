@@ -22,7 +22,7 @@ host-03 zk_id=3
 host-[01:03] mesos_mode=leader
 
 [mesos_followers]
-host-[04:05]
+host-[04:05] os_flavor_ram=16384 os_flavor_include=XLarge
 
 [marathon_servers]
 host-[01:03]
