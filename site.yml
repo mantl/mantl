@@ -1,5 +1,5 @@
 ---
-- include: openstack/provision-hosts.yml
+- include: provision-openstack.yml
 
 - hosts: all
   roles:
@@ -11,22 +11,43 @@
 
 - include: playbooks/consul-join-wan.yml
 
-- hosts: zookeeper_servers
+- hosts: dc1:&zookeeper_servers
   gather_facts: no
   roles:
     - zookeeper
 
-- hosts: mesos_leaders
+- hosts: dc1:&mesos_leaders
   gather_facts: no
   roles:
     - mesos
 
-- hosts: mesos_followers
+- hosts: dc1:&mesos_followers
   gather_facts: no
   roles:
     - mesos
 
-- hosts: marathon_servers
+- hosts: dc1:&marathon_servers
+  gather_facts: no
+  serial: 1
+  roles:
+    - marathon
+
+- hosts: dc2:&zookeeper_servers
+  gather_facts: no
+  roles:
+    - zookeeper
+
+- hosts: dc2:&mesos_leaders
+  gather_facts: no
+  roles:
+    - mesos
+
+- hosts: dc2:&mesos_followers
+  gather_facts: no
+  roles:
+    - mesos
+
+- hosts: dc2:&marathon_servers
   gather_facts: no
   serial: 1
   roles:
