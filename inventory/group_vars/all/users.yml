@@ -1,0 +1,10 @@
+---
+# add additional users here
+#users: 
+#  - name: user1
+#  - enable: 1
+#  - pubkeys: 
+#      - ssh-rsa AAAAB3NzaC1yc...
+#  
+#  - name: user2
+#    ...
