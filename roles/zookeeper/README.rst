@@ -11,6 +11,14 @@ You can use these variables to customize your ZooKepeer installation (see
 the :ref:`ZooKeeper Example Playbook <zookeeper-example-playbook>` for how
 to do so.)
 
+.. data:: zk_id
+
+   The value of ``zk_id`` in the ZooKeeper configuration file. This
+   has no default set.
+
+   .. warning:: ``zk_id`` is *required*. If it is not set, your
+                cluster won't even start up.
+
 .. data:: zookeeper_service
 
    default: zookeeper
