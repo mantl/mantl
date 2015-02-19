@@ -10,7 +10,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   getting_started.rst
+   getting_started/index.rst
    components/index.rst
    changelog.rst
    license.rst
