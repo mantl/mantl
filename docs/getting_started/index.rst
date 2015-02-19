@@ -44,7 +44,7 @@ ZooKeepers.
     zk2        ansible_ssh_hostname=10.10.10.17
     zk3        ansible_ssh_hostname=10.10.10.18
 
-    [consul_server]
+    [consul_servers]
     leader[1:3]
     follower[1:3]
     zk[1:3]
@@ -55,7 +55,7 @@ ZooKeepers.
     zk1[1:3]
 
     [dc_tx1:vars]
-    consul_server_group=dc_tx1
+    consul_servers_group=dc_tx1
     consul_dc=tx1
 
     [zookeeper_servers:vars]
@@ -75,12 +75,12 @@ ZooKeepers.
     [marathon_servers]
     leader[1:3]
 
-We put 6 servers in the ``consul_server`` group. These will all
+We put 6 servers in the ``consul_servers`` group. These will all
 discover each other as part of the Ansible run and form a cluster. If
 you had more than one datacenter, you can specify an additional set of
 servers (in, for example, ``dc_ny1``) and use the
 ``consul-join-wan.yml`` playbook to join them together. Note that
-we're setting :data:`consul_server_group` and :data:`consul_dc` to
+we're setting :data:`consul_servers_group` and :data:`consul_dc` to
 appropriate values for this datacenter as well.
 
 We're also setting some group and host variables here for
@@ -120,9 +120,9 @@ bring up the cluster of nodes that we've specified in our inventory.
         - dnsmasq
     
     # this syntax essentially means "take all the servers in dc1 which
-    # are also in consul_server"
+    # are also in consul_servers"
     # see: http://docs.ansible.com/intro_patterns.html
-    - hosts: dc_tx1:&consul_server
+    - hosts: dc_tx1:&consul_servers
       # to speed things up we turn off gather_facts after we've
       # already done it on the host.
       gather_facts: no
@@ -135,7 +135,7 @@ bring up the cluster of nodes that we've specified in our inventory.
     
     # again, we don't have any hosts in ny1, so this is just how it
     # would run if we *did*.
-    - hosts: ny1:&consul_server
+    - hosts: ny1:&consul_servers
       gather_facts: no
       serial: 1
       roles:
