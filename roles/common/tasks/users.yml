@@ -7,6 +7,8 @@
     regexp: "^%wheel"
     line: "%wheel ALL=(ALL) NOPASSWD: ALL"
     state: present
+  tags:
+    - users
 
 - name: create os users
   sudo: yes
@@ -15,6 +17,8 @@
     groups: wheel
   when: item.enable == 1
   with_items: users
+  tags:
+  - users
 
 - name: set ssh key for users
   sudo: yes
@@ -23,7 +27,9 @@
   with_subelements:
     - users
     - pubkeys
-     
+  tags:
+    - users
+
 - name: delete os users
   sudo: yes
   user:
@@ -32,3 +38,5 @@
     remove: yes
   when: item.enable == 0
   with_items: users
+  tags:
+   - users
