@@ -6,10 +6,24 @@ Getting Started
           continuing.
 
 The Microservices Infrastructure project uses Ansible to bring up
-nodes and clusters. This generally means that you need two things:
+nodes and clusters. This generally means that you need three things:
 
- 1. an `inventory file`_ with the hosts you want to be modified.
- 2. a playbook to show which components should go where.
+ 1. hosts to use as the base for your cluster
+ 2. an `inventory file`_ with the hosts you want to be modified.
+ 3. a playbook to show which components should go where.
+
+Getting Hosts
+-------------
+
+The playbooks and roles in this project will work on whatever provider
+(or metal) you care to spin up, as long as it can run CentOS 7 or
+equivalent. However, here are some guides to get started on common
+platforms:
+
+.. toctree::
+   :maxdepth: 1
+
+   openstack.rst
 
 Inventory
 ---------
