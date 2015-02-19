@@ -133,7 +133,7 @@ bring up the cluster of nodes that we've specified in our inventory.
       roles:
         - consul
     
-    # again, we don't have any hosts in ny1, so this is jut how it
+    # again, we don't have any hosts in ny1, so this is just how it
     # would run if we *did*.
     - hosts: ny1:&consul_server
       gather_facts: no
