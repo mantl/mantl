@@ -1,4 +1,5 @@
 ---
+# This playbook traces all Consul WAN traffic.
 - hosts: localhost
   gather_facts: no
   tasks:
@@ -25,7 +26,7 @@
       register: packages_after
       changed_when: no
 
-    - name: capture sniffer trace
+    - name: capture sniffer trace (for 2 minutes)
       sudo: yes
       command:
         tshark -n
