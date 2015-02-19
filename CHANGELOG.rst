@@ -32,5 +32,5 @@ Ansible Playbooks
 * Add show-containers
 * Add show-package-drift
 * Add show-uptime
-* Add show consul-wan-gossip
+* Add trace-consul-wan-traffic
 * Add upgrade-packages
