@@ -7,7 +7,7 @@
         path: /tmp/traces
         state: directory
 
-- hosts: consul_server
+- hosts: consul_servers
   tasks:
     - name: get list of installed packages before installing wireshark
       command: rpm -qa

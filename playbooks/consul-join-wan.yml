@@ -1,18 +1,18 @@
 ---
-- hosts: consul_server
+- hosts: consul_servers
   tasks:
 
   - name: check port 8300 open between all consul servers
     wait_for:
       host: "{{ hostvars[item].ansible_default_ipv4.address }}"
       port: 8300
-    with_items: groups['consul_server']
+    with_items: groups['consul_servers']
 
   - name: check port 8302 open between all consul servers
     wait_for:
       host: "{{ hostvars[item].ansible_default_ipv4.address }}"
       port: 8302
-    with_items: groups['consul_server']
+    with_items: groups['consul_servers']
 
   - name: get list of consul servers that are wan gossip pool members
     sudo: yes
@@ -21,7 +21,7 @@
     changed_when: no
 
   - name: get list of all consul servers for wan gossip pool
-    set_fact: servers="{% for host in groups['consul_server'] %}{{ hostvars[host].ansible_default_ipv4.address }}{% if not loop.last %} {% endif %}{% endfor %}"
+    set_fact: servers="{% for host in groups['consul_servers'] %}{{ hostvars[host].ansible_default_ipv4.address }}{% if not loop.last %} {% endif %}{% endfor %}"
 
   - name: get count of consul servers that are not wan gossip pool members
     set_fact: non_member_count="{{ servers.split(' ') | difference(members.stdout_lines | list) | length }}"

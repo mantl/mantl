@@ -28,7 +28,7 @@ The inventory file can look something like this:
     zk2 ansible_ssh_hostname=10.10.10.17
     zk3 ansible_ssh_hostname=10.10.10.18
 
-    [consul_server]
+    [consul_servers]
     node[1:6]
 
     [dc1]
@@ -56,7 +56,7 @@ The inventory file can look something like this:
     [marathon_servers]
     node[1:3]
 
-This sets six nodes to be in the ``consul_server`` group, with the
+This sets six nodes to be in the ``consul_servers`` group, with the
 first three communicating in the ``dc1`` group, and the second three
 in the ``dc2`` group. It also assigns three zookeeper servers and a
 set :data:`zk_id` for each (which you **must do**), and sets up Mesos
@@ -88,13 +88,13 @@ Once you're able to connect to your nodes, you'll want to use a
       roles:
         - consul
     
-    - hosts: consul_server:&dc1
+    - hosts: consul_servers:&dc1
       gather_facts: no
       serial: 1
       roles:
         - consul
     
-    - hosts: consul_server:&dc2
+    - hosts: consul_servers:&dc2
       gather_facts: no
       serial: 1
       roles:

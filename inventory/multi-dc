@@ -1,7 +1,7 @@
 [all]
 host-[01:10]
 
-[consul_server]
+[consul_servers]
 host-[01:03]
 host-[06:08]
 
