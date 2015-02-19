@@ -1,5 +1,4 @@
 ---
-- include_vars: users.yml
      
 - name: configure members of wheel group for passwordless sudo
   sudo: yes
