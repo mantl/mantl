@@ -30,6 +30,7 @@
       command:
         tshark -n
         -a duration:120
+        -f "port 8300"
         -f "port 8302"
         -w "/tmp/wan-gossip.pcap"
 
