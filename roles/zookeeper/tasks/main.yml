@@ -1,3 +1,4 @@
+---
 - name: generate default env file
   sudo: yes
   template:

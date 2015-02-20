@@ -1,5 +1,4 @@
 ---
-     
 - name: configure members of wheel group for passwordless sudo
   sudo: yes
   lineinfile:

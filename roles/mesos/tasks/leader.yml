@@ -17,4 +17,5 @@
   notify:
     - register mesos leader with consul
   tags:
+    - consul-service
     - mesos
