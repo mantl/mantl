@@ -1,0 +1,14 @@
+---
+- hosts: all
+  roles:
+    - common
+    - docker
+    - dnsmasq
+    - consul
+    - registrator
+
+- hosts: all
+  roles:
+    - zookeeper
+    - mesos
+    - marathon
