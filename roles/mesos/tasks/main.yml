@@ -15,7 +15,7 @@
   tags:
     - mesos
 
-- name: configure /etc/mesos/zk
+- name: configure mesos zookeeper
   sudo: yes
   template:
     src: zk.j2

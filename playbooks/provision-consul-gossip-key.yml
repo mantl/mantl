@@ -2,7 +2,7 @@
 - hosts: localhost
   connection: local
   tasks:
-    - name: base directory
+    - name: get base directory
       command: git rev-parse --show-toplevel
       register: top_dir
       always_run: yes

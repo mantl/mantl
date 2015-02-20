@@ -20,7 +20,7 @@
   tags:
     - dnsmasq
 
-- name: configure /etc/resolv.conf
+- name: set localhost as nameserver
   sudo: yes
   lineinfile:
     dest: /etc/resolv.conf

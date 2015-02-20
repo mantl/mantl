@@ -1,16 +1,13 @@
 ---
 # required to install conntrack
-- name: install epel-release
-  sudo: yes
-  yum:
-    name: epel-release
-    state: present
-    
 - name: install conntrack
   sudo: yes
   yum:
-    name: conntrack
+    name: {{ item }}
     state: present
+  with_items:
+    - epel-release
+    - conntrack
 
 - name: configure consul
   sudo: yes
