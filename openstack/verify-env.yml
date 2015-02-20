@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: verify OpenStack environment
+      fail: msg="OpenStack environment variables {{ item }} is not set"
+      when: lookup('env', item) == ""
+      with_items:
+        - OS_USERNAME
+        - OS_PASSWORD

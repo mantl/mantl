@@ -1,4 +1,6 @@
 ---
+- include: verify-env.yml
+
 - hosts: all
   gather_facts: no
   connection: local

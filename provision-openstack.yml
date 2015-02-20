@@ -1,8 +1,5 @@
 #The following environment variables need to be set
-# OS_AUTH_URL
 # OS_PASSWORD
-# OS_TENANT_ID
-# OS_TENANT_NAME
 # OS_USERNAME
 
 # Modify inventory/group_vars/all to set 
@@ -13,13 +10,6 @@
 # Modify inventory/group_vars/dc1 & dc2 to set
 # - openstack net id
 # - consul datacenter
-
-# For a single data center model run:
-#   ansible-playbook provision-openstack.yml
-#
-# For a multiple data center model run for each data center:
-#   ansbile-playbook -e dc={dc} provision-openstack.yml
-#
 - include: openstack/provision-nova-key.yml
 - include: openstack/provision-hosts.yml
 - include: playbooks/upgrade-packages.yml
