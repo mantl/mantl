@@ -6,9 +6,9 @@
     - dnsmasq
     - consul
     - registrator
+    - zookeeper
 
 - hosts: all
   roles:
-    - zookeeper
     - mesos
     - marathon
