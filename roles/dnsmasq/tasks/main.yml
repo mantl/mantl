@@ -1,4 +1,4 @@
-
+---
 - name: install dnsmasq and bind-utils
   sudo: yes
   yum:

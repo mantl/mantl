@@ -1,3 +1,4 @@
+---
 #override for your cluster for consul service discovery
 zookeeper_service: zookeeper   
 zookeeper_service_tags: "{{ zookeeper_service }}"
