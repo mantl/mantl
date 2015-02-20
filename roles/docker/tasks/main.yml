@@ -4,6 +4,8 @@
   yum:
     name: http://cbs.centos.org/kojifiles/packages/docker/1.5.0/1.el7/x86_64/docker-1.5.0-1.el7.x86_64.rpm
     state: present
+  tags:
+    - docker
 
 - name: configure docker consul dns
   sudo: yes
@@ -12,6 +14,10 @@
     regexp: ^DOCKER_NETWORK_OPTIONS
     line: DOCKER_NETWORK_OPTIONS='--dns {{ ansible_default_ipv4.address }} --dns-search service.consul'
     state: present
+  notify:
+    - restart docker
+  tags:
+    - docker
 
 - name: enable docker
   sudo: yes
@@ -19,3 +25,5 @@
     name: docker
     enabled: yes
     state: started
+  tags:
+    - docker
