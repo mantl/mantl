@@ -18,7 +18,7 @@
   when: item.enable == 1
   with_items: users
   tags:
-  - users
+    - users
 
 - name: set ssh key for users
   sudo: yes
