@@ -1,4 +1,4 @@
-
+---
 - name: install dnsmasq and bind-utils
   sudo: yes
   yum:
@@ -8,6 +8,7 @@
     - dnsmasq
     - bind-utils
   tags:
+    - package
     - dnsmasq
 
 - name: configure consul lookups
@@ -20,7 +21,7 @@
   tags:
     - dnsmasq
 
-- name: configure /etc/resolv.conf
+- name: set localhost as nameserver
   sudo: yes
   lineinfile:
     dest: /etc/resolv.conf

@@ -1,3 +1,4 @@
+---
 ansible_ssh_user: centos
 ansible_ssh_key: ansible_key
 ansible_ssh_pubkey: "{{ lookup('file','~/.ssh/id_rsa.pub') }}"

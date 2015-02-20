@@ -5,6 +5,7 @@
     name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
     state: present
   tags:
+    - package
     - marathon
 
 - name: install marathon package
@@ -13,6 +14,7 @@
     name: marathon-0.7.6
     state: present
   tags:
+    - package
     - marathon
 
 - name: enable and start marathon
@@ -30,6 +32,7 @@
     path: /etc/consul/register.d
     state: directory
   tags:
+    - consul
     - marathon
 
 - name: generate marathon consul service
@@ -40,4 +43,6 @@
   notify:
     - register marathon with consul
   tags:
+    - consul
+    - consul-service
     - marathon
