@@ -7,6 +7,7 @@
   notify:
     - register mesos follower with consul
   tags:
+    - consul-service
     - mesos
 
 - name: disable mesos leader

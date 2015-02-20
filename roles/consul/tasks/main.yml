@@ -8,6 +8,9 @@
   with_items:
     - epel-release
     - conntrack
+  tags:
+    - package
+    - consul
 
 - name: configure consul
   sudo: yes
@@ -18,4 +21,3 @@
     - reload consul
   tags:
     - consul
-    - consul-config
