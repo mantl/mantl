@@ -3,7 +3,7 @@
   sudo: yes
   template:
     src: zookeeper-env.j2 
-    dest: "/etc/default/{{zookeeper_service}}"
+    dest: "/etc/default/{{ zookeeper_service }}"
   notify: 
     - restart zookeeper
   tags: 
@@ -13,7 +13,7 @@
   sudo: yes
   template:
     src: zookeeper-service.j2 
-    dest: "/usr/lib/systemd/system/{{zookeeper_service}}.service"
+    dest: "/usr/lib/systemd/system/{{ zookeeper_service }}.service"
   notify: 
     - register zookeeper service
     - reload systemd daemon 
