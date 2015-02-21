@@ -1,10 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
-
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.configure(2) do |config|
   config.vm.box = "CiscoCloud/shipped-devbox"
 
   config.vm.network :forwarded_port, guest: 2181, host: 2181  # ZooKeeper 
@@ -31,8 +28,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       "consul_bootstrap_expect" => 1,
       "consul_retry_join" => 1,
       "mesos_cluster" => "vagrant",
-      "mesos_mode" => "mixed", # Meso leader + follower
+      "mesos_mode" => "mixed",
       "zk_id" => 1
     }
+  end
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ['modifyvm', :id, '--cpus', 2]
+    vb.customize ['modifyvm', :id, '--memory', 4092]
   end
 end
