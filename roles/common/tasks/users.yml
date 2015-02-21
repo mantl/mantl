@@ -14,7 +14,7 @@
   user:
     name: "{{ item.name }}"
     groups: wheel
-  when: item.enable == 1
+  when: item.enabled is defined and item.enabled == 1
   with_items: users
   tags:
     - users
@@ -22,9 +22,9 @@
 - name: set ssh key for users
   sudo: yes
   authorized_key: "user={{ item.0.name }} key='{{ item.1 }}'"
-  when: item.0.enable == 1
+  when: item.1 is defined and item.0.enabled == 1
   with_subelements:
-    - users
+    - users|default([])
     - pubkeys
   tags:
     - users
@@ -35,7 +35,7 @@
     name: "{{ item.name }}"
     state: absent
     remove: yes
-  when: item.enable == 0
+  when: item.enabled is defined and item.enabled == 0
   with_items: users
   tags:
-   - users
+    - users
