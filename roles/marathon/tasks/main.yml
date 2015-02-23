@@ -2,10 +2,9 @@
 - name: add mesosphere repository
   sudo: yes
   yum:
-    name: http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
     state: present
   tags:
-    - package
     - marathon
 
 - name: install marathon package
@@ -14,7 +13,15 @@
     name: marathon-0.7.6
     state: present
   tags:
-    - package
+    - marathon
+
+- name: configure marathon unit file
+  sudo: yes
+  replace:
+    dest: /usr/lib/systemd/system/marathon.service
+    regexp: "=network.target"
+    replace: '=mesos-master.service'
+  tags:
     - marathon
 
 - name: enable and start marathon
@@ -32,7 +39,6 @@
     path: /etc/consul/register.d
     state: directory
   tags:
-    - consul
     - marathon
 
 - name: generate marathon consul service
@@ -43,6 +49,4 @@
   notify:
     - register marathon with consul
   tags:
-    - consul
-    - consul-service
     - marathon

@@ -1,13 +1,10 @@
 ---
-- name: install mesos
+- name: add mesosphere repository
   sudo: yes
   yum:
-    name: "{{ item }}"
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
     state: present
-  with_items:
-    - http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
   tags:
-    - package
     - mesos
 
 - name: install mesos package
@@ -16,10 +13,9 @@
     name: mesos
     state: present
   tags:
-    - package
     - mesos
 
-- name: configure mesos zookeeper
+- name: configure /etc/mesos/zk
   sudo: yes
   template:
     src: zk.j2
@@ -33,6 +29,16 @@
     name: mesos-master
     enabled: no
   when: mesos_mode == "follower"
+  tags:
+    - mesos
+
+- name: configure mesos-master unit file
+  sudo: yes
+  replace:
+    dest: /usr/lib/systemd/system/mesos-master.service
+    regexp: "=network.target"
+    replace: '=zookeeper.service'
+  when: mesos_mode == "leader"
   tags:
     - mesos
 
@@ -51,8 +57,8 @@
     path: /etc/consul/register.d
     state: directory
   tags:
-    - consul
     - mesos
+
 
 - include: leader.yml
   when: mesos_mode == "leader" or mesos_mode == "mixed"
