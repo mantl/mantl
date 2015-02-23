@@ -18,4 +18,15 @@
     group: root
     mode: 755 
 
-- include: users.yml  
+# add hosts to /etc/hosts
+- name: configure hosts file
+  sudo: yes
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }} {{ item }}.novalocal"
+    state: present
+  when: hostvars[item].ansible_default_ipv4.address is defined
+  with_items: groups['all']
+
+- include: users.yml
