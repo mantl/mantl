@@ -30,18 +30,18 @@ function dhclient_config {
     fi
 
     for nameserver in "$new_domain_name_servers"; do
-        echo "nameserver "$nameserver" >> "$rscf"
+        echo "nameserver $nameserver" >> "$rscf"
     done
 }
 
 function update_resolv_conf {
-    cp "$rscf" /etc/resolv.conf &&  rm -f "$rscf" 
+    cp "$rscf" /etc/resolv.conf &&  rm -f "$rscf"
 }
 
 header
 
 # Perfer local and hard-coded DNS names.
-local_dns 
+local_dns
 
 # Next, pull in values from DHCP.
 dhclient_config
