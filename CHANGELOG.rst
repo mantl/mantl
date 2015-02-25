@@ -26,7 +26,6 @@ Ansible Playbooks
 * Add destroy-hosts
 * Add provision-consul-gossip-key
 * Add provision-hosts
-* Add provision-image
 * Add provision-nova-key
 * Add reboot-hosts
 * Add show-containers
