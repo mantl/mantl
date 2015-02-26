@@ -16,15 +16,15 @@ The base platform contains control nodes that manage the cluster and any number 
 
 ![Single-DC](docs/_static/single_dc.png)
 
-Once WAN joining is configured, each cluster find services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html). 
+Once WAN joining is configured, each cluster can locate services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html). 
 
 ![Mult-DC](docs/_static/multi_dc.png)
 
 ####Control Nodes
 
-The compute node manages a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
+The control node manages a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
 
-In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services.
+In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The consul ansible role will automatically bootstrap and join multiple consul nodes. The mesos ansible role will provision highly-availabile Mesos and Zookeeper environments when more than one node is provisioned. 
 
 ![Control Node](docs/_static/control_node.png)
 
