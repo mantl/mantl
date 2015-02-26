@@ -1,0 +1,7 @@
+
+#configure DNS resolution to consul servers
+server=/consul/127.0.0.1#8600
+{%- for host in groups[consul_servers_group] | intersect(groups[consul_dc]) -%} 
+server=/consul/{{ hostvars[host].ansible_default_ipv4.address }}#8600
+{%- endfor -%}
+
