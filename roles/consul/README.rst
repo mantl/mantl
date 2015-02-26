@@ -58,7 +58,7 @@ variables are roughly sorted from most commonly used to least.
 
    Docker image to pull and run (default ``progrium/consul``)
 
-.. data:: consul_tag
+.. data:: consul_image_tag
 
    Tag of :data:`consul_image` to pull (default ``latest``)
 
