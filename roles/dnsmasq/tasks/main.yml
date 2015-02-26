@@ -18,7 +18,7 @@
   tags:
     - dnsmasq
 
-# Before we reboot the system, resolve IPs via consul
+# Resolve IPs via Consul before reboot
 - name: configure dnsmasq symlink
   sudo: yes
   file:
