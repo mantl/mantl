@@ -8,16 +8,44 @@
     - dnsmasq
     - bind-utils
   tags:
-    - package
     - dnsmasq
 
-- name: configure consul lookups
+- name: configure dnsmasq for consul 
   sudo: yes
-  copy: 
-    content: 'server=/consul/127.0.0.1#8600'
-    dest: /etc/dnsmasq.d/10-consul
+  template: 
+    src: 10-consul 
+    dest: /etc/NetworkManager/dnsmasq.d/10-consul
+  tags:
+    - dnsmasq
+
+# Before we reboot the system, resolve IPs via consul
+- name: configure dnsmasq symlink
+  sudo: yes
+  file:
+    src: /etc/NetworkManager/dnsmasq.d/10-consul
+    dest: /etc/dnsmasq.d/10-consul 
+    state: link
   notify:
-    - restart dnsmasq
+    - restart dnsmasq 
+  tags:
+    - dnsmasq 
+
+- name: configure base dnsmasq 
+  sudo: yes
+  template:
+    src: 90-base
+    dest: /etc/NetworkManager/dnsmasq.d/90-base
+  tags:
+    - dnsmasq 
+
+- name: configure networkmanager for dnsmasq
+  sudo: yes
+  lineinfile:
+    dest: /etc/NetworkManager/NetworkManager.conf
+    line: "dns=dnsmasq"
+    insertbefore: "^plugins"
+  notify:
+    - disable dnsmasq
   tags:
     - dnsmasq
 
@@ -26,6 +54,6 @@
   lineinfile:
     dest: /etc/resolv.conf
     line: "nameserver 127.0.0.1"
-    insertbefore: "^nameserver"
+    insertafter: "^search"
   tags:
     - dnsmasq
