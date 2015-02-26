@@ -20,7 +20,10 @@ Vagrant.configure(2) do |config|
     ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
     ansible.playbook = "vagrant.yml"
     ansible.groups = {
-      "mesos_leaders" => ["default"]
+      "consul_servers" => ["default"],
+      "mesos_leaders" => ["default"],
+      "vagrant" => ["default"],
+      "zookeeper_servers" => ["default"]
     }
     ansible.extra_vars = {
       "consul_gossip_key" => "ggVIrhEzqe7W/65YZ9fYFA==",
@@ -29,12 +32,11 @@ Vagrant.configure(2) do |config|
       "consul_retry_join" => 1,
       "mesos_cluster" => "vagrant",
       "mesos_mode" => "mixed",
-      "zk_id" => 1
     }
   end
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ['modifyvm', :id, '--cpus', 2]
-    vb.customize ['modifyvm', :id, '--memory', 4092]
+    vb.customize ['modifyvm', :id, '--memory', 1024]
   end
 end
