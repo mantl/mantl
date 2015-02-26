@@ -1,10 +1,10 @@
-ZK_ID={{ zk_id }}
+ZK_ID={{ zookeeper_id }}
 CONSUL_CONNECT=consul.service.consul:8500
 CONSUL_QUERY={{ zookeeper_ensemble }}.{{ zookeeper_service }}
 SERVICE_2181_NAME={{ zookeeper_service }}
-SERVICE_2181_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:2181:zkid-{{ zk_id }}
+SERVICE_2181_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:2181:zkid-{{ zookeeper_id }}
 SERVICE_2888_NAME={{ zookeeper_service }}-2888
-SERVICE_2888_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:2888:zkid-{{ zk_id }}
+SERVICE_2888_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:2888:zkid-{{ zookeeper_id }}
 SERVICE_3888_NAME={{ zookeeper_service }}-3888
-SERVICE_3888_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:3888:zkid-{{ zk_id }}
-SERVICE_TAGS={{ zookeeper_service_tags }},{{ zookeeper_ensemble }},zkid-{{ zk_id }}
+SERVICE_3888_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:3888:zkid-{{ zookeeper_id }}
+SERVICE_TAGS={{ zookeeper_service_tags }},{{ zookeeper_ensemble }},zkid-{{ zookeeper_id }}
