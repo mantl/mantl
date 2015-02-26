@@ -7,7 +7,7 @@ zookeeper_container_name: "{{ zookeeper_service }}"
 zookeeper_data_volume: "{{ zookeeper_service }}-data-volume"
 
 zookeeper_image: asteris/zookeeper
-zookeeper_tag: latest
+zookeeper_image_tag: latest
 zookeeper_ports: "-p 2181:2181 -p 2888:2888 -p 3888:3888"
 zookeeper_env: "/etc/default/{{ zookeeper_service }}"
 
