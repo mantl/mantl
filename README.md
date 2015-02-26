@@ -5,7 +5,7 @@ Microservices infrastructure is a powerful platform for rapidly deploying contai
 ##Features
 
 * Docker Container support
-* Mesos, Marathon and Zookeeper
+* Run workloads across multiple sysems via Mesos
 * Consul DNS-based service discovery 
 * High Availability
 * Multi-Datacenter support
