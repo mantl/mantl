@@ -1,7 +1,9 @@
 ---
+# We disble dnsmasq in systemd so that NetworkManager can control it
+- name: disable dnsmasq
+  sudo: yes
+  command: systemctl disable dnsmasq
+
 - name: restart dnsmasq
   sudo: yes
-  service: 
-    name: dnsmasq
-    state: restarted
-    enabled: yes 
+  command: systemctl restart dnsmasq 
