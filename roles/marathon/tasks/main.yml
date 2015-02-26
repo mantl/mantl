@@ -21,6 +21,9 @@
     dest: /usr/lib/systemd/system/marathon.service
     regexp: "=network.target"
     replace: '=mesos-master.service'
+  notify:
+    - reload marathon
+    - restart marathon
   tags:
     - marathon
 
