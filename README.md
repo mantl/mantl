@@ -1,6 +1,6 @@
 Overview
 --------
-Microservices infrastructure is a powerful platform for rapidly deploying containers any analytic applications.
+Microservices infrastructure is a powerful platform for rapidly deploying containers and analytic applications.
 
 ##Features
 
@@ -43,7 +43,14 @@ The compute node launches containers and other Mesos-based workloads. Registrato
 
 ##Getting Started
 
-[Getting Started Documentation](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html)
+A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
+
+```
+	vagrant up
+```
+
+
+The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
 
 
 ##Documentation
@@ -60,6 +67,6 @@ To build the documentation locally, run:
 
 License
 -------
-Copyright ©2015 Cisco Systems, Inc. All rights reserved. 
+Copyright © 2015 Cisco Systems, Inc. All rights reserved. 
 
 Released under the Apache 2.0 License. See LICENSE.
