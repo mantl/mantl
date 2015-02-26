@@ -88,8 +88,9 @@ ZooKeeper. In particular, we're setting the
 :data:`zookeeper_service_tags` for ZooKeeper to "ensemble1" on the
 group level. That means that every machine in the group will have that
 variable set to that value. We also are setting :data:`zk_id` on each
-individual node. This is currently required for proper ZooKeeper
-operation.
+individual node. This is not required for proper operation but if it
+is not set and the order of servers in the group changes, the
+automatically generated ID would change.
 
 Once you have your inventory file in place, test your connections
 using the command ``ansible all -i /path/to/your/inventory -m
@@ -146,9 +147,9 @@ bring up the cluster of nodes that we've specified in our inventory.
       roles:
         - registrator
     
-    # remember that zk_id and other ZooKeeper variables are set in our
-    # inventory in this case, so we don't need to define them in the
-    # playbook
+    # remember that zk_id and other ZooKeeper variables are set
+    # in our inventory in this case, so we don't need to define them
+    # in the playbook
     - hosts: zookeeper_servers
       gather_facts: no
       roles:

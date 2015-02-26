@@ -7,17 +7,20 @@ service yourself, you should prefer :doc:`consul`.
 Variables
 ---------
 
-You can use these variables to customize your ZooKepeer installation (see
+You can use these variables to customize your ZooKeeper installation (see
 the :ref:`ZooKeeper Example Playbook <zookeeper-example-playbook>` for how
 to do so.)
 
 .. data:: zk_id
 
-   The value of ``zk_id`` in the ZooKeeper configuration file. This
-   has no default set.
+   The value of ``zk_id`` in the ZooKeeper configuration file. If not
+   set, this will be calculated from the server's position in the
+   :data:`zookeeper_server_group`.
 
-   .. warning:: ``zk_id`` is *required*. If it is not set, your
-                cluster won't even start up.
+.. data:: zookeeper_server_group
+
+   The server group from which to pull identity information, if
+   :data:`zk_id` is not set.
 
 .. data:: zookeeper_service
 
@@ -28,13 +31,7 @@ to do so.)
    Comma separated list of tags to be used by registrator to register
    the service with consul.
 
-   Generated automatically from :data:`zookeeper_service`,
-   :data:`zookeeper_env`, :data:`zookeeper_ensemble`, and
-   :data:`zk_id` if not set.
-
-.. data:: zookeeper_env
-
-   default: ``dev``
+   Generated automatically from :data:`zookeeper_service` if not set.
 
 .. data:: zookeeper_ensemble
 
@@ -43,15 +40,12 @@ to do so.)
 .. data:: zookeeper_container_name
 
    The name that will be used for the container at runtime. Generated
-   automatically from :data:`zookeeper_service`,
-   :data:`zookeeper_env`, :data:`zookeeper_ensemble`, and
-   :data:`zk_id` if not set.
+   automatically from :data:`zookeeper_service` if not set.
 
 .. data:: zookeeper_data_volume
 
    The name of the data volume to store state in. Generated
-   automatically from :data:`zookeeper_env`,
-   :data:`zookeeper_ensemble`, and :data:`zk_id` if not set.
+   automatically from :data:`zookeeper_service` if not set.
 
 .. data:: zookeeper_docker_image
 
