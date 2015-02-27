@@ -18,7 +18,7 @@
   tags:
     - dnsmasq
 
-# Before we reboot the system, resolve IPs via consul
+# Resolve IPs via Consul before reboot
 - name: configure dnsmasq symlink
   sudo: yes
   file:
@@ -27,14 +27,6 @@
     state: link
   notify:
     - restart dnsmasq 
-  tags:
-    - dnsmasq 
-
-- name: configure base dnsmasq 
-  sudo: yes
-  template:
-    src: 90-base
-    dest: /etc/NetworkManager/dnsmasq.d/90-base
   tags:
     - dnsmasq 
 
