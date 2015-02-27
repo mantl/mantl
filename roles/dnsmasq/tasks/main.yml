@@ -30,14 +30,6 @@
   tags:
     - dnsmasq 
 
-- name: configure base dnsmasq 
-  sudo: yes
-  template:
-    src: 90-base
-    dest: /etc/NetworkManager/dnsmasq.d/90-base
-  tags:
-    - dnsmasq 
-
 - name: configure networkmanager for dnsmasq
   sudo: yes
   lineinfile:
