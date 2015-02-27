@@ -4,12 +4,12 @@ Microservices infrastructure is a powerful platform for rapidly deploying contai
 
 ##Features
 
-* Docker Container support
-* Run workloads across multiple sysems via Mesos
-* Consul DNS-based service discovery 
+* [Docker](http://docker.io) Container support
+* Run workloads across multiple sysems via [Mesos](http://mesos.apache.org)
+* [Consul](http://consul.io) DNS-based service discovery 
 * High Availability
 * Multi-Datacenter support
-* Vagrantfile for testing
+* [Vagrantfile](http://vagrantup.com) for testing
 
 ####Architecture
 The base platform contains control nodes that manage the cluster and any number of compute nodes. Containers automatically register themselves into DNS so that other services can locate them.
