@@ -10,7 +10,7 @@ RestartSec=20
 TimeoutStartSec=20m
 
 ExecStartPre=-/usr/bin/docker rm {{ zookeeper_container_name }}
-ExecStartPre=-/usr/bin/docker pull {{ zookeeper_image }}:{{ zookeeper_tag }}
+ExecStartPre=-/usr/bin/docker pull {{ zookeeper_image }}:{{ zookeeper_image_tag }}
 ExecStartPre=/bin/bash -c ' \
     /usr/bin/docker inspect -f "\{\{.Created\}\}" {{ zookeeper_data_volume }} || \
     /usr/bin/docker run \
@@ -24,7 +24,7 @@ ExecStart=/usr/bin/docker run \
     {{ zookeeper_ports }} \
     --env-file={{ zookeeper_env }} \
     --volumes-from {{ zookeeper_data_volume }} \
-    {{ zookeeper_image }}:{{ zookeeper_tag }}
+    {{ zookeeper_image }}:{{ zookeeper_image_tag }}
 
 ExecStop=/bin/bash -c " \
     /usr/bin/docker kill {{ zookeeper_container_name }} && \
