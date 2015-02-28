@@ -11,7 +11,6 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * Multi-datacenter support
 * High availablity
 
-
 ####Architecture
 The base platform contains control nodes that manage the cluster and any number of compute nodes. Containers automatically register themselves into DNS so that other services can locate them.
 
@@ -35,13 +34,6 @@ The compute nodes launch containers and other Mesos-based workloads. [Registrato
 
 ![Compute Node](docs/_static/compute_node.png)
 
-
-
-
-
-
-
-
 ##Getting Started
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
@@ -49,7 +41,6 @@ A Vagrantfile is provided that provisions everything on a single VM. To run (ens
 ```
 	vagrant up
 ```
-
 
 The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
 
