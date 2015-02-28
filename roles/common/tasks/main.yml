@@ -13,7 +13,7 @@
   sudo: yes
   lineinfile:
     dest: /etc/hosts
-    regexp: '.*{{ item }}$'
+    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }} {{ item }} {{ item }}.novalocal$"
     line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }} {{ item }}.novalocal"
     state: present
   when: hostvars[item].ansible_default_ipv4.address is defined
