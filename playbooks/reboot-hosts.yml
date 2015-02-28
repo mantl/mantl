@@ -1,4 +1,6 @@
 ---
+- include: ../openstack/provision-hosts.yml
+
 - hosts:  all
   gather_facts: no
   tasks:
