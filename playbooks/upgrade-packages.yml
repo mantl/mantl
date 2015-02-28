@@ -1,7 +1,7 @@
 ---
 - hosts:  "{{ dc | default('all') }}"
   gather_facts: no
-  serial: "{{ serial_count | default(1) }}"
+  serial: "{{ serial | default(1) }}"
   tasks:
 
   - name: upgrade kernel package
