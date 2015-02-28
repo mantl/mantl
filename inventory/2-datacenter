@@ -1,19 +1,18 @@
+# all 
 [all]
-host-[01:10]
+host-[01:05]
 
+# datacenters
 [dc1]
 host-[01:05]
 
 [dc2]
-host-[06:10]
+host-[06:10
 
+# control 
 [consul_servers]
 host-[01:03]
 host-[06:08]
-
-[consul_clients]
-host-[04:05]
-host-[09:10]
 
 [zookeeper_servers]
 host-[01:03]
@@ -23,10 +22,15 @@ host-[06:08]
 host-[01:03]
 host-[06:08]
 
-[mesos_followers]
-host-[04:05]
-host-[09:10]
-
 [marathon_servers]
 host-[01:03]
 host-[06:08]
+
+# compute 
+[consul_clients]
+host-[04:05]
+host-[09:10]
+
+[mesos_followers]
+host-[04:05]
+host-[09:10]
