@@ -13,4 +13,4 @@
 # - consul datacenter
 - include: openstack/provision-nova-key.yml
 - include: openstack/provision-hosts.yml
-- include: playbooks/upgrade-packages.yml
+- include: playbooks/upgrade-packages.yml serial=100%
