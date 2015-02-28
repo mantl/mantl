@@ -9,7 +9,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * [Consul](http://consul.io) for service discovery 
 * [Docker](http://docker.io) container runtime
 * Multi-datacenter support
-* High Availablility
+* High availablity
 
 
 ####Architecture
