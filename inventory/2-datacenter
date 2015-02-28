@@ -7,7 +7,7 @@ host-[01:05]
 host-[01:05]
 
 [dc2]
-host-[06:10
+host-[06:10]
 
 # control 
 [consul_servers]
