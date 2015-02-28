@@ -1,6 +1,6 @@
 # all 
 [all]
-host-[01:05]
+host-[01:10]
 
 # datacenters
 [dc1]
