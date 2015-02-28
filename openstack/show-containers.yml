@@ -1,0 +1,3 @@
+---
+- include: provision-hosts.yml
+- include: ../playbooks/show-containers.yml
