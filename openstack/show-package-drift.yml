@@ -1,0 +1,3 @@
+---
+- include: provision-hosts.yml
+- include: ../playbooks/show-package-drift.yml
