@@ -1,15 +1,16 @@
 Overview
 --------
-Microservices infrastructure is a modern platform for rapidly deploying globally distributed services and analytic applications
+Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
 
 ##Features
 
 * [Mesos](http://mesos.apache.org) cluser manager for efficient resource isolation and sharing across distributed services
-* [Marathon](https://mesosphere.github.io/marathon) a framework for cluster management of containerized services
+* [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery 
 * [Docker](http://docker.io) container runtime
-* Highly available and fault tolerant
 * Multi-datacenter support
+* High availablity
+
 
 ####Architecture
 The base platform contains control nodes that manage the cluster and any number of compute nodes. Containers automatically register themselves into DNS so that other services can locate them.
