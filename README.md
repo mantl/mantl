@@ -8,7 +8,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery 
 * [Docker](http://docker.io) container runtime
-* Multi-Datacenter support
+* Multi-datacenter support
 * High Availablility
 
 
