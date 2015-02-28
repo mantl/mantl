@@ -12,6 +12,7 @@
     wait_for:
       host: "{{ hostvars[item].ansible_default_ipv4.address }}"
       port: 8302
+      timeout: 10
     with_items: groups['consul_servers']
 
   - name: get list of consul servers that are wan gossip pool members
