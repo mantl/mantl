@@ -42,6 +42,16 @@ A Vagrantfile is provided that provisions everything on a single VM. To run (ens
 	vagrant up
 ```
 
+###Deploying on multiple servers
+If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
+
+1. Install the software components: `sudo pip install -r requirements.txt`
+2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
+	- `inventory/1-datacenter`
+	- `inventory/2-datacenter` Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
+3. Run `ansible-provision -i <your_inventory_file> site.yml`
+
+
 The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
 
 
