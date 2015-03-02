@@ -13,11 +13,7 @@ to do so.)
 
 .. data:: zk_id
 
-   The value of ``zk_id`` in the ZooKeeper configuration file. This
-   has no default set.
-
-   .. warning:: ``zk_id`` is *required*. If it is not set, your
-                cluster won't even start up.
+   The value of ``zk_id`` in the ZooKeeper configuration file. If not provided it will be set by the playbook.
 
 .. data:: zookeeper_service
 
