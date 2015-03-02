@@ -37,7 +37,7 @@ Getting OpenStack tenant settings
 3. Click on the "Download the OpenStack RC File" button. We'll use this file to set up authentication.
 4. Download the RC file for each Data Center you want to provision servers in. You may have to log into different OpenStack web consoles.
 
-.. image:: ../_static/openstack_rc.png
+.. image:: _static/openstack_rc.png
 
 Open the file that you just downloaded. We are interested in three of the environment variables that are exported:
 
