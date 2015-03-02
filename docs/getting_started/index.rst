@@ -52,7 +52,7 @@ Checking your deployment
 If the playbooks are successful, you should be able to reach the web
 consoles for Mesos, Marathon and Consul.
 
-Here are some links to test on host-01 (host-01 should resolve via `/etc/hosts` or DNS):
+Here are some links to test on host-01 (make sure host-01 resolves via ``/etc/hosts`` or DNS):
 
 *  `mesos-leader`_ on port 5050
 *  `marathon`_ on port 8080
@@ -65,14 +65,14 @@ Here are some links to test on host-01 (host-01 should resolve via `/etc/hosts` 
 
 Customizing your deployment
 ---------------------------
-Below are guides to customizing your host inventory and Ansible playbooks.
+Below are guides to customizing your host inventory, Ansible playbooks and adding users.
 
 .. toctree::
    :maxdepth: 1
 
    inventory.rst
    playbook.rst
-  
+   ssh_users.rst  
         
 .. _generated dynamically: http://docs.ansible.com/intro_dynamic_inventory.html
 .. _inventory file: http://docs.ansible.com/intro_inventory.html
