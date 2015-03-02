@@ -12,10 +12,6 @@ Features
 * Multi-datacenter support
 * High availablity
 
-
-microservices (or whatever else you'd like) on top of `Apache Mesos`_
-and `Marathon`_.
-
 Contents:
 
 .. toctree::
