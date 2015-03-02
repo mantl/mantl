@@ -25,3 +25,13 @@ Contents:
 
 .. _Apache Mesos: https://mesos.apache.org/
 .. _Marathon: https://mesosphere.github.io/marathon/
+
+
+License
+-------
+Copyright ©2015 Cisco Systems, Inc. All rights reserved. 
+
+Released under the Apache 2.0 License. See the ``LICENSE`` file in the git repository.
+
+
+
