@@ -4,7 +4,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 
 ##Features
 
-* [Mesos](http://mesos.apache.org) clutser manager for efficient resource isolation and sharing across distributed services
+* [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery 
 * [Docker](http://docker.io) container runtime
