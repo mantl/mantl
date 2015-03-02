@@ -16,7 +16,7 @@ Example files are located in ``inventory/group_vars/dc1`` and ``inventory/group_
 
 The file looks like this:
 
-.. code::
+.. code-block:: yaml
 
   os_auth_url:
   os_tenant_name:
@@ -71,6 +71,7 @@ Before running any playbooks, run the following command to to pull in your usern
 
   source ~/Downloads/my-project.rc
 
+.. note:: The default OpenStack RC file will prompt for your password in order to set OS_PASSWORD. 
 
 Creating a Network
 ------------------
@@ -214,6 +215,6 @@ If you already have a CentOS 7 image in your OpenStack environment, you don't ne
 
 A SSH key is required to configure servers. ``openstack/provision-nova-key.yml`` will take the your ``${HOME}/.ssh/id_rsa`` and upload it to OpenStack as ``ansible_key``. SSH key vars can be changed via the ``inventory/group_vars/all/all.yml`` file.
 
-.. code-block:: yaml
+.. code-block:: shell 
 
   ansible-playbook -i inventory/my_dc1 openstack/provision-nova-key.yml
