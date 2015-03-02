@@ -1,8 +1,6 @@
 OpenStack
 =========
 
-.. todo:: document network setup
-
 This project provides a number of playbooks to get your hosts created
 using OpenStack. You can find them in ``openstack/`` in the main
 project directory.
@@ -68,17 +66,129 @@ The playbooks get Username/Password information via environment variables:
 
    Your OpenStack password
 
-So before running any playbooks, run the following command to to pull in your username password:
+Creating a Network
+------------------
 
-.. code::
+You will need to create a network in your OpenStack tenant for the
+services in this project to run on. The commands below will create
+your network and router, and allow traffic through on the ports you'll
+need to use to communicate with the services.
 
-  source <my_openstack.rc>
+Network
+^^^^^^^
 
+The network is the first thing you'll need to create in OpenStack. The
+ID of this network (in our example
+``fd94baf0-b314-453e-9cd6-73c90fc53857``) is what you'll need to add
+as ``os_net_id`` in the ``group_vars`` files mentioned above.
 
-After setting these, you can provision a new CentOS 7 image with
-``openstack/provision-image.yml``, add your SSH key to your tenant
-with ``openstack/provision-nova-key.yml``, spin up new instances with
-``openstack/provision-hosts.yml``, and destroy them with
-``openstack/destroy-hosts.yml``. These playbooks all use the host
+.. code-block:: shell
+
+   $ neutron net-create network1
+   Created a new network:
+   +-----------------+--------------------------------------+
+   | Field           | Value                                |
+   +-----------------+--------------------------------------+
+   | admin_state_up  | True                                 |
+   | id              | fd94baf0-b314-453e-9cd6-73c90fc53857 |
+   | name            | network1                             |
+   | router:external | False                                |
+   | shared          | False                                |
+   | status          | ACTIVE                               |
+   | subnets         |                                      |
+   | tenant_id       | ...                                  |
+   +-----------------+--------------------------------------+
+
+   $ neutron subnet-create network1 10.10.10.0/24 --name subnet1
+   Created a new subnet:
+   +-------------------+------------------------------------------------+
+   | Field             | Value                                          |
+   +-------------------+------------------------------------------------+
+   | allocation_pools  | {"start": "10.10.10.2", "end": "10.10.10.254"} |
+   | cidr              | 10.10.10.0/24                                  |
+   | dns_nameservers   |                                                |
+   | enable_dhcp       | True                                           |
+   | gateway_ip        | 10.10.10.1                                     |
+   | host_routes       |                                                |
+   | id                | ...                                            |
+   | ip_version        | 4                                              |
+   | ipv6_address_mode |                                                |
+   | ipv6_ra_mode      |                                                |
+   | name              | subnet1                                        |
+   | network_id        | fd94baf0-b314-453e-9cd6-73c90fc53857           |
+   | tenant_id         | ...                                            |
+   +-------------------+------------------------------------------------+
+
+Router
+^^^^^^
+
+Once you've created your network, you'll also need a router with an
+external gateway on ``network1``.
+
+.. code-block:: shell
+
+   $ neutron router-create router1
+   Created a new router:
+   +-----------------------+--------------------------------------+
+   | Field                 | Value                                |
+   +-----------------------+--------------------------------------+
+   | admin_state_up        | True                                 |
+   | external_gateway_info |                                      |
+   | id                    | c5a07e4d-09d2-434a-96b2-73c088c13dc5 |
+   | name                  | router1                              |
+   | routes                |                                      |
+   | status                | ACTIVE                               |
+   | tenant_id             | 7dc1ba3b443c4b34a202924a75bd81a3     |
+   +-----------------------+--------------------------------------+
+
+   $ neutron router-gateway-set router1 external
+   Set gateway for router router1
+
+   $ neutron router-interface-add router1 subnet1
+   Added interface ... to router router1.
+
+To check that everything was created successfully, run ``neutron
+router-show router``. You should see IPs in ``external_fixed_ips`` and
+``network_id`` should be set.
+
+Security Group
+^^^^^^^^^^^^^^
+
+You should add the following rules to your security group. These are
+for the web and publicly facing interfaces to the various services in
+your cluster:
+
+.. table:: Security Group Rules
+
+   ================ ======== =========
+   Service          Protocol Ports    
+   ================ ======== =========
+   Ping             ICMP     -1       
+   Mesos            TCP      5050/5051
+   Marathon         TCP      8080
+   Consul           TCP      8500
+   Mesos libprocess TCP      9090
+   ================ ======== =========
+
+If you're using the ``default`` security group, you can just
+run the following:
+
+.. code-block:: shell
+
+   nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
+   nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
+   nova secgroup-add-rule default tcp 5050 5050 0.0.0.0/0
+   nova secgroup-add-rule default tcp 5051 5051 0.0.0.0/0
+   nova secgroup-add-rule default tcp 8080 8080 0.0.0.0/0
+   nova secgroup-add-rule default tcp 8500 8500 0.0.0.0/0
+   nova secgroup-add-rule default tcp 9090 9090 0.0.0.0/0
+
+Creating Instances
+------------------
+
+After setting up auth and your network, you can provision a new CentOS
+7 image with ``openstack/provision-image.yml``, add your SSH key to
+your tenant with ``openstack/provision-nova-key.yml``, spin up new
+instances with ``openstack/provision-hosts.yml``, and destroy them
+with ``openstack/destroy-hosts.yml``. These playbooks all use the host
 variables defined in ``inventory/``
-
