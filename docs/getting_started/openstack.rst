@@ -54,9 +54,7 @@ Update the ``inventory/dc1`` file with these values for the apropriate fields. I
 OpenStack Username/Password
 ---------------------------
 
-
 The playbooks get Username/Password information via environment variables:
-
 
 .. envvar:: OS_USERNAME
 
@@ -65,6 +63,14 @@ The playbooks get Username/Password information via environment variables:
 .. envvar:: OS_PASSWORD
 
    Your OpenStack password
+
+
+Before running any playbooks, run the following command to to pull in your username and password for Ansible to use:
+
+.. code::
+
+  source <my_openstack.rc>
+
 
 Creating a Network
 ------------------
@@ -81,6 +87,9 @@ The network is the first thing you'll need to create in OpenStack. The
 ID of this network (in our example
 ``fd94baf0-b314-453e-9cd6-73c90fc53857``) is what you'll need to add
 as ``os_net_id`` in the ``group_vars`` files mentioned above.
+
+**Note:** If you already have a network and routers in your OpenStack region, you can skip these steps and just use the ID of your existing network. Make sure that hosts on the existing network can resolve DNS names and pull data from IP addresses (like ``centos.org``).
+
 
 .. code-block:: shell
 
@@ -158,6 +167,8 @@ You should add the following rules to your security group. These are
 for the web and publicly facing interfaces to the various services in
 your cluster:
 
+**Note:** These rules are good for testing, but please don't expose these ports for production systems to the internet.
+
 .. table:: Security Group Rules
 
    ================ ======== =========
@@ -192,3 +203,17 @@ your tenant with ``openstack/provision-nova-key.yml``, spin up new
 instances with ``openstack/provision-hosts.yml``, and destroy them
 with ``openstack/destroy-hosts.yml``. These playbooks all use the host
 variables defined in ``inventory/``
+
+Here's an example invocation:
+
+.. code::
+
+  ansible-playbook -i inventory/my_dc1 openstack/provision-hosts.yml
+
+If you already have a CentOS 7 image in your OpenStack environment, you don't need to create a new one. 
+
+A SSH key is required to configure servers. ``openstack/provision-nova-key.yml`` will take the your ``${HOME}/.ssh/id_rsa`` and upload it to OpenStack as ``ansible_key``. SSH key vars can be changed via the ``inventory/group_vars/all/all.yml`` file.
+
+.. code::
+
+  ansible-playbook -i inventory/my_dc1 openstack/provision-nova-key.yml
