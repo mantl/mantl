@@ -41,7 +41,7 @@ Getting OpenStack tenant settings
 
 Open the file that you just downloaded. We are interested in three of the environment variables that are exported:
 
-.. code::
+.. code-block:: shell
 
   export OS_AUTH_URL=https://my.openstack.com:5000/v2.0
   export OS_TENANT_ID=my-long-unique-id
@@ -65,11 +65,11 @@ The playbooks get Username/Password information via environment variables:
    Your OpenStack password
 
 
-Before running any playbooks, run the following command to to pull in your username and password for Ansible to use:
+Before running any playbooks, run the following command to to pull in your username and password for Ansible to use, changing the file name and location to the location of your OpenStack RC file:
 
-.. code::
+.. code-block:: shell
 
-  source <my_openstack.rc>
+  source ~/Downloads/my-project.rc
 
 
 Creating a Network
@@ -88,7 +88,7 @@ ID of this network (in our example
 ``fd94baf0-b314-453e-9cd6-73c90fc53857``) is what you'll need to add
 as ``os_net_id`` in the ``group_vars`` files mentioned above.
 
-**Note:** If you already have a network and routers in your OpenStack region, you can skip these steps and just use the ID of your existing network. Make sure that hosts on the existing network can resolve DNS names and pull data from IP addresses (like ``centos.org``).
+.. note:: If you already have a network and routers in your OpenStack region, you can skip these steps and just use the ID of your existing network. Make sure that hosts on the existing network can resolve DNS names and pull data from IP addresses (like ``centos.org``).
 
 
 .. code-block:: shell
@@ -167,7 +167,7 @@ You should add the following rules to your security group. These are
 for the web and publicly facing interfaces to the various services in
 your cluster:
 
-**Note:** These rules are good for testing, but please don't expose these ports for production systems to the internet.
+.. warning:: These rules are good for testing, but please don't expose these ports for production systems to the internet.
 
 .. table:: Security Group Rules
 
@@ -206,7 +206,7 @@ variables defined in ``inventory/``
 
 Here's an example invocation:
 
-.. code::
+.. code-block:: shell
 
   ansible-playbook -i inventory/my_dc1 openstack/provision-hosts.yml
 
@@ -214,6 +214,6 @@ If you already have a CentOS 7 image in your OpenStack environment, you don't ne
 
 A SSH key is required to configure servers. ``openstack/provision-nova-key.yml`` will take the your ``${HOME}/.ssh/id_rsa`` and upload it to OpenStack as ``ansible_key``. SSH key vars can be changed via the ``inventory/group_vars/all/all.yml`` file.
 
-.. code::
+.. code-block:: yaml
 
   ansible-playbook -i inventory/my_dc1 openstack/provision-nova-key.yml
