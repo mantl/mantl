@@ -1,7 +1,18 @@
-Welcome to Microservices Infrastructure's documentation!
+Microservices Infrastructure's documentation
 ========================================================
 
-Microservices Infrastructure provides a platform for running
+Microservices infrastructure is a modern platform for rapidly deploying globally distributed services.
+
+Features
+--------
+* `Mesos`_ cluster manager for efficient resource isolation and sharing across distributed services
+* `Marathon`_ for cluster management of long running containerized services
+* `Consul`_ for service discovery
+* `Docker`_ container runtime
+* Multi-datacenter support
+* High availablity
+
+
 microservices (or whatever else you'd like) on top of `Apache Mesos`_
 and `Marathon`_.
 
@@ -23,7 +34,9 @@ Contents:
    * :ref:`genindex`
    * :ref:`search`
 
-.. _Apache Mesos: https://mesos.apache.org/
+.. _Mesos: https://mesos.apache.org/
+.. _Consul: http://consul.io
+.. _Docker: http://docker.io
 .. _Marathon: https://mesosphere.github.io/marathon/
 
 
