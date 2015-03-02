@@ -1,4 +1,6 @@
 ---
+- include: provision-openstack.yml
+
 - hosts: all
   roles:
     - common
