@@ -28,7 +28,6 @@
 
 - hosts: dc1:&marathon_servers
   gather_facts: no
-  serial: 1
   roles:
     - marathon
 
@@ -49,6 +48,5 @@
 
 - hosts: dc2:&marathon_servers
   gather_facts: no
-  serial: 1
   roles:
     - marathon
