@@ -1,15 +1,61 @@
 ---
-# required to install conntrack
-- name: install conntrack
+- name: install unzip
   sudo: yes
   yum:
     name: "{{ item }}"
     state: present
   with_items:
-    - epel-release
-    - conntrack
+    - unzip
   tags:
-    - package
+    - consul
+
+- name: download consul
+  get_url:
+    url: https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip
+    dest: /tmp/consul.zip
+    mode: 0640
+  tags:
+    - consul
+
+- name: unzip consul
+  sudo: true
+  unarchive:
+    copy: false
+    creates: /bin/consul
+    src: /tmp/consul.zip
+    dest: /bin
+    mode: +x
+  tags:
+    - consul
+
+- name: uninstall unzip
+  sudo: true
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    unzip
+  tags:
+    - consul
+
+- name: cleanup download
+  sudo: true
+  file:
+    path: /tmp/consul.zip
+    state: absent
+  tags:
+    - consul
+
+- name: create directories
+  sudo: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 750
+  with_items:
+    - /data
+    - /etc/consul.d
+  tags:
     - consul
 
 - name: configure consul
