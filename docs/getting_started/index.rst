@@ -33,7 +33,7 @@ First, ping the servers to ensure they are reachable via ssh:
 
 .. code-block:: shell
 
- ansible all -i inventory/1-datacenter -m ping`` 
+ ansible all -i inventory/1-datacenter -m ping 
 
 If any servers fail to connect, check your connection by adding ``-vvvv`` 
 for verbose SSH debugging and try again to view the errors in more detail.
