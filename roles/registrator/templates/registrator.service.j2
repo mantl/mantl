@@ -16,11 +16,10 @@ ExecStartPre=-/usr/bin/docker pull {{ registrator_image }}:{{ registrator_image_
 ExecStart=/usr/bin/docker run \
     --rm \
     --name=registrator \
-    --hostname={{ inventory_hostname }} \
+    --net=host \
     --privileged=true \
-    --link consul:consul \
     --volume=/var/run/docker.sock:/tmp/docker.sock \
-    {{ registrator_image }}:{{ registrator_image_tag }} consul://consul:8500
+    {{ registrator_image }}:{{ registrator_image_tag }} consul://127.0.0.1:8500
 
 ExecStop=/usr/bin/docker kill registrator
 
