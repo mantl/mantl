@@ -1,0 +1,18 @@
+{
+  "datacenter": "{{ consul_dc }}",
+  "advertise_addr": "{{ consul_advertise }}",
+  "rejoin_after_leave": true,
+  "retry_join": [ {{ consul_retry_join }} ],
+  "data_dir": "/data",
+  "ui_dir": "/data/ui/dist",
+{% if consul_is_server %}
+  "server": true,
+  "bootstrap_expect": 3,
+{% endif %}
+{% if consul_gossip_key is defined %}
+  "encrypt": "{{ consul_gossip_key }}",
+{% endif %}
+  "addresses" : {
+    "HTTP": "0.0.0.0"
+  }
+}
