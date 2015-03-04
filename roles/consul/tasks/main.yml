@@ -4,7 +4,7 @@
   file:
     path: "{{ item }}"
     state: directory
-    mode: 750
+    mode: 0750
   with_items:
     - /data
     - /data/ui
@@ -87,8 +87,13 @@
 - name: configure consul
   sudo: yes
   template:
-    src: consul.service.j2
-    dest: /usr/lib/systemd/system/consul.service
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: consul.service.j2
+      dest: /usr/lib/systemd/system/consul.service
+    - src: consul.json.j2
+      dest: /etc/consul.d/consul.json
   notify:
     - reload consul
   tags:
