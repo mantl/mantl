@@ -17,7 +17,7 @@
 
   - name: get list of consul servers that are wan gossip pool members
     sudo: yes
-    shell: docker exec consul consul members -wan | awk '$4 == "server" { print $2 }' | cut -f1 -d":"
+    shell: /bin/consul members -wan | awk '$4 == "server" { print $2 }' | cut -f1 -d":"
     register: members
     changed_when: no
 
@@ -29,5 +29,5 @@
 
   - name: join all consul servers to wan gossip pool
     sudo: yes
-    command: docker exec consul consul join -wan "{{ servers }}"
+    command: /bin/consul join -wan "{{ servers }}"
     when: non_member_count != "0"
