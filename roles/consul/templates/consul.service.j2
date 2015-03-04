@@ -8,17 +8,7 @@ Restart=on-failure
 RestartSec=20
 TimeoutStartSec=0
 
-ExecStart=/bin/consul agent \
-    -dc {{ consul_dc }} \
-    -advertise {{ consul_advertise }} \
-    -rejoin \
-    -retry-join {{ consul_retry_join }} \
-    -data-dir /data \
-    -ui-dir /data/ui \
-    -config-dir /etc/consul.d 
-    {%- if consul_is_server %} -server -bootstrap-expect {{ consul_bootstrap_expect }}{% endif %}
-    {%- if consul_gossip_key is defined %} -encrypt {{ consul_gossip_key }}{% endif %}
- 
+ExecStart=/bin/consul agent -config-dir /etc/consul.d 
 ExecStop=/bin/consul leave
 
 [Install]
