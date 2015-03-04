@@ -1,4 +1,17 @@
 ---
+- name: create directories
+  sudo: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 750
+  with_items:
+    - /data
+    - /data/ui
+    - /etc/consul.d
+  tags:
+    - consul
+
 - name: install unzip
   sudo: yes
   yum:
@@ -11,9 +24,18 @@
 
 - name: download consul
   get_url:
-    url: https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip
-    dest: /tmp/consul.zip
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
     mode: 0640
+  with_items:
+    - { 
+        url: 'https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip',
+        dest: '/tmp/consul.zip' 
+      }
+    - {
+        url: 'https://dl.bintray.com/mitchellh/consul/0.5.0_web_ui.zip',
+        dest: '/tmp/ui.zip'
+      }
   tags:
     - consul
 
@@ -21,10 +43,22 @@
   sudo: true
   unarchive:
     copy: false
-    creates: /bin/consul
-    src: /tmp/consul.zip
-    dest: /bin
-    mode: +x
+    creates: "{{ item.creates }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode | default(omit) }}"
+  with_items:
+    - {
+        creates: '/bin/consul',
+        src: '/tmp/consul.zip',
+        dest: '/bin',
+        mode: '+x'
+      }
+    - {
+        creates: '/data/ui/dist/index.html',
+        src: '/tmp/ui.zip',
+        dest: '/data/ui'
+      }
   tags:
     - consul
 
@@ -34,29 +68,21 @@
     name: "{{ item }}"
     state: absent
   with_items:
-    unzip
+    - unzip
   tags:
     - consul
 
 - name: cleanup download
   sudo: true
   file:
-    path: /tmp/consul.zip
+    path: "{{ item }}"
     state: absent
+  with_items:
+    - '/tmp/consul.zip'
+    - '/tmp/ui.zip'
   tags:
     - consul
 
-- name: create directories
-  sudo: true
-  file:
-    path: "{{ item }}"
-    state: directory
-    mode: 750
-  with_items:
-    - /data
-    - /etc/consul.d
-  tags:
-    - consul
 
 - name: configure consul
   sudo: yes
