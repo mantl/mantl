@@ -2,6 +2,11 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
+
+  # Prefer VirtualBox before VMware Fusion  
+  config.vm.provider "virtualbox"
+  config.vm.provider "vmware_fusion"
+  
   config.vm.box = "CiscoCloud/shipped-devbox"
 
   config.vm.network :forwarded_port, guest: 2181, host: 2181  # ZooKeeper 
