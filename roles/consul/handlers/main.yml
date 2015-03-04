@@ -5,7 +5,6 @@
   with_items:
     - systemctl restart consul
     - systemctl enable consul
-    - systemctl daemon-reload
   notify:
     - wait for consul to listen
 
