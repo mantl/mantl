@@ -4,6 +4,11 @@ Changelog
 0.2.0 (unreleased)
 ------------------
 
+Fixes
+^^^^^
+* set preference for virtualbox provider for owners of vmware_fusion #73 
+
+
 0.1.0 (03-02-2015)
 ------------------
 
