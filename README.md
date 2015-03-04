@@ -67,7 +67,24 @@ To build the documentation locally, run:
 
 ```
 
-License
+##Roadmap
+microservices-infrastructure is a work in progress.  Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
+
+- [ ] Authentication and authorization for Consul, Mesos, Marathon
+- [ ] Application load balancer based on HAProxy and consul-template
+- [ ] Cisco APIC Integration
+- [ ] Reliablity enhancements
+- [ ] Self maintaining system (log rotation, automatic instance replacement)
+- [ ] Autoscaling of compute nodes (with HashiCorp Atlas)
+- [ ] Immutable deployment (with HashiCorp Atlas + Packer)
+- [ ] Kafka Mesos framework for container logs and application event bus
+- [ ] ElasticSearch Mesos framework for container logs
+- [ ] Support for Amazon Web Services
+- [ ] Support for Microsoft Azure
+- [ ] Support for Google compute Engine
+- [ ] Support for VMware vSphere
+
+##License
 -------
 Copyright © 2015 Cisco Systems, Inc. All rights reserved. 
 
