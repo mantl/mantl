@@ -2,7 +2,9 @@
   "datacenter": "{{ consul_dc }}",
   "advertise_addr": "{{ consul_advertise }}",
   "rejoin_after_leave": true,
+{% if consul_bootstrap_expect > 1 %}
   "retry_join": [ {{ consul_retry_join }} ],
+{% endif %}
   "data_dir": "/data",
   "ui_dir": "/data/ui/dist",
 {% if consul_is_server %}
