@@ -70,6 +70,11 @@ To build the documentation locally, run:
 ##Roadmap
 microservices-infrastructure is a work in progress.  Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
+- [x] Mesos
+- [x] Marathon
+- [x] Consul
+- [x] Multi-datacenter
+- [x] High availablity
 - [ ] Authentication and authorization for Consul, Mesos, Marathon
 - [ ] Application load balancer based on HAProxy and consul-template
 - [ ] Cisco APIC Integration
@@ -79,6 +84,8 @@ microservices-infrastructure is a work in progress.  Please see [milestones](htt
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
 - [ ] Kafka Mesos framework for container logs and application event bus
 - [ ] ElasticSearch Mesos framework for container logs
+- [x] Support for Vagrant
+- [x] Support for OpenStack
 - [ ] Support for Amazon Web Services
 - [ ] Support for Microsoft Azure
 - [ ] Support for Google compute Engine
