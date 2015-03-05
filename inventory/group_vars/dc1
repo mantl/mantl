@@ -1,3 +1,8 @@
+# os_auth_url: https://dc1.cloud.cisco.com:5000/v2.0
+# os_tenant_name: tenant-name
+# os_tenant_id: 86e97371ad71450d91b292029ca9a8c2
+# os_net_id: e7b1ae4f-e0d2-4e24-a48f-b9e6c4933323
+
 os_auth_url:
 os_tenant_name:
 os_tenant_id:
