@@ -1,5 +1,5 @@
 os_auth_url:
 os_tenant_name:
 os_tenant_id:
-os_net_id: fd94baf0-b314-453e-9cd6-73c90fc53857
+os_net_id:
 consul_dc: dc1
