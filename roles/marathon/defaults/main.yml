@@ -1,4 +1,4 @@
 ---
-http_credentials: ""
-ssl_keystore_path: ""
-ssl_keystore_password: ""
+marathon_http_credentials: ""
+marathon_keystore_path: ""
+marathon_keystore_password: ""
