@@ -46,7 +46,7 @@ vagrant up
 ### Deploying on multiple servers
 If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
 
-1. Install the software components: `sudo pip install -r requirements.txt`
+1. Install the software components: `pip install -r requirements.txt`
 2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
 	- [`inventory/1-datacenter`](inventory/1-datacenter)
 	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
@@ -61,7 +61,7 @@ All documentation is located at [https://microservices-infrastructure.readthedoc
 To build the documentation locally, run:
 
 ```shell
-sudo pip install -r requirements.txt
+pip install -r requirements.txt
 cd docs
 make html
 ```
