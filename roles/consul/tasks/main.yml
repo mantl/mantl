@@ -2,13 +2,25 @@
 - name: create directories
   sudo: true
   file:
-    path: "{{ item }}"
+    path: "{{ item.path }}"
     state: directory
-    mode: 0750
+    mode: "{{ item.mode | default(0750) }}"
   with_items:
-    - /data
-    - /data/ui
-    - /etc/consul.d
+    - path: /data
+    - path: /data/ui
+    - path: /etc/consul.d
+  tags:
+    - consul
+
+- name: create TLS struture
+  sudo: true
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode | default(0700) }}"
+  with_items:
+    - path: /etc/consul.d/ssl
+  when: consul_enable_tls == true
   tags:
     - consul
 
@@ -59,6 +71,23 @@
         src: '/tmp/ui.zip',
         dest: '/data/ui'
       }
+  tags:
+    - consul
+
+- name: copy tls files
+  sudo: true
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0400
+  with_items:
+    - src: ca.cert
+      dest: /etc/consul.d/ssl
+    - src: consul.cert
+      dest: /etc/consul.d/ssl
+    - src: consul.key
+      dest: /etc/consul.d/ssl
+  when: consul_enable_tls == true
   tags:
     - consul
 

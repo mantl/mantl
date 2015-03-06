@@ -5,3 +5,7 @@ consul_servers_group: consul_servers
 consul_advertise: "{{ ansible_default_ipv4.address }}"
 consul_retry_join: "{% for host in groups[consul_servers_group] | intersect(groups[consul_dc]) %}\"{{ hostvars[host].ansible_default_ipv4.address }}\"{% if not loop.last %}, {% endif %}{% endfor %}"
 consul_bootstrap_expect: "{{ groups[consul_servers_group] | intersect(groups[consul_dc]) | length }}"
+consul_enable_tls: false
+consul_ca_file:
+consul_cert_file:
+consul_key_file:
