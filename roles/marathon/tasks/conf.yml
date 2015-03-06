@@ -1,0 +1,85 @@
+---
+- name: create marathon conf directory
+  sudo: yes
+  file:
+    dest: /etc/marathon/conf
+    state: directory
+  tags:
+    - marathon
+
+- name: set key/value options
+  sudo: yes
+  when: item.value != ""
+  copy:
+    dest: /etc/marathon/conf/{{ item.key }}
+    content: "{{ item.value }}"
+  with_items:
+    - key: http_credentials
+      value: "{{ http_credentials }}"
+    - key: ssl_keystore_password
+      value: "{{ ssl_keystore_password }}"
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
+
+- name: check keystore consistency
+  fail: msg="cannot set keystore path without keystore password"
+  when: ssl_keystore_path != "" and ssl_keystore_password == ""
+
+- name: copy ssl keystore
+  when: ssl_keystore_path != ""
+  sudo: yes
+  copy:
+    src: "{{ ssl_keystore_path }}"
+    dest: /etc/marathon/keystore.jks
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
+
+- name: create ssl_keystore_path
+  when: ssl_keystore_path != ""
+  sudo: yes
+  copy:
+    dest: /etc/marathon/conf/ssl_keystore_path
+    content: /etc/marathon/keystore.jks
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
+
+
+# since the Mesosphere Marathon package configures itself with files
+# in a directory, we need to clean up old options when they become
+# unset.
+- name: remove blank options
+  sudo: yes
+  when: item.value == ""
+  file:
+    dest: /etc/marathon/conf/{{ item.key }}
+    state: absent
+  with_items:
+    - key: http_credentials
+      value: "{{ http_credentials }}"
+    - key: ssl_keystore_password
+      value: "{{ ssl_keystore_password }}"
+    - key: ssl_keystore_path
+      value: "{{ ssl_keystore_path }}"
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
+
+- name: remove ssl keystore
+  when: ssl_keystore_path == ""
+  sudo: yes
+  file:
+    dest: /etc/marathon/keystore.jks
+    state: absent
+  tags:
+    - marathon
