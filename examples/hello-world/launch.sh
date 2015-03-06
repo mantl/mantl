@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 function usage() {
     echo "$0 - Launch application with Marathon"
@@ -17,8 +18,7 @@ function usage() {
 }
 
 function launch() {
-    curl -X POST -H "Content-Type: application/json" "$MARATHON:8080/v2/apps" -d@"$CONFIG"
-    return "$?"
+    curl -s -X POST -H "Content-Type: application/json" "$MARATHON:8080/v2/apps" -d@"$CONFIG" | python -m json.tool
 }
 
 [[ "$#" -ne 4 ]] && usage
@@ -50,6 +50,5 @@ do
 done
 
 launch
-exit $?
 
 # EOF
