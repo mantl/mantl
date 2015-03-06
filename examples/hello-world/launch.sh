@@ -15,6 +15,8 @@ function usage() {
     echo "  -m, --marathon"
     echo "    IP address or FQDN of the Marathon server"
     echo
+
+    exit 0
 }
 
 function launch() {
@@ -37,7 +39,6 @@ do
 
         -h|--help)
             usage
-            exit 0
             ;;
 
         *)
