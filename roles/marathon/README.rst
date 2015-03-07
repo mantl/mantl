@@ -39,7 +39,7 @@ Variables
 
    .. note:: If you plan to use framework authentication, be sure to
              add the principal and secret to :data:`mesos_credentials`
-             and set :data:`mesos_authenticate` to ``yes``.
+             and set :data:`mesos_authenticate_frameworks` to ``yes``.
 
    default: ``marathon``
 
