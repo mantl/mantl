@@ -33,7 +33,7 @@
   sudo: yes
   copy:
     dest: /etc/mesos/follower-credential
-    content: "{{ ansible_hostname }} {{ mesos_follower_password }}"
+    content: "{{ ansible_hostname }} {{ mesos_follower_secret }}"
   notify: restart mesos follower
   tags:
     - mesos
