@@ -1,4 +1,6 @@
 ---
+- include: framework_auth.yml
+
 - name: create marathon conf directory
   sudo: yes
   file:
