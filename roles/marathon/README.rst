@@ -10,10 +10,28 @@ Keep Marathon servers close to Mesos leaders for best performance;
 they talk back and forth quite a lot to keep the services in the
 cluster in a good state. Placing them on the same machines would work.
 
+Marathon listens on port 8080. To connect to Marathon securely, set
+:data:`marathon_keystore_path` and :data:`marathon_keystore_password`,
+then connect via HTTPS on port 8443.
+
 Variables
 ---------
 
-There are currently no variables for Marathon.
+.. data:: marathon_http_credentials
+
+   HTTP Basic authentication credentials, in the form "user:password".
+
+.. data:: marathon_keystore_path
+
+   Path on the local machine that contains a Java keystore. Marathon
+   has docs on `generating this file
+   <https://mesosphere.github.io/marathon/docs/ssl-basic-access-authentication.html>`_. Please
+   note that if this option is set, :data:`marathon_keystore_password` is
+   *required*.
+
+.. data:: marathon_keystore_password
+
+   Password for the keystore specified in :data:`marathon_keystore_path`.
 
 .. _marathon-example-playbook:
 
