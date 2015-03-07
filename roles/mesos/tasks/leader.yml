@@ -11,7 +11,7 @@
 
 - name: write leader credentials
   sudo: yes
-  when: mesos_authenticate == "True"
+  when: mesos_authenticate
   template:
     src: master-credentials.j2
     dest: /etc/mesos/credentials
@@ -22,7 +22,7 @@
 
 - name: delete leader credentials
   sudo: yes
-  when: mesos_authenticate == "False"
+  when: not mesos_authenticate
   file:
     dest: /etc/mesos/credentials
     state: absent

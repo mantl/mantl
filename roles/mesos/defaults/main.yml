@@ -24,4 +24,4 @@ mesos_zk_chroot: mesos
 
 # authentication options
 mesos_credentials: []
-mesos_authenticate: "{{ mesos_credentials|length > 0 }}"
+mesos_authenticate: no
