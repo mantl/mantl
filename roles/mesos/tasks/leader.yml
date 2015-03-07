@@ -9,6 +9,26 @@
   tags:
     - mesos
 
+- name: write leader credentials
+  sudo: yes
+  when: mesos_authenticate == "True"
+  template:
+    src: master-credentials.j2
+    dest: /etc/mesos/credentials
+  notify:
+    - restart mesos leader
+  tags:
+    - mesos
+
+- name: delete leader credentials
+  sudo: yes
+  when: mesos_authenticate == "False"
+  file:
+    dest: /etc/mesos/credentials
+    state: absent
+  tags:
+    - mesos
+
 - name: generate leader consul service
   sudo: yes
   template:

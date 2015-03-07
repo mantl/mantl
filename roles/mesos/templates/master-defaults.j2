@@ -3,5 +3,11 @@ ZK=`cat /etc/mesos/zk`
 CLUSTER={{ mesos_cluster }}
 MESOS_QUORUM={{ groups.mesos_leaders|count // 2 + 1 }}
 {% if mesos_hostname is defined %}
-MESOS_HOSTNAME={{ mesos_hostname }}
+export MESOS_HOSTNAME={{ mesos_hostname }}
+{% endif %}
+export MESOS_AUTHENTICATORS=crammd5
+{% if mesos_authenticate == "True" %}
+export MESOS_AUTHENTICATE=true
+{% endif %}
+{% if mesos_authenticate == "True" %}export MESOS_CREDENTIALS=/etc/mesos/credentials
 {% endif %}
