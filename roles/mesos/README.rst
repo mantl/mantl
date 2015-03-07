@@ -98,10 +98,17 @@ do so.)
 
    default: ``[]``
 
-.. data:: mesos_authenticate
+.. data:: mesos_authenticate_frameworks
 
    Enable Mesos authentication for frameworks. You should set
    :data:`mesos_credentials` for credentials if this is set.
+
+   default: ``no``
+
+.. data:: mesos_authenticate_followers
+
+   Enable Mesos authentication from followers. If set, each follower
+   will need ``mesos_follower_secret`` set in their host variables.
 
    default: ``no``
 
