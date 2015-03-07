@@ -25,3 +25,4 @@ mesos_zk_chroot: mesos
 # authentication options
 mesos_credentials: []
 mesos_authenticate: no
+mesos_authenticate_followers: no

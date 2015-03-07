@@ -6,8 +6,9 @@ MESOS_QUORUM={{ groups.mesos_leaders|count // 2 + 1 }}
 export MESOS_HOSTNAME={{ mesos_hostname }}
 {% endif %}
 export MESOS_AUTHENTICATORS=crammd5
-{% if mesos_authenticate %}
-export MESOS_AUTHENTICATE=true
+{% if mesos_authenticate %}export MESOS_AUTHENTICATE=true
 {% endif %}
-{% if mesos_authenticate %}export MESOS_CREDENTIALS=/etc/mesos/credentials
+{% if mesos_authenticate_followers %}export MESOS_AUTHENTICATE_SLAVES=true
+{% endif %}
+{% if mesos_authenticate or mesos_authenticate_followers %}export MESOS_CREDENTIALS=/etc/mesos/credentials
 {% endif %}
