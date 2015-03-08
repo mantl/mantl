@@ -31,6 +31,23 @@ class Component(object):
         elif answer == '':
             return default
 
+    def ask_value(self, prompt, default=None, password=False):
+        if password:
+            out = getpass.getpass('{} [{}]: '.format(
+                prompt,
+                'default password set' if default is not None else 'no default password set'
+            ))
+        else:
+            out = getpass.getpass('{}{}: '.format(
+                prompt,
+                ' [{}]' if default is not None else ''
+            ))
+
+        if out is '':
+            out = default
+
+        return out
+
     def read_yaml(self, filename):
         try:
             with open(filename, 'r') as handle:
@@ -80,11 +97,10 @@ class Marathon(Component):
                 return
 
         config['marathon_http_credentials'] = '{}:{}'.format(
-            raw_input('Username: '),
-            getpass.getpass('Password: ')
+            self.ask_value('Username'),
+            self.ask_value('Password', password=True),
         )
         self.write_group('marathon_servers', config)
-
 
 
 def main(args):
