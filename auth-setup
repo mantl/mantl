@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+"""set up authentication and security for various components"""
+from __future__ import print_function
+from argparse import ArgumentParser
+import getpass
+import os
+import yaml
+
+parser = ArgumentParser(__name__, __doc__)
+
+
+class Component(object):
+    def check(self, subset):
+        """return tasks which need to be run"""
+        pass
+
+    def ask_bool(self, question, default=True):
+        """ask a question of the user"""
+        if default is True:
+            yn = 'Y/n'
+        elif default is False:
+            yn = 'y/N'
+        else:
+            raise ValueError('cannot convert %s to bool', default)
+
+        answer = raw_input('{} [{}]: '.format(question, yn))
+        if answer.lower() == 'y':
+            return True
+        elif answer.lower() == 'n':
+            return False
+        elif answer == '':
+            return default
+
+    def read_yaml(self, filename):
+        try:
+            with open(filename, 'r') as handle:
+                return yaml.safe_load(handle)
+        except IOError as err:
+            if err.errno == 2:
+                return {}
+            else:
+                raise err
+
+    def write_yaml(self, filename, content):
+        with open(filename, 'w') as handle:
+            yaml.dump(content, handle, indent=2)
+
+    def read_group(self, group):
+        return self.read_yaml(os.path.join('inventory', 'group_vars', group))
+
+    def write_group(self, group, content):
+        return self.write_yaml(
+            os.path.join('inventory', 'group_vars', group),
+            content
+        )
+
+    def read_host(self, host):
+        return self.read_yaml(os.path.join('inventory', 'host_vars', host))
+
+    def write_host(self, host, content):
+        return self.write_yaml(
+            os.path.join('inventory', 'host_vars', host),
+            content
+        )
+
+
+class Marathon(Component):
+    def check(self):
+        return [self.basic_auth]
+
+    def basic_auth(self):
+        "basic auth"
+        config = self.read_group('marathon_servers')
+
+        if 'marathon_http_credentials' not in config:
+            if not self.ask_bool('Use basic auth for Marathon?', default=True):
+                return
+        else:
+            if not self.ask_bool('Update basic auth for Marathon?', default=False):
+                return
+
+        config['marathon_http_credentials'] = '{}:{}'.format(
+            raw_input('Username: '),
+            getpass.getpass('Password: ')
+        )
+        self.write_group('marathon_servers', config)
+
+
+
+def main(args):
+    for cls in Component.__subclasses__():
+        component = cls()
+
+        print(' {} '.format(cls.__name__).center(40, '='))
+        for item in component.check():
+            print('----> {}'.format(item.__doc__))
+            item()
+
+if __name__ == '__main__':
+    main(parser.parse_args())
