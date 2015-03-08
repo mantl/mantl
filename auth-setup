@@ -40,7 +40,7 @@ class Component(object):
         else:
             out = getpass.getpass('{}{}: '.format(
                 prompt,
-                ' [{}]' if default is not None else ''
+                ' [{}]'.format(default) if default is not None else ''
             ))
 
         if out is '':
@@ -83,24 +83,39 @@ class Component(object):
 
 class Marathon(Component):
     def check(self):
-        return [self.basic_auth]
+        return [self.basic_auth, self.mesos_auth]
 
     def basic_auth(self):
         "basic auth"
-        config = self.read_group('marathon_servers')
+        if not self.ask_bool('Set up/update basic auth for Marathon?', default=True):
+            return
 
-        if 'marathon_http_credentials' not in config:
-            if not self.ask_bool('Use basic auth for Marathon?', default=True):
-                return
-        else:
-            if not self.ask_bool('Update basic auth for Marathon?', default=False):
-                return
+        config = self.read_group('marathon_servers')
 
         config['marathon_http_credentials'] = '{}:{}'.format(
             self.ask_value('Username'),
             self.ask_value('Password', password=True),
         )
         self.write_group('marathon_servers', config)
+
+    def mesos_auth(self):
+        "marathon framework authentication"
+        if not self.ask_bool('Set up/update Marathon framework authentication?', default=True):
+            return False
+
+        config = self.read_group('marathon_servers')
+        config['marathon_principal'] = self.ask_value(
+            'Principal',
+            default=config.get('marathon_principal', 'marathon')
+        )
+        config['marathon_secret'] = self.ask_value(
+            'Secret',
+            default=config.get('marathon_secret', None),
+            password=True,
+        )
+        self.write_group('marathon_servers', config)
+
+        print('Make sure to also set up framework authentication on the Mesos leader!')
 
 
 def main(args):
