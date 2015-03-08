@@ -78,7 +78,6 @@ microservices-infrastructure is a work in progress.  Please see [milestones](htt
 - [ ] Authentication and authorization for Consul, Mesos, Marathon
 - [ ] Application load balancer based on HAProxy and consul-template
 - [ ] Cisco APIC Integration
-- [ ] Reliablity enhancements
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
 - [ ] Autoscaling of compute nodes (with HashiCorp Atlas)
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
