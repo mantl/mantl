@@ -68,14 +68,16 @@ To build the documentation locally, run:
 ```
 
 ##Roadmap
-microservices-infrastructure is a work in progress.  Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
 - [x] Mesos
 - [x] Marathon
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availablity
-- [ ] Authentication and authorization for Consul, Mesos, Marathon
+- [x] Manage Linux user account
+- [ ] Authentication and authorization for Consul
+- [ ] Authentication and authorization for Mesos
+- [ ] Authentication and authorization for Marathon
 - [ ] Application load balancer based on HAProxy and consul-template
 - [ ] Cisco APIC Integration
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
@@ -89,6 +91,8 @@ microservices-infrastructure is a work in progress.  Please see [milestones](htt
 - [ ] Support for Microsoft Azure
 - [ ] Support for Google compute Engine
 - [ ] Support for VMware vSphere
+
+Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
 ##License
 -------
