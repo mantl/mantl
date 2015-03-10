@@ -50,3 +50,13 @@
   gather_facts: no
   roles:
     - marathon
+
+- hosts: dc1:&proxy_servers
+  gather_facts: no
+  roles:
+    - haproxy
+
+- hosts: dc2:&proxy_servers
+  gather_facts: no
+  roles:
+    - haproxy
