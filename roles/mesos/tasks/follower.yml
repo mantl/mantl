@@ -27,6 +27,46 @@
   notify: restart mesos follower
   tags:
     - mesos  
+
+- name: write credential
+  when: mesos_authenticate_followers
+  sudo: yes
+  copy:
+    dest: /etc/mesos/follower-credential
+    content: "{{ ansible_hostname }} {{ mesos_follower_secret }}"
+  notify: restart mesos follower
+  tags:
+    - mesos
+
+- name: delete credential
+  when: not mesos_authenticate_followers
+  sudo: yes
+  file:
+    dest: /etc/mesos/follower-credential
+    state: absent
+  notify: restart mesos follower
+  tags:
+    - mesos
+
+- name: enable credential option
+  when: mesos_authenticate_followers
+  sudo: yes
+  copy:
+    dest: /etc/mesos-slave/credential
+    content: /etc/mesos/follower-credential
+  notify: restart mesos follower
+  tags:
+    - mesos
+
+- name: disable credential option
+  when: not mesos_authenticate_followers
+  sudo: yes
+  file:
+    dest: /etc/mesos-slave/credential
+    state: absent
+  notify: restart mesos follower
+  tags:
+    - mesos
     
 - name: set executor registration timeout 
   sudo: yes

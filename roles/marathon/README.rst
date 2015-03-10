@@ -33,6 +33,24 @@ Variables
 
    Password for the keystore specified in :data:`marathon_keystore_path`.
 
+.. data:: marathon_principal
+
+   Principal to use for Mesos framework authentication.
+
+   .. note:: If you plan to use framework authentication, be sure to
+             add the principal and secret to :data:`mesos_credentials`
+             and set :data:`mesos_authenticate_frameworks` to ``yes``.
+
+   default: ``marathon``
+
+.. data:: marathon_secret
+
+   Secret to use for Mesos framework authentication. Authentication
+   will only be enabled if this value is set to a non-blank value. See
+   also the note in :data:`marathon_principal`.
+
+   default: ``""``
+
 .. _marathon-example-playbook:
 
 Example Playbook
