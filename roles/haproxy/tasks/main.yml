@@ -1,0 +1,22 @@
+---
+- name: set haproxy environment
+  sudo: yes
+  template:
+    src: haproxy.j2
+    dest: /etc/default/haproxy
+  notify: 
+    - restart haproxy
+  tags:
+    - haproxy
+
+- name: configure haproxy
+  sudo: yes
+  template:
+    src: haproxy.service.j2
+    dest: /usr/lib/systemd/system/haproxy.service
+  notify:
+    - reload haproxy
+    - restart haproxy
+  tags:
+    - haproxy
+
