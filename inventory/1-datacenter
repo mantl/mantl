@@ -28,3 +28,6 @@ host-[04:05]
 
 [marathon_servers]
 host-[01:03]
+
+[proxy_servers]
+host-[04:05]
