@@ -1,0 +1,11 @@
+---
+- name: reload haproxy
+  sudo: yes
+  command: "{{ item }}"
+  with_items:
+    - systemctl enable haproxy
+    - systemctl daemon-reload
+
+- name: restart haproxy 
+  sudo: yes
+  command: systemctl restart haproxy
