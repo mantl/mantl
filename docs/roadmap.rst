@@ -19,7 +19,7 @@ Roadmap
 - |_| ElasticSearch Mesos framework for container logs
 - |x| Support for Vagrant
 - |x| Support for OpenStack
-- |x| Support for Apache CloudStack
+- |_| Support for Apache CloudStack
 - |_| Support for Amazon Web Services
 - |_| Support for Microsoft Azure
 - |_| Support for Google compute Engine
