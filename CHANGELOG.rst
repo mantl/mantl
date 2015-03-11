@@ -4,15 +4,23 @@ Changelog
 0.2.0 (unreleased)
 ------------------
 
+Features
+^^^^^^^^
+* Moved consul out of docker #66
+* Added authentication & ssl  support for marathon #67
+* Add mesos-authentication #45
+* Add haproxy role to dynamically configure haproxy from consul. #42
+* Add TLS to consul
+
 Fixes
 ^^^^^
-* set preference for virtualbox provider for owners of vmware_fusion #73 
-
+* Set preference for virtualbox provider for owners of vmware_fusion #73
+* Fix consul clients #30
 
 0.1.0 (03-02-2015)
 ------------------
 
-- Initial release. 
+- Initial release.
 
 Ansible Roles 
 ^^^^^^^^^^^^^
