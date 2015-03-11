@@ -59,10 +59,10 @@
   tags:
     - mesos
 
-- name: ensure consul register.d is present
+- name: ensure consul.d is present
   sudo: yes
   file:
-    path: /etc/consul/register.d
+    path: "{{ consul_dir }}"
     state: directory
   tags:
     - mesos

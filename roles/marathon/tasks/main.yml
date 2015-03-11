@@ -38,10 +38,10 @@
   tags:
     - marathon
 
-- name: ensure consul register.d is present
+- name: ensure consul.d is present
   sudo: yes
   file:
-    path: /etc/consul/register.d
+    path: "{{ consul_dir }}"
     state: directory
   tags:
     - marathon
@@ -50,8 +50,8 @@
   sudo: yes
   template:
     src: marathon-consul.j2
-    dest: /etc/consul/register.d/marathon.json
+    dest: "{{ consul_dir }}/marathon.json"
   notify:
-    - register marathon with consul
+    - reload consul
   tags:
     - marathon
