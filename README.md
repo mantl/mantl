@@ -87,6 +87,7 @@ To build the documentation locally, run:
 - [ ] ElasticSearch Mesos framework for container logs
 - [x] Support for Vagrant
 - [x] Support for OpenStack
+- [ ] Support for Apache CloudStack
 - [ ] Support for Amazon Web Services
 - [ ] Support for Microsoft Azure
 - [ ] Support for Google compute Engine
