@@ -55,19 +55,16 @@
   sudo: true
   unarchive:
     copy: false
-    creates: "{{ item.creates }}"
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode | default(omit) }}"
   with_items:
     - {
-        creates: '/bin/consul',
         src: '/tmp/consul.zip',
         dest: '/bin',
         mode: '+x'
       }
     - {
-        creates: '/data/ui/dist/index.html',
         src: '/tmp/ui.zip',
         dest: '/data/ui'
       }
@@ -90,28 +87,6 @@
   when: consul_enable_tls == true
   tags:
     - consul
-
-- name: uninstall unzip
-  sudo: true
-  yum:
-    name: "{{ item }}"
-    state: absent
-  with_items:
-    - unzip
-  tags:
-    - consul
-
-- name: cleanup download
-  sudo: true
-  file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-    - '/tmp/consul.zip'
-    - '/tmp/ui.zip'
-  tags:
-    - consul
-
 
 - name: configure consul
   sudo: yes
