@@ -33,9 +33,9 @@
   sudo: yes
   template:
     src: mesos-leader-consul.j2
-    dest: /etc/consul/register.d/mesos-leader.json
+    dest: "{{ consul_dir }}/mesos-leader.json"
   notify:
-    - register mesos leader with consul
+    - reload consul
   tags:
     - consul-service
     - mesos
