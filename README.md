@@ -74,7 +74,7 @@ To build the documentation locally, run:
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availablity
-- [x] Manage Linux user account
+- [x] Manage Linux user accounts
 - [ ] Authentication and authorization for Consul
 - [ ] Authentication and authorization for Mesos
 - [ ] Authentication and authorization for Marathon
