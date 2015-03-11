@@ -26,3 +26,7 @@ mesos_zk_chroot: mesos
 mesos_credentials: []
 mesos_authenticate_frameworks: no
 mesos_authenticate_followers: no
+
+# register serivce with consul
+consul_bin: /bin/consul
+consul_dir: /etc/consul.d
