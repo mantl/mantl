@@ -7,6 +7,7 @@ Roadmap
 - |x| Multi-datacenter
 - |x| High availablity
 - |x| Manage Linux user account
+- | | In-service Upgrade and Rollback
 - |_| Authentication and authorization for Consul
 - |_| Authentication and authorization for Mesos
 - |_| Authentication and authorization for Marathon
