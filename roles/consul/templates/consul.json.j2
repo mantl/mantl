@@ -6,8 +6,6 @@
 {% if consul_bootstrap_expect > 1 %}
   "retry_join": [ {{ consul_retry_join }} ],
 {% endif %}
-  "data_dir": "/data",
-  "ui_dir": "/data/ui/dist",
 {% if consul_is_server %}
   "server": true,
   "bootstrap_expect": {{ consul_bootstrap_expect }},
@@ -22,7 +20,6 @@
   "verify_incoming": true,
   "verify_outgoing": true,
 {% endif %}
-  "addresses": {
-    "HTTP": "0.0.0.0"
-  }
+  "data_dir": "/data",
+  "ui_dir": "/data/ui/dist"
 }

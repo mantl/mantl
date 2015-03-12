@@ -98,6 +98,8 @@
       dest: /usr/lib/systemd/system/consul.service
     - src: consul.json.j2
       dest: /etc/consul.d/consul.json
+    - src: consul.nginx.j2
+      dest: /etc/nginx/conf.d/consul.conf
   notify:
     - reload consul
   tags:

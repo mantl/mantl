@@ -1,0 +1,11 @@
+server {
+  listen {{ ansible_default_ipv4.address}}:8500;
+
+  if ($request_method !~ ^GET$) {
+     return 404;
+  }
+
+  location / {
+    proxy_pass http://localhost:8500/;
+  }
+}
