@@ -3,8 +3,9 @@
   sudo: yes
   command: "{{ item }}"
   with_items:
-    - systemctl restart consul
     - systemctl enable consul
+    - systemctl daemon-reload
+    - systemctl restart consul
   notify:
     - wait for consul to listen
 

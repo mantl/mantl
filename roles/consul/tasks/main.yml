@@ -1,16 +1,12 @@
 ---
-- name: create directories
+- name: install consul rpms
   sudo: true
-  file:
-    path: "{{ item.path }}"
-    state: directory
-    mode: "{{ item.mode | default(0750) }}"
+  yum:
+    name: "{{ item }}"
+    state: present
   with_items:
-    - path: /data
-    - path: /data/ui
-    - path: /etc/consul.d
-  tags:
-    - consul
+    - https://bintray.com/artifact/download/asteris/rpm/consul-0.5.0-2.el7.centos.x86_64.rpm
+    - https://bintray.com/artifact/download/asteris/rpm/consul-ui-0.5.0-2.el7.centos.x86_64.rpm
 
 - name: create TLS struture
   sudo: true
@@ -19,55 +15,8 @@
     state: directory
     mode: "{{ item.mode | default(0700) }}"
   with_items:
-    - path: /etc/consul.d/ssl
+    - path: /etc/consul/ssl
   when: consul_enable_tls == true
-  tags:
-    - consul
-
-- name: install unzip
-  sudo: yes
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - unzip
-  tags:
-    - consul
-
-- name: download consul
-  get_url:
-    url: "{{ item.url }}"
-    dest: "{{ item.dest }}"
-    mode: 0640
-  with_items:
-    - { 
-        url: 'https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip',
-        dest: '/tmp/consul.zip' 
-      }
-    - {
-        url: 'https://dl.bintray.com/mitchellh/consul/0.5.0_web_ui.zip',
-        dest: '/tmp/ui.zip'
-      }
-  tags:
-    - consul
-
-- name: unzip consul
-  sudo: true
-  unarchive:
-    copy: false
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: "{{ item.mode | default(omit) }}"
-  with_items:
-    - {
-        src: '/tmp/consul.zip',
-        dest: '/bin',
-        mode: '+x'
-      }
-    - {
-        src: '/tmp/ui.zip',
-        dest: '/data/ui'
-      }
   tags:
     - consul
 
@@ -79,11 +28,11 @@
     mode: 0400
   with_items:
     - src: ca.cert
-      dest: /etc/consul.d/ssl
+      dest: /etc/consul/ssl
     - src: consul.cert
-      dest: /etc/consul.d/ssl
+      dest: /etc/consul/ssl
     - src: consul.key
-      dest: /etc/consul.d/ssl
+      dest: /etc/consul/ssl
   when: consul_enable_tls == true
   tags:
     - consul
@@ -94,10 +43,10 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - src: consul.service.j2
-      dest: /usr/lib/systemd/system/consul.service
+    - src: consul.sysconfig.j2
+      dest: /etc/sysconfig/consul
     - src: consul.json.j2
-      dest: /etc/consul.d/consul.json
+      dest: /etc/consul/consul.json
     - src: consul.nginx.j2
       dest: /etc/nginx/conf.d/consul.conf
   notify:
