@@ -29,4 +29,4 @@ mesos_authenticate_followers: no
 
 # register serivce with consul
 consul_bin: /bin/consul
-consul_dir: /etc/consul.d
+consul_dir: /etc/consul
