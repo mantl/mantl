@@ -14,12 +14,12 @@
   "encrypt": "{{ consul_gossip_key }}",
 {% endif %}
 {% if consul_enable_tls %}
-  "ca_file": "/etc/consul.d/ssl/{{ consul_ca_file }}",
-  "cert_file": "/etc/consul.d/ssl/{{ consul_cert_file }}",
-  "key_file": "/etc/consul.d/ssl/{{ consul_key_file }}",
+  "ca_file": "/etc/consul/ssl/{{ consul_ca_file }}",
+  "cert_file": "/etc/consul/ssl/{{ consul_cert_file }}",
+  "key_file": "/etc/consul/ssl/{{ consul_key_file }}",
   "verify_incoming": true,
   "verify_outgoing": true,
 {% endif %}
-  "data_dir": "/data",
-  "ui_dir": "/data/ui/dist"
+  "data_dir": "/var/lib/consul",
+  "ui_dir": "/usr/share/consul-ui"
 }
