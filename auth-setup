@@ -115,7 +115,24 @@ class Marathon(Component):
         )
         self.write_group('marathon_servers', config)
 
-        print('Make sure to also set up framework authentication on the Mesos leader!')
+
+class Mesos(Component):
+    def check(self):
+        return [self.framework_auth]
+
+    def framework_auth(self):
+        "framework auth"
+        mesos_leaders = self.read_group('mesos_leaders')
+
+        marathon = self.read_group('marathon_servers')
+        if 'marathon_principal' in marathon and 'marathon_secret' in marathon:
+            mesos_leaders.setdefault('mesos_credentials', [])
+            mesos_leaders['mesos_credentials'].append({
+                'principal': marathon['marathon_principal'],
+                'secret': marathon['marathon_secret'],
+            })
+            self.write_group('mesos_leaders', mesos_leaders)
+            print('set/updated auth for Marathon')
 
 
 def main(args):
