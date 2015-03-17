@@ -124,7 +124,7 @@ The following steps are taken to secure the Consul infrastructure.
    (version 0.2)
 -  Keep
    `acl\_down\_policy <http://www.consul.io/docs/agent/options.html#acl_down_policy>`__
-   at "extend-cache" (version 0.2
+   at "extend-cache" (version 0.2)
 
 Future roadmap items:
 
@@ -140,26 +140,24 @@ Future roadmap items:
    Current compensating control is to use nginx proxy for non-localhost
    connections (version 0.3+)
 
-Consul template authentication support:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Consul template
+^^^^^^^^^^^^^^^
 
 Consul template is used to dynamically configure components based on
 Consul Key/Value pairs or items in the Consul catalog. Consul-template
 supports the following security options:
 
-+------------+---------------------------------------------------------------------------------------------------------------+
-| Option     | Description                                                                                                   |
-+============+===============================================================================================================+
-| ``auth``   | The basic authentication username (and optional password), separated by a colon. There is no default value.   |
-+------------+---------------------------------------------------------------------------------------------------------------+
-
-| \| ``ssl`` \| Use HTTPS while talking to Consul. Requires the Consul
-  server to be configured to serve secure connections. The default value
-  is false.\|
-| \| ``ssl-verify`` \| Verify certificates when connecting via SSL. This
-  requires the use of ``-ssl``. The default value is true.\|
-| \| ``token`` \| The [Consul API token][Consul ACLs]. There is no
-  default value.\|
++------------------+-------------------------------------------------------------------------------------------------------------------------------------------+
+| Option           | Description                                                                                                                               |
++==================+===========================================================================================================================================+
+| ``auth``         | The basic authentication username (and optional password), separated by a colon. There is no default value.                               |
++------------------+-------------------------------------------------------------------------------------------------------------------------------------------+
+| ``ssl``          | Use HTTPS while talking to Consul. Requires the Consul server to be configured to serve secure connections. The default value is false.   |
++------------------+-------------------------------------------------------------------------------------------------------------------------------------------+
+| ``ssl-verify``   | Verify certificates when connecting via SSL. This requires the use of ``-ssl``. The default value is true.                                |
++------------------+-------------------------------------------------------------------------------------------------------------------------------------------+
+| ``token``        | The Consul API token. There is no default value.                                                                                          |
++------------------+-------------------------------------------------------------------------------------------------------------------------------------------+
 
 Consul template is used across the environment. The following settings
 are generally used:
