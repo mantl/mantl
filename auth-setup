@@ -5,6 +5,9 @@ from argparse import ArgumentParser
 import getpass
 import os
 import yaml
+import random
+import base64
+from contextlib import contextmanager
 
 parser = ArgumentParser(__name__, __doc__)
 
@@ -13,40 +16,6 @@ class Component(object):
     def check(self, subset):
         """return tasks which need to be run"""
         pass
-
-    def ask_bool(self, question, default=True):
-        """ask a question of the user"""
-        if default is True:
-            yn = 'Y/n'
-        elif default is False:
-            yn = 'y/N'
-        else:
-            raise ValueError('cannot convert %s to bool', default)
-
-        answer = raw_input('{} [{}]: '.format(question, yn))
-        if answer.lower() == 'y':
-            return True
-        elif answer.lower() == 'n':
-            return False
-        elif answer == '':
-            return default
-
-    def ask_value(self, prompt, default=None, password=False):
-        if password:
-            out = getpass.getpass('{} [{}]: '.format(
-                prompt,
-                'default password set' if default is not None else 'no default password set'
-            ))
-        else:
-            out = getpass.getpass('{}{}: '.format(
-                prompt,
-                ' [{}]'.format(default) if default is not None else ''
-            ))
-
-        if out is '':
-            out = default
-
-        return out
 
     def read_yaml(self, filename):
         try:
@@ -80,59 +49,73 @@ class Component(object):
             content
         )
 
+    @contextmanager
+    def modify_group(self, group):
+        content = self.read_group(group)
+        yield content
+        self.write_group(group, content)
+
+    @contextmanager
+    def modify_host(self, host):
+        content = self.read_host(host)
+        yield content
+        self.write_host(host, content)
+
+    def random(self, size=2**5):
+        """get `size` bytes of random data, base64 encoded
+
+        tries to get random data from /dev/random, but if that fails
+        it will use the Python PRNG."""
+        try:
+            with open('/dev/random') as ran:
+                bytes = ran.read(size)
+        except IOError:  # /dev/random is unavailable! PRNG time!
+            bytes = ''.join(
+                chr(random.randint(0, 256))
+                for _ in range(size)
+            )
+
+        return base64.b64encode(bytes)
+
 
 class Marathon(Component):
     def check(self):
-        return [self.basic_auth, self.mesos_auth]
-
-    def basic_auth(self):
-        "basic auth"
-        if not self.ask_bool('Set up/update basic auth for Marathon?', default=True):
-            return
-
-        config = self.read_group('marathon_servers')
-
-        config['marathon_http_credentials'] = '{}:{}'.format(
-            self.ask_value('Username'),
-            self.ask_value('Password', password=True),
-        )
-        self.write_group('marathon_servers', config)
+        return [self.mesos_auth]
 
     def mesos_auth(self):
         "marathon framework authentication"
-        if not self.ask_bool('Set up/update Marathon framework authentication?', default=True):
-            return False
-
-        config = self.read_group('marathon_servers')
-        config['marathon_principal'] = self.ask_value(
-            'Principal',
-            default=config.get('marathon_principal', 'marathon')
-        )
-        config['marathon_secret'] = self.ask_value(
-            'Secret',
-            default=config.get('marathon_secret', None),
-            password=True,
-        )
-        self.write_group('marathon_servers', config)
+        with self.modify_group('marathon_servers') as config:
+            config.setdefault('marathon_principal', 'marathon')
+            if 'marathon_secret' not in config:
+                config['marathon_secret'] = self.random()
+                print('set marathon framework secret')
+            else:
+                print('marathon secret already set')
 
 
-class Mesos(Component):
+class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.framework_auth]
 
     def framework_auth(self):
         "framework auth"
-        mesos_leaders = self.read_group('mesos_leaders')
+        with self.modify_group('mesos_leaders') as config:
+            frameworks = set(['marathon'])
 
-        marathon = self.read_group('marathon_servers')
-        if 'marathon_principal' in marathon and 'marathon_secret' in marathon:
-            mesos_leaders.setdefault('mesos_credentials', [])
-            mesos_leaders['mesos_credentials'].append({
-                'principal': marathon['marathon_principal'],
-                'secret': marathon['marathon_secret'],
-            })
-            self.write_group('mesos_leaders', mesos_leaders)
-            print('set/updated auth for Marathon')
+            marathon = self.read_group('marathon_servers')
+            if 'marathon_principal' in marathon and 'marathon_secret' in marathon:
+                config.setdefault('mesos_credentials', [])
+                config['mesos_credentials'].append({
+                    'principal': marathon['marathon_principal'],
+                    'secret': marathon['marathon_secret'],
+                })
+                print('set/updated auth for Marathon')
+            else:
+                frameworks.remove('marathon')
+
+            authenticate = len(frameworks) > 0
+            config['mesos_authenticate_frameworks'] = authenticate
+            print('{} framework auth'.format('enabled' if authenticate else 'disabled'))
 
 
 def main(args):
