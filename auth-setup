@@ -84,6 +84,20 @@ class Component(object):
         return base64.b64encode(bytes)
 
 
+class Consul(Component):
+    def check(self):
+        return [self.gossip_key]
+
+    def gossip_key(self):
+        "gossip key"
+        with self.modify_group('consul_servers') as config:
+            if 'consul_gossip_key' not in config:
+                config['consul_gossip_key'] = self.random(16)
+                print('set gossip key')
+            else:
+                print('gossip key already set')
+
+
 class Marathon(Component):
     def check(self):
         return [self.mesos_auth]
