@@ -29,7 +29,13 @@ class Component(object):
 
     def write_yaml(self, filename, content):
         with open(filename, 'w') as handle:
-            yaml.dump(content, handle, indent=2)
+            yaml.dump(
+                content,
+                handle,
+                default_style='"',
+                indent=2,
+                explicit_start=True,
+            )
 
     def read_group(self, group):
         return self.read_yaml(os.path.join('inventory', 'group_vars', group))
