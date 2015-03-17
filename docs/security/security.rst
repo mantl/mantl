@@ -298,13 +298,13 @@ Longer-term goals
 -----------------
 
 Kerberos
-^^^^^^^^
+~~~~~~~~
 
 -  Integrate Kerberos authentication into supported components:
    Zookeeper, Mesos, HDFS, Kafka, etc.
 
 Application SSL support
-^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Enable developers to secure their applications with SSL.
 
