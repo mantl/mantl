@@ -8,11 +8,21 @@ import yaml
 import random
 import base64
 from contextlib import contextmanager
+from ansible.inventory import Inventory
 
 parser = ArgumentParser(__name__, __doc__)
+parser.add_argument(
+    '-i', '--inventory',
+    type=str, help='inventory file to query',
+    default='inventory/1-datacenter',
+)
 
 
 class Component(object):
+    def __init__(self, args):
+        self.args = args
+        self.inventory = Inventory(self.args.inventory)
+
     def check(self, subset):
         """return tasks which need to be run"""
         pass
@@ -115,7 +125,7 @@ class Marathon(Component):
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
-        return [self.framework_auth]
+        return [self.framework_auth, self.follower_auth]
 
     def framework_auth(self):
         "framework auth"
@@ -125,11 +135,14 @@ class Mesos(Component):  # Mesos should always come after any frameworks
             marathon = self.read_group('marathon_servers')
             if 'marathon_principal' in marathon and 'marathon_secret' in marathon:
                 config.setdefault('mesos_credentials', [])
-                config['mesos_credentials'].append({
+                credential = {
                     'principal': marathon['marathon_principal'],
                     'secret': marathon['marathon_secret'],
-                })
-                print('set/updated auth for Marathon')
+                }
+                if credential not in config['mesos_credentials']:
+                    config['mesos_credentials'].append(credential)
+                    print('set auth for Marathon')
+
             else:
                 frameworks.remove('marathon')
 
@@ -137,10 +150,38 @@ class Mesos(Component):  # Mesos should always come after any frameworks
             config['mesos_authenticate_frameworks'] = authenticate
             print('{} framework auth'.format('enabled' if authenticate else 'disabled'))
 
+    def follower_auth(self):
+        "follower auth"
+        with self.modify_group('mesos_leaders') as leaders:
+            for host in self.inventory.get_group('mesos_followers').get_hosts():
+                vars = host.get_variables()
+
+                if 'mesos_follower_secret' not in vars:
+                    secret = self.random()
+                    with self.modify_host(host.name) as follower:
+                        follower['mesos_follower_secret'] = secret
+                        print('{}: set follower secret for'.format(host.name))
+
+                    vars['mesos_follower_secret'] = secret
+                else:
+                    secret = vars['mesos_follower_secret']
+
+                credentials = {'principal': host.name, 'secret': secret}
+
+                leaders.setdefault('mesos_credentials', [])
+                if credentials not in leaders['mesos_credentials']:
+                    leaders['mesos_credentials'].append(credentials)
+                    print('{}: added follower secret to leader config'.format(
+                        host.name
+                    ))
+
+            leaders['mesos_authenticate_followers'] = True
+            print('enabled follower auth')
+
 
 def main(args):
     for cls in Component.__subclasses__():
-        component = cls()
+        component = cls(args)
 
         print(' {} '.format(cls.__name__).center(40, '='))
         for item in component.check():
