@@ -7,6 +7,10 @@
   with_items:
     - https://bintray.com/artifact/download/asteris/rpm/consul-0.5.0-2.el7.centos.x86_64.rpm
     - https://bintray.com/artifact/download/asteris/rpm/consul-ui-0.5.0-2.el7.centos.x86_64.rpm
+  notify:
+    - enable consul
+  tags: 
+    - consul
 
 - name: create TLS struture
   sudo: true
@@ -49,6 +53,18 @@
       dest: /etc/consul/consul.json
     - src: consul.nginx.j2
       dest: /etc/nginx/conf.d/consul.conf
+  notify:
+    - reload consul
+  tags:
+    - consul
+
+- name: configure consul ACL policy
+  sudo: yes
+  template:
+    src: acl.json.j2
+    dest: /etc/consul/acl.json
+  when:
+    - consul_acl_master_token != ""
   notify:
     - reload consul
   tags:
