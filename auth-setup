@@ -96,7 +96,7 @@ class Component(object):
 
 class Consul(Component):
     def check(self):
-        return [self.gossip_key]
+        return [self.gossip_key, self.master_acl_token]
 
     def gossip_key(self):
         "gossip key"
@@ -107,6 +107,15 @@ class Consul(Component):
             else:
                 print('gossip key already set')
 
+    def master_acl_token(self):
+        "master acl token"
+        with self.modify_group('consul_servers') as config:
+            if 'consul_acl_master_token' not in config:
+                import uuid
+                config['consul_acl_master_token'] = str(uuid.uuid4())
+                print('set acl master token')
+            else:
+                print('acl master token already set')
 
 class Marathon(Component):
     def check(self):
