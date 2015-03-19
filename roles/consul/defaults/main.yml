@@ -10,3 +10,7 @@ consul_enable_tls: false
 consul_ca_file:
 consul_cert_file:
 consul_key_file:
+consul_acl_master_token: "89ff9d38-534a-41aa-a3a6-e4985bcd11c0"
+consul_acl_datacenter: dc1
+consul_acl_default_policy: "allow"
+consul_acl_down_policy: "allow"
