@@ -18,9 +18,15 @@ mesos_cluster: cluster1
 #metadata for private ip
 #mesos_hostname: $(curl --silent http://169.254.169.254/latest/meta-data/local-ipv4) 
 
+mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
 mesos_zk_dns: zookeeper.service.consul
 mesos_zk_port: 2181
 mesos_zk_chroot: mesos
+
+mesos_zk_acl_world: "world:anyone:r"
+mesos_zk_acl: "{% if zk_mesos_user_secret is defined %}digest:{{ zk_mesos_user }}:{{ zk_mesos_user_secret_digest}}:cdraw{% endif %}"
+
+mesos_zk_acl_cmd: "printf \\\"addauth secret:{{ zk_super_user_secret }}\nsetAcl {{ mesos_zk_chroot }} {{ mesos_zk_acl_world }},{{ mesos_zk_acl }}\\\""
 
 # authentication options
 mesos_credentials: []
