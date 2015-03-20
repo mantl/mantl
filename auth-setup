@@ -134,7 +134,8 @@ class Marathon(Component):
 
 class Zookeeper(Component):
     def check(self):
-         return [self.super_auth, self.mesos_auth, self.marathon_auth]
+         return [self.super_auth, self.mesos_auth, self.marathon_auth,
+                 self.consul_ssl]
 
     def super_auth(self):
         "super user auth"
@@ -159,7 +160,7 @@ class Zookeeper(Component):
 
     def marathon_auth(self):
         "marathon user auth"
-        with self.modify_group('mesos_servers') as config:
+        with self.modify_group('marathon_servers') as config:
             config.setdefault('zk_marathon_user', 'marathon')
             if 'zk_superuser_secret' not in config:
                 config['zk_marathon_user_secret'] = self.random() 
@@ -167,7 +168,13 @@ class Zookeeper(Component):
             else:
                 print('zk marathon user secret already set')
 
-
+    def consul_ssl(self):
+        "turn on consul ssl" 
+        with self.modify_group('zookeeper_servers') as config: 
+             config.setdefault('zk_consul_ssl', 'true')
+             config.setdefault('zk_consul_ssl_verify', 'false')
+             print('configuring consul ssl defaults')
+ 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.framework_auth, self.follower_auth]
