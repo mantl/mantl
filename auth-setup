@@ -156,10 +156,12 @@ class Zookeeper(Component):
 
     def mesos_auth(self):
         "mesos user auth"
-        with self.modify_group('mesos_servers') as config:
+        with self.modify_group('mesos_leaders') as config:
             config.setdefault('zk_mesos_user', 'mesos')
             if 'zk_mesos_user_secret' not in config:
-                config['zk_mesos_user_secret'] = self.random() 
+                credential = self.random()
+                config['zk_mesos_user_secret'] = credential
+                config['zk_mesos_user_secret_digest'] = self.zk_digest(user='marathon', credential=credential)
                 print('set zk mesos user secret')
             else:
                 print('zk mesos user secret already set')
@@ -169,7 +171,9 @@ class Zookeeper(Component):
         with self.modify_group('marathon_servers') as config:
             config.setdefault('zk_marathon_user', 'marathon')
             if 'zk_superuser_secret' not in config:
-                config['zk_marathon_user_secret'] = self.random() 
+                credential = self.random()
+                config['zk_marathon_user_secret'] = credential
+                config['zk_marathon_user_secret_digest'] = self.zk_digest(user='marathon', credential=credential)
                 print('set zk marathon user secret')
             else:
                 print('zk marathon user secret already set')
