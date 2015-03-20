@@ -135,7 +135,7 @@ class Marathon(Component):
 class Zookeeper(Component):
     def check(self):
          return [self.super_auth, self.mesos_auth, self.marathon_auth]
- 
+
     def super_auth(self):
         "super user auth"
         with self.modify_group('zookeeper_servers') as config:
