@@ -7,6 +7,7 @@ import hashlib
 import os
 import yaml
 import random
+import string
 import base64
 from contextlib import contextmanager
 from ansible.inventory import Inventory
@@ -93,6 +94,11 @@ class Component(object):
             )
 
         return base64.b64encode(bytes)
+    
+    def randpass(self, size=16):
+        """generates a random string of digits + letters"""
+        chars = string.letters + string.digits
+        return ''.join((random.choice(chars)) for x in range(size))
 
     def zk_digest(self, user, credential):
         """creates a zookeeper-compatible digest. 
@@ -159,7 +165,7 @@ class Zookeeper(Component):
         with self.modify_group('mesos_leaders') as config:
             config.setdefault('zk_mesos_user', 'mesos')
             if 'zk_mesos_user_secret' not in config:
-                credential = self.random()
+                credential = self.randpass()
                 config['zk_mesos_user_secret'] = credential
                 config['zk_mesos_user_secret_digest'] = self.zk_digest(user='marathon', credential=credential)
                 print('set zk mesos user secret')
@@ -171,7 +177,7 @@ class Zookeeper(Component):
         with self.modify_group('marathon_servers') as config:
             config.setdefault('zk_marathon_user', 'marathon')
             if 'zk_superuser_secret' not in config:
-                credential = self.random()
+                credential = self.randpass()
                 config['zk_marathon_user_secret'] = credential
                 config['zk_marathon_user_secret_digest'] = self.zk_digest(user='marathon', credential=credential)
                 print('set zk marathon user secret')
