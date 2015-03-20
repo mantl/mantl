@@ -3,6 +3,7 @@
 from __future__ import print_function
 from argparse import ArgumentParser
 import getpass
+import hashlib
 import os
 import yaml
 import random
@@ -93,6 +94,11 @@ class Component(object):
 
         return base64.b64encode(bytes)
 
+    def zk_digest(self, user, credential):
+        """creates a zookeeper-compatible digest. 
+        The zk digest includes the username & password
+        """
+        return base64.b64encode(hashlib.sha1(user + ":" + credential).digest()).strip()
 
 class Consul(Component):
     def check(self):
