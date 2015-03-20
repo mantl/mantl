@@ -1,0 +1,237 @@
+#!/usr/bin/env python
+"""set up authentication and security for various components"""
+from __future__ import print_function
+from argparse import ArgumentParser
+import getpass
+import os
+import yaml
+import random
+import base64
+from contextlib import contextmanager
+from ansible.inventory import Inventory
+
+parser = ArgumentParser(__name__, __doc__)
+parser.add_argument(
+    '-i', '--inventory',
+    type=str, help='inventory file to query',
+    default='inventory/1-datacenter',
+)
+
+
+class Component(object):
+    def __init__(self, args):
+        self.args = args
+        self.inventory = Inventory(self.args.inventory)
+
+    def check(self, subset):
+        """return tasks which need to be run"""
+        pass
+
+    def read_yaml(self, filename):
+        try:
+            with open(filename, 'r') as handle:
+                return yaml.safe_load(handle)
+        except IOError as err:
+            if err.errno == 2:
+                return {}
+            else:
+                raise err
+
+    def write_yaml(self, filename, content):
+        with open(filename, 'w') as handle:
+            yaml.dump(
+                content,
+                handle,
+                default_style='"',
+                indent=2,
+                explicit_start=True,
+            )
+
+    def read_group(self, group):
+        return self.read_yaml(os.path.join('inventory', 'group_vars', group))
+
+    def write_group(self, group, content):
+        return self.write_yaml(
+            os.path.join('inventory', 'group_vars', group),
+            content
+        )
+
+    def read_host(self, host):
+        return self.read_yaml(os.path.join('inventory', 'host_vars', host))
+
+    def write_host(self, host, content):
+        return self.write_yaml(
+            os.path.join('inventory', 'host_vars', host),
+            content
+        )
+
+    @contextmanager
+    def modify_group(self, group):
+        content = self.read_group(group)
+        yield content
+        self.write_group(group, content)
+
+    @contextmanager
+    def modify_host(self, host):
+        content = self.read_host(host)
+        yield content
+        self.write_host(host, content)
+
+    def random(self, size=2**5+1):
+        """get `size` bytes of random data, base64 encoded
+
+        tries to get random data from /dev/random, but if that fails
+        it will use the Python PRNG."""
+        try:
+            with open('/dev/random') as ran:
+                bytes = ran.read(size)
+        except IOError:  # /dev/random is unavailable! PRNG time!
+            bytes = ''.join(
+                chr(random.randint(0, 256))
+                for _ in range(size)
+            )
+
+        return base64.b64encode(bytes)
+
+
+class Consul(Component):
+    def check(self):
+        return [self.gossip_key, self.master_acl_token]
+
+    def gossip_key(self):
+        "gossip key"
+        with self.modify_group('consul_servers') as config:
+            if 'consul_gossip_key' not in config:
+                config['consul_gossip_key'] = self.random(16)
+                print('set gossip key')
+            else:
+                print('gossip key already set')
+
+    def master_acl_token(self):
+        "master acl token"
+        with self.modify_group('consul_servers') as config:
+            if 'consul_acl_master_token' not in config:
+                import uuid
+                config['consul_acl_master_token'] = str(uuid.uuid4())
+                print('set acl master token')
+            else:
+                print('acl master token already set')
+
+class Marathon(Component):
+    def check(self):
+        return [self.mesos_auth]
+
+    def mesos_auth(self):
+        "marathon framework authentication"
+        with self.modify_group('marathon_servers') as config:
+            config.setdefault('marathon_principal', 'marathon')
+            if 'marathon_secret' not in config:
+                config['marathon_secret'] = self.random()
+                print('set marathon framework secret')
+            else:
+                print('marathon secret already set')
+
+
+class Zookeeper(Component):
+    def check(self):
+         return [self.super_auth, self.mesos_auth, self.marathon_auth]
+
+    def super_auth(self):
+        "super user auth"
+        with self.modify_group('zookeeper_servers') as config:
+            config.setdefault('zk_super_user', 'super')
+            if 'zk_super_user_secret' not in config:
+                config['zk_super_user_secret'] = self.random() 
+                print('set zk super user secret')
+            else:
+                print('zk super user secret already set')
+
+
+    def mesos_auth(self):
+        "mesos user auth"
+        with self.modify_group('mesos_servers') as config:
+            config.setdefault('zk_mesos_user', 'mesos')
+            if 'zk_mesos_user_secret' not in config:
+                config['zk_mesos_user_secret'] = self.random() 
+                print('set zk mesos user secret')
+            else:
+                print('zk mesos user secret already set')
+
+    def marathon_auth(self):
+        "marathon user auth"
+        with self.modify_group('mesos_servers') as config:
+            config.setdefault('zk_marathon_user', 'marathon')
+            if 'zk_superuser_secret' not in config:
+                config['zk_marathon_user_secret'] = self.random() 
+                print('set zk marathon user secret')
+            else:
+                print('zk marathon user secret already set')
+
+
+class Mesos(Component):  # Mesos should always come after any frameworks
+    def check(self):
+        return [self.framework_auth, self.follower_auth]
+
+    def framework_auth(self):
+        "framework auth"
+        with self.modify_group('mesos_leaders') as config:
+            frameworks = set(['marathon'])
+
+            marathon = self.read_group('marathon_servers')
+            if 'marathon_principal' in marathon and 'marathon_secret' in marathon:
+                config.setdefault('mesos_credentials', [])
+                credential = {
+                    'principal': marathon['marathon_principal'],
+                    'secret': marathon['marathon_secret'],
+                }
+                if credential not in config['mesos_credentials']:
+                    config['mesos_credentials'].append(credential)
+                    print('set auth for Marathon')
+
+            else:
+                frameworks.remove('marathon')
+
+            authenticate = len(frameworks) > 0
+            config['mesos_authenticate_frameworks'] = authenticate
+            print('{} framework auth'.format('enabled' if authenticate else 'disabled'))
+
+    def follower_auth(self):
+        "follower auth"
+        with self.modify_group('mesos_leaders') as leaders:
+            for host in self.inventory.get_group('mesos_followers').get_hosts():
+                vars = host.get_variables()
+
+                if 'mesos_follower_secret' not in vars:
+                    secret = self.random()
+                    with self.modify_host(host.name) as follower:
+                        follower['mesos_follower_secret'] = secret
+                        print('{}: set follower secret for'.format(host.name))
+
+                    vars['mesos_follower_secret'] = secret
+                else:
+                    secret = vars['mesos_follower_secret']
+
+                credentials = {'principal': host.name, 'secret': secret}
+
+                leaders.setdefault('mesos_credentials', [])
+                if credentials not in leaders['mesos_credentials']:
+                    leaders['mesos_credentials'].append(credentials)
+                    print('{}: added follower secret to leader config'.format(
+                        host.name
+                    ))
+
+            leaders['mesos_authenticate_followers'] = True
+            print('enabled follower auth')
+
+
+def main(args):
+    for cls in Component.__subclasses__():
+        component = cls(args)
+
+        print(' {} '.format(cls.__name__).center(40, '='))
+        for item in component.check():
+            print('----> {}'.format(item.__doc__))
+            item()
+
+if __name__ == '__main__':
+    main(parser.parse_args())
