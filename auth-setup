@@ -77,7 +77,7 @@ class Component(object):
         yield content
         self.write_host(host, content)
 
-    def random(self, size=2**5):
+    def random(self, size=2**5+1):
         """get `size` bytes of random data, base64 encoded
 
         tries to get random data from /dev/random, but if that fails
@@ -130,6 +130,42 @@ class Marathon(Component):
                 print('set marathon framework secret')
             else:
                 print('marathon secret already set')
+
+
+class Zookeeper(Component):
+    def check(self):
+         return [self.super_auth, self.mesos_auth, self.marathon_auth]
+ 
+    def super_auth(self):
+        "super user auth"
+        with self.modify_group('zookeeper_servers') as config:
+            config.setdefault('zk_super_user', 'super')
+            if 'zk_super_user_secret' not in config:
+                config['zk_super_user_secret'] = self.random() 
+                print('set zk super user secret')
+            else:
+                print('zk super user secret already set')
+
+
+    def mesos_auth(self):
+        "mesos user auth"
+        with self.modify_group('mesos_servers') as config:
+            config.setdefault('zk_mesos_user', 'mesos')
+            if 'zk_mesos_user_secret' not in config:
+                config['zk_mesos_user_secret'] = self.random() 
+                print('set zk mesos user secret')
+            else:
+                print('zk mesos user secret already set')
+
+    def marathon_auth(self):
+        "marathon user auth"
+        with self.modify_group('mesos_servers') as config:
+            config.setdefault('zk_marathon_user', 'marathon')
+            if 'zk_superuser_secret' not in config:
+                config['zk_marathon_user_secret'] = self.random() 
+                print('set zk marathon user secret')
+            else:
+                print('zk marathon user secret already set')
 
 
 class Mesos(Component):  # Mesos should always come after any frameworks
