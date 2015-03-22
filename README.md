@@ -86,6 +86,7 @@ To build the documentation locally, run:
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
 - [ ] Kafka Mesos framework for container logs and application event bus
 - [ ] ElasticSearch Mesos framework for container logs
+- [ ] Kubernetes Mesos framework
 - [x] Support for Vagrant
 - [x] Support for OpenStack
 - [ ] Support for Apache CloudStack
