@@ -18,6 +18,7 @@ Roadmap
 - |_| Immutable deployment (with HashiCorp Atlas + Packer)
 - |_| Kafka Mesos framework for container logs and application event bus
 - |_| ElasticSearch Mesos framework for container logs
+- |_| Kubernetes Mesos framework
 - |x| Support for Vagrant
 - |x| Support for OpenStack
 - |_| Support for Apache CloudStack
