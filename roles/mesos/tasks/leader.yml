@@ -15,6 +15,7 @@
   template:
     src: master-credentials.j2
     dest: /etc/mesos/credentials
+    mode: 0600
   notify:
     - restart mesos leader
   tags:
