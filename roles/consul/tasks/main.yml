@@ -28,7 +28,7 @@
   file:
     path: "{{ item.path }}"
     state: directory
-    mode: "{{ item.mode | default(0700) }}"
+    mode: "{{ item.mode | default(0755) }}"
   with_items:
     - path: /etc/consul/ssl
   when: consul_enable_tls == true
@@ -40,7 +40,7 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0400
+    mode: 0444
   with_items:
     - src: ca.cert
       dest: /etc/consul/ssl
@@ -48,6 +48,9 @@
       dest: /etc/consul/ssl
     - src: consul.key
       dest: /etc/consul/ssl
+    - src: consul.nginx
+      dest: /etc/consul
+      mode: 0644
   when: consul_enable_tls == true
   tags:
     - consul
@@ -62,10 +65,11 @@
       dest: /etc/sysconfig/consul
     - src: consul.json.j2
       dest: /etc/consul/consul.json
-    - src: consul.nginx.j2
-      dest: /etc/nginx/conf.d/consul.conf
+    - src: consul_nginx.service.j2
+      dest: /usr/lib/systemd/system/nginx-consul.service
   notify:
     - reload consul
+    - restart nginx-consul
   tags:
     - consul
 
@@ -78,5 +82,31 @@
     - consul_acl_master_token != ""
   notify:
     - reload consul
+  tags:
+    - consul
+
+- name: enable consul
+  sudo: yes
+  service:
+    name: consul
+    enabled: yes
+    state: started
+  tags:
+    - consul
+
+- name: configure nginx
+  sudo: yes
+  command: curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul
+  tags:
+    - consul
+
+- name: enable nginx-consul
+  sudo: yes
+  service:
+    name: nginx-consul
+    enabled: yes
+    state: started
+  notify:
+    - restart nginx-consul
   tags:
     - consul
