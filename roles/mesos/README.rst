@@ -107,10 +107,23 @@ do so.)
 
 .. data:: mesos_authenticate_followers
 
-   Enable Mesos authentication from followers. If set, each follower
-   will need ``mesos_follower_secret`` set in their host variables.
+   Enable Mesos authentication from followers. If set, each follower will need
+   :data:`mesos_follower_secret` set in their host variables.
 
    default: ``no``
+
+.. data:: mesos_follower_principal
+
+   The principal to use for follower authentication
+
+   default: ``follower``
+
+.. data:: mesos_follower_secret
+
+   The secret to use for follower authentication
+
+   default: not set. Set this and :data:`mesos_authenticate_followers` to `true`
+   to enable follower authentication.
 
 .. _mesos-example-playbook:
 
