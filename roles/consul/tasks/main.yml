@@ -5,8 +5,8 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - https://bintray.com/artifact/download/asteris/rpm/consul-0.5.0-2.el7.centos.x86_64.rpm
-    - https://bintray.com/artifact/download/asteris/rpm/consul-ui-0.5.0-2.el7.centos.x86_64.rpm
+    - https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.0-2.el7.centos.x86_64.rpm
+    - https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.0-2.el7.centos.x86_64.rpm
   notify:
     - enable consul
   tags: 
