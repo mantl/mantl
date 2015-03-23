@@ -33,6 +33,8 @@ mesos_zk_acl_cmd: "docker run --rm -e ZK_AUTH=super:{{ zk_super_user_secret }} -
 mesos_credentials: []
 mesos_authenticate_frameworks: no
 mesos_authenticate_followers: no
+mesos_follower_principal: follower
+mesos_follower_secret: ""
 
 # register serivce with consul
 consul_bin: /bin/consul
