@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """set up authentication and security for various components"""
 from __future__ import print_function
-from ansible.inventory import Inventory
 from argparse import ArgumentParser
 import base64
 from contextlib import contextmanager
@@ -15,11 +14,6 @@ import sys
 import uuid
 
 parser = ArgumentParser(__name__, __doc__)
-parser.add_argument(
-    '-i', '--inventory',
-    type=str, help='inventory file to query',
-    default='inventory/1-datacenter',
-)
 
 BASE = os.path.dirname(__file__)
 SECURITY_FILE = os.path.join(BASE, 'security.json')
@@ -28,7 +22,6 @@ SECURITY_FILE = os.path.join(BASE, 'security.json')
 class Component(object):
     def __init__(self, args):
         self.args = args
-        self.inventory = Inventory(self.args.inventory)
 
     def check(self, subset):
         """return tasks which need to be run"""
