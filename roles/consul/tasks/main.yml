@@ -1,6 +1,6 @@
 ---
-- name: install consul rpms
-  sudo: true
+- name: install consul
+  sudo: yes
   yum:
     name: "{{ item }}"
     state: present
@@ -12,8 +12,9 @@
   tags: 
     - consul
 
-- name: create TLS struture
-  sudo: true
+# todo: move tls directory creation to consul rpm
+- name: create tls directory struture
+  sudo: yes
   file:
     path: "{{ item.path }}"
     state: directory
@@ -24,8 +25,8 @@
   tags:
     - consul
 
-- name: copy tls files
-  sudo: true
+- name: deploy tls files
+  sudo: yes
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -58,7 +59,7 @@
   tags:
     - consul
 
-- name: configure consul ACL policy
+- name: configure consul acl policy
   sudo: yes
   template:
     src: acl.json.j2

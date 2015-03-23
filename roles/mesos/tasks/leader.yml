@@ -9,21 +9,13 @@
   tags:
     - mesos
 
-- name: create zookeeper acl
-  sudo: yes
-  shell: "{{ mesos_zk_acl_cmd }} | docker run --entrypoint /bin/bash asteris/zookeeper"
-  notify:
-    - restart mesos leader
-  tags:
-    - mesos
-
 - name: write leader credentials
   sudo: yes
   when: mesos_authenticate_frameworks or mesos_authenticate_followers
   template:
     src: master-credentials.j2
     dest: /etc/mesos/credentials
-    mode: 0700
+    mode: 0600
   notify:
     - restart mesos leader
   tags:

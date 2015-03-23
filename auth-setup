@@ -94,14 +94,14 @@ class Component(object):
             )
 
         return base64.b64encode(bytes)
-    
+
     def randpass(self, size=16):
         """generates a random string of digits + letters"""
         chars = string.letters + string.digits
         return ''.join((random.choice(chars)) for x in range(size))
 
     def zk_digest(self, user, credential):
-        """creates a zookeeper-compatible digest. 
+        """creates a zookeeper-compatible digest.
         The zk digest includes the username & password
         """
         return base64.b64encode(hashlib.sha1(user + ":" + credential).digest()).strip()
@@ -154,7 +154,7 @@ class Zookeeper(Component):
         with self.modify_group('zookeeper_servers') as config:
             config.setdefault('zk_super_user', 'super')
             if 'zk_super_user_secret' not in config:
-                config['zk_super_user_secret'] = self.random() 
+                config['zk_super_user_secret'] = self.random()
                 print('set zk super user secret')
             else:
                 print('zk super user secret already set')
@@ -185,12 +185,12 @@ class Zookeeper(Component):
                 print('zk marathon user secret already set')
 
     def consul_ssl(self):
-        "turn on consul ssl" 
-        with self.modify_group('zookeeper_servers') as config: 
+        "turn on consul ssl"
+        with self.modify_group('zookeeper_servers') as config:
              config.setdefault('zk_consul_ssl', 'true')
              config.setdefault('zk_consul_ssl_verify', 'false')
              print('configuring consul ssl defaults')
- 
+
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.framework_auth, self.follower_auth]
