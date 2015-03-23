@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 """set up authentication and security for various components"""
 from __future__ import print_function
+from ansible.inventory import Inventory
 from argparse import ArgumentParser
-import getpass
-import hashlib
-import os
-import yaml
-import random
-import string
 import base64
 from contextlib import contextmanager
-from ansible.inventory import Inventory
+import getpass
+import hashlib
+import json
+import os
+import random
+import string
+import sys
+import uuid
 
 parser = ArgumentParser(__name__, __doc__)
 parser.add_argument(
@@ -18,6 +20,9 @@ parser.add_argument(
     type=str, help='inventory file to query',
     default='inventory/1-datacenter',
 )
+
+BASE = os.path.dirname(__file__)
+SECURITY_FILE = os.path.join(BASE, 'security.json')
 
 
 class Component(object):
@@ -29,55 +34,34 @@ class Component(object):
         """return tasks which need to be run"""
         pass
 
-    def read_yaml(self, filename):
+    def read_security(self):
         try:
-            with open(filename, 'r') as handle:
-                return yaml.safe_load(handle)
-        except IOError as err:
-            if err.errno == 2:
-                return {}
-            else:
-                raise err
+            with open(SECURITY_FILE, 'r') as fh:
+                security = json.load(fh)
+        except IOError:  # file doesn't exist
+            security = {}
+        except ValueError:  # bad JSON
+            print('bad JSON in `security.json` - please fix and try again')
+            sys.exit(1)
 
-    def write_yaml(self, filename, content):
-        with open(filename, 'w') as handle:
-            yaml.dump(
-                content,
-                handle,
-                default_style='"',
-                indent=2,
-                explicit_start=True,
-            )
+        return security
 
-    def read_group(self, group):
-        return self.read_yaml(os.path.join('inventory', 'group_vars', group))
-
-    def write_group(self, group, content):
-        return self.write_yaml(
-            os.path.join('inventory', 'group_vars', group),
-            content
-        )
-
-    def read_host(self, host):
-        return self.read_yaml(os.path.join('inventory', 'host_vars', host))
-
-    def write_host(self, host, content):
-        return self.write_yaml(
-            os.path.join('inventory', 'host_vars', host),
-            content
-        )
+    def write_security(self, options):
+        try:
+            with open(SECURITY_FILE, 'w') as out:
+                json.dump(options, out)
+        except IOError:
+            print('could not write this JSON to {}:'.format(SECURITY_FILE))
+            print()
+            print(json.dumps(options))
+            sys.exit(1)
 
     @contextmanager
-    def modify_group(self, group):
-        content = self.read_group(group)
-        yield content
-        self.write_group(group, content)
-
-    @contextmanager
-    def modify_host(self, host):
-        content = self.read_host(host)
-        yield content
-        self.write_host(host, content)
+    def modify_security(self):
+        security = self.read_security()
+        yield security
+        security['security_enabled'] = True
+        self.write_security(security)
 
     def random(self, size=2**5+1):
         """get `size` bytes of random data, base64 encoded
@@ -106,13 +90,14 @@ class Component(object):
         """
         return base64.b64encode(hashlib.sha1(user + ":" + credential).digest()).strip()
 
+
 class Consul(Component):
     def check(self):
         return [self.gossip_key, self.master_acl_token]
 
     def gossip_key(self):
         "gossip key"
-        with self.modify_group('consul_servers') as config:
+        with self.modify_security() as config:
             if 'consul_gossip_key' not in config:
                 config['consul_gossip_key'] = self.random(16)
                 print('set gossip key')
@@ -121,9 +106,8 @@ class Consul(Component):
 
     def master_acl_token(self):
         "master acl token"
-        with self.modify_group('consul_servers') as config:
+        with self.modify_security() as config:
             if 'consul_acl_master_token' not in config:
-                import uuid
                 config['consul_acl_master_token'] = str(uuid.uuid4())
                 print('set acl master token')
             else:
@@ -135,7 +119,7 @@ class Marathon(Component):
 
     def mesos_auth(self):
         "marathon framework authentication"
-        with self.modify_group('marathon_servers') as config:
+        with self.modify_security() as config:
             config.setdefault('marathon_principal', 'marathon')
             if 'marathon_secret' not in config:
                 config['marathon_secret'] = self.random()
@@ -146,12 +130,14 @@ class Marathon(Component):
 
 class Zookeeper(Component):
     def check(self):
-         return [self.super_auth, self.mesos_auth, self.marathon_auth,
-                 self.consul_ssl]
+         return [
+             self.super_auth, self.mesos_auth, self.marathon_auth,
+             self.consul_ssl
+         ]
 
     def super_auth(self):
         "super user auth"
-        with self.modify_group('zookeeper_servers') as config:
+        with self.modify_security() as config:
             config.setdefault('zk_super_user', 'super')
             if 'zk_super_user_secret' not in config:
                 config['zk_super_user_secret'] = self.random()
@@ -159,37 +145,41 @@ class Zookeeper(Component):
             else:
                 print('zk super user secret already set')
 
-
     def mesos_auth(self):
         "mesos user auth"
-        with self.modify_group('mesos_leaders') as config:
+        with self.modify_security() as config:
             config.setdefault('zk_mesos_user', 'mesos')
             if 'zk_mesos_user_secret' not in config:
                 credential = self.randpass()
                 config['zk_mesos_user_secret'] = credential
-                config['zk_mesos_user_secret_digest'] = self.zk_digest(user='marathon', credential=credential)
+                config['zk_mesos_user_secret_digest'] = self.zk_digest(
+                    user='marathon', credential=credential
+                )
                 print('set zk mesos user secret')
             else:
                 print('zk mesos user secret already set')
 
     def marathon_auth(self):
         "marathon user auth"
-        with self.modify_group('marathon_servers') as config:
+        with self.modify_security() as config:
             config.setdefault('zk_marathon_user', 'marathon')
             if 'zk_superuser_secret' not in config:
                 credential = self.randpass()
                 config['zk_marathon_user_secret'] = credential
-                config['zk_marathon_user_secret_digest'] = self.zk_digest(user='marathon', credential=credential)
+                config['zk_marathon_user_secret_digest'] = self.zk_digest(
+                    user='marathon', credential=credential
+                )
                 print('set zk marathon user secret')
             else:
                 print('zk marathon user secret already set')
 
     def consul_ssl(self):
         "turn on consul ssl"
-        with self.modify_group('zookeeper_servers') as config:
+        with self.modify_security() as config:
              config.setdefault('zk_consul_ssl', 'true')
              config.setdefault('zk_consul_ssl_verify', 'false')
              print('configuring consul ssl defaults')
+
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
@@ -197,15 +187,14 @@ class Mesos(Component):  # Mesos should always come after any frameworks
 
     def framework_auth(self):
         "framework auth"
-        with self.modify_group('mesos_leaders') as config:
+        with self.modify_security() as config:
             frameworks = set(['marathon'])
 
-            marathon = self.read_group('marathon_servers')
-            if 'marathon_principal' in marathon and 'marathon_secret' in marathon:
+            if 'marathon_principal' in config and 'marathon_secret' in config:
                 config.setdefault('mesos_credentials', [])
                 credential = {
-                    'principal': marathon['marathon_principal'],
-                    'secret': marathon['marathon_secret'],
+                    'principal': config['marathon_principal'],
+                    'secret': config['marathon_secret'],
                 }
                 if credential not in config['mesos_credentials']:
                     config['mesos_credentials'].append(credential)
@@ -220,20 +209,19 @@ class Mesos(Component):  # Mesos should always come after any frameworks
 
     def follower_auth(self):
         "follower auth"
-        with self.modify_group('mesos_leaders') as leaders, self.modify_group('mesos_followers') as followers:
-            followers.setdefault('mesos_follower_principal', 'follower')
-            followers.setdefault('mesos_follower_secret', self.random())
+        with self.modify_security() as config:
+            config.setdefault('mesos_follower_principal', 'follower')
+            config.setdefault('mesos_follower_secret', self.random())
 
-            secret = followers['mesos_follower_secret']
             credentials = {
-                'principal': 'follower',
-                'secret': 'secret',
+                'principal': config['mesos_follower_principal'],
+                'secret': config['mesos_follower_secret'],
             }
-            if credentials not in leaders['mesos_credentials']:
-                leaders['mesos_credentials'].append(credentials)
+            if credentials not in config['mesos_credentials']:
+                config['mesos_credentials'].append(credentials)
                 print('added follower secret to leader config')
 
-            leaders['mesos_authenticate_followers'] = True
+            config['mesos_authenticate_followers'] = True
             print('enabled follower auth')
 
 
@@ -245,6 +233,13 @@ def main(args):
         for item in component.check():
             print('----> {}'.format(item.__doc__))
             item()
+
+    print('=' * 40)
+    print("""\
+Wrote security settings to {path}. Include them in your Ansible run like this:
+
+    ansible-playbook -i your-playbook.yml -e {path}""")
+
 
 if __name__ == '__main__':
     main(parser.parse_args())
