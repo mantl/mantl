@@ -19,7 +19,7 @@ Contents:
 
    getting_started/index.rst
    components/index.rst
-   security/security.rst
+   security/index.rst
    changelog.rst
    license.rst
 
