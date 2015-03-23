@@ -1,7 +1,7 @@
-Microservices Infrastructure's documentation
-========================================================
+microservices-infrastructure documentation
+=======================================================
 
-Microservices infrastructure is a modern platform for rapidly deploying globally distributed services.
+microservices-infrastructure is a modern platform for rapidly deploying globally distributed services.
 
 Features
 --------
