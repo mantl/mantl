@@ -231,7 +231,7 @@ def main(args):
     print("""\
 Wrote security settings to {path}. Include them in your Ansible run like this:
 
-    ansible-playbook -i your-playbook.yml -e {path}""")
+    ansible-playbook -i your-playbook.yml -e @{path}""")
 
 
 if __name__ == '__main__':
