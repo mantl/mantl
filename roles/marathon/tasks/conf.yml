@@ -1,6 +1,14 @@
 ---
-- include: framework_auth.yml
-
+- name: create zookeeper acl 
+  sudo: yes 
+  shell: "{{ marathon_zk_acl_cmd }} | docker run --entrypoint /opt/zookeeper/bin/zkCli.sh  asteris/zookeeper -server {{ marathon_zk_dns }}:{{ marathon_zk_port }}"
+  notify:
+    - restart marathon
+  when: zk_marathon_user_secret is defined
+  run_once: true
+  tags:
+    - marathon
+   
 - name: create marathon conf directory
   sudo: yes
   file:
@@ -8,6 +16,8 @@
     state: directory
   tags:
     - marathon
+
+- include: framework_auth.yml
 
 - name: set key/value options
   sudo: yes
