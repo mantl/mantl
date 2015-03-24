@@ -2,3 +2,6 @@ docs/_build
 *.pyc
 .vagrant
 security.json
+ssl/**/*.pem
+ssl/index.txt
+ssl/serial
