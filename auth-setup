@@ -127,11 +127,14 @@ class Certificates(Component):
             with open(serial, 'w') as fh:
                 fh.write('100001')
 
+            print('created serial')
+
         index = os.path.join(CERT_PATH, 'index.txt')
         if os.path.exists(index):
             print('index already exists')
         else:
             open(index, 'w').close()
+            print('created index')
 
         with self.chdir(CERT_PATH):
             if os.path.exists(ROOT_KEY) or os.path.exists(ROOT_CERT):
