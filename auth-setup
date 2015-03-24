@@ -21,6 +21,11 @@ parser = ArgumentParser(__name__, __doc__)
 BASE = os.path.dirname(__file__)
 SECURITY_FILE = os.path.join(BASE, 'security.json')
 
+# SSL
+CERT_PATH = os.path.abspath(os.path.join(BASE, 'ssl'))
+ROOT_KEY = os.path.join(CERT_PATH, 'private', 'cakey.pem')
+ROOT_CERT = os.path.join(CERT_PATH, 'cacert.pem')
+
 
 class Component(object):
     def __init__(self, args):
@@ -86,53 +91,67 @@ class Component(object):
         """
         return base64.b64encode(hashlib.sha1(user + ":" + credential).digest()).strip()
 
+    @contextmanager
+    def chdir(self, directory):
+        original = os.getcwd()
+        os.chdir(directory)
+        yield
+        os.chdir(original)
+
     def call(self, command, stdin=None, visible_to_user=False):
         capture = None if visible_to_user else PIPE
         proc = Popen(shlex.split(command), stdin=capture, stdout=capture, stderr=capture)
         stdout, stderr = proc.communicate(stdin)
         return proc.returncode, stdout, stderr
 
+    def print_call_failure(self, status, stdout, stderr):
+        print('exit status: {}'.format(status))
+        if stdout:
+            print(' stdout '.center(40, '~'))
+            print(stdout)
+        if stderr:
+            print(' stderr '.center(40, '~'))
+            print(stderr)
+
 
 class Certificates(Component):
-    STORE_PATH = os.path.join(BASE, 'certs')
     def check(self):
         return [self.ca]
 
     def ca(self):
         "certificate authority"
-        root_key = os.path.join(self.STORE_PATH, 'rootCA.key')
-        root_cert = os.path.join(self.STORE_PATH, 'rootCA.pem')
-
-        if os.path.exists(root_key):
-            print('root CA key already exists')
+        serial = os.path.join(CERT_PATH, 'serial')
+        if os.path.exists(serial):
+            print('serial already exists')
         else:
-            status, out, err = self.call('openssl genrsa -out {} 2048'.format(root_key))
-            if status != 0:
-                print('openssl failed - see below to debug')
-                print(' stdout '.center(40, '~'))
-                print(out)
-                print(' stderr '.center(40, '~'))
-                print(err)
-                sys.exit(1)
+            with open(serial, 'w') as fh:
+                fh.write('100001')
 
-            os.chmod(root_key, stat.S_IRUSR | stat.S_IWUSR)
-            print('generated root CA key')
-
-        if os.path.exists(root_cert):
-            print('root CA certificate already exists')
+        index = os.path.join(CERT_PATH, 'index.txt')
+        if os.path.exists(index):
+            print('index already exists')
         else:
-            status, _, _ = self.call(
-                'openssl req -x509 -new -nodes -key {} -days 1024 -out {}'.format(
-                    root_key, root_cert
-                ),
-                visible_to_user=True,  # for filling in the prompts
-            )
-            if status != 0:
-                print('openssl failed')
-                sys.exit(1)
+            open(index, 'w').close()
 
-            os.chmod(root_cert, stat.S_IRUSR | stat.S_IWUSR)
-            print('generated root CA certificate')
+        with self.chdir(CERT_PATH):
+            if os.path.exists(ROOT_KEY) or os.path.exists(ROOT_CERT):
+                print('root CA already exists')
+            else:
+                status, _, _ = self.call(
+                    'openssl req -new -x509 -extensions v3_ca -nodes '
+                    '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
+                        ROOT_KEY, ROOT_CERT
+                    ),
+                    visible_to_user=True,
+                )
+                if status != 0:
+                    print('openssl failed')
+                    self.print_call_failure(status, None, None)
+                    sys.exit(1)
+
+                os.chmod(ROOT_KEY, stat.S_IRUSR | stat.S_IWUSR)
+                os.chmod(ROOT_CERT, stat.S_IRUSR | stat.S_IWUSR)
+                print('generated root CA')
 
 
 class Consul(Component):
