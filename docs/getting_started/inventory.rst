@@ -7,15 +7,15 @@ ZooKeepers.
 
 .. code-block:: dosini
 
-    leader1    ansible_ssh_hostname=10.10.10.10
-    leader2    ansible_ssh_hostname=10.10.10.11
-    leader3    ansible_ssh_hostname=10.10.10.12
-    follower1  ansible_ssh_hostname=10.10.10.13
-    follower2  ansible_ssh_hostname=10.10.10.14
-    follower3  ansible_ssh_hostname=10.10.10.15
-    zk1        ansible_ssh_hostname=10.10.10.16
-    zk2        ansible_ssh_hostname=10.10.10.17
-    zk3        ansible_ssh_hostname=10.10.10.18
+    leader1    ansible_ssh_host=10.10.10.10
+    leader2    ansible_ssh_host=10.10.10.11
+    leader3    ansible_ssh_host=10.10.10.12
+    follower1  ansible_ssh_host=10.10.10.13
+    follower2  ansible_ssh_host=10.10.10.14
+    follower3  ansible_ssh_host=10.10.10.15
+    zk1        ansible_ssh_host=10.10.10.16
+    zk2        ansible_ssh_host=10.10.10.17
+    zk3        ansible_ssh_host=10.10.10.18
 
     [consul_servers]
     leader[1:3]
