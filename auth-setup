@@ -50,7 +50,7 @@ class Component(object):
     def write_security(self, options):
         try:
             with open(SECURITY_FILE, 'w') as out:
-                json.dump(options, out)
+                json.dump(options, out, indent=4)
         except IOError:
             print('could not write this JSON to {}:'.format(SECURITY_FILE))
             print()
