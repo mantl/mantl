@@ -43,5 +43,5 @@ Copyright ©2015 Cisco Systems, Inc. All rights reserved.
 
 Released under the Apache 2.0 License. See the ``LICENSE`` file in the git repository.
 
-
-
+This product includes software developed by the OpenSSL Project for use in the
+OpenSSL Toolkit (http://www.openssl.org/)

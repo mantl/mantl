@@ -88,3 +88,6 @@ microservices-infrastructure is a work in progress.  Please see [milestones](htt
 Copyright © 2015 Cisco Systems, Inc. All rights reserved. 
 
 Released under the Apache 2.0 License. See LICENSE.
+
+This product includes software developed by the OpenSSL Project for use in the
+OpenSSL Toolkit (http://www.openssl.org/)
