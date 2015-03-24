@@ -8,4 +8,3 @@ os_flavor_include: Medium
 os_image_name: centos-7_x86_64-2015-01-27-v6
 
 consul_servers_group: consul_servers
-consul_gossip_key: xlPbHYLp8khl1qkmrKnU8w==
