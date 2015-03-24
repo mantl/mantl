@@ -10,8 +10,10 @@ import json
 import os
 import random
 import string
+from subprocess import Popen, PIPE
 import sys
 import uuid
+import shlex
 
 parser = ArgumentParser(__name__, __doc__)
 
@@ -82,6 +84,52 @@ class Component(object):
         The zk digest includes the username & password
         """
         return base64.b64encode(hashlib.sha1(user + ":" + credential).digest()).strip()
+
+    def call(self, command, stdin=None, visible_to_user=False):
+        capture = None if visible_to_user else PIPE
+        proc = Popen(shlex.split(command), stdin=capture, stdout=capture, stderr=capture)
+        stdout, stderr = proc.communicate(stdin)
+        return proc.returncode, stdout, stderr
+
+
+class Certificates(Component):
+    STORE_PATH = os.path.join(BASE, 'certs')
+    def check(self):
+        return [self.ca]
+
+    def ca(self):
+        "certificate authority"
+        root_key = os.path.join(self.STORE_PATH, 'rootCA.key')
+        root_cert = os.path.join(self.STORE_PATH, 'rootCA.pem')
+
+        if os.path.exists(root_key):
+            print('root CA key already exists')
+        else:
+            status, out, err = self.call('openssl genrsa -out {} 2048'.format(root_key))
+            if status != 0:
+                print('openssl failed - see below to debug')
+                print(' stdout '.center(40, '~'))
+                print(out)
+                print(' stderr '.center(40, '~'))
+                print(err)
+                sys.exit(1)
+
+            print('generated root CA key')
+
+        if os.path.exists(root_cert):
+            print('root CA certificate already exists')
+        else:
+            status, _, _ = self.call(
+                'openssl req -x509 -new -nodes -key {} -days 1024 -out {}'.format(
+                    root_key, root_cert
+                ),
+                visible_to_user=True,  # for filling in the prompts
+            )
+            if status != 0:
+                print('openssl failed')
+                sys.exit(1)
+
+            print('generated root CA certificate')
 
 
 class Consul(Component):
