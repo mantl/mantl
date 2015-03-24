@@ -7,9 +7,11 @@ consul_retry_join: "{% for host in groups[consul_servers_group] | intersect(grou
 consul_bootstrap_expect: "{{ groups[consul_servers_group] | intersect(groups[consul_dc]) | length }}"
 consul_disable_remote_exec: "true"
 consul_enable_tls: false
-consul_ca_file:
-consul_cert_file:
-consul_key_file:
+consul_ca_file: 
+consul_cert_file: 
+consul_key_file: 
+consul_nginx_image: asteris/nginx-consul
+consul_nginx_image_tag: latest
 consul_acl_master_token: "89ff9d38-534a-41aa-a3a6-e4985bcd11c0"
 consul_acl_datacenter: dc1
 consul_acl_default_policy: "allow"

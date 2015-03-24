@@ -1,0 +1,64 @@
+worker_processes	1;
+
+events {
+	worker_connections	1024;
+}
+
+http {
+	include		mime.types;
+	default_type	application/octet-stream;
+
+	sendfile		on;
+	keepalive_timeout	65;
+
+	server {
+		listen {{ env "NGINX_PUBLIC_IP" }}:8500 ssl;
+
+		ssl_certificate		/etc/consul/ssl/consul.cert;
+		ssl_certificate_key	/etc/consul/ssl/consul.key;
+
+		ssl on;
+		ssl_session_cache	builtin:1000 shared:SSL:10m;
+		ssl_protocols		TLSv1 TLSv1.1 TLSv1.2;
+		ssl_ciphers		HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
+		ssl_prefer_server_ciphers	on;
+	
+		location /ui/ {
+			return 404;
+		}
+
+		location / {
+			proxy_connect_timeout	600;
+			proxy_send_timeout	600;
+			proxy_read_timeout	600;
+			send_timeout		600;
+
+			proxy_pass http://localhost:8500/;
+		}
+	}
+
+	server {
+		listen {{ env "NGINX_PUBLIC_IP" }}:8700 ssl;
+
+		ssl_certificate		/etc/consul/ssl/consul.cert;
+		ssl_certificate_key	/etc/consul/ssl/consul.key;
+
+		ssl on;
+		ssl_session_cache	builtin:1000 shared:SSL:10m;
+		ssl_protocols		TLSv1 TLSv1.1 TLSv1.2;
+		ssl_ciphers		HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
+		ssl_prefer_server_ciphers	on;
+
+		auth_basic on;
+		auth_basic_user_file /etc/nginx/nginx-auth.conf;
+
+		location / {
+			proxy_connect_timeout	600;
+			proxy_send_timeout	600;
+			proxy_read_timeout	600;
+			send_timeout		600;
+
+			proxy_pass http://localhost:8500;
+		}
+	}
+}
