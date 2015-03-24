@@ -20,27 +20,13 @@
   tags: 
     - consul
 
-
-
-# todo: move tls directory creation to consul rpm
-- name: create tls directory struture
-  sudo: yes
-  file:
-    path: "{{ item.path }}"
-    state: directory
-    mode: "{{ item.mode | default(0755) }}"
-  with_items:
-    - path: /etc/consul/ssl
-  when: consul_enable_tls == true
-  tags:
-    - consul
-
 - name: deploy tls files
   sudo: yes
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0444
+    owner: "{{ item.owner | default('consul') }}"
+    mode: "{{ item.mode | default(0400) }}"
   with_items:
     - src: ca.cert
       dest: /etc/consul/ssl
@@ -51,7 +37,6 @@
     - src: consul.nginx
       dest: /etc/consul
       mode: 0644
-  when: consul_enable_tls == true
   tags:
     - consul
 
