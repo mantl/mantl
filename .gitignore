@@ -2,4 +2,3 @@ docs/_build
 *.pyc
 .vagrant
 security.json
-certs/*
