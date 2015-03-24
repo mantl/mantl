@@ -207,6 +207,15 @@ class Certificates(Component):
                 print('generated root CA')
 
 
+class Nginx(Component):
+    def check(self):
+        return [self.cert]
+
+    def cert(self):
+        "SSL certificate"
+        self.generate_certificate("nginx")
+
+
 class Consul(Component):
     def check(self):
         return [self.gossip_key, self.master_acl_token, self.cert]
