@@ -14,6 +14,7 @@ from subprocess import Popen, PIPE
 import sys
 import uuid
 import shlex
+import stat
 
 parser = ArgumentParser(__name__, __doc__)
 
@@ -114,6 +115,7 @@ class Certificates(Component):
                 print(err)
                 sys.exit(1)
 
+            os.chmod(root_key, stat.S_IRUSR | stat.S_IWUSR)
             print('generated root CA key')
 
         if os.path.exists(root_cert):
@@ -129,6 +131,7 @@ class Certificates(Component):
                 print('openssl failed')
                 sys.exit(1)
 
+            os.chmod(root_cert, stat.S_IRUSR | stat.S_IWUSR)
             print('generated root CA certificate')
 
 
