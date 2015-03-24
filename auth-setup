@@ -113,6 +113,60 @@ class Component(object):
             print(' stderr '.center(40, '~'))
             print(stderr)
 
+    def wrap_call(self, command, **kwargs):
+        status, out, err = self.call(command, **kwargs)
+        if status != 0:
+            print('~' * 40)
+            print('call to {} failed'.format(shlex.split(command)[0]))
+            print('command: {}'.format(command))
+            self.print_call_failure(status, out, err)
+            sys.exit(status)
+
+        return status, out, err
+
+    def generate_certificate(self, name):
+        key = os.path.join(CERT_PATH, 'private', name + '.key.pem')
+        csr = os.path.join(CERT_PATH, 'certs', name + '.csr.pem')
+        cert = os.path.join(CERT_PATH, 'certs', name + '.cert.pem')
+
+        with self.chdir(CERT_PATH):
+            if os.path.exists(key):
+                print('{} key already exists'.format(name))
+            else:
+                self.wrap_call(
+                    'openssl genrsa -out {} 2048 -config ./openssl.cnf'.format(key)
+                )
+                os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
+                print('generated {} key'.format(name))
+
+            if os.path.exists(cert):
+                print('{} certificate already exists'.format(name))
+            else:
+                # CSR
+                self.wrap_call(
+                    'openssl req -sha256 -new -key {} -out {} -config ./openssl.cnf'.format(key, csr),
+                    visible_to_user=True,
+                )
+                print('generated {} CSR'.format(name))
+
+                # certificate
+                self.wrap_call(
+                    'openssl ca -extensions usr_cert -notext -md sha256 '
+                    '-in {} -out {} -config ./openssl.cnf'.format(
+                        csr, cert
+                    ),
+                    visible_to_user=True,
+                )
+                os.chmod(
+                    cert,
+                    stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH
+                )
+                print('generated {} certificate'.format(name))
+
+            # verify
+            self.wrap_call('openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
+            print('{} certificate is valid'.format(name))
+
 
 class Certificates(Component):
     def check(self):
@@ -140,17 +194,13 @@ class Certificates(Component):
             if os.path.exists(ROOT_KEY) or os.path.exists(ROOT_CERT):
                 print('root CA already exists')
             else:
-                status, _, _ = self.call(
+                self.wrap_call(
                     'openssl req -new -x509 -extensions v3_ca -nodes '
                     '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
                         ROOT_KEY, ROOT_CERT
                     ),
                     visible_to_user=True,
                 )
-                if status != 0:
-                    print('openssl failed')
-                    self.print_call_failure(status, None, None)
-                    sys.exit(1)
 
                 os.chmod(ROOT_KEY, stat.S_IRUSR | stat.S_IWUSR)
                 os.chmod(ROOT_CERT, stat.S_IRUSR | stat.S_IWUSR)
@@ -159,7 +209,7 @@ class Certificates(Component):
 
 class Consul(Component):
     def check(self):
-        return [self.gossip_key, self.master_acl_token]
+        return [self.gossip_key, self.master_acl_token, self.cert]
 
     def gossip_key(self):
         "gossip key"
@@ -178,6 +228,11 @@ class Consul(Component):
                 print('set acl master token')
             else:
                 print('acl master token already set')
+
+    def cert(self):
+        "SSL certificate"
+        self.generate_certificate("consul")
+
 
 class Marathon(Component):
     def check(self):
