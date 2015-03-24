@@ -17,12 +17,16 @@ import shlex
 import stat
 
 parser = ArgumentParser(__name__, __doc__)
+parser.add_argument(
+    '--no-verify-certificates', action='store_true',
+    help='skip verifying certificates'
+)
 
-BASE = os.path.dirname(__file__)
+BASE = os.path.abspath(os.path.dirname(__file__))
 SECURITY_FILE = os.path.join(BASE, 'security.json')
 
 # SSL
-CERT_PATH = os.path.abspath(os.path.join(BASE, 'ssl'))
+CERT_PATH = os.path.join(BASE, 'ssl')
 ROOT_KEY = os.path.join(CERT_PATH, 'private', 'cakey.pem')
 ROOT_CERT = os.path.join(CERT_PATH, 'cacert.pem')
 
@@ -164,8 +168,13 @@ class Component(object):
                 print('generated {} certificate'.format(name))
 
             # verify
-            self.wrap_call('openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
-            print('{} certificate is valid'.format(name))
+            if not self.args.no_verify_certificates:
+                status, out, err = self.wrap_call('openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
+                if out != '{}: OK\n'.format(cert):
+                    self.print_call_failure(status, out, err)
+                    sys.exit(1)
+
+                print('{} certificate is valid'.format(name))
 
 
 class Certificates(Component):
