@@ -249,7 +249,7 @@ class Nginx(Component):
 
 class Consul(Component):
     def check(self):
-        return [self.gossip_key, self.master_acl_token, self.cert]
+        return [self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
 
     def gossip_key(self):
         "gossip key"
@@ -272,7 +272,15 @@ class Consul(Component):
     def cert(self):
         "SSL certificate"
         self.generate_certificate("consul")
-
+ 
+    def default_acl_policy(self):
+        "Default ACL policy" 
+        with self.modify_security() as config:
+            if 'consul_default_acl_policy' not in config:
+               config['consul_default_acl_policy'] = 'allow'
+               print('set consul_default_acl_policy')
+            else:
+               print('consul_default_acl_policy already set')
 
 class Marathon(Component):
     def check(self):
