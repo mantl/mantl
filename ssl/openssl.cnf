@@ -161,6 +161,8 @@ unstructuredName		= An optional company name
 
 # These extensions are added when 'ca' signs a request.
 
+extendedKeyUsage=serverAuth,clientAuth
+
 # This goes against PKIX guidelines but some CAs do it and some software
 # requires this to avoid interpreting an end user certificate as a CA.
 
@@ -183,6 +185,7 @@ basicConstraints=CA:FALSE
 
 # This is typical in keyUsage for a client certificate.
 # keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+keyUsage = digitalSignature,keyEncipherment
 
 # This will be displayed in Netscape's comment listbox.
 nsComment			= "OpenSSL Generated Certificate"
