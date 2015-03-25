@@ -17,12 +17,26 @@ import shlex
 import stat
 
 parser = ArgumentParser(__name__, __doc__)
+parser.add_argument(
+    '--no-verify-certificates', action='store_true',
+    help='skip verifying certificates'
+)
 
-BASE = os.path.dirname(__file__)
+# certificates
+parser.add_argument('--cert-country', default='US')
+parser.add_argument('--cert-state', default='New York')
+parser.add_argument('--cert-locality', default='Anytown')
+parser.add_argument('--cert-organization', default='Example Company Inc')
+parser.add_argument('--cert-unit', default='Operations')
+parser.add_argument('--cert-email', default='operations@example.com')
+parser.add_argument('--consul-location', default='consul.example.com')  # used as common name
+parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
+
+BASE = os.path.abspath(os.path.dirname(__file__))
 SECURITY_FILE = os.path.join(BASE, 'security.json')
 
 # SSL
-CERT_PATH = os.path.abspath(os.path.join(BASE, 'ssl'))
+CERT_PATH = os.path.join(BASE, 'ssl')
 ROOT_KEY = os.path.join(CERT_PATH, 'private', 'cakey.pem')
 ROOT_CERT = os.path.join(CERT_PATH, 'cacert.pem')
 
@@ -124,10 +138,23 @@ class Component(object):
 
         return status, out, err
 
+    def openssl_subject(self, common, **overrides):
+        return '/C={country}/ST={state}/L={locality}/O={organization}' \
+               '/OU={unit}/CN={common}/emailAddress={email}'.format(
+            country=overrides.get('country', self.args.cert_country),
+            state=overrides.get('state', self.args.cert_state),
+            locality=overrides.get('locality', self.args.cert_locality),
+            organization=overrides.get('organization', self.args.cert_organization),
+            unit=overrides.get('unit', self.args.cert_unit),
+            common=common,
+            email=overrides.get('email', self.args.cert_email)
+        )
+
     def generate_certificate(self, name):
         key = os.path.join(CERT_PATH, 'private', name + '.key.pem')
         csr = os.path.join(CERT_PATH, 'certs', name + '.csr.pem')
         cert = os.path.join(CERT_PATH, 'certs', name + '.cert.pem')
+        common = getattr(self.args, name + '_location', name + '.example.com')
 
         with self.chdir(CERT_PATH):
             if os.path.exists(key):
@@ -144,18 +171,18 @@ class Component(object):
             else:
                 # CSR
                 self.wrap_call(
-                    'openssl req -sha256 -new -key {} -out {} -config ./openssl.cnf'.format(key, csr),
-                    visible_to_user=True,
+                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl.cnf'.format(
+                        self.openssl_subject(common), key, csr
+                    )
                 )
                 print('generated {} CSR'.format(name))
 
                 # certificate
                 self.wrap_call(
                     'openssl ca -extensions usr_cert -notext -md sha256 '
-                    '-in {} -out {} -config ./openssl.cnf'.format(
+                    '-in {} -out {} -config ./openssl.cnf -batch'.format(
                         csr, cert
-                    ),
-                    visible_to_user=True,
+                    )
                 )
                 os.chmod(
                     cert,
@@ -164,8 +191,13 @@ class Component(object):
                 print('generated {} certificate'.format(name))
 
             # verify
-            self.wrap_call('openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
-            print('{} certificate is valid'.format(name))
+            if not self.args.no_verify_certificates:
+                status, out, err = self.wrap_call('openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
+                if out != '{}: OK\n'.format(cert):
+                    self.print_call_failure(status, out, err)
+                    sys.exit(1)
+
+                print('{} certificate is valid'.format(name))
 
 
 class Certificates(Component):
@@ -195,11 +227,10 @@ class Certificates(Component):
                 print('root CA already exists')
             else:
                 self.wrap_call(
-                    'openssl req -new -x509 -extensions v3_ca -nodes '
+                    'openssl req -new -x509 -extensions v3_ca -nodes -subj "{}" '
                     '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
-                        ROOT_KEY, ROOT_CERT
-                    ),
-                    visible_to_user=True,
+                        self.openssl_subject("auth-setup"), ROOT_KEY, ROOT_CERT
+                    )
                 )
 
                 os.chmod(ROOT_KEY, stat.S_IRUSR | stat.S_IWUSR)
