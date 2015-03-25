@@ -14,8 +14,8 @@ http {
 	server {
 		listen {{ env "NGINX_PUBLIC_IP" }}:8500 ssl;
 
-		ssl_certificate		/etc/consul/ssl/consul.cert;
-		ssl_certificate_key	/etc/consul/ssl/consul.key;
+		ssl_certificate		/etc/nginx/ssl/nginx.cert;
+		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
 
 		ssl on;
 		ssl_session_cache	builtin:1000 shared:SSL:10m;
@@ -40,8 +40,8 @@ http {
 	server {
 		listen {{ env "NGINX_PUBLIC_IP" }}:8700 ssl;
 
-		ssl_certificate		/etc/consul/ssl/consul.cert;
-		ssl_certificate_key	/etc/consul/ssl/consul.key;
+		ssl_certificate		/etc/nginx/ssl/nginx.cert;
+		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
 
 		ssl on;
 		ssl_session_cache	builtin:1000 shared:SSL:10m;
