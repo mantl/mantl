@@ -1,14 +1,4 @@
 ---
-- name: enable consul
-  sudo: yes
-  command: "{{ item }}"
-  with_items:
-    - systemctl enable consul
-    - systemctl daemon-reload
-    - systemctl restart consul
-  notify:
-    - wait for consul to listen
-
 - name: reload consul
   sudo: yes
   command: systemctl reload consul
