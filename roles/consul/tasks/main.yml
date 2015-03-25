@@ -4,8 +4,6 @@
   yum:
     name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.0-2.el7.centos.x86_64.rpm"
     state: present
-  notify:
-    - enable consul
   tags: 
     - consul
 
@@ -15,8 +13,6 @@
     name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.0-2.el7.centos.x86_64.rpm"
     state: present
   when: consul_is_server 
-  notify:
-    - enable consul
   tags: 
     - consul
 
@@ -78,6 +74,12 @@
     state: started
   tags:
     - consul
+
+# Give consul time to elect a leader
+- name: wait for leader
+  wait_for:
+    port: 8301
+    delay: 10
 
 - name: configure nginx
   sudo: yes
