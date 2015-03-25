@@ -28,15 +28,15 @@
     owner: "{{ item.owner | default('consul') }}"
     mode: "{{ item.mode | default(0400) }}"
   with_items:
-    - src: ca.cert
-      dest: /etc/consul/ssl
-    - src: consul.cert
-      dest: /etc/consul/ssl
-    - src: consul.key
-      dest: /etc/consul/ssl
+    - src: ssl/cacert.pem
+      dest: /etc/consul/ssl/{{ consul_ca_file }}
+    - src: ssl/certs/consul.cert.pem
+      dest: /etc/consul/ssl/{{ consul_cert_file }}
+    - src: ssl/private/consul.key.pem
+      dest: /etc/consul/ssl/{{ consul_key_file }}
     - src: consul.nginx
       dest: /etc/consul
-      mode: 0644
+      mode: u=rw,g=r,o=r
   tags:
     - consul
 
