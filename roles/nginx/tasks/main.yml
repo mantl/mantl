@@ -1,47 +1,23 @@
 ---
-- name: add nginx repository
-  sudo: yes
-  yum:
-    name: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
-    state: present
-  tags:
-    - nginx
-
-- name: install nginx package
-  sudo: yes
-  yum:
-    name: nginx
-    state: present
-  tags:
-    - nginx
-
-- name: remove nginx samples
+- name: create tls directory structure
   sudo: yes
   file:
-    path: "{{ item }}"
-    state: absent
+    path: /etc/nginx/ssl
+    state: directory
+    mode: 0700
+  tags:
+    - nginx
+
+- name: deploy tls files
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: u=r
   with_items:
-    - /etc/nginx/conf.d/default.conf
-    - /etc/nginx/conf.d/example_ssl.conf
+    - src: ssl/certs/nginx.cert.pem
+      dest: /etc/nginx/ssl/nginx.cert
+    - src: ssl/private/nginx.key.pem
+      dest: /etc/nginx/ssl/nginx.key
   tags:
     - nginx
-
-- name: configure nginx unit file
-  sudo: yes
-  replace:
-    dest: /usr/lib/systemd/system/nginx.service
-    regexp: "=/run/nginx.pid"
-    replace: "=/var/run/nginx.pid"
-  notify:
-    - reload nginx
-  tags:
-    - nginx
-
-- name: enable nginx service
-  sudo: yes
-  service:
-    name: nginx
-    enabled: yes
-  tags:
-    - nginx
-

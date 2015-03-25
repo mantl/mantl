@@ -1,6 +1,0 @@
----
-- name: reload nginx
-  sudo: yes
-  service:
-    name: nginx
-    state: reloaded
