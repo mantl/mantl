@@ -33,6 +33,7 @@ Vagrant.configure(2) do |config|
     ansible.extra_vars = {
       "consul_gossip_key" => "ggVIrhEzqe7W/65YZ9fYFA==",
       "consul_dc" => "vagrant",
+      "consul_acl_datacenter" => "vagrant",
       "consul_bootstrap_expect" => 1,
       "mesos_cluster" => "vagrant",
       "mesos_mode" => "mixed",
