@@ -322,7 +322,7 @@ class Zookeeper(Component):
                 credential = self.randpass()
                 config['zk_mesos_user_secret'] = credential
                 config['zk_mesos_user_secret_digest'] = self.zk_digest(
-                    user='marathon', credential=credential
+                    user='mesos', credential=credential
                 )
                 print('set zk mesos user secret')
             else:
