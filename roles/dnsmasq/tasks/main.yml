@@ -24,7 +24,7 @@
   template: 
     src: 10-consul 
     dest: /etc/NetworkManager/dnsmasq.d/10-consul
-    mode: 777
+    mode: 755
   tags:
     - dnsmasq
 
