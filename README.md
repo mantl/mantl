@@ -50,7 +50,8 @@ If you already have running instances (Centos7 is the only Linux distribution su
 2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
 	- [`inventory/1-datacenter`](inventory/1-datacenter)
 	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
-3. Run `ansible-playbook -i <your_inventory_file> site.yml`
+3. Set up security. Run: `./auth-setup` 
+4. Run `ansible-playbook -i <your_inventory_file> site.yml -e @security.json`
 
 
 The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
