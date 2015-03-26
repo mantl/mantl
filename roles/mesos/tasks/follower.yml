@@ -87,11 +87,3 @@
   tags:
     - mesos
 
-- name: enable follower task checkpoints
-  sudo: yes
-  copy: 
-    dest: /etc/mesos-slave/?checkpoint 
-    content: ""
-  notify: restart mesos follower
-  tags:
-    - mesos

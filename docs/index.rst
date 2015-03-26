@@ -1,7 +1,7 @@
-Microservices Infrastructure's documentation
-========================================================
+microservices-infrastructure documentation
+=======================================================
 
-Microservices infrastructure is a modern platform for rapidly deploying globally distributed services.
+microservices-infrastructure is a modern platform for rapidly deploying globally distributed services.
 
 Features
 --------
@@ -40,9 +40,13 @@ Contents:
 
 License
 -------
-Copyright ©2015 Cisco Systems, Inc. All rights reserved. 
+Copyright © 2015 Cisco Systems, Inc.
 
-Released under the Apache 2.0 License. See the ``LICENSE`` file in the git repository.
+Licensed under the `Apache License, Version 2.0`_ (the "License").
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+.. _Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
 This product includes software developed by the OpenSSL Project for use in the
 OpenSSL Toolkit (http://www.openssl.org/)

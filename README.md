@@ -46,7 +46,7 @@ vagrant up
 ### Deploying on multiple servers
 If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
 
-1. Install the software components: `pip install -r requirements.txt`
+1. Install the software components: `sudo pip install -r requirements.txt`
 2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
 	- [`inventory/1-datacenter`](inventory/1-datacenter)
 	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
@@ -88,6 +88,7 @@ make html
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
 - [ ] Kafka Mesos framework for container logs and application event bus
 - [ ] ElasticSearch Mesos framework for container logs
+- [ ] Kubernetes Mesos framework
 - [x] Support for Vagrant
 - [x] Support for OpenStack
 - [ ] Support for Apache CloudStack
@@ -100,9 +101,11 @@ Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructu
 
 ##License
 -------
-Copyright © 2015 Cisco Systems, Inc. All rights reserved. 
+Copyright © 2015 Cisco Systems, Inc.
 
-Released under the Apache 2.0 License. See LICENSE.
+Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) (the "License").
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 This product includes software developed by the OpenSSL Project for use in the
 OpenSSL Toolkit (http://www.openssl.org/)
