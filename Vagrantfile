@@ -38,7 +38,7 @@ Vagrant.configure(2) do |config|
       "mesos_cluster" => "vagrant",
       "mesos_mode" => "mixed",
       "nginx_admin_password" => "vagrant",
-      "marathon_http_credentails" => "admin:vagrant"
+      "marathon_http_credentials" => "admin:vagrant"
     }
   end
 
