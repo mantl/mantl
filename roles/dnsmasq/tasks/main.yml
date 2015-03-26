@@ -7,6 +7,13 @@
   with_items:
     - dnsmasq
     - bind-utils
+    - NetworkManager
+  tags:
+    - dnsmasq
+
+- name: ensure dnsmasq.d directory exists
+  sudo: yes
+  file: path=/etc/NetworkManager/dnsmasq.d state=directory
   tags:
     - dnsmasq
 
@@ -15,6 +22,7 @@
   template: 
     src: 10-consul 
     dest: /etc/NetworkManager/dnsmasq.d/10-consul
+    mode: 777
   tags:
     - dnsmasq
 
@@ -38,6 +46,7 @@
     insertbefore: "^plugins"
   notify:
     - disable dnsmasq
+    - restart networkmanager
   tags:
     - dnsmasq
 
