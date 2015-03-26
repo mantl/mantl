@@ -81,6 +81,43 @@
     port: 8301
     delay: 10
 
+- name: create agent acl
+  shell: "curl --fail  -X PUT http://localhost:8500/v1/acl/create?token={{ consul_acl_master_token }} -d '{{ consul_acl_agent_rule }}'"
+  run_once: yes
+  register: agent_acl
+  when:
+    - consul_acl_master_token != "" and consul_agent_acl_token is not defined
+  tags:
+    - consul
+
+- name: get agent_token 
+  run_once: yes
+  set_fact:
+    consul_agent_acl_token: "{{ (agent_acl.stdout|from_json).ID }}"
+  when: consul_agent_acl_token is not defined
+  tags:
+   - consul
+
+- name: update security.json with agent_token
+  connection: local
+  run_once: yes
+  lineinfile:
+    dest: security.json
+    line: '    "consul_agent_acl_token": "{{ consul_agent_acl_token }}",'
+    insertafter: "^{"
+  tags:
+    - consul
+
+- name: update acl file with agent_token
+  sudo: yes
+  template:
+    src: acl.json.j2
+    dest: /etc/consul/acl.json
+  notify:
+    - reload consul
+  tags:
+    - consul
+
 - name: configure nginx
   sudo: yes
   command: "{{ item }}"
