@@ -10,7 +10,7 @@
 - name: install marathon package
   sudo: yes
   yum:
-    name: marathon-0.7.6
+    name: marathon
     state: present
   tags:
     - marathon
