@@ -67,25 +67,39 @@ cd docs
 make html
 ```
 
-## Roadmap
-microservices-infrastructure is a work in progress.  Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
+```
 
-- [ ] Authentication and authorization for Consul, Mesos, Marathon
+##Roadmap
+
+- [x] Mesos
+- [x] Marathon
+- [x] Consul
+- [x] Multi-datacenter
+- [x] High availablity
+- [x] Manage Linux user accounts
+- [ ] In-service Upgrade and Rollback
+- [ ] Authentication and authorization for Consul
+- [ ] Authentication and authorization for Mesos
+- [ ] Authentication and authorization for Marathon
 - [ ] Application load balancer based on HAProxy and consul-template
 - [ ] Cisco APIC Integration
-- [ ] Reliablity enhancements
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
 - [ ] Autoscaling of compute nodes (with HashiCorp Atlas)
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
 - [ ] Kafka Mesos framework for container logs and application event bus
 - [ ] ElasticSearch Mesos framework for container logs
+- [x] Support for Vagrant
+- [x] Support for OpenStack
+- [ ] Support for Apache CloudStack
 - [ ] Support for Amazon Web Services
 - [ ] Support for Microsoft Azure
 - [ ] Support for Google compute Engine
 - [ ] Support for VMware vSphere
 
-## License
+Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
+##License
+-------
 Copyright © 2015 Cisco Systems, Inc. All rights reserved. 
 
 Released under the Apache 2.0 License. See LICENSE.

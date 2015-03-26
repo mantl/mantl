@@ -205,7 +205,7 @@ instances with ``openstack/provision-hosts.yml``, and destroy them
 with ``openstack/destroy-hosts.yml``. These playbooks all use the host
 variables defined in ``inventory/``
 
-Here's an example invocation:
+Here's an example invocation (after running openstack/provision-nova-key.yml):
 
 .. code-block:: shell
 

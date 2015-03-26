@@ -21,6 +21,7 @@ Contents:
    components/index.rst
    security/index.rst
    changelog.rst
+   roadmap.rst
    license.rst
 
 .. only:: html 
