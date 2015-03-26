@@ -5,4 +5,7 @@
     "acl_down_policy": "{{ consul_acl_down_policy }}",
 {% endif %}
     "acl_datacenter": "{{ consul_acl_datacenter }}"
+{% if consul_acl_agent_token is defined %}
+    "acl_token": "{{ consul_agent_acl_token }}"
+{% endif %}
 }
