@@ -308,7 +308,7 @@ class Marathon(Component):
         "admin password"
         with self.modify_security() as config:
             if 'marathon_http_credentials' not in config:
-                config['marathon_http_credentials'] = self.randpass()
+                config['marathon_http_credentials'] = 'admin:{}'.format(self.randpass())
                 print('set marathon http credentials')
             else:
                 print('marathon http credentials already set')
