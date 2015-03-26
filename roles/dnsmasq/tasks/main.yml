@@ -13,7 +13,9 @@
 
 - name: ensure dnsmasq.d directory exists
   sudo: yes
-  file: path=/etc/NetworkManager/dnsmasq.d state=directory
+  file: 
+    path: /etc/NetworkManager/dnsmasq.d
+    state: directory
   tags:
     - dnsmasq
 
