@@ -37,6 +37,7 @@ Vagrant.configure(2) do |config|
       "consul_bootstrap_expect" => 1,
       "mesos_cluster" => "vagrant",
       "mesos_mode" => "mixed",
+      "nginx_admin_password" => "vagrant"
     }
   end
 

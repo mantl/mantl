@@ -240,12 +240,20 @@ class Certificates(Component):
 
 class Nginx(Component):
     def check(self):
-        return [self.cert]
+        return [self.cert, self.password]
 
     def cert(self):
         "SSL certificate"
         self.generate_certificate("nginx")
 
+    def password(self):
+        "admin password"
+        with self.modify_security() as config:
+            if 'nginx_admin_password' not in config:
+                config['nginx_admin_password'] = self.randpass()
+                print('set nginx admin password')
+            else:
+                print('nginx admin password already set')
 
 class Consul(Component):
     def check(self):

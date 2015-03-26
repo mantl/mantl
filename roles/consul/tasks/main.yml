@@ -83,7 +83,10 @@
 
 - name: configure nginx
   sudo: yes
-  command: curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul?token="{{ consul_acl_master_token }}"
+  command: "{{ item }}"
+  with_items:
+   - curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul?token="{{ consul_acl_master_token }}"
+   - curl -X PUT -d '{{ nginx_admin_crypted_password }}' localhost:8500/v1/kv/service/nginx/auth/users/admin?token="{{ consul_acl_master_token }}"
   tags:
     - consul
 
