@@ -1,0 +1,10 @@
+---
+haproxy_image: asteris/haproxy-consul
+haproxy_image_tag: latest
+
+# Set the domain that haproxy uses to match URLs to internal apps.
+# For example, if all your apps will be 
+#    app1.example.com, app2.example.com, etc.  set this to 'example.com'
+haproxy_domain: example.com 
+
+haproxy_env: /etc/default/haproxy

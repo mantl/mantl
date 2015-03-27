@@ -15,6 +15,14 @@
   tags:
     - mesos
 
+- name: install cyrus-sasl-md5
+  sudo: yes
+  yum:
+    name: cyrus-sasl-md5
+    state: present
+  tags:
+    - mesos
+
 - name: configure /etc/mesos/zk
   sudo: yes
   template:
@@ -51,14 +59,13 @@
   tags:
     - mesos
 
-- name: ensure consul register.d is present
+- name: ensure consul.d is present
   sudo: yes
   file:
-    path: /etc/consul/register.d
+    path: "{{ consul_dir }}"
     state: directory
   tags:
     - mesos
-
 
 - include: leader.yml
   when: mesos_mode == "leader" or mesos_mode == "mixed"

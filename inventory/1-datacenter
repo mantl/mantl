@@ -25,3 +25,6 @@ host-[04:05]
 
 [mesos_followers]
 host-[04:05]
+
+[proxy_servers]
+host-[04:05]

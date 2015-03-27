@@ -19,6 +19,7 @@ Contents:
 
    getting_started/index.rst
    components/index.rst
+   security/index.rst
    changelog.rst
    roadmap.rst
    license.rst
@@ -47,3 +48,5 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 .. _Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
 
+This product includes software developed by the OpenSSL Project for use in the
+OpenSSL Toolkit (http://www.openssl.org/)

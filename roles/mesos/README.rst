@@ -91,6 +91,40 @@ do so.)
 
    default: ``mesos``
 
+.. data:: mesos_credentials
+
+   A list of credentials to add for authentication. These should be in
+   the form ``{ principal: "...", secret: "..." }``.
+
+   default: ``[]``
+
+.. data:: mesos_authenticate_frameworks
+
+   Enable Mesos authentication for frameworks. You should set
+   :data:`mesos_credentials` for credentials if this is set.
+
+   default: ``no``
+
+.. data:: mesos_authenticate_followers
+
+   Enable Mesos authentication from followers. If set, each follower will need
+   :data:`mesos_follower_secret` set in their host variables.
+
+   default: ``no``
+
+.. data:: mesos_follower_principal
+
+   The principal to use for follower authentication
+
+   default: ``follower``
+
+.. data:: mesos_follower_secret
+
+   The secret to use for follower authentication
+
+   default: not set. Set this and :data:`mesos_authenticate_followers` to `true`
+   to enable follower authentication.
+
 .. _mesos-example-playbook:
 
 Example Playbook

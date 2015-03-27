@@ -9,13 +9,44 @@
   tags:
     - mesos
 
+- name: write leader credentials
+  sudo: yes
+  when: mesos_authenticate_frameworks or mesos_authenticate_followers
+  template:
+    src: master-credentials.j2
+    dest: /etc/mesos/credentials
+    mode: 0600
+  notify:
+    - restart mesos leader
+  tags:
+    - mesos
+
+- name: delete leader credentials
+  sudo: yes
+  when: not mesos_authenticate_frameworks and not mesos_authenticate_followers
+  file:
+    dest: /etc/mesos/credentials
+    state: absent
+  tags:
+    - mesos
+
 - name: generate leader consul service
   sudo: yes
   template:
     src: mesos-leader-consul.j2
-    dest: /etc/consul/register.d/mesos-leader.json
+    dest: "{{ consul_dir }}/mesos-leader.json"
   notify:
-    - register mesos leader with consul
+    - reload consul
   tags:
     - consul-service
+    - mesos
+
+- name: create zookeeper acl 
+  sudo: yes 
+  shell: "{{ mesos_zk_acl_cmd }}" 
+  notify:
+    - restart mesos leader
+  when: zk_mesos_user_secret is defined
+  run_once: true
+  tags:
     - mesos

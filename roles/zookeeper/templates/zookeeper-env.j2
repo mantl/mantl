@@ -8,3 +8,15 @@ SERVICE_2888_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:2888:zkid-
 SERVICE_3888_NAME={{ zookeeper_service }}-3888
 SERVICE_3888_ID={{ ansible_hostname }}:{{ zookeeper_container_name }}:3888:zkid-{{ zookeeper_id }}
 SERVICE_TAGS={{ zookeeper_service_tags }},{{ zookeeper_ensemble }},zkid-{{ zookeeper_id }}
+{% if zk_super_user_secret is defined%}
+ZK_SUPER_PW={{ zk_super_user_secret }}
+{% endif %}
+{% if zk_consul_token is defined %}
+CONSUL_TOKEN={{ zk_consul_token }}
+{% endif %}
+{% if zk_consul_ssl is defined %}
+CONSUL_SSL={{ zk_consul_ssl }}
+{% endif %}
+{% if zk_consul_ssl_verify is defined %}
+CONSUL_SSL_VERIFY={{ zk_consul_ssl_verify }}
+{% endif %}

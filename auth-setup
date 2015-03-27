@@ -1,0 +1,433 @@
+#!/usr/bin/env python
+"""set up authentication and security for various components"""
+from __future__ import print_function
+from argparse import ArgumentParser
+import base64
+from contextlib import contextmanager
+import getpass
+import hashlib
+import json
+import os
+import random
+import string
+from subprocess import Popen, PIPE
+import sys
+import uuid
+import shlex
+import stat
+
+parser = ArgumentParser(__name__, __doc__)
+parser.add_argument(
+    '--no-verify-certificates', action='store_true',
+    help='skip verifying certificates'
+)
+
+# certificates
+parser.add_argument('--cert-country', default='US')
+parser.add_argument('--cert-state', default='New York')
+parser.add_argument('--cert-locality', default='Anytown')
+parser.add_argument('--cert-organization', default='Example Company Inc')
+parser.add_argument('--cert-unit', default='Operations')
+parser.add_argument('--cert-email', default='operations@example.com')
+parser.add_argument('--consul-location', default='consul.example.com')  # used as common name
+parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
+
+BASE = os.path.abspath(os.path.dirname(__file__))
+SECURITY_FILE = os.path.join(BASE, 'security.json')
+
+# SSL
+CERT_PATH = os.path.join(BASE, 'ssl')
+ROOT_KEY = os.path.join(CERT_PATH, 'private', 'cakey.pem')
+ROOT_CERT = os.path.join(CERT_PATH, 'cacert.pem')
+
+
+class Component(object):
+    def __init__(self, args):
+        self.args = args
+
+    def check(self, subset):
+        """return tasks which need to be run"""
+        pass
+
+    def read_security(self):
+        try:
+            with open(SECURITY_FILE, 'r') as fh:
+                security = json.load(fh)
+        except IOError:  # file doesn't exist
+            security = {}
+        except ValueError:  # bad JSON
+            print('bad JSON in `security.json` - please fix and try again')
+            sys.exit(1)
+
+        return security
+
+    def write_security(self, options):
+        try:
+            with open(SECURITY_FILE, 'w') as out:
+                json.dump(options, out, indent=4)
+        except IOError:
+            print('could not write this JSON to {}:'.format(SECURITY_FILE))
+            print()
+            print(json.dumps(options))
+            sys.exit(1)
+
+    @contextmanager
+    def modify_security(self):
+        security = self.read_security()
+        yield security
+        security['security_enabled'] = True
+        self.write_security(security)
+
+    def random(self, size=2**5+1):
+        """get `size` bytes of random data, base64 encoded
+
+        tries to get random data from /dev/random, but if that fails
+        it will use the Python PRNG."""
+        try:
+            with open('/dev/random') as ran:
+                bytes = ran.read(size)
+        except IOError:  # /dev/random is unavailable! PRNG time!
+            bytes = ''.join(
+                chr(random.randint(0, 256))
+                for _ in range(size)
+            )
+
+        return base64.b64encode(bytes)
+
+    def randpass(self, size=16):
+        """generates a random string of digits + letters"""
+        chars = string.letters + string.digits
+        return ''.join((random.choice(chars)) for x in range(size))
+
+    def zk_digest(self, user, credential):
+        """creates a zookeeper-compatible digest.
+        The zk digest includes the username & password
+        """
+        return base64.b64encode(hashlib.sha1(user + ":" + credential).digest()).strip()
+
+    @contextmanager
+    def chdir(self, directory):
+        original = os.getcwd()
+        os.chdir(directory)
+        yield
+        os.chdir(original)
+
+    def call(self, command, stdin=None, visible_to_user=False):
+        capture = None if visible_to_user else PIPE
+        proc = Popen(shlex.split(command), stdin=capture, stdout=capture, stderr=capture)
+        stdout, stderr = proc.communicate(stdin)
+        return proc.returncode, stdout, stderr
+
+    def print_call_failure(self, status, stdout, stderr):
+        print('exit status: {}'.format(status))
+        if stdout:
+            print(' stdout '.center(40, '~'))
+            print(stdout)
+        if stderr:
+            print(' stderr '.center(40, '~'))
+            print(stderr)
+
+    def wrap_call(self, command, **kwargs):
+        status, out, err = self.call(command, **kwargs)
+        if status != 0:
+            print('~' * 40)
+            print('call to {} failed'.format(shlex.split(command)[0]))
+            print('command: {}'.format(command))
+            self.print_call_failure(status, out, err)
+            sys.exit(status)
+
+        return status, out, err
+
+    def openssl_subject(self, common, **overrides):
+        return '/C={country}/ST={state}/L={locality}/O={organization}' \
+               '/OU={unit}/CN={common}/emailAddress={email}'.format(
+            country=overrides.get('country', self.args.cert_country),
+            state=overrides.get('state', self.args.cert_state),
+            locality=overrides.get('locality', self.args.cert_locality),
+            organization=overrides.get('organization', self.args.cert_organization),
+            unit=overrides.get('unit', self.args.cert_unit),
+            common=common,
+            email=overrides.get('email', self.args.cert_email)
+        )
+
+    def generate_certificate(self, name):
+        key = os.path.join(CERT_PATH, 'private', name + '.key.pem')
+        csr = os.path.join(CERT_PATH, 'certs', name + '.csr.pem')
+        cert = os.path.join(CERT_PATH, 'certs', name + '.cert.pem')
+        common = getattr(self.args, name + '_location', name + '.example.com')
+
+        with self.chdir(CERT_PATH):
+            if os.path.exists(key):
+                print('{} key already exists'.format(name))
+            else:
+                self.wrap_call(
+                    'openssl genrsa -out {} 2048 -config ./openssl.cnf'.format(key)
+                )
+                os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
+                print('generated {} key'.format(name))
+
+            if os.path.exists(cert):
+                print('{} certificate already exists'.format(name))
+            else:
+                # CSR
+                self.wrap_call(
+                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl.cnf'.format(
+                        self.openssl_subject(common), key, csr
+                    )
+                )
+                print('generated {} CSR'.format(name))
+
+                # certificate
+                self.wrap_call(
+                    'openssl ca -extensions usr_cert -notext -md sha256 '
+                    '-in {} -out {} -config ./openssl.cnf -batch'.format(
+                        csr, cert
+                    )
+                )
+                os.chmod(
+                    cert,
+                    stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH
+                )
+                print('generated {} certificate'.format(name))
+
+            # verify
+            if not self.args.no_verify_certificates:
+                status, out, err = self.wrap_call('openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
+                if out != '{}: OK\n'.format(cert):
+                    self.print_call_failure(status, out, err)
+                    sys.exit(1)
+
+                print('{} certificate is valid'.format(name))
+
+
+class Certificates(Component):
+    def check(self):
+        return [self.ca]
+
+    def ca(self):
+        "certificate authority"
+        serial = os.path.join(CERT_PATH, 'serial')
+        if os.path.exists(serial):
+            print('serial already exists')
+        else:
+            with open(serial, 'w') as fh:
+                fh.write('100001')
+
+            print('created serial')
+
+        index = os.path.join(CERT_PATH, 'index.txt')
+        if os.path.exists(index):
+            print('index already exists')
+        else:
+            open(index, 'w').close()
+            print('created index')
+
+        with self.chdir(CERT_PATH):
+            if os.path.exists(ROOT_KEY) or os.path.exists(ROOT_CERT):
+                print('root CA already exists')
+            else:
+                self.wrap_call(
+                    'openssl req -new -x509 -extensions v3_ca -nodes -subj "{}" '
+                    '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
+                        self.openssl_subject("auth-setup"), ROOT_KEY, ROOT_CERT
+                    )
+                )
+
+                os.chmod(ROOT_KEY, stat.S_IRUSR | stat.S_IWUSR)
+                os.chmod(ROOT_CERT, stat.S_IRUSR | stat.S_IWUSR)
+                print('generated root CA')
+
+
+class Nginx(Component):
+    def check(self):
+        return [self.cert, self.password]
+
+    def cert(self):
+        "SSL certificate"
+        self.generate_certificate("nginx")
+
+    def password(self):
+        "admin password"
+        with self.modify_security() as config:
+            if 'nginx_admin_password' not in config:
+                config['nginx_admin_password'] = self.randpass()
+                print('set nginx admin password')
+            else:
+                print('nginx admin password already set')
+
+class Consul(Component):
+    def check(self):
+        return [self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
+
+    def gossip_key(self):
+        "gossip key"
+        with self.modify_security() as config:
+            if 'consul_gossip_key' not in config:
+                config['consul_gossip_key'] = self.random(16)
+                print('set gossip key')
+            else:
+                print('gossip key already set')
+
+    def master_acl_token(self):
+        "master acl token"
+        with self.modify_security() as config:
+            if 'consul_acl_master_token' not in config:
+                config['consul_acl_master_token'] = str(uuid.uuid4())
+                print('set acl master token')
+            else:
+                print('acl master token already set')
+
+    def cert(self):
+        "SSL certificate"
+        self.generate_certificate("consul")
+ 
+    def default_acl_policy(self):
+        "Default ACL policy" 
+        with self.modify_security() as config:
+            if 'consul_default_acl_policy' not in config:
+               config['consul_default_acl_policy'] = 'allow'
+               print('set consul_default_acl_policy')
+            else:
+               print('consul_default_acl_policy already set')
+
+class Marathon(Component):
+    def check(self):
+        return [self.mesos_auth, self.password]
+
+    def mesos_auth(self):
+        "marathon framework authentication"
+        with self.modify_security() as config:
+            config.setdefault('marathon_principal', 'marathon')
+            if 'marathon_secret' not in config:
+                config['marathon_secret'] = self.random()
+                print('set marathon framework secret')
+            else:
+                print('marathon secret already set')
+
+    def password(self):
+        "admin password"
+        with self.modify_security() as config:
+            if 'marathon_http_credentials' not in config:
+                config['marathon_http_credentials'] = 'admin:{}'.format(self.randpass())
+                print('set marathon http credentials')
+            else:
+                print('marathon http credentials already set')
+
+
+class Zookeeper(Component):
+    def check(self):
+         return [
+             self.super_auth, self.mesos_auth, self.marathon_auth,
+             self.consul_ssl
+         ]
+
+    def super_auth(self):
+        "super user auth"
+        with self.modify_security() as config:
+            config.setdefault('zk_super_user', 'super')
+            if 'zk_super_user_secret' not in config:
+                config['zk_super_user_secret'] = self.random()
+                print('set zk super user secret')
+            else:
+                print('zk super user secret already set')
+
+    def mesos_auth(self):
+        "mesos user auth"
+        with self.modify_security() as config:
+            config.setdefault('zk_mesos_user', 'mesos')
+            if 'zk_mesos_user_secret' not in config:
+                credential = self.randpass()
+                config['zk_mesos_user_secret'] = credential
+                config['zk_mesos_user_secret_digest'] = self.zk_digest(
+                    user='mesos', credential=credential
+                )
+                print('set zk mesos user secret')
+            else:
+                print('zk mesos user secret already set')
+
+    def marathon_auth(self):
+        "marathon user auth"
+        with self.modify_security() as config:
+            config.setdefault('zk_marathon_user', 'marathon')
+            if 'zk_superuser_secret' not in config:
+                credential = self.randpass()
+                config['zk_marathon_user_secret'] = credential
+                config['zk_marathon_user_secret_digest'] = self.zk_digest(
+                    user='marathon', credential=credential
+                )
+                print('set zk marathon user secret')
+            else:
+                print('zk marathon user secret already set')
+
+    def consul_ssl(self):
+        "turn on consul ssl"
+        with self.modify_security() as config:
+             config.setdefault('zk_consul_ssl', 'true')
+             config.setdefault('zk_consul_ssl_verify', 'false')
+             print('configuring consul ssl defaults')
+
+
+class Mesos(Component):  # Mesos should always come after any frameworks
+    def check(self):
+        return [self.framework_auth, self.follower_auth]
+
+    def framework_auth(self):
+        "framework auth"
+        with self.modify_security() as config:
+            frameworks = set(['marathon'])
+
+            if 'marathon_principal' in config and 'marathon_secret' in config:
+                config.setdefault('mesos_credentials', [])
+                credential = {
+                    'principal': config['marathon_principal'],
+                    'secret': config['marathon_secret'],
+                }
+                if credential not in config['mesos_credentials']:
+                    config['mesos_credentials'].append(credential)
+                    print('set auth for Marathon')
+
+            else:
+                frameworks.remove('marathon')
+
+            authenticate = len(frameworks) > 0
+            config['mesos_authenticate_frameworks'] = authenticate
+            print('{} framework auth'.format('enabled' if authenticate else 'disabled'))
+
+    def follower_auth(self):
+        "follower auth"
+        with self.modify_security() as config:
+            config.setdefault('mesos_follower_principal', 'follower')
+            config.setdefault('mesos_follower_secret', self.random())
+
+            credentials = {
+                'principal': config['mesos_follower_principal'],
+                'secret': config['mesos_follower_secret'],
+            }
+            if credentials not in config['mesos_credentials']:
+                config['mesos_credentials'].append(credentials)
+                print('added follower secret to leader config')
+
+            config['mesos_authenticate_followers'] = True
+            print('enabled follower auth')
+
+
+def main(args):
+    for cls in Component.__subclasses__():
+        component = cls(args)
+
+        print(' {} '.format(cls.__name__).center(40, '='))
+        for item in component.check():
+            print('----> {}'.format(item.__doc__))
+            item()
+
+    print('=' * 40)
+    print("""\
+Wrote security settings to {path}. Include them in your Ansible run like this:
+
+    ansible-playbook your-playbook.yml -e @{path}""".format(
+        path=SECURITY_FILE.lstrip('./')
+    ))
+
+
+if __name__ == '__main__':
+    main(parser.parse_args())

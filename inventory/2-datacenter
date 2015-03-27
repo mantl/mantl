@@ -34,3 +34,7 @@ host-[09:10]
 [mesos_followers]
 host-[04:05]
 host-[09:10]
+
+[proxy_servers]
+host-[04:05]
+host-[09:10]

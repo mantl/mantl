@@ -2,6 +2,11 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
+
+  # Prefer VirtualBox before VMware Fusion  
+  config.vm.provider "virtualbox"
+  config.vm.provider "vmware_fusion"
+  
   config.vm.box = "CiscoCloud/shipped-devbox"
 
   config.vm.network :forwarded_port, guest: 2181, host: 2181  # ZooKeeper 
@@ -28,10 +33,12 @@ Vagrant.configure(2) do |config|
     ansible.extra_vars = {
       "consul_gossip_key" => "ggVIrhEzqe7W/65YZ9fYFA==",
       "consul_dc" => "vagrant",
+      "consul_acl_datacenter" => "vagrant",
       "consul_bootstrap_expect" => 1,
-      "consul_retry_join" => 1,
       "mesos_cluster" => "vagrant",
       "mesos_mode" => "mixed",
+      "nginx_admin_password" => "vagrant",
+      "marathon_http_credentials" => "admin:vagrant"
     }
   end
 

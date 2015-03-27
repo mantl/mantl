@@ -1,8 +1,8 @@
-Overview
---------
+# Overview
+
 Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
 
-##Features
+## Features
 
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
@@ -11,7 +11,8 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * Multi-datacenter support
 * High availablity
 
-####Architecture
+#### Architecture
+
 The base platform contains control nodes that manage the cluster and any number of compute nodes. Containers automatically register themselves into DNS so that other services can locate them.
 
 ![Single-DC](docs/_static/single_dc.png)
@@ -20,7 +21,7 @@ Once WAN joining is configured, each cluster can locate services in other data c
 
 ![Mult-DC](docs/_static/multi_dc.png)
 
-####Control Nodes
+#### Control Nodes
 
 The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
 
@@ -28,42 +29,43 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 ![Control Node](docs/_static/control_node.png)
 
-####Compute Nodes
+#### Compute Nodes
 
 The compute nodes launch containers and other Mesos-based workloads. [Registrator](https://github.com/gliderlabs/registrator) is used to update Consul as containers are launched and exit. 
 
 ![Compute Node](docs/_static/compute_node.png)
 
-##Getting Started
+## Getting Started
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
-```
-	vagrant up
+```shell
+vagrant up
 ```
 
-###Deploying on multiple servers
+### Deploying on multiple servers
 If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
 
 1. Install the software components: `sudo pip install -r requirements.txt`
 2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
-	- `inventory/1-datacenter`
-	- `inventory/2-datacenter` Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
-3. Run `ansible-playbook -i <your_inventory_file> site.yml`
+	- [`inventory/1-datacenter`](inventory/1-datacenter)
+	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
+3. Set up security. Run: `./auth-setup` 
+4. Run `ansible-playbook -i <your_inventory_file> site.yml -e @security.json`
 
 
 The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
 
-
-##Documentation
+## Documentation
 All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest). 
 
 To build the documentation locally, run:
 
+```shell
+pip install -r requirements.txt
+cd docs
+make html
 ```
-	sudo pip install -r requirements.txt
-	cd docs
-	make html
 
 ```
 
@@ -104,3 +106,6 @@ Copyright © 2015 Cisco Systems, Inc.
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) (the "License").
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+This product includes software developed by the OpenSSL Project for use in the
+OpenSSL Toolkit (http://www.openssl.org/)

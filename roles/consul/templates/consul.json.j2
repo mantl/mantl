@@ -1,0 +1,24 @@
+{
+  "datacenter": "{{ consul_dc }}",
+  "advertise_addr": "{{ consul_advertise }}",
+  "node_name": "{{ inventory_hostname }}",
+  "rejoin_after_leave": true,
+{% if consul_bootstrap_expect > 1 %}
+  "retry_join": [ {{ consul_retry_join }} ],
+{% endif %}
+{% if consul_is_server %}
+  "server": true,
+  "bootstrap_expect": {{ consul_bootstrap_expect }},
+{% endif %}
+{% if consul_gossip_key is defined %}
+  "encrypt": "{{ consul_gossip_key }}",
+{% endif %}
+  "ca_file": "/etc/consul/ssl/{{ consul_ca_file }}",
+  "cert_file": "/etc/consul/ssl/{{ consul_cert_file }}",
+  "key_file": "/etc/consul/ssl/{{ consul_key_file }}",
+  "verify_incoming": true,
+  "verify_outgoing": true,
+  "data_dir": "/var/lib/consul",
+  "ui_dir": "/usr/share/consul-ui",
+  "disable_remote_exec": {{ consul_disable_remote_exec }}
+}

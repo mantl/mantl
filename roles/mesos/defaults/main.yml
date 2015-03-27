@@ -18,6 +18,24 @@ mesos_cluster: cluster1
 #metadata for private ip
 #mesos_hostname: $(curl --silent http://169.254.169.254/latest/meta-data/local-ipv4) 
 
+mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
 mesos_zk_dns: zookeeper.service.consul
 mesos_zk_port: 2181
 mesos_zk_chroot: mesos
+zk_docker_image: "asteris/zookeeper:latest"
+
+mesos_zk_acl_world: "world:anyone:r"
+mesos_zk_acl: "{% if zk_mesos_user_secret is defined %}digest:{{ zk_mesos_user }}:{{ zk_mesos_user_secret_digest}}:cdraw{% endif %}"
+
+mesos_zk_acl_cmd: "docker run --rm -e ZK_AUTH=super:{{ zk_super_user_secret }} -e ZNODE=/{{ mesos_zk_chroot }} -e ZNODE_ACL={{ mesos_zk_acl_world }},{{ mesos_zk_acl }} -e ZK_SERVER={{ mesos_zk_dns }}:{{ mesos_zk_port }} --entrypoint /usr/local/bin/setacl.sh {{ zk_docker_image }}"
+
+# authentication options
+mesos_credentials: []
+mesos_authenticate_frameworks: no
+mesos_authenticate_followers: no
+mesos_follower_principal: follower
+mesos_follower_secret: ""
+
+# register serivce with consul
+consul_bin: /bin/consul
+consul_dir: /etc/consul

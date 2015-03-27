@@ -4,6 +4,7 @@
     - common
     - docker
     - dnsmasq
+    - nginx
     - consul
     - registrator
     - zookeeper

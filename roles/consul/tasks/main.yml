@@ -1,23 +1,139 @@
 ---
-# required to install conntrack
-- name: install conntrack
+- name: install consul
   sudo: yes
   yum:
-    name: "{{ item }}"
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.0-2.el7.centos.x86_64.rpm"
     state: present
+  tags: 
+    - consul
+
+- name: install consul-ui
+  sudo: yes
+  yum:
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.0-2.el7.centos.x86_64.rpm"
+    state: present
+  when: consul_is_server 
+  tags: 
+    - consul
+
+- name: deploy tls files
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('consul') }}"
+    mode: "{{ item.mode | default(0400) }}"
   with_items:
-    - epel-release
-    - conntrack
+    - src: ssl/cacert.pem
+      dest: /etc/consul/ssl/{{ consul_ca_file }}
+    - src: ssl/certs/consul.cert.pem
+      dest: /etc/consul/ssl/{{ consul_cert_file }}
+    - src: ssl/private/consul.key.pem
+      dest: /etc/consul/ssl/{{ consul_key_file }}
+    - src: consul.nginx
+      dest: /etc/consul
+      mode: u=rw,g=r,o=r
   tags:
-    - package
     - consul
 
 - name: configure consul
   sudo: yes
   template:
-    src: consul.service.j2
-    dest: /usr/lib/systemd/system/consul.service
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: consul.sysconfig.j2
+      dest: /etc/sysconfig/consul
+    - src: consul.json.j2
+      dest: /etc/consul/consul.json
+    - src: consul_nginx.service.j2
+      dest: /usr/lib/systemd/system/nginx-consul.service
   notify:
     - reload consul
+    - restart nginx-consul
+  tags:
+    - consul
+
+- name: configure consul acl policy
+  sudo: yes
+  template:
+    src: acl.json.j2
+    dest: /etc/consul/acl.json
+  when:
+    - consul_acl_master_token != ""
+  notify:
+    - reload consul
+  tags:
+    - consul
+
+- name: enable consul
+  sudo: yes
+  service:
+    name: consul
+    enabled: yes
+    state: started
+  tags:
+    - consul
+
+# Give consul time to elect a leader
+- name: wait for leader
+  wait_for:
+    port: 8301
+    delay: 10
+
+- name: create agent acl
+  shell: "curl --fail  -X PUT http://localhost:8500/v1/acl/create?token={{ consul_acl_master_token }} -d '{{ consul_acl_agent_rule }}'"
+  run_once: yes
+  register: agent_acl
+  when:
+    - consul_acl_master_token != "" and consul_agent_acl_token is not defined
+  tags:
+    - consul
+
+- name: get agent_token 
+  run_once: yes
+  set_fact:
+    consul_agent_acl_token: "{{ (agent_acl.stdout|from_json).ID }}"
+  when: consul_agent_acl_token is not defined
+  tags:
+   - consul
+
+- name: update security.json with agent_token
+  connection: local
+  run_once: yes
+  lineinfile:
+    dest: security.json
+    line: '    "consul_agent_acl_token": "{{ consul_agent_acl_token }}",'
+    insertafter: "^{"
+  tags:
+    - consul
+
+- name: update acl file with agent_token
+  sudo: yes
+  template:
+    src: acl.json.j2
+    dest: /etc/consul/acl.json
+  notify:
+    - reload consul
+  tags:
+    - consul
+
+- name: configure nginx
+  sudo: yes
+  command: "{{ item }}"
+  with_items:
+   - curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul?token="{{ consul_acl_master_token }}"
+   - curl -X PUT -d '{{ nginx_admin_crypted_password }}' localhost:8500/v1/kv/service/nginx/auth/users/admin?token="{{ consul_acl_master_token }}"
+  tags:
+    - consul
+
+- name: enable nginx-consul
+  sudo: yes
+  service:
+    name: nginx-consul
+    enabled: yes
+    state: started
+  notify:
+    - restart nginx-consul
   tags:
     - consul

@@ -1,0 +1,11 @@
+{ 
+{% if consul_is_server %}
+    "acl_master_token": "{{ consul_acl_master_token }}",
+    "acl_default_policy": "{{ consul_acl_default_policy }}",
+    "acl_down_policy": "{{ consul_acl_down_policy }}",
+{% endif %}
+    "acl_datacenter": "{{ consul_acl_datacenter }}"
+{%- if consul_agent_acl_token is defined %},
+    "acl_token": "{{ consul_agent_acl_token }}"
+{% endif %}
+}
