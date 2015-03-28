@@ -33,6 +33,9 @@
     - src: consul.nginx
       dest: /etc/consul
       mode: u=rw,g=r,o=r
+    - src: consul.bootstrap
+      dest: /usr/local/bin
+      mode: u=rwx
   tags:
     - consul
 
@@ -41,6 +44,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    mode: "{{ item.mode | default('u=rw,g=r,o=r') }}"
   with_items:
     - src: consul.sysconfig.j2
       dest: /etc/sysconfig/consul
@@ -82,48 +86,31 @@
     delay: 10
 
 - name: create agent acl
-  shell: "curl --fail  -X PUT http://localhost:8500/v1/acl/create?token={{ consul_acl_master_token }} -d '{{ consul_acl_agent_rule }}'"
+  sudo: yes
+  shell: /usr/local/bin/consul.bootstrap {{ consul_acl_master_token }} {{ consul_agent_acl_token | default(omit) }}
   run_once: yes
   register: agent_acl
   when:
-    - consul_acl_master_token != "" and consul_agent_acl_token is not defined
+    - consul_acl_master_token != ""
   tags:
     - consul
 
 - name: get agent_token 
   run_once: yes
   set_fact:
-    consul_agent_acl_token: "{{ (agent_acl.stdout|from_json).ID }}"
-  when: consul_agent_acl_token is not defined
-  tags:
-   - consul
-
-- name: update security.json with agent_token
-  connection: local
-  run_once: yes
-  lineinfile:
-    dest: security.json
-    line: '    "consul_agent_acl_token": "{{ consul_agent_acl_token }}",'
-    insertafter: "^{"
+    consul_agent_token: "{{ (agent_acl.stdout|from_json).ID }}"
   tags:
     - consul
 
-- name: update acl file with agent_token
-  sudo: yes
-  template:
-    src: acl.json.j2
-    dest: /etc/consul/acl.json
-  notify:
-    - reload consul
-  tags:
-    - consul
+- include: agent_acl.yml
+  when: consul_agent_acl_token is not defined or consul_agent_token != consul_agent_acl_token
 
 - name: configure nginx
   sudo: yes
   command: "{{ item }}"
   with_items:
-   - curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul?token="{{ consul_acl_master_token }}"
-   - curl -X PUT -d '{{ nginx_admin_crypted_password }}' localhost:8500/v1/kv/service/nginx/auth/users/admin?token="{{ consul_acl_master_token }}"
+   - curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul?token={{ consul_agent_token }}
+   - curl -X PUT -d '{{ nginx_admin_crypted_password }}' localhost:8500/v1/kv/service/nginx/auth/users/admin?token={{ consul_agent_token }}
   tags:
     - consul
 
