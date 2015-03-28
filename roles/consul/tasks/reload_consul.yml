@@ -1,0 +1,9 @@
+--- 
+- name: force reload consul
+  sudo: yes
+  command: systemctl reload consul
+
+- name: force wait for leader
+  wait_for:
+    port: 8301
+    delay: 10

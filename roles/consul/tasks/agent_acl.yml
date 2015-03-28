@@ -1,0 +1,22 @@
+---
+- name: update security.json with agent_token
+  connection: local
+  run_once: yes
+  lineinfile:
+    dest: security.json
+    line: '    "consul_agent_acl_token": "{{ consul_agent_token }}",'
+    regexp: '.*consul_agent_acl_token.*'
+    insertafter: "^{"
+  tags:
+    - consul
+
+- name: update acl file with agent_token
+  sudo: yes
+  template:
+    src: acl.json.j2
+    dest: /etc/consul/acl.json
+  tags:
+    - consul
+
+- include: reload_consul.yml
+  
