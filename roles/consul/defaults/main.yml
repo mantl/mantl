@@ -15,9 +15,4 @@ consul_acl_master_token: "89ff9d38-534a-41aa-a3a6-e4985bcd11c0"
 consul_acl_datacenter: dc1
 consul_acl_default_policy: "allow"
 consul_acl_down_policy: "allow"
-consul_acl_agent_rule: '{
-  "Name": "agent_policy",
-  "Type": "client",
-  "Rules": "service \"\" { policy = \"write\" }"
-}'
 
