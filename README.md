@@ -68,8 +68,6 @@ cd docs
 make html
 ```
 
-```
-
 ##Roadmap
 
 - [x] Mesos
