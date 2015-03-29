@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-function usage() {
+usage() {
     echo "$0 - Launch application with Marathon"
     echo
     echo "Options:"
@@ -21,15 +21,14 @@ function usage() {
     echo "  -p, --password"
     echo "    Password for Marathon server (see 'marathon_http_credentials' security.json)"
     echo
-
+    
     exit 0
 }
 
-function launch() {
-    curl -s -X POST -H "Content-Type: application/json" "$MARATHON_URL" -d@"$CONFIG" | python -m json.tool
+launch() {
+    curl -X POST -H "Content-Type: application/json" "$MARATHON_URL" -d@"$CONFIG"
 }
 
-[[ "$#" -ne 8 ]] && usage
 until [[ "$*" == "" ]]
 do
     case "$1" in
@@ -50,7 +49,7 @@ do
 
         -p|--password)
             shift
-            PASS="$1"
+            PASSWORD="$1"
             ;;
 
         -h|--help)
@@ -66,10 +65,12 @@ do
     shift
 done
 
-MARATHON_URL=$MARATHON
-if [[ "0$USER" != "0" && "0$PASS" != "0" ]]; then
-    MARATHON_URL="${USER}:${PASS}@${MARATHON}"
-fi
+# test for mandatory arguments
+[[ -n "$CONFIG" ]] || usage
+[[ -n "$MARATHON" ]] || usage
+
+# construct marathon url
+[[ -n "$USER" && -n "$PASSWORD" ]] && MARATHON_URL="$USER:$PASSWORD@$MARATHON" || MARATHON_URL="$MARATHON"
 MARATHON_URL+=":8080/v2/apps"
 
 launch
