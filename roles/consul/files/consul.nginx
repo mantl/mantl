@@ -23,7 +23,7 @@ http {
 		ssl_ciphers		HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
 		ssl_prefer_server_ciphers	on;
 
-		error_page 497 https://{{ env "NGINX_PUBLIC_IP" }}:8500$request_uri;
+		error_page 497 https://$host:$server_port$request_uri;
 
 		location /ui/ {
 			proxy_connect_timeout	600;
