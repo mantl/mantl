@@ -7,12 +7,11 @@ Roadmap
 - |x| Multi-datacenter
 - |x| High availablity
 - |x| Manage Linux user account
-- | | In-service Upgrade and Rollback
-- |_| Authentication and authorization for Consul
+- |x| Authentication and authorization for Consul
 - |_| Authentication and authorization for Mesos
-- |_| Authentication and authorization for Marathon
+- |x| Authentication and authorization for Marathon
 - |_| Application load balancer based on HAProxy and consul-template
-- |_| Cisco APIC Integration
+- | | In-service Upgrade and Rollback
 - |_| Self maintaining system (log rotation, automatic instance replacement)
 - |_| Autoscaling of compute nodes (with HashiCorp Atlas)
 - |_| Immutable deployment (with HashiCorp Atlas + Packer)

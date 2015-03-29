@@ -39,9 +39,10 @@ The compute nodes launch containers and other Mesos-based workloads. [Registrato
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
-```shell
-vagrant up
-```
+1. Set up security. Run: `./auth-setup`
+2. Provision box. Run: `vagrant up`
+
+Authenticate to Consul and Marathon with `admin` : `vagrant`
 
 ### Deploying on multiple servers
 If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
@@ -67,8 +68,6 @@ cd docs
 make html
 ```
 
-```
-
 ##Roadmap
 
 - [x] Mesos
@@ -77,12 +76,11 @@ make html
 - [x] Multi-datacenter
 - [x] High availablity
 - [x] Manage Linux user accounts
-- [ ] In-service Upgrade and Rollback
-- [ ] Authentication and authorization for Consul
+- [x] Authentication and authorization for Consul
 - [ ] Authentication and authorization for Mesos
-- [ ] Authentication and authorization for Marathon
+- [x] Authentication and authorization for Marathonk
 - [ ] Application load balancer based on HAProxy and consul-template
-- [ ] Cisco APIC Integration
+- [ ] In-service Upgrade and Rollback
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
 - [ ] Autoscaling of compute nodes (with HashiCorp Atlas)
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
