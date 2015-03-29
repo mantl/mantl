@@ -1,5 +1,5 @@
 ---
-- name: install dnsmasq and bind-utils
+- name: install packages
   sudo: yes
   yum:
     name: "{{ item }}"
