@@ -1,7 +1,7 @@
 Example
 ---
 
-**Important** -- Bootstrap security configuration by running `./auth-setup` once to generate `secuirty.json`. Customize as necessary for environment before starting the VM with Vagrant. 
+**Important** -- Bootstrap security configuration by running `./auth-setup` once to generate `security.json`. Customize as necessary for environment before starting the VM with Vagrant. 
 
 For the examples below use the credentials from the *marathon\_http\_credentials* key, found in `security.json`, in place of `<user>` and `<pass>`.
 

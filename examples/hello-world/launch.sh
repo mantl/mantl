@@ -26,7 +26,7 @@ usage() {
 }
 
 launch() {
-    curl -X POST -H "Content-Type: application/json" "$MARATHON_URL" -d@"$CONFIG"
+    curl -k -X POST -H "Content-Type: application/json" "https://$MARATHON_URL" -d@"$CONFIG"
 }
 
 until [[ "$*" == "" ]]
