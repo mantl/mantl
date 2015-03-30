@@ -56,6 +56,7 @@
   sudo: yes
   lineinfile:
     dest: /etc/resolv.conf
+    regexp: "^nameserver 127.0.0.1"
     line: "nameserver 127.0.0.1"
     insertafter: "^search"
   tags:
