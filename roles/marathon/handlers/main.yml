@@ -10,3 +10,7 @@
 - name: reload consul
   sudo: yes
   shell: "{{ consul_bin }} reload"
+
+- name: restart nginx-marathon
+  sudo: yes
+  shell: systemctl restart nginx-marathon
