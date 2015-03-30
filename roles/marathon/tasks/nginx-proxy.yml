@@ -1,0 +1,47 @@
+---
+- name: copy nginx configuration
+  sudo: yes
+  copy:
+    src: marathon.nginx
+    dest: /etc/marathon
+    mode: u=rw,g=r,o=r
+  tags:
+    - marathon
+
+- name: configure nginx
+  sudo: yes
+  command: curl -X PUT -d @/etc/marathon/marathon.nginx localhost:8500/v1/kv/service/nginx/templates/marathon
+  tags:
+    - marathon
+
+- name: configure nginx-marathon
+  sudo: yes
+  template:
+    src: nginx-marathon.service.j2
+    dest: /usr/lib/systemd/system/nginx-marathon.service
+  tags:
+    - marathon
+  tags:
+    - restart nginx-marathon
+
+- name: enable nginx-marathon
+  sudo: yes
+  service:
+    name: nginx-marathon
+    enabled: yes
+    state: started
+  notify:
+    - restart nginx-marathon
+  tags:
+    - marathon
+
+- name: block external nttp
+  sudo: yes
+  copy:
+    src: marathon.service
+    dest: /usr/lib/systemd/system/marathon.service
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon

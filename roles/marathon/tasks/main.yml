@@ -38,6 +38,8 @@
   tags:
     - marathon
 
+- include: nginx-proxy.yml
+
 - name: ensure consul.d is present
   sudo: yes
   file:
