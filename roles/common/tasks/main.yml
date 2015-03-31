@@ -19,10 +19,6 @@
   when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: groups['all']
 
-- name: update yum cache
-  sudo: yes
-  command: yum makecache
-
 - name: install httpd-tools
   sudo: yes
   yum:
