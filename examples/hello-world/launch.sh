@@ -19,7 +19,7 @@ usage() {
     echo "    User for Marathon server (default: admin)"
     echo
     echo "  -p, --password"
-    echo "    Password for Marathon server (see 'nginx_admin_password' in security.json)"
+    echo "    Password for Marathon server (see 'nginx_admin_password' in security.yaml)"
     echo
     
     exit 0

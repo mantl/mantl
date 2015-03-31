@@ -87,7 +87,7 @@
 
 - name: create agent acl
   sudo: yes
-  command: /usr/local/bin/consul-acl-bootstrap.sh {{ consul_acl_master_token }} {{ consul_agent_acl_token | default(omit) }}
+  command: /usr/local/bin/consul-acl-bootstrap.sh {{ consul_acl_master_token }} {{ consul_agent_acl_token | default('') }}
   run_once: yes
   register: agent_acl
   when:
