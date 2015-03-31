@@ -1,12 +1,12 @@
 ---
-- name: update security.json with agent_token
+- name: update security.yaml with agent_token
   connection: local
   run_once: yes
   lineinfile:
-    dest: security.json
-    line: '    "consul_agent_acl_token": "{{ consul_agent_token }}",'
+    dest: security.yaml
+    line: 'consul_agent_acl_token: {{ consul_agent_token }},'
     regexp: '.*consul_agent_acl_token.*'
-    insertafter: "^{"
+    insertafter: "^---"
   tags:
     - consul
 
