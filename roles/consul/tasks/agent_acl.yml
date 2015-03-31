@@ -6,7 +6,7 @@
     dest: security.yaml
     line: 'consul_agent_acl_token: {{ consul_agent_token }},'
     regexp: '.*consul_agent_acl_token.*'
-    insertafter: "^---"
+    insertbefore: "^consul_acl_master_token"
   tags:
     - consul
 
