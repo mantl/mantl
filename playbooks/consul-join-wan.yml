@@ -6,6 +6,7 @@
     wait_for:
       host: "{{ hostvars[item].ansible_default_ipv4.address }}"
       port: 8300
+      timeout: 10
     with_items: groups['consul_servers']
 
   - name: check port 8302 open between all consul servers
