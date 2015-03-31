@@ -9,7 +9,7 @@
         msg: |
           Security is not enabled. Please run `auth-setup` in the root directory
           and re-run this playbook with the `--extra-vars`/`-e` option pointing
-          to your `security.json` (like `-e @security.json`)
+          to your `security.yaml` (like `-e @security.yaml`)
 
 - include: provision-openstack.yml
 

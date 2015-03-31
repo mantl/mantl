@@ -1,18 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-require 'json'
+require 'yaml'
 
 def load_security
-  if !File.exist? "security.json"
-    $stderr.puts "security.json not found - please run `./auth-setup` and try again."
+  if !File.exist? "security.yaml"
+    $stderr.puts "security.yaml not found - please run `./auth-setup` and try again."
     exit 1
   end
 
-  security_file = File.open("security.json", "r")
-  extra_vars = JSON.load(security_file)
-  security_file.close
-
-  extra_vars
+  YAML.load_file("security.yaml")
 end
 
 Vagrant.configure(2) do |config|
