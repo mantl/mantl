@@ -3,18 +3,19 @@
 from __future__ import print_function
 from argparse import ArgumentParser
 import base64
+from collections import OrderedDict
 from contextlib import contextmanager
 import getpass
 import hashlib
-import json
 import os
 import random
+import shlex
+import stat
 import string
 from subprocess import Popen, PIPE
 import sys
 import uuid
-import shlex
-import stat
+import yaml
 
 parser = ArgumentParser(__name__, __doc__)
 parser.add_argument(
@@ -33,12 +34,18 @@ parser.add_argument('--consul-location', default='consul.example.com')  # used a
 parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
 
 BASE = os.path.abspath(os.path.dirname(__file__))
-SECURITY_FILE = os.path.join(BASE, 'security.json')
+SECURITY_FILE = os.path.join(BASE, 'security.yaml')
 
 # SSL
 CERT_PATH = os.path.join(BASE, 'ssl')
 ROOT_KEY = os.path.join(CERT_PATH, 'private', 'cakey.pem')
 ROOT_CERT = os.path.join(CERT_PATH, 'cacert.pem')
+
+# dumping
+yaml.SafeDumper.add_representer(
+    OrderedDict,
+    lambda dumper, od: dumper.represent_dict(od.iteritems())
+)
 
 
 class Component(object):
@@ -52,23 +59,27 @@ class Component(object):
     def read_security(self):
         try:
             with open(SECURITY_FILE, 'r') as fh:
-                security = json.load(fh)
+                security = yaml.safe_load(fh)
         except IOError:  # file doesn't exist
             security = {}
-        except ValueError:  # bad JSON
-            print('bad JSON in `security.json` - please fix and try again')
+        except ValueError:  # bad YAML
+            print('bad YAML in `security.yaml` - please fix and try again')
             sys.exit(1)
 
-        return security
+        return security or {}
 
     def write_security(self, options):
         try:
+            content = yaml.safe_dump(
+                OrderedDict(sorted(options.items())),
+                explicit_start=True
+            )
             with open(SECURITY_FILE, 'w') as out:
-                json.dump(options, out, indent=4)
+                out.write(content)
         except IOError:
-            print('could not write this JSON to {}:'.format(SECURITY_FILE))
+            print('could not write this YAML to {}:'.format(SECURITY_FILE))
             print()
-            print(json.dumps(options))
+            print(yaml.safe_dump(options, explicit_start=True))
             sys.exit(1)
 
     @contextmanager
@@ -280,9 +291,9 @@ class Consul(Component):
     def cert(self):
         "SSL certificate"
         self.generate_certificate("consul")
- 
+
     def default_acl_policy(self):
-        "Default ACL policy" 
+        "Default ACL policy"
         with self.modify_security() as config:
             if 'consul_default_acl_policy' not in config:
                config['consul_default_acl_policy'] = 'allow'
@@ -425,7 +436,7 @@ def main(args):
 Wrote security settings to {path}. Include them in your Ansible run like this:
 
     ansible-playbook your-playbook.yml -e @{path}""".format(
-        path=SECURITY_FILE.lstrip('./')
+        path=SECURITY_FILE,
     ))
 
 
