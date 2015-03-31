@@ -4,6 +4,10 @@
   serial: "{{ serial | default(1) }}"
   tasks:
 
+  - name: refresh yum cache
+    sudo: yes
+    command: yum makecache
+
   - name: upgrade kernel package
     sudo: yes
     yum:
