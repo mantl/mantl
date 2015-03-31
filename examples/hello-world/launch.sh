@@ -16,10 +16,10 @@ usage() {
     echo "    IP address or FQDN of the Marathon server"
     echo
     echo "  -u, --user"
-    echo "    User for Marathon server (see 'marathon_http_credentials' in security.yaml)"
+    echo "    User for Marathon server (default: admin)"
     echo
     echo "  -p, --password"
-    echo "    Password for Marathon server (see 'marathon_http_credentials' security.yaml)"
+    echo "    Password for Marathon server (see 'nginx_admin_password' in security.yaml)"
     echo
     
     exit 0
