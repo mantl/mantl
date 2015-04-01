@@ -18,22 +18,27 @@
     - common
 
 - hosts: all
+  gather_facts: no
   roles:
     - docker
 
 - hosts: all
+  gather_facts: no
   roles:
     - dnsmasq
 
 - hosts: all
+  gather_facts: no
   roles:
     - nginx
 
 - hosts: all
+  gather_facts: no
   roles:
     - consul
 
 - hosts: all
+  gather_facts: no
   roles:
     - registrator
 
