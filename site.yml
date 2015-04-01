@@ -16,10 +16,25 @@
 - hosts: all
   roles:
     - common
+
+- hosts: all
+  roles:
     - docker
+
+- hosts: all
+  roles:
     - dnsmasq
+
+- hosts: all
+  roles:
     - nginx
+
+- hosts: all
+  roles:
     - consul
+
+- hosts: all
+  roles:
     - registrator
 
 - include: playbooks/consul-join-wan.yml

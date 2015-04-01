@@ -28,18 +28,6 @@
   tags:
     - dnsmasq
 
-# Resolve IPs via Consul before reboot
-- name: configure dnsmasq symlink
-  sudo: yes
-  file:
-    src: /etc/NetworkManager/dnsmasq.d/10-consul
-    dest: /etc/dnsmasq.d/10-consul 
-    state: link
-  notify:
-    - restart dnsmasq 
-  tags:
-    - dnsmasq 
-
 - name: configure networkmanager for dnsmasq
   sudo: yes
   lineinfile:
@@ -47,17 +35,6 @@
     line: "dns=dnsmasq"
     insertbefore: "^plugins"
   notify:
-    - disable dnsmasq
     - restart networkmanager
-  tags:
-    - dnsmasq
-
-- name: set localhost as nameserver
-  sudo: yes
-  lineinfile:
-    dest: /etc/resolv.conf
-    regexp: "^nameserver 127.0.0.1"
-    line: "nameserver 127.0.0.1"
-    insertafter: "^search"
   tags:
     - dnsmasq
