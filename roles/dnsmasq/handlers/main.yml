@@ -4,10 +4,6 @@
   sudo: yes
   command: systemctl disable dnsmasq
 
-- name: restart dnsmasq
-  sudo: yes
-  command: systemctl restart dnsmasq 
-
 - name: restart networkmanager
   sudo: yes
   command: systemctl restart NetworkManager
