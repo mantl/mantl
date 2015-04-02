@@ -110,6 +110,12 @@ class Component(object):
         chars = string.letters + string.digits
         return ''.join((random.choice(chars)) for x in range(size))
 
+    def ask_pass(self, prompt='Password: '):
+        if sys.stdin.isatty():
+            return getpass.getpass(prompt)
+        else:
+            return self.randpass()
+
     def zk_digest(self, user, credential):
         """creates a zookeeper-compatible digest.
         The zk digest includes the username & password
@@ -261,7 +267,7 @@ class Nginx(Component):
         "admin password"
         with self.modify_security() as config:
             if 'nginx_admin_password' not in config:
-                config['nginx_admin_password'] = self.randpass()
+                config['nginx_admin_password'] = self.ask_pass()
                 print('set nginx admin password')
             else:
                 print('nginx admin password already set')
