@@ -29,9 +29,9 @@ platforms:
 Setting up Authentication and Authorization
 -------------------------------------------
 
-Before you begin, you'll want to run the ``auth-setup`` script in the root
-directory. This will create and set passwords, authentication, and
-certificates. For more information, see the :doc:`auth-setup
+Before you begin, you'll want to run the ``security-setup`` script in the
+root directory. This will create and set passwords, authentication, and
+certificates. For more information, see the :doc:`security-setup
 <../security/auth_setup>` documentation.
 
 Deploying software via Ansible

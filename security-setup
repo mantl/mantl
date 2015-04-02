@@ -263,7 +263,7 @@ class Certificates(Component):
                 self.wrap_call(
                     'openssl req -new -x509 -extensions v3_ca -nodes -subj "{}" '
                     '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
-                        self.openssl_subject("auth-setup"), ROOT_KEY, ROOT_CERT
+                        self.openssl_subject("security-setup"), ROOT_KEY, ROOT_CERT
                     )
                 )
 
