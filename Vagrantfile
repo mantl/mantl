@@ -3,8 +3,8 @@
 require 'yaml'
 
 def load_security
-  if !File.exist? "security.yaml"
-    $stderr.puts "security.yaml not found - please run `./auth-setup` and try again."
+  if !File.exist? "security.yml"
+    $stderr.puts "security.yml not found - please run `./security-setup` and try again."
     exit 1
   end
 

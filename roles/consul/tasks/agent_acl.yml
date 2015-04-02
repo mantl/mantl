@@ -1,9 +1,9 @@
 ---
-- name: update security.yaml with agent_token
+- name: update security.yml with agent_token
   connection: local
   run_once: yes
   lineinfile:
-    dest: security.yaml
+    dest: security.yml
     line: 'consul_agent_acl_token: {{ consul_agent_token }},'
     regexp: '.*consul_agent_acl_token.*'
     insertbefore: "^consul_acl_master_token"

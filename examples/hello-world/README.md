@@ -1,9 +1,9 @@
 Example
 ---
 
-**Important** -- Bootstrap security configuration by running `./security-setup` once to generate `security.yaml`. Customize as necessary for environment before starting the VM with Vagrant. 
+**Important** -- Bootstrap security configuration by running `./security-setup` once to generate `security.yml`. Customize as necessary for environment before starting the VM with Vagrant. 
 
-For the examples below use the credentials from the *marathon\_http\_credentials* key, found in `security.yaml`, in place of `<user>` and `<pass>`.
+For the examples below use the credentials from the *marathon\_http\_credentials* key, found in `security.yml`, in place of `<user>` and `<pass>`.
 
 `vagrant up`
 

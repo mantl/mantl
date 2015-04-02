@@ -1,7 +1,7 @@
 docs/_build
 *.pyc
 .vagrant
-security.yaml
+security.yml
 ssl/**/*.pem
 ssl/index.txt*
 ssl/serial*

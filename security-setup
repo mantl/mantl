@@ -69,7 +69,7 @@ class Component(object):
         except IOError:  # file doesn't exist
             security = {}
         except ValueError:  # bad YAML
-            print('bad YAML in `security.yaml` - please fix and try again')
+            print('bad YAML in `security.yml` - please fix and try again')
             sys.exit(1)
 
         return security or {}
