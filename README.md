@@ -42,7 +42,6 @@ A Vagrantfile is provided that provisions everything on a single VM. To run (ens
 1. Set up security. Run: `./auth-setup`
 2. Provision box. Run: `vagrant up`
 
-Authenticate to Consul and Marathon with `admin` : `vagrant`
 
 ### Deploying on multiple servers
 If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
