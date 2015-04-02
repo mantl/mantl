@@ -38,7 +38,7 @@ parser.add_argument('--consul-location', default='consul.example.com')  # used a
 parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
 
 BASE = os.path.abspath(os.path.dirname(__file__))
-SECURITY_FILE = os.path.join(BASE, 'security.yaml')
+SECURITY_FILE = os.path.join(BASE, 'security.yml')
 
 # SSL
 CERT_PATH = os.path.join(BASE, 'ssl')
