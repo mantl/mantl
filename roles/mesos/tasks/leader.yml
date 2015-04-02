@@ -50,3 +50,5 @@
   run_once: true
   tags:
     - mesos
+
+- include: nginx-proxy.yml

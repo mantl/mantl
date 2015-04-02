@@ -18,3 +18,7 @@
 - name: reload consul
   sudo: yes
   shell: "{{ consul_bin }} reload"
+
+- name: restart nginx-mesos-leader
+  sudo: yes
+  shell: systemctl restart nginx-mesos-leader
