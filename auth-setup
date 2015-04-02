@@ -54,7 +54,7 @@ class Component(object):
 
     def check(self, subset):
         """return tasks which need to be run"""
-        pass
+        return []
 
     def read_security(self):
         try:
