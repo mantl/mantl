@@ -40,6 +40,12 @@ Options
    this check may be somewhat brittle. If this gives you trouble, disable it by
    specifying this flag.
 
+.. option:: --change-admin-password
+
+   ``auth-setup`` will normally ask for an admin password only if it doesn't
+   already have one. Setting this option will cause ``auth-setup`` to re-prompt
+   for the admin password.
+
 .. option:: --cert-country
 
    Country to be used for certificates

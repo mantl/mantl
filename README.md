@@ -60,7 +60,6 @@ A Vagrantfile is provided that provisions everything on a single VM. To run (ens
 1. Set up security. Run: `./auth-setup`
 2. Provision box. Run: `vagrant up`
 
-Authenticate to Consul and Marathon with `admin` : `vagrant`
 
 ### Software Requirements
 
