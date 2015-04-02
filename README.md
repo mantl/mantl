@@ -102,8 +102,14 @@ make html
 
 Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
-##License
--------
+## Development
+
+If you're interested in contributing to the project, install the software listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
+
+Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
+
+## License
+
 Copyright © 2015 Cisco Systems, Inc.
 
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) (the "License").
