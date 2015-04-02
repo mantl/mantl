@@ -1,3 +1,7 @@
+# Overview
+
+Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
 **Table of Contents**
 
@@ -15,10 +19,6 @@
     - [License](#license)
 
 <!-- markdown-toc end -->
-# Overview
-
-Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
-
 
 ## Features
 
