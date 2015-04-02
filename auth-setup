@@ -22,6 +22,10 @@ parser.add_argument(
     '--no-verify-certificates', action='store_true',
     help='skip verifying certificates'
 )
+parser.add_argument(
+    '--change-admin-password', action='store_true',
+    help='change admin password'
+)
 
 # certificates
 parser.add_argument('--cert-country', default='US')
@@ -46,6 +50,8 @@ yaml.SafeDumper.add_representer(
     OrderedDict,
     lambda dumper, od: dumper.represent_dict(od.iteritems())
 )
+
+PASSWORDS = {}  # KV is purpose: password
 
 
 class Component(object):
@@ -110,11 +116,22 @@ class Component(object):
         chars = string.letters + string.digits
         return ''.join((random.choice(chars)) for x in range(size))
 
-    def ask_pass(self, prompt='Password: '):
-        if sys.stdin.isatty():
-            return getpass.getpass(prompt)
+    def ask_pass(self, prompt='Password: ', purpose=None):
+        """\
+        Ask the user for a password. If `purpose` is supplied, the password will
+        be reused for other calls to the same purpose
+        """
+        if purpose is not None and purpose in PASSWORDS:
+            password = PASSWORDS[purpose]
+        elif sys.stdin.isatty():
+            password = getpass.getpass(prompt)
         else:
-            return self.randpass()
+            password = self.randpass()
+
+        if purpose is not None and purpose not in PASSWORDS:
+            PASSWORDS[purpose] = password
+
+        return password
 
     def zk_digest(self, user, credential):
         """creates a zookeeper-compatible digest.
@@ -266,8 +283,11 @@ class Nginx(Component):
     def password(self):
         "admin password"
         with self.modify_security() as config:
-            if 'nginx_admin_password' not in config:
-                config['nginx_admin_password'] = self.ask_pass()
+            if 'nginx_admin_password' not in config or self.args.change_admin_password:
+                config['nginx_admin_password'] = self.ask_pass(
+                    prompt='Admin Password: ',
+                    purpose='admin',
+                )
                 print('set nginx admin password')
             else:
                 print('nginx admin password already set')
@@ -326,8 +346,11 @@ class Marathon(Component):
     def password(self):
         "admin password"
         with self.modify_security() as config:
-            if 'marathon_http_credentials' not in config:
-                config['marathon_http_credentials'] = 'admin:{}'.format(self.randpass())
+            if 'marathon_http_credentials' not in config or self.args.change_admin_password:
+                config['marathon_http_credentials'] = 'admin:{}'.format(self.ask_pass(
+                    prompt='Admin Password: ',
+                    purpose='admin',
+                ))
                 print('set marathon http credentials')
             else:
                 print('marathon http credentials already set')
