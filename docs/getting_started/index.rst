@@ -26,9 +26,19 @@ platforms:
 
    openstack.rst
 
+Setting up Authentication and Authorization
+-------------------------------------------
+
+Before you begin, you'll want to run the ``auth-setup`` script in the root
+directory. This will create and set passwords, authentication, and
+certificates. For more information, see the :doc:`auth-setup
+<../security/auth_setup>` documentation.
+
 Deploying software via Ansible
 ------------------------------
-In the following examples, we're going to assume you deployed hosts using ``inventory/1-datacenter``. 
+
+In the following examples, we're going to assume you deployed hosts using
+``inventory/1-datacenter``.
 
 First, ping the servers to ensure they are reachable via ssh:
 
