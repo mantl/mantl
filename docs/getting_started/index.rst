@@ -3,7 +3,8 @@ Getting Started
 
 .. note:: This document assumes you have a `working Ansible
           installation`_. If you don't, install Ansible before
-          continuing.
+          continuing. This can be done simply by running ``pip install -r
+          requirements.txt`` from the root of the project.
 
 The Microservices Infrastructure project uses Ansible to bring up
 nodes and clusters. This generally means that you need three things:
