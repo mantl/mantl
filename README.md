@@ -2,6 +2,23 @@
 
 Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
+**Table of Contents**
+
+- [Overview](#overview)
+    - [Features](#features)
+        - [Control Nodes](#control-nodes)
+        - [Compute Nodes](#compute-nodes)
+    - [Getting Started](#getting-started)
+        - [Software Requirements](#software-requirements)
+        - [Deploying on multiple servers](#deploying-on-multiple-servers)
+    - [Documentation](#documentation)
+    - [Roadmap](#roadmap)
+    - [Development](#development)
+    - [License](#license)
+
+<!-- markdown-toc end -->
+
 ## Features
 
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
