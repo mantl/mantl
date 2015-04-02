@@ -45,9 +45,7 @@ Vagrant.configure(2) do |config|
       "consul_acl_datacenter" => "vagrant",
       "consul_bootstrap_expect" => 1,
       "mesos_cluster" => "vagrant",
-      "mesos_mode" => "mixed",
-      "nginx_admin_password" => "vagrant",
-      "marathon_http_credentials" => "admin:vagrant"
+      "mesos_mode" => "mixed"
     })
   end
 
