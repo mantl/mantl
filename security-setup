@@ -296,6 +296,7 @@ class Nginx(Component):
             else:
                 print('nginx admin password already set')
 
+
 class Consul(Component):
     def check(self):
         return [self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
