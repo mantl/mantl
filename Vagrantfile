@@ -8,7 +8,7 @@ def load_security
     exit 1
   end
 
-  YAML.load_file("security.yaml")
+  YAML.load_file("security.yml")
 end
 
 Vagrant.configure(2) do |config|
