@@ -57,7 +57,7 @@ The compute nodes launch containers and other Mesos-based workloads. [Registrato
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
-1. Set up security. Run: `./auth-setup`
+1. Set up security. Run: `./security-setup`
 2. Provision box. Run: `vagrant up`
 
 
@@ -73,7 +73,7 @@ If you already have running instances (Centos7 is the only Linux distribution su
 2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
 	- [`inventory/1-datacenter`](inventory/1-datacenter)
 	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
-3. Set up security. Run: `./auth-setup` 
+3. Set up security. Run: `./security-setup` 
 4. Run `ansible-playbook -i <your_inventory_file> site.yml -e @security.yaml`
 
 The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.

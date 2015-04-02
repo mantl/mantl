@@ -1,7 +1,7 @@
-the auth-setup script
+the security-setup script
 =====================
 
-The ``auth-setup`` script is located in the root of the project. It will set up
+The ``security-setup`` script is located in the root of the project. It will set up
 authentication and authorization for you, as described in the :doc:`component
 documentation <../components/index>`. When components are updated, you can run it
 again, as many times as you want. It will only set the variables it needs to.
@@ -9,12 +9,12 @@ again, as many times as you want. It will only set the variables it needs to.
 After you've set up security with the script, you can include it in your
 playbook runs by specifying the ``-e`` or ``--extra-vars`` option, like so::
 
-    ansible-playbook site.yml --extra-vars=@security.yaml
+    ansible-playbook site.yml --extra-vars=@security.yml
 
 Certificates
 ------------
 
-If not present, ``auth-setup`` will create a root CA to generate certificates
+If not present, ``security-setup`` will create a root CA to generate certificates
 from. If you want to use your own CA, add the key in ``ssl/private/cakey.pem``
 and the cert in ``ssl/cacert.pem``.
 
@@ -27,7 +27,7 @@ and they'll be used instead of the generated files, and not overridden.
 Options
 -------
 
-.. program:: auth-setup
+.. program:: security-setup
 
 .. option:: -h, --help
 
@@ -35,14 +35,14 @@ Options
 
 .. option:: --no-verify-certificates
 
-   By default ``auth-setup`` will verify certificates when it runs, to make sure
-   they're still valid. However, do the way OpenSSL handles verification errors
-   this check may be somewhat brittle. If this gives you trouble, disable it by
-   specifying this flag.
+   By default ``security-setup`` will verify certificates when it runs, to make
+   sure they're still valid. However, do the way OpenSSL handles verification
+   errors this check may be somewhat brittle. If this gives you trouble, disable
+   it by specifying this flag.
 
 .. option:: --change-admin-password
 
-   ``auth-setup`` will normally ask for an admin password only if it doesn't
+   ``security-setup`` will normally ask for an admin password only if it doesn't
    already have one. Setting this option will cause ``auth-setup`` to re-prompt
    for the admin password.
 
