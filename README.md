@@ -1,12 +1,9 @@
-# Overview
-
-Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
-
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
 **Table of Contents**
 
 - [Overview](#overview)
     - [Features](#features)
+        - [Architecture](#architecture)
         - [Control Nodes](#control-nodes)
         - [Compute Nodes](#compute-nodes)
     - [Getting Started](#getting-started)
@@ -18,6 +15,10 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
     - [License](#license)
 
 <!-- markdown-toc end -->
+# Overview
+
+Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
+
 
 ## Features
 
@@ -28,7 +29,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * Multi-datacenter support
 * High availablity
 
-#### Architecture
+### Architecture
 
 The base platform contains control nodes that manage the cluster and any number of compute nodes. Containers automatically register themselves into DNS so that other services can locate them.
 
@@ -38,7 +39,7 @@ Once WAN joining is configured, each cluster can locate services in other data c
 
 ![Mult-DC](docs/_static/multi_dc.png)
 
-#### Control Nodes
+### Control Nodes
 
 The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
 
@@ -46,7 +47,7 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 ![Control Node](docs/_static/control_node.png)
 
-#### Compute Nodes
+### Compute Nodes
 
 The compute nodes launch containers and other Mesos-based workloads. [Registrator](https://github.com/gliderlabs/registrator) is used to update Consul as containers are launched and exit. 
 
