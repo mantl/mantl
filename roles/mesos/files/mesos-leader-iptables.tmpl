@@ -1,0 +1,18 @@
+#!/bin/bash
+
+iptables -F MESOSLEADER
+iptables -D INPUT -p tcp --dport 5050 -j MESOSLEADER
+iptables -X MESOSLEADER
+
+iptables -N MESOSLEADER
+
+{{ range service "mesos-leader" "any" }}
+iptables -A MESOSLEADER -p tcp --dport 5050 -s {{ .Address }} -j ACCEPT
+{{ end }}
+{{ range service "mesos-follower" "any" }}
+iptables -A MESOSLEADER -p tcp --dport 5050 -s {{ .Address }} -j ACCEPT
+{{ end }}
+iptables -A MESOSLEADER -p tcp --dport 5050 -d 127.0.0.1 -j ACCEPT
+iptables -A MESOSLEADER -p tcp --dport 5050 -j DROP
+
+iptables -A INPUT -p tcp --dport 5050 -j MESOSLEADER
