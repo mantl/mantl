@@ -197,14 +197,19 @@ run the following:
 Creating Instances
 ------------------
 
-After setting up auth and your network, you can provision a new CentOS
-7 image with ``openstack/provision-image.yml``, add your SSH key to
+After setting up auth and your network, you can add your SSH key to
 your tenant with ``openstack/provision-nova-key.yml``, spin up new
 instances with ``openstack/provision-hosts.yml``, and destroy them
 with ``openstack/destroy-hosts.yml``. These playbooks all use the host
 variables defined in ``inventory/``
 
-Here's an example invocation (after running openstack/provision-nova-key.yml):
+A SSH key is required to configure servers. ``openstack/provision-nova-key.yml`` will take the your ``${HOME}/.ssh/id_rsa`` and upload it to OpenStack as ``ansible_key``. SSH key vars can be changed via the ``inventory/group_vars/all/all.yml`` file.
+
+.. code-block:: shell 
+
+  ansible-playbook -i inventory/1-datacenter openstack/provision-nova-key.yml
+
+Here's an example invocation:
 
 .. code-block:: shell
 
@@ -212,8 +217,4 @@ Here's an example invocation (after running openstack/provision-nova-key.yml):
 
 If you already have a CentOS 7 image in your OpenStack environment, you don't need to create a new one. 
 
-A SSH key is required to configure servers. ``openstack/provision-nova-key.yml`` will take the your ``${HOME}/.ssh/id_rsa`` and upload it to OpenStack as ``ansible_key``. SSH key vars can be changed via the ``inventory/group_vars/all/all.yml`` file.
 
-.. code-block:: shell 
-
-  ansible-playbook -i inventory/1-datacenter openstack/provision-nova-key.yml
