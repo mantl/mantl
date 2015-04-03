@@ -151,7 +151,7 @@ external gateway on ``network1``.
    | tenant_id             | 7dc1ba3b443c4b34a202924a75bd81a3     |
    +-----------------------+--------------------------------------+
 
-   $ neutron router-gateway-set router1 external
+   $ neutron router-gateway-set router1 network1
    Set gateway for router router1
 
    $ neutron router-interface-add router1 subnet1
