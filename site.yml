@@ -20,6 +20,11 @@
 - hosts: all
   gather_facts: no
   roles:
+    - consul-template
+
+- hosts: all
+  gather_facts: no
+  roles:
     - docker
 
 - hosts: all
