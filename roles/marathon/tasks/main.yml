@@ -40,6 +40,21 @@
 
 - include: nginx-proxy.yml
 
+- name: deploy iptables template
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: marathon-consul.cfg
+      dest: /etc/consul-template/config.d
+    - src: marathon-iptables.tmpl
+      dest: /etc/consul-template/templates
+  notify:
+    - reload consul-template
+  tags:
+    - marathon
+
 - name: ensure consul.d is present
   sudo: yes
   file:
