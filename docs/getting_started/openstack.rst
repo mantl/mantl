@@ -209,7 +209,7 @@ Here's an example invocation (after running openstack/provision-nova-key.yml):
 
 .. code-block:: shell
 
-  ansible-playbook -i inventory/my_dc1 openstack/provision-hosts.yml
+  ansible-playbook -i inventory/1-datacenter openstack/provision-hosts.yml
 
 If you already have a CentOS 7 image in your OpenStack environment, you don't need to create a new one. 
 
@@ -217,4 +217,4 @@ A SSH key is required to configure servers. ``openstack/provision-nova-key.yml``
 
 .. code-block:: shell 
 
-  ansible-playbook -i inventory/my_dc1 openstack/provision-nova-key.yml
+  ansible-playbook -i inventory/1-datacenter openstack/provision-nova-key.yml
