@@ -158,8 +158,7 @@ external gateway on ``network1``.
    Added interface ... to router router1.
 
 To check that everything was created successfully, run ``neutron
-router-show router``. You should see IPs in ``external_fixed_ips`` and
-``network_id`` should be set.
+router-show router``,``network_id`` should be set.
 
 Security Group
 ^^^^^^^^^^^^^^
