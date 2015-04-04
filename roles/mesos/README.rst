@@ -122,8 +122,7 @@ do so.)
 
    The secret to use for follower authentication
 
-   default: not set. Set this and :data:`mesos_authenticate_followers` to `true`
-   to enable follower authentication.
+   default: not set. Set this to enable follower authentication.
 
 .. _mesos-example-playbook:
 
