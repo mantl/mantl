@@ -395,7 +395,7 @@ class Zookeeper(Component):
         "marathon user auth"
         with self.modify_security() as config:
             config.setdefault('zk_marathon_user', 'marathon')
-            if 'zk_superuser_secret' not in config:
+            if 'zk_marathon_user_secret' not in config:
                 credential = self.randpass()
                 config['zk_marathon_user_secret'] = credential
                 config['zk_marathon_user_secret_digest'] = self.zk_digest(
