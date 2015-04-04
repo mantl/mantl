@@ -19,10 +19,4 @@
   when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: groups['all']
 
-- name: install httpd-tools
-  sudo: yes
-  yum:
-    name: httpd-tools
-    state: present
-
 - include: users.yml
