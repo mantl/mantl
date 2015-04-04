@@ -411,7 +411,7 @@ class Zookeeper(Component):
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
-        return [self.framework_auth, self.follower_auth]
+        return [self.framework_auth, self.follower_auth, self.deprecate]
 
     def framework_auth(self):
         "framework auth"
@@ -432,6 +432,30 @@ class Mesos(Component):  # Mesos should always come after any frameworks
             config.setdefault('mesos_follower_principal', 'follower')
             config.setdefault('mesos_follower_secret', self.random())
             print('enabled follower auth')
+
+    def deprecate(self):
+        "remove deprecated settings"
+        with self.modify_security() as config:
+            auth_frameworks = config.pop("mesos_authenticate_frameworks", None)
+            if auth_frameworks is not None:
+                print('removed mesos_authenticate_frameworks. This value is now automatically generated - see the docs.')
+
+            auth_followers = config.pop("mesos_authenticate_followers", None)
+            if auth_followers is not None:
+                print('removed mesos_authenticate_followers. This value is now automatically generated - see the docs.')
+
+            # remove follower credential from credential list
+            try:
+                credential_idx = config['mesos_credentials'].index({
+                    'principal': config['mesos_follower_principal'],
+                    'secret': config['mesos_follower_secret']
+                })
+            except ValueError:
+                credential_idx = None
+
+            if credential_idx is not None:
+                del config['mesos_credentials'][credential_idx]
+                print('removed follower credentials from credential list - it is now a separate setting.')
 
 
 def main(args):
