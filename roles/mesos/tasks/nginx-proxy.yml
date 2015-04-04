@@ -1,0 +1,36 @@
+---
+- name: copy nginx configuration
+  sudo: yes
+  copy:
+    src: mesos-leader.nginx
+    dest: /etc
+    mode: u=rw,g=r,o=r
+  tags:
+    - mesos
+
+- name: configure nginx
+  sudo: yes
+  command: curl -X PUT -d @/etc/mesos-leader.nginx localhost:8500/v1/kv/service/nginx/templates/mesos-leader
+  tags:
+    - mesos
+
+- name: configure nginx-mesos-leader
+  sudo: yes
+  template:
+    src: nginx-mesos-leader.service.j2
+    dest: /usr/lib/systemd/system/nginx-mesos-leader.service
+  tags:
+    - mesos
+  tags:
+    - restart nginx-mesos-leader
+
+- name: enable nginx-mesos-leader
+  sudo: yes
+  service:
+    name: nginx-mesos-leader
+    enabled: yes
+    state: started
+  notify:
+    - restart nginx-mesos-leader
+  tags:
+    - mesos

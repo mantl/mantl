@@ -30,8 +30,6 @@
       value: "{{ marathon_zk_connect }}"
     - key: ssl_keystore_password
       value: "{{ marathon_keystore_password }}"
-    - key: http_port
-      value: 8081
   notify:
     - restart marathon
   tags:

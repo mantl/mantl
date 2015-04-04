@@ -50,3 +50,20 @@
   run_once: true
   tags:
     - mesos
+
+- name: deploy iptables template
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: mesos-leader-consul.cfg
+      dest: /etc/consul-template/config.d
+    - src: mesos-leader-iptables.tmpl
+      dest: /etc/consul-template/templates
+  notify:
+    - reload consul-template
+  tags:
+    - mesos
+
+- include: nginx-proxy.yml

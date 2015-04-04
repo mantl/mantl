@@ -34,14 +34,3 @@
     - restart nginx-marathon
   tags:
     - marathon
-
-- name: block external nttp
-  sudo: yes
-  copy:
-    src: marathon.service
-    dest: /usr/lib/systemd/system/marathon.service
-  notify:
-    - reload marathon
-    - restart marathon
-  tags:
-    - marathon
