@@ -31,8 +31,7 @@ mesos_zk_acl_cmd: "docker run --rm -e ZK_AUTH=super:{{ zk_super_user_secret }} -
 
 # authentication options
 mesos_credentials: []
-_mesos_principals: "{% for cred in mesos_credentials %}{% if cred.principal != mesos_follower_principal %}{{ cred.principal }}{% endif %}{% endfor %}"
-mesos_authenticate_frameworks: "{{ _mesos_principals != '' }}"
+mesos_authenticate_frameworks: "{{ mesos_credentials|length > 0 }}"
 mesos_authenticate_followers: "{{ mesos_follower_secret != '' }}"
 mesos_follower_principal: follower
 mesos_follower_secret: ""
