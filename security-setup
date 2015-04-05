@@ -3,7 +3,6 @@
 from __future__ import print_function
 from argparse import ArgumentParser
 import base64
-import bcrypt
 from collections import OrderedDict
 from contextlib import contextmanager
 import getpass
@@ -290,9 +289,6 @@ class Nginx(Component):
                     purpose='admin',
                 )
                 print('set nginx admin password')
-
-                config['nginx_admin_password_encrypted'] = bcrypt.hashpw(config['nginx_admin_password'], bcrypt.gensalt())
-                print('creating encrypted nginx admin password')
             else:
                 print('nginx admin password already set')
 
