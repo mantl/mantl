@@ -6,7 +6,7 @@
   gather_facts: no
   tasks:
 
-  - name: set consul maintenance enabled
+  - name: set consul maintenance enable
     command: consul maint -enable -reason "{{ lookup('env', 'USER') }} initiated reboot"
 
   - name: reboot host
