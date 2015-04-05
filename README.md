@@ -9,7 +9,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
     - [Features](#features)
         - [Architecture](#architecture)
         - [Control Nodes](#control-nodes)
-        - [Compute Nodes](#compute-nodes)
+        - [Resource Nodes](#resource-nodes)
     - [Getting Started](#getting-started)
         - [Software Requirements](#software-requirements)
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
@@ -31,7 +31,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 
 ### Architecture
 
-The base platform contains control nodes that manage the cluster and any number of compute nodes. Containers automatically register themselves into DNS so that other services can locate them.
+The base platform contains control nodes that manage the cluster and any number of resource nodes. Containers automatically register themselves into DNS so that other services can locate them.
 
 ![Single-DC](docs/_static/single_dc.png)
 
@@ -47,11 +47,11 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 ![Control Node](docs/_static/control_node.png)
 
-### Compute Nodes
+### Resource Nodes
 
-The compute nodes launch containers and other Mesos-based workloads. [Registrator](https://github.com/gliderlabs/registrator) is used to update Consul as containers are launched and exit. 
+Resource nodes launch containers and other Mesos-based workloads. [Registrator](https://github.com/gliderlabs/registrator) is used to update Consul as containers are launched and exit. 
 
-![Compute Node](docs/_static/compute_node.png)
+![Resource Node](docs/_static/compute_node.png)
 
 ## Getting Started
 
@@ -104,7 +104,7 @@ make html
 - [ ] Application load balancer based on HAProxy and consul-template
 - [ ] In-service Upgrade and Rollback
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
-- [ ] Autoscaling of compute nodes (with HashiCorp Atlas)
+- [ ] Autoscaling of resource nodes (with HashiCorp Atlas)
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
 - [ ] Kafka Mesos framework for container logs and application event bus
 - [ ] ElasticSearch Mesos framework for container logs
