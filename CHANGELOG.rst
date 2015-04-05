@@ -20,7 +20,13 @@ Features
 * Add Zookeeper authentication and ACLs for mesos #86
 * Add nginx proxy to authentiate consul UI
 * Removed hardcoding of marathon to 0.7.6
-
+* Move consul to install via rpm #90
+* auth-setup: openssl has to prompt user #99
+* Ease of use enhancements for auth-setup #109
+* Need to update example/hello-world to support Marathon auth #112
+* Automatically redirect http requests to https #113
+* auth-setup refinements #128
+* Use Centos docker package #141
 
 Fixes
 ^^^^^
@@ -31,6 +37,9 @@ Fixes
 * OpenSSL certificate fixes #95
 * Fix ansible inventory metadata #96
 * Deprecated checkpoint flag prevents mesos-slave startup #105
+* Consul UI unavailable #111
+* Networkmanager removing 127.0.0.1 from /etc/resolv.conf #122
+* Consul "Failed connect to 127.0.0.1:8080; Connection refused" #131
 * Remove duplicate definition of marathon_servers #101 
 * Running reboot-hosts.yml causes consul to lose quorum #132
 * Numeous other bug fixes
