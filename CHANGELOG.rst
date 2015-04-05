@@ -31,7 +31,8 @@ Fixes
 * OpenSSL certificate fixes #95
 * Fix ansible inventory metadata #96
 * Deprecated checkpoint flag prevents mesos-slave startup #105
-* remove duplicate definition of marathon_servers #101 
+* Remove duplicate definition of marathon_servers #101 
+* Running reboot-hosts.yml causes consul to lose quorum #132
 * Numeous other bug fixes
 
 0.1.0 (03-02-2015)
