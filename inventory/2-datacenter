@@ -26,7 +26,7 @@ host-[06:08]
 host-[01:03]
 host-[06:08]
 
-# compute 
+# resource nodes
 [consul_clients]
 host-[04:05]
 host-[09:10]

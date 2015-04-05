@@ -19,7 +19,7 @@ host-[01:03]
 [marathon_servers]
 host-[01:03]
 
-# compute
+# resource nodes
 [consul_clients]
 host-[04:05]
 
