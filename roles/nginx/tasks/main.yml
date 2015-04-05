@@ -21,3 +21,13 @@
       dest: /etc/nginx/ssl/nginx.key
   tags:
     - nginx
+
+- name: encrypt admin password
+  sudo: yes
+  shell: htpasswd -Bnb admin {{ nginx_admin_password }} | cut -f 2 -d ':'
+  register: nginx_admin_password_encrypted
+  changed_when: no
+
+- name: set admin password variable
+  set_fact:
+    nginx_admin_password_encrypted: "{{ nginx_admin_password_encrypted.stdout }}"
