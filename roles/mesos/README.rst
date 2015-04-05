@@ -103,14 +103,14 @@ do so.)
    Enable Mesos authentication for frameworks. You should set
    :data:`mesos_credentials` for credentials if this is set.
 
-   default: ``no``
+   default: set automatically if framework credentials are present
 
 .. data:: mesos_authenticate_followers
 
    Enable Mesos authentication from followers. If set, each follower will need
    :data:`mesos_follower_secret` set in their host variables.
 
-   default: ``no``
+   default: set automatically if follower credentials are present
 
 .. data:: mesos_follower_principal
 
@@ -122,8 +122,7 @@ do so.)
 
    The secret to use for follower authentication
 
-   default: not set. Set this and :data:`mesos_authenticate_followers` to `true`
-   to enable follower authentication.
+   default: not set. Set this to enable follower authentication.
 
 .. _mesos-example-playbook:
 
