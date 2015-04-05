@@ -1,15 +1,15 @@
 #!/bin/bash
 
 iptables -F MARATHON
-iptables -D INPUT -p tcp --dport 8080 -j MARATHON
+iptables -D INPUT -p tcp --dport 18080 -j MARATHON
 iptables -X MARATHON
 
 iptables -N MARATHON
 
 {{ range service "marathon" "any" }}
-iptables -A MARATHON -p tcp --dport 8080 -s {{ .Address }} -j ACCEPT
+iptables -A MARATHON -p tcp --dport 18080 -s {{ .Address }} -j ACCEPT
 {{ end }}
-iptables -A MARATHON -p tcp --dport 8080 -d 127.0.0.1 -j ACCEPT
-iptables -A MARATHON -p tcp --dport 8080 -j DROP
+iptables -A MARATHON -p tcp --dport 18080 -d 127.0.0.1 -j ACCEPT
+iptables -A MARATHON -p tcp --dport 18080 -j DROP
 
-iptables -A INPUT -p tcp --dport 8080 -j MARATHON
+iptables -A INPUT -p tcp --dport 18080 -j MARATHON
