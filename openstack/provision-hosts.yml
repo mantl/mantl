@@ -56,12 +56,13 @@
   gather_facts: no
   sudo: yes
   tasks:
-    - name: update /etc/hosts
-      local_action: lineinfile
-        dest=/etc/hosts
-        regexp=".*{{ item }}$"
-        line="{{ hostvars[item].ansible_ssh_host }} {{ item }}"
-        state=present
+    - name: add hosts to local /etc/hosts
+      local_action:
+        module: lineinfile
+        dest: "/etc/hosts"
+        regexp: ".*{{ item }}$"
+        line: "{{ hostvars[item].ansible_ssh_host }} {{ item }}"
+        state: present
       when: hostvars[item].ansible_ssh_host is defined
       with_items: groups['all']
       tags: host

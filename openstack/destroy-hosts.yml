@@ -5,9 +5,10 @@
   gather_facts: no
   sudo: yes
   tasks:
-    - name: update /etc/hosts
-      local_action: lineinfile
-        dest=/etc/hosts
-        regexp=".*{{ item }}$"
-        state=absent
+    - name: remove hosts from local /etc/hosts
+      local_action:
+        module: lineinfile
+        dest: "/etc/hosts"
+        regexp: ".*{{ item }}$"
+        state: absent
       with_items: groups['all']
