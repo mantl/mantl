@@ -48,7 +48,7 @@ Open the file that you just downloaded. We are interested in three of the enviro
   export OS_TENANT_NAME="my-project"
 
 
-Update the ``inventory/dc1`` file with these values for the apropriate fields. If you have a second region, update ``inventory/dc2`` with values from the second file.
+Update the ``inventory/group_vars/dc1`` file with these values for the apropriate fields. If you have a second region, update ``inventory/group_vars/dc2`` with values from the second file.
 
 
 OpenStack Username/Password
@@ -133,7 +133,9 @@ Router
 ^^^^^^
 
 Once you've created your network, you'll also need a router with an
-external gateway on ``network1``.
+external gateway on an existing publicly accessible network. In the example below,
+put the name of the publicly accessible network in place of <external network>. If
+you followed the tutorial above, this can be ``network1``
 
 .. code-block:: shell
 
@@ -151,7 +153,7 @@ external gateway on ``network1``.
    | tenant_id             | 7dc1ba3b443c4b34a202924a75bd81a3     |
    +-----------------------+--------------------------------------+
 
-   $ neutron router-gateway-set router1 network1
+   $ neutron router-gateway-set router1 <external network>
    Set gateway for router router1
 
    $ neutron router-interface-add router1 subnet1
