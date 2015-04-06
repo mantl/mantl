@@ -19,3 +19,5 @@
     - reload systemd daemon 
   tags: 
     - zookeeper
+
+- meta: flush_handlers
