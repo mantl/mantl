@@ -3,6 +3,7 @@ mesos_mode: follower
 mesos_log_dir: /var/log/mesos
 mesos_work_dir: /var/run/mesos
 mesos_leader_port: 15050
+mesos_leader_proxy_port: 5050
 mesos_follower_port: 5051
 mesos_leader_cmd: mesos-master
 mesos_follower_cmd: mesos-slave

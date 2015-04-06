@@ -1,10 +1,9 @@
 ---
 - name: copy nginx configuration
   sudo: yes
-  copy:
-    src: mesos-leader.nginx
-    dest: /etc
-    mode: u=rw,g=r,o=r
+  template:
+    src: mesos-leader.nginx.j2
+    dest: /etc/mesos-leader.nginx
   tags:
     - mesos
 
