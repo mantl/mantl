@@ -48,7 +48,7 @@ Open the file that you just downloaded. We are interested in three of the enviro
   export OS_TENANT_NAME="my-project"
 
 
-Update the ``inventory/dc1`` file with these values for the apropriate fields. If you have a second region, update ``inventory/dc2`` with values from the second file.
+Update the ``inventory/group_vars/dc1`` file with these values for the apropriate fields. If you have a second region, update ``inventory/group_vars/dc2`` with values from the second file.
 
 
 OpenStack Username/Password
