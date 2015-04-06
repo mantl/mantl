@@ -160,7 +160,7 @@ you followed the tutorial above, this can be ``network1``
    Added interface ... to router router1.
 
 To check that everything was created successfully, run ``neutron
-router-show router``,``network_id`` should be set.
+router-show router1``,``network_id`` should be set.
 
 Security Group
 ^^^^^^^^^^^^^^
