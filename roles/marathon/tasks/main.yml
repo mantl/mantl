@@ -40,7 +40,7 @@
 
 - include: nginx-proxy.yml
 
-- name: deploy iptables template
+- name: deploy iptables configuration
   sudo: yes
   copy:
     src: "{{ item.src }}"
@@ -48,8 +48,16 @@
   with_items:
     - src: marathon-consul.cfg
       dest: /etc/consul-template/config.d
-    - src: marathon-iptables.tmpl
-      dest: /etc/consul-template/templates
+  notify:
+    - reload consul-template
+  tags:
+    - marathon
+
+- name: deploy iptables template
+  sudo: yes
+  template:
+    src: marathon-iptables.tmpl.j2
+    dest: /etc/consul-template/templates/marathon-iptables.tmpl
   notify:
     - reload consul-template
   tags:

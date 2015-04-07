@@ -38,3 +38,5 @@
     - restart networkmanager
   tags:
     - dnsmasq
+
+- meta: flush_handlers

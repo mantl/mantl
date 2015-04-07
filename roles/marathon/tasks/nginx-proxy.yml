@@ -1,10 +1,11 @@
 ---
 - name: copy nginx configuration
   sudo: yes
-  copy:
-    src: marathon.nginx
-    dest: /etc/marathon
-    mode: u=rw,g=r,o=r
+  template:
+    src: marathon.nginx.j2
+    dest: /etc/marathon/marathon.nginx
+  notify:
+    - restart nginx-marathon
   tags:
     - marathon
 
@@ -19,10 +20,10 @@
   template:
     src: nginx-marathon.service.j2
     dest: /usr/lib/systemd/system/nginx-marathon.service
+  notify:
+    - restart nginx-marathon
   tags:
     - marathon
-  tags:
-    - restart nginx-marathon
 
 - name: enable nginx-marathon
   sudo: yes
