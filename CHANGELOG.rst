@@ -1,9 +1,12 @@
 Changelog
 =========
 
+
 0.2.0 (unreleased)
-0.2.0-RC1 (04-07-2015)
 ------------------
+
+0.2.0-RC1 (04-07-2015)
+----------------------
 
 Features
 ^^^^^^^^
@@ -43,7 +46,9 @@ Fixes
 * Consul "Failed connect to 127.0.0.1:8080; Connection refused" #131
 * Remove duplicate definition of marathon_servers #101 
 * Running reboot-hosts.yml causes consul to lose quorum #132
-* Numeous other bug fixes
+* Missing or incorrect information in getting started documents #133
+* Numerous other bug fixes
+
 
 0.1.0 (03-02-2015)
 ------------------
