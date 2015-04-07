@@ -2,6 +2,7 @@ Changelog
 =========
 
 0.2.0 (unreleased)
+0.2.0-RC1 (04-07-2015)
 ------------------
 
 Features
