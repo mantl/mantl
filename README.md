@@ -99,9 +99,9 @@ make html
 - [x] High availablity
 - [x] Manage Linux user accounts
 - [x] Authentication and authorization for Consul
-- [ ] Authentication and authorization for Mesos
-- [x] Authentication and authorization for Marathonk
-- [ ] Application load balancer based on HAProxy and consul-template
+- [x] Authentication and authorization for Mesos
+- [x] Authentication and authorization for Marathon
+- [x] Application load balancer based on HAProxy and consul-template
 - [ ] In-service Upgrade and Rollback
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
 - [ ] Autoscaling of resource nodes (with HashiCorp Atlas)
