@@ -23,6 +23,7 @@ The file looks like this:
   os_tenant_id:
   os_net_id: fd94baf0-b314-453e-9cd6-73c90fc53857
   consul_dc: dc1
+  security_group: default
 
 In the next sections, we'll explain how to obtain these settings.
 
@@ -169,32 +170,62 @@ You should add the following rules to your security group. These are
 for the web and publicly facing interfaces to the various services in
 your cluster:
 
-.. warning:: These rules are good for testing, but please don't expose these ports for production systems to the internet.
-
 .. table:: Security Group Rules
 
    ================ ======== =========
    Service          Protocol Ports    
    ================ ======== =========
    Ping             ICMP     -1       
-   Mesos            TCP      5050/5051
+   SSH              TCP      22
+   HAproxy          TCP      80
+   Mesos            TCP      5050
    Marathon         TCP      8080
    Consul           TCP      8500
-   Mesos libprocess TCP      9090
    ================ ======== =========
 
-If you're using the ``default`` security group, you can just
-run the following:
+
+We suggest creating a new security group instead of using the default group.
+
+In the following example, we're going to create a security group called ``microservice`` that allows a few connections from the outside, but trusts all traffic between hosts in the security group. 
+
+You'll have to create a security group for each OpenStack region you are going
+to create nodes in:
 
 .. code-block:: shell
 
-   nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
-   nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
-   nova secgroup-add-rule default tcp 5050 5050 0.0.0.0/0
-   nova secgroup-add-rule default tcp 5051 5051 0.0.0.0/0
-   nova secgroup-add-rule default tcp 8080 8080 0.0.0.0/0
-   nova secgroup-add-rule default tcp 8500 8500 0.0.0.0/0
-   nova secgroup-add-rule default tcp 9090 9090 0.0.0.0/0
+   nova secgroup-create microservice "microservices-infrastructure"
+   nova secgroup-add-rule microservice icmp -1 -1 0.0.0.0/0
+   nova secgroup-add-rule microservice tcp 22 22 0.0.0.0/0
+   nova secgroup-add-rule microservice tcp 80 80 0.0.0.0/0
+   nova secgroup-add-rule microservice tcp 5050 5050 0.0.0.0/0
+   nova secgroup-add-rule microservice tcp 8080 8080 0.0.0.0/0
+   nova secgroup-add-rule microservice tcp 8500 8500 0.0.0.0/0
+   nova secgroup-add-group-rule microservice microservice tcp 1 65535
+
+Once you have created this group in each dc, update the ``security_group:``
+entry in the ``inventory/group_vars/dc1`` and ``inventory/group_vars/dc2``
+files with the name of this security group.
+
+In order for the dcs to be able to talk to each other, you'll have to 
+open us the security for each of their subnets and make sure they can 
+connect to each other. 
+
+In ``dc1`` you'll want to run:
+
+.. code-block:: shell
+  
+   nova secgroup-add-rule microservice tcp 1 65535 <cidr for dc2 network>
+
+Where the cidr will be formatted like ``172.18.19.0/23``.
+
+And in ``dc2`` you'll want to run:
+
+.. code-block:: shell
+
+   nova secgroup-add-rule microservice tcp 1 65535 <cidr for dc1 network>
+
+If you don't set up connectivity between DCs, Consul WAN dns lookups won't
+work. Strictly speaking, only the consul WAN ports need to be open between data centers, but we are opening everything here for simplicity. 
 
 Creating Instances
 ------------------
