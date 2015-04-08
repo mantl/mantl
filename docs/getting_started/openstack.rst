@@ -206,6 +206,27 @@ Once you have created this group in each dc, update the ``security_group:``
 entry in the ``inventory/group_vars/dc1`` and ``inventory/group_vars/dc2``
 files with the name of this security group.
 
+In order for the dcs to be able to talk to each other, you'll have to 
+open us the security for each of their subnets and make sure they can 
+connect to each other. 
+
+In ``dc1`` you'll want to run:
+
+.. code-block:: shell
+  
+   nova secgroup-add-rule microservice tcp 1 65535 <cidr for dc2 network>
+
+Where the cidr will be formatted like ``172.18.19.0/23``.
+
+And in ``dc2`` you'll want to run:
+
+.. code-block:: shell
+
+   nova secgroup-add-rule microservice tcp 1 65535 <cidr for dc1 network>
+
+If you don't set up connectivity between DCs, Consul WAN dns lookups won't
+work. Strictly speaking, only the consul WAN ports need to be open between data centers, but we are opening everything here for simplicity. 
+
 Creating Instances
 ------------------
 
