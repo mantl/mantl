@@ -96,20 +96,8 @@ class Component(object):
         self.write_security(security)
 
     def random(self, size=2**5+1):
-        """get `size` bytes of random data, base64 encoded
-
-        tries to get random data from /dev/random, but if that fails
-        it will use the Python PRNG."""
-        try:
-            with open('/dev/random') as ran:
-                bytes = ran.read(size)
-        except IOError:  # /dev/random is unavailable! PRNG time!
-            bytes = ''.join(
-                chr(random.randint(0, 256))
-                for _ in range(size)
-            )
-
-        return base64.b64encode(bytes)
+        """get `size` bytes of random data, base64 encoded"""
+        return base64.b64encode(os.urandom(size))
 
     def randpass(self, size=16):
         """generates a random string of digits + letters"""
