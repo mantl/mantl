@@ -1,4 +1,12 @@
 ---
+- name: workaround for docker/issues/12108. Update device-mapper-libs to latest.
+  sudo: yes
+  yum:
+    name: device-mapper-libs
+    state: latest
+  tags:
+    - docker
+
 - name: install docker
   sudo: yes
   yum:
