@@ -5,9 +5,15 @@ Changelog
 0.2.0 (unreleased)
 ------------------
 
+Features
+^^^^^^^^
+* Move openstack security group to a variable #155
+
 Fixes
 ^^^^^
 * Docker fails to start when using latest Docker RPM without latest CentOS7 updates #161
+* Fix documentation for security group ports #154
+* Security-setup script hangs on low entropy linux hosts due to /dev/random bug #153
 
 0.2.0-RC1 (04-07-2015)
 ----------------------
