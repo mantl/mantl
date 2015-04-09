@@ -24,10 +24,11 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
-* [Consul](http://consul.io) for service discovery 
+* [Consul](http://consul.io) for service discovery
 * [Docker](http://docker.io) container runtime
 * Multi-datacenter support
 * High availablity
+* Security
 
 ### Architecture
 
@@ -35,7 +36,7 @@ The base platform contains control nodes that manage the cluster and any number 
 
 ![Single-DC](docs/_static/single_dc.png)
 
-Once WAN joining is configured, each cluster can locate services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html). 
+Once WAN joining is configured, each cluster can locate services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html).
 
 ![Mult-DC](docs/_static/multi_dc.png)
 
@@ -43,7 +44,7 @@ Once WAN joining is configured, each cluster can locate services in other data c
 
 The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
 
-In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned. 
+In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned.
 
 ![Control Node](docs/_static/control_node.png)
 
@@ -54,6 +55,24 @@ Resource nodes launch containers and other Mesos-based workloads. [Registrator](
 ![Resource Node](docs/_static/resource_node.png)
 
 ## Getting Started
+
+All development is done on the `master` branch. Tested, stable versions are identified via git tags. 
+
+```
+    # git clone https://github.com/CiscoCloud/microservices-infrastructure.git
+
+```
+
+To use a stable version, use `git tag` to list the stable versions:
+
+```
+     # git tag
+     0.1.0
+     0.2.0
+
+     # git checkout 0.2.0
+```
+
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
@@ -92,23 +111,35 @@ make html
 
 ## Roadmap
 
+
+### Components/Features
+
 - [x] Mesos
 - [x] Marathon
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availablity
 - [x] Manage Linux user accounts
+- [ ] Logging
+- [ ] Kafka Mesos framework
+- [ ] ElasticSearch Mesos framework for container logs
+- [ ] Kubernetes Mesos framework
+
+### Security
+
 - [x] Authentication and authorization for Consul
 - [x] Authentication and authorization for Mesos
 - [x] Authentication and authorization for Marathon
 - [x] Application load balancer based on HAProxy and consul-template
+- [x] Application dynamic firewalls using consul template
 - [ ] In-service Upgrade and Rollback
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
 - [ ] Autoscaling of resource nodes (with HashiCorp Atlas)
 - [ ] Immutable deployment (with HashiCorp Atlas + Packer)
-- [ ] Kafka Mesos framework for container logs and application event bus
-- [ ] ElasticSearch Mesos framework for container logs
-- [ ] Kubernetes Mesos framework
+
+
+### Platform support
+
 - [x] Support for Vagrant
 - [x] Support for OpenStack
 - [ ] Support for Apache CloudStack
