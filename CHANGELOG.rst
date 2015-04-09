@@ -36,10 +36,10 @@ Features
 * Removed hardcoding of marathon to 0.7.6
 * Move consul to install via rpm #90
 * auth-setup: openssl has to prompt user #99
-* Ease of use enhancements for auth-setup #109
+* Ease of use enhancements for security-setup #109
 * Need to update example/hello-world to support Marathon auth #112
 * Automatically redirect http requests to https #113
-* auth-setup refinements #128
+* security-setup refinements #128
 * Use Centos docker package #141
 
 Fixes
