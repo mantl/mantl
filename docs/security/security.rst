@@ -16,8 +16,7 @@ in each component vary greatly. For example, projects that utilize HTTP
 tend to provide support for SSL and HTTP basic authentication while
 projects in the Hadoop ecosystem favor Kerberos
 
-Note: at the current time the infrastructure is not suitable for running
-untrusted code or multi-tenant workloads.
+.. note:: At the current time the infrastructure is not suitable for running untrusted code or multi-tenant workloads.
 
 Focus Areas
 -----------
@@ -33,8 +32,8 @@ The next sections will deal with each area.
 Provisioning
 ~~~~~~~~~~~~
 
-This area deals with setting up a secure cloud environment, basic server
-security, and securing secrets on the provisioning systems.
+Provisioning security involves setting up a secure cloud environment, 
+basic server security, and securing secrets on the provisioning systems.
 `Ansible <http://ansible.com>`__ is the primary provisioning tool with a
 migration of cloud provisioning to `Terraform <http://terraform.io>`__
 starting in 0.3.
@@ -62,6 +61,12 @@ The following items are currently not on the roadmap:
 -  Setting up a Kerberos environment
 -  Encrypting server disks for data at rest.
 
+
+Credential Generation
+^^^^^^^^^^^^^^^^^^^^^
+A ``security-setup`` script has been created to automate the creation of credentials.
+Please refer to `the security-setup documentation <security_setup.html>`__ 
+
 Component Security
 ~~~~~~~~~~~~~~~~~~
 
@@ -75,7 +80,7 @@ support, we provide a compensating control.
 HTTP authentication/SSL
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-HTTP traffic to the management systems will be managed on each node via
+HTTP traffic to the management systems is managed via
 an nginx proxy that provides basic authentication and ssl termination.
 For example, consul will be configured to bind to 127.0.0.1:8500, and
 nginx will bind to the eth0 port 8500 and forward traffic to localhost.
@@ -88,22 +93,16 @@ Ansible.
 The following steps are taken to secure http on infrastructure
 components using an nginx proxy (version 0.2):
 
--  Create nginx + consul template docker container
--  Create user/password pairs in consul K/V (using Bcrypt)
--  Consul-template will write out the nginx auth file
--  Create port mapping for nginx in Consul K/V
-   (eth0:8500->127.0.0.1:8500))
--  Use generated cert from ansible for TLS termination.
+-  Create nginx + consul template docker container (version 0.2)
+-  Create user/password pairs in consul K/V (using Bcrypt) (version 0.2)
+-  Consul-template manages the nginx auth file (version 0.2)
+-  Use generated cert from security script for TLS termination. (version 0.2)
 -  Create default GET policy to allow unauthenticated reads, basic
-   authentication required for POST, PUT, DELETE.
+   authentication required for POST, PUT, DELETE. (future version)
 
 Consul
 ^^^^^^
 
-`Consul <http://consul.io>`__ supports TLS, HTTP basic authentication,
-API tokens and ACLs.
-
-The following steps are taken to secure the Consul infrastructure.
 
 -  Consul endpoints are encrypted with Self-signed TLS certificates. A
    master ACL token is created as part of the Ansible installation
@@ -125,6 +124,9 @@ The following steps are taken to secure the Consul infrastructure.
 -  Keep
    `acl\_down\_policy <http://www.consul.io/docs/agent/options.html#acl_down_policy>`__
    at "extend-cache" (version 0.2)
+-  Create master ACL token (version 0.2)
+-  Create ACL token for agents (version 0.2)
+-  Set default ACL policy to "allow" (version 0.2)
 
 Future roadmap items:
 
@@ -210,21 +212,25 @@ Marathon
 ~~~~~~~~
 
 Marathon supports both basic http authentication and TLS via the Java
-keystore.
+keystore, however we use a different method by placing an
+authenticating proxy in front of the instance, using the same credentials
+as for the Mesos and Consul administrative accounts.
 
-To secure marathon, we could use the native support, or place an
-authenticating proxy in front of the instance. The latter approach has
-been chosen.
+Marathon does not support Zookeeper authentication, so the zookeeper znode must have world access.
 
 The following controls will be implemented:
 
--  Bind Marathon to locahost (version 0.2)
+-  Bind Marathon to locahost (version 0.2+)
 -  Place nginx authenticating/SSL proxy in front of Marathon (version
    0.2)
+-  Create a dynamic firewall on each Marathon host that uses consul-template
+   to only allow connections from other Marathon nodes. (version 0.2)
 
 | References:
 | `SSL and Basic Access
   Authentication <https://github.com/mesosphere/marathon/blob/master/docs/docs/ssl-basic-access-authentication.md>`__
+| `Support Zookeeper Authentication
+  <https://github.com/mesosphere/marathon/issues/1336>`__
 
 Mesos
 ~~~~~
@@ -248,8 +254,9 @@ The following steps are taken to secure mesos if security is enabled:
 -  On the leader nodes, the ``--authenticate`` flag is set
 -  On the leader nodes, the ``--authenticate_slaves`` flag is set
 -  A credential file is created and the ``--credential=/path`` is set on
-   leaders and followers
--  Mesos nodes connect to zookeeper with a ``username:password``
+   leaders and followers (version 0.2)
+-  Mesos nodes connect to zookeeper with a ``username:password`` (version 0.2)
+-  Zookeeper ACL created on the /mesos znode: world read, mesos full access (version 0.2)
 
 Future security items:
 
@@ -281,12 +288,13 @@ have SSL support
 Compensating controls:
 
 -  We won't store any restricted data within Zookeeper (under review)
--  Implement ACLs and Authentication on the ``/mesos`` and ``/marathon``
-   znodes using user digest. (version 0.2)
+-  Implement ACLs and Authentication on the ``/mesos`` znode using user digest. (version 0.2)
+-  Implement ACLs and Authentication on the ``/marathon`` znode using user digest. (version 0.3+, pending support for Marathon zk authentication))
 -  Provide Stunnel encryption for Zookeeper Peer-to-Peer communication
    (version 0.3+)
--  Update Marathon configuration to use zk user:password
--  Update Mesos configuration to use zk user:password
+-  Develop dynamic firewall using consul template on Zookeeper ports (version 0.3) 
+-  Update Marathon configuration to use zk user:password (future version)
+-  Update Mesos configuration to use zk user:password (version 0.2)
 
 | References:
 | `Setting ACLs & Auth in
