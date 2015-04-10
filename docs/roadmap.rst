@@ -50,6 +50,7 @@ Platform Support
 | |_| Google Compute Engine
 | |_| VMware vSphere
 | |_| Apache CloudStack
+|
 
 Please see milestones_ for more details on the roadmap.
 
