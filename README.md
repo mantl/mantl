@@ -112,44 +112,55 @@ make html
 ## Roadmap
 
 
-### Components/Features
+### Core Components and Features
 
 - [x] Mesos
-- [x] Marathon
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availablity
-- [x] Manage Linux user accounts
-- [ ] Logging
-- [ ] Kafka Mesos framework
-- [ ] ElasticSearch Mesos framework for container logs
-- [ ] Kubernetes Mesos framework
+- [ ] Rapid immutable deployment (with Terraform + Packer)
+
+### Mesos Frameworks
+
+- [x] Marathon framework
+- [ ] Kubernetes framework
+- [ ] Kafka framework
+- [ ] Cassandra
+- [ ] ElasticSearch framework
+- [ ] HDFS framework
+- [ ] Spark framework
+- [ ] Storm framework
 
 ### Security
 
+- [x] Manage Linux user accounts
 - [x] Authentication and authorization for Consul
 - [x] Authentication and authorization for Mesos
 - [x] Authentication and authorization for Marathon
-- [x] Application load balancer based on HAProxy and consul-template
-- [x] Application dynamic firewalls using consul template
+- [x] Application load balancer (based on HAProxy and consul-template)
+- [x] Application dynamic firewalls (using consul template)
 
 ### Operations
 
-- [ ] In-service Upgrade and Rollback
-- [ ] Self maintaining system (log rotation, automatic instance replacement)
-- [ ] Autoscaling of resource nodes (with HashiCorp Atlas)
-- [ ] Immutable deployment (with HashiCorp Atlas + Packer)
+- [ ] Logging
+- [ ] Metrics
+- [ ] In-service upgrade with rollback
+- [ ] Autoscaling of Resource Nodes
+- [ ] Self maintaining system (log rotation, etc)
+- [ ] Self healing system (automatic failed instance replacement, etc)
 
+### Platform Support
 
-### Platform support
-
-- [x] Support for Vagrant
-- [x] Support for OpenStack
-- [ ] Support for Apache CloudStack
-- [ ] Support for Amazon Web Services
-- [ ] Support for Microsoft Azure
-- [ ] Support for Google compute Engine
-- [ ] Support for VMware vSphere
+- [x] Vagrant
+- [x] OpenStack
+- [x] Cisco Cloud Services
+- [X] Cisco MetaCloud
+- [ ] Cisco Unified Computing System
+- [ ] Amazon Web Services
+- [ ] Microsoft Azure
+- [ ] Google Compute Engine
+- [ ] VMware vSphere
+- [ ] Apache CloudStack
 
 Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
