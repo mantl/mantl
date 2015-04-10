@@ -7,6 +7,7 @@ Roadmap
 |     |x| Multi-datacenter
 |     |x| High availablity
 |     |x| Rapid immutable deployment (with Terraform + Packer)
+|
 
 * Mesos Frameworks
 
@@ -18,6 +19,7 @@ Roadmap
 |     |_| HDFS framework
 |     |_| Spark framework
 |     |_| Storm framework
+|
 
 * Security
 
@@ -27,6 +29,7 @@ Roadmap
 |     |x| Authentication and authorization for Marathon
 |     |x| Application load balancer (based on HAProxy and consul-template)
 |     |x| Application dynamic firewalls (using consul template)
+|
 
 * Operations
 
@@ -36,7 +39,7 @@ Roadmap
 |     |_| Autoscaling of Resource Nodes
 |     |_| Self maintaining system (log rotation, etc)
 |     |_| Self healing system (automatic failed instance replacement, etc)
-
+|
 
 * Platform Support
 
@@ -50,6 +53,7 @@ Roadmap
 |     |_| Google Compute Engine
 |     |_| VMware vSphere
 |     |_| Apache CloudStack
+|
 
 Please see milestones_ for more details on the roadmap.
 
