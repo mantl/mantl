@@ -1,21 +1,7 @@
 Changelog
 =========
 
-
-0.2.0 (unreleased)
-------------------
-
-Features
-^^^^^^^^
-* Move openstack security group to a variable #155
-
-Fixes
-^^^^^
-* Docker fails to start when using latest Docker RPM without latest CentOS7 updates #161
-* Fix documentation for security group ports #154
-* Security-setup script hangs on low entropy linux hosts due to /dev/random bug #153
-
-0.2.0-RC1 (04-07-2015)
+0.2.0 (04-10-2015)
 ----------------------
 
 Features
@@ -41,6 +27,7 @@ Features
 * Automatically redirect http requests to https #113
 * security-setup refinements #128
 * Use Centos docker package #141
+* Move openstack security group to a variable #155
 
 Fixes
 ^^^^^
@@ -58,6 +45,9 @@ Fixes
 * Running reboot-hosts.yml causes consul to lose quorum #132
 * Missing or incorrect information in getting started documents #133
 * Numerous other bug fixes
+* Docker fails to start when using latest Docker RPM without latest CentOS7 updates #161
+* Fix documentation for security group ports #154
+* Security-setup script hangs on low entropy linux hosts due to /dev/random bug #153
 
 
 0.1.0 (03-02-2015)
