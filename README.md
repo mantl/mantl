@@ -122,14 +122,15 @@ make html
 
 ### Mesos Frameworks
 
-- [x] Marathon framework
-- [ ] Kubernetes framework
-- [ ] Kafka framework
+- [x] Marathon
+- [ ] Kubernetes
+- [ ] Kafka
+- [ ] Riak
 - [ ] Cassandra
-- [ ] ElasticSearch framework
-- [ ] HDFS framework
-- [ ] Spark framework
-- [ ] Storm framework
+- [ ] Elasticsearch
+- [ ] HDFS
+- [ ] Spark
+- [ ] Storm
 
 ### Security
 
