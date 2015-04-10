@@ -132,6 +132,9 @@ make html
 - [x] Authentication and authorization for Marathon
 - [x] Application load balancer based on HAProxy and consul-template
 - [x] Application dynamic firewalls using consul template
+
+### Operations
+
 - [ ] In-service Upgrade and Rollback
 - [ ] Self maintaining system (log rotation, automatic instance replacement)
 - [ ] Autoscaling of resource nodes (with HashiCorp Atlas)
