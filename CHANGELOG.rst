@@ -1,8 +1,18 @@
 Changelog
 =========
 
+
+0.3.0 (unreleased)
+------------------
+
+Fixes
+^^^^^
+
+* Note Vagrant provider requirement #170
+
+
 0.2.0 (04-10-2015)
-----------------------
+------------------
 
 Features
 ^^^^^^^^
