@@ -79,6 +79,8 @@ A Vagrantfile is provided that provisions everything on a single VM. To run (ens
 1. Set up security. Run: `./security-setup`
 2. Provision box. Run: `vagrant up`
 
+Note that there is no support for the VMware Fusion Vagrant provider, so ensure that you set your provider to Virtualbox when running `vagrant up`: `vagrant up --provider=virtualbox`.
+
 
 ### Software Requirements
 
