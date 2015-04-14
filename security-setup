@@ -8,6 +8,7 @@ from contextlib import contextmanager
 import getpass
 import hashlib
 import os
+import posixpath
 import random
 import shlex
 import stat
@@ -37,13 +38,13 @@ parser.add_argument('--cert-email', default='operations@example.com')
 parser.add_argument('--consul-location', default='consul.example.com')  # used as common name
 parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
 
-BASE = os.path.abspath(os.path.dirname(__file__))
-SECURITY_FILE = os.path.join(BASE, 'security.yml')
+BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
+SECURITY_FILE = posixpath.join(BASE, 'security.yml')
 
 # SSL
-CERT_PATH = os.path.join(BASE, 'ssl')
-ROOT_KEY = os.path.join(CERT_PATH, 'private', 'cakey.pem')
-ROOT_CERT = os.path.join(CERT_PATH, 'cacert.pem')
+CERT_PATH = posixpath.join(BASE, 'ssl')
+ROOT_KEY = posixpath.join(CERT_PATH, 'private', 'cakey.pem')
+ROOT_CERT = posixpath.join(CERT_PATH, 'cacert.pem')
 
 # dumping
 yaml.SafeDumper.add_representer(
@@ -173,13 +174,13 @@ class Component(object):
         )
 
     def generate_certificate(self, name):
-        key = os.path.join(CERT_PATH, 'private', name + '.key.pem')
-        csr = os.path.join(CERT_PATH, 'certs', name + '.csr.pem')
-        cert = os.path.join(CERT_PATH, 'certs', name + '.cert.pem')
+        key = posixpath.join(CERT_PATH, 'private', name + '.key.pem')
+        csr = posixpath.join(CERT_PATH, 'certs', name + '.csr.pem')
+        cert = posixpath.join(CERT_PATH, 'certs', name + '.cert.pem')
         common = getattr(self.args, name + '_location', name + '.example.com')
 
         with self.chdir(CERT_PATH):
-            if os.path.exists(key):
+            if posixpath.exists(key):
                 print('{} key already exists'.format(name))
             else:
                 self.wrap_call(
@@ -188,7 +189,7 @@ class Component(object):
                 os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
                 print('generated {} key'.format(name))
 
-            if os.path.exists(cert):
+            if posixpath.exists(cert):
                 print('{} certificate already exists'.format(name))
             else:
                 # CSR
@@ -228,8 +229,8 @@ class Certificates(Component):
 
     def ca(self):
         "certificate authority"
-        serial = os.path.join(CERT_PATH, 'serial')
-        if os.path.exists(serial):
+        serial = posixpath.join(CERT_PATH, 'serial')
+        if posixpath.exists(serial):
             print('serial already exists')
         else:
             with open(serial, 'w') as fh:
@@ -237,15 +238,15 @@ class Certificates(Component):
 
             print('created serial')
 
-        index = os.path.join(CERT_PATH, 'index.txt')
-        if os.path.exists(index):
+        index = posixpath.join(CERT_PATH, 'index.txt')
+        if posixpath.exists(index):
             print('index already exists')
         else:
             open(index, 'w').close()
             print('created index')
 
         with self.chdir(CERT_PATH):
-            if os.path.exists(ROOT_KEY) or os.path.exists(ROOT_CERT):
+            if posixpath.exists(ROOT_KEY) or posixpath.exists(ROOT_CERT):
                 print('root CA already exists')
             else:
                 self.wrap_call(
