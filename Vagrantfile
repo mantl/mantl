@@ -44,6 +44,7 @@ Vagrant.configure(2) do |config|
     }
     ansible.extra_vars = load_security.merge({
       "consul_servers_group" => "consul_servers",
+      "consul_dns_domain" => "consul",
       "consul_dc" => "vagrant",
       "consul_acl_datacenter" => "vagrant",
       "consul_bootstrap_expect" => 1,
