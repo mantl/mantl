@@ -76,9 +76,13 @@ To use a stable version, use `git tag` to list the stable versions:
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
-1. Install dependencies. Run: `sudo pip install -r requirements.txt`
-2. Set up security. Run: `./security-setup`
-3. Provision box. Run: `vagrant up`
+```shell
+git clone https://github.com/CiscoCloud/microservices-infrastructure.git
+cd microservices-infrastructure
+sudo pip install -r requirements.txt
+./security-setup
+vagrant up
+```
 
 Note:
 * There is no support for Windows at this time, however support is planned.
