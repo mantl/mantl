@@ -76,10 +76,13 @@ To use a stable version, use `git tag` to list the stable versions:
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
-1. Set up security. Run: `./security-setup`
-2. Provision box. Run: `vagrant up`
+1. Install dependencies. Run: `sudo pip install -r requirements.txt`
+2. Set up security. Run: `./security-setup`
+3. Provision box. Run: `vagrant up`
 
-Note that there is no support for the VMware Fusion Vagrant provider, so ensure that you set your provider to Virtualbox when running `vagrant up`: `vagrant up --provider=virtualbox`.
+Note:
+* There is no support for Windows at this time, however support is planned.
+* There is no support for the VMware Fusion Vagrant provider, so ensure that you set your provider to Virtualbox when running `vagrant up`: `vagrant up --provider=virtualbox`.
 
 
 ### Software Requirements
@@ -154,7 +157,8 @@ make html
 
 ### Platform Support
 
-- [x] Vagrant
+- [x] Vagrant (OSX + VirtualBox)
+- [ ] Vagrant (Windows + VirtualBox)
 - [x] OpenStack
 - [x] Cisco Cloud Services
 - [X] Cisco MetaCloud
