@@ -59,26 +59,23 @@ Resource nodes launch containers and other Mesos-based workloads. [Registrator](
 All development is done on the `master` branch. Tested, stable versions are identified via git tags. 
 
 ```
-    # git clone https://github.com/CiscoCloud/microservices-infrastructure.git
+    git clone https://github.com/CiscoCloud/microservices-infrastructure.git
 
 ```
 
 To use a stable version, use `git tag` to list the stable versions:
 
 ```
-     # git tag
-     0.1.0
-     0.2.0
+git tag
+0.1.0
+0.2.0
 
-     # git checkout 0.2.0
+git checkout 0.2.0
 ```
-
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
-```shell
-git clone https://github.com/CiscoCloud/microservices-infrastructure.git
-cd microservices-infrastructure
+```
 sudo pip install -r requirements.txt
 ./security-setup
 vagrant up
@@ -112,8 +109,8 @@ All documentation is located at [https://microservices-infrastructure.readthedoc
 
 To build the documentation locally, run:
 
-```shell
-pip install -r requirements.txt
+```
+sudo pip install -r requirements.txt
 cd docs
 make html
 ```
@@ -161,7 +158,7 @@ make html
 
 ### Platform Support
 
-- [x] Vagrant (OSX + VirtualBox)
+- [x] Vagrant (Mac OSX + VirtualBox)
 - [ ] Vagrant (Windows + VirtualBox)
 - [x] OpenStack
 - [x] Cisco Cloud Services
