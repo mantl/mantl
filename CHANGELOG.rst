@@ -1,7 +1,17 @@
 Changelog
 =========
 
-0.2.0 (unreleased)
+
+0.3.0 (unreleased)
+------------------
+
+Fixes
+^^^^^
+
+* Note Vagrant provider requirement #170
+
+
+0.2.0 (04-10-2015)
 ------------------
 
 Features
@@ -22,11 +32,12 @@ Features
 * Removed hardcoding of marathon to 0.7.6
 * Move consul to install via rpm #90
 * auth-setup: openssl has to prompt user #99
-* Ease of use enhancements for auth-setup #109
+* Ease of use enhancements for security-setup #109
 * Need to update example/hello-world to support Marathon auth #112
 * Automatically redirect http requests to https #113
-* auth-setup refinements #128
+* security-setup refinements #128
 * Use Centos docker package #141
+* Move openstack security group to a variable #155
 
 Fixes
 ^^^^^
@@ -42,7 +53,12 @@ Fixes
 * Consul "Failed connect to 127.0.0.1:8080; Connection refused" #131
 * Remove duplicate definition of marathon_servers #101 
 * Running reboot-hosts.yml causes consul to lose quorum #132
-* Numeous other bug fixes
+* Missing or incorrect information in getting started documents #133
+* Numerous other bug fixes
+* Docker fails to start when using latest Docker RPM without latest CentOS7 updates #161
+* Fix documentation for security group ports #154
+* Security-setup script hangs on low entropy linux hosts due to /dev/random bug #153
+
 
 0.1.0 (03-02-2015)
 ------------------

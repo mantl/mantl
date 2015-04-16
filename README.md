@@ -24,10 +24,11 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
-* [Consul](http://consul.io) for service discovery 
+* [Consul](http://consul.io) for service discovery
 * [Docker](http://docker.io) container runtime
 * Multi-datacenter support
 * High availablity
+* Security
 
 ### Architecture
 
@@ -35,7 +36,7 @@ The base platform contains control nodes that manage the cluster and any number 
 
 ![Single-DC](docs/_static/single_dc.png)
 
-Once WAN joining is configured, each cluster can locate services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html). 
+Once WAN joining is configured, each cluster can locate services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html).
 
 ![Mult-DC](docs/_static/multi_dc.png)
 
@@ -43,7 +44,7 @@ Once WAN joining is configured, each cluster can locate services in other data c
 
 The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
 
-In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned. 
+In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned.
 
 ![Control Node](docs/_static/control_node.png)
 
@@ -51,14 +52,34 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 Resource nodes launch containers and other Mesos-based workloads. [Registrator](https://github.com/gliderlabs/registrator) is used to update Consul as containers are launched and exit. 
 
-![Resource Node](docs/_static/compute_node.png)
+![Resource Node](docs/_static/resource_node.png)
 
 ## Getting Started
+
+All development is done on the `master` branch. Tested, stable versions are identified via git tags. 
+
+```
+    # git clone https://github.com/CiscoCloud/microservices-infrastructure.git
+
+```
+
+To use a stable version, use `git tag` to list the stable versions:
+
+```
+     # git tag
+     0.1.0
+     0.2.0
+
+     # git checkout 0.2.0
+```
+
 
 A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
 
 1. Set up security. Run: `./security-setup`
 2. Provision box. Run: `vagrant up`
+
+Note that there is no support for the VMware Fusion Vagrant provider, so ensure that you set your provider to Virtualbox when running `vagrant up`: `vagrant up --provider=virtualbox`.
 
 
 ### Software Requirements
@@ -92,30 +113,57 @@ make html
 
 ## Roadmap
 
+
+### Core Components and Features
+
 - [x] Mesos
-- [x] Marathon
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availablity
+- [ ] Rapid immutable deployment (with Terraform + Packer)
+
+### Mesos Frameworks
+
+- [x] Marathon
+- [ ] Kubernetes
+- [ ] Kafka
+- [ ] Riak
+- [ ] Cassandra
+- [ ] Elasticsearch
+- [ ] HDFS
+- [ ] Spark
+- [ ] Storm
+
+### Security
+
 - [x] Manage Linux user accounts
 - [x] Authentication and authorization for Consul
-- [ ] Authentication and authorization for Mesos
-- [x] Authentication and authorization for Marathonk
-- [ ] Application load balancer based on HAProxy and consul-template
-- [ ] In-service Upgrade and Rollback
-- [ ] Self maintaining system (log rotation, automatic instance replacement)
-- [ ] Autoscaling of resource nodes (with HashiCorp Atlas)
-- [ ] Immutable deployment (with HashiCorp Atlas + Packer)
-- [ ] Kafka Mesos framework for container logs and application event bus
-- [ ] ElasticSearch Mesos framework for container logs
-- [ ] Kubernetes Mesos framework
-- [x] Support for Vagrant
-- [x] Support for OpenStack
-- [ ] Support for Apache CloudStack
-- [ ] Support for Amazon Web Services
-- [ ] Support for Microsoft Azure
-- [ ] Support for Google compute Engine
-- [ ] Support for VMware vSphere
+- [x] Authentication and authorization for Mesos
+- [x] Authentication and authorization for Marathon
+- [x] Application load balancer (based on HAProxy and consul-template)
+- [x] Application dynamic firewalls (using consul template)
+
+### Operations
+
+- [ ] Logging
+- [ ] Metrics
+- [ ] In-service upgrade with rollback
+- [ ] Autoscaling of Resource Nodes
+- [ ] Self maintaining system (log rotation, etc)
+- [ ] Self healing system (automatic failed instance replacement, etc)
+
+### Platform Support
+
+- [x] Vagrant
+- [x] OpenStack
+- [x] Cisco Cloud Services
+- [X] Cisco MetaCloud
+- [ ] Cisco Unified Computing System
+- [ ] Amazon Web Services
+- [ ] Microsoft Azure
+- [ ] Google Compute Engine
+- [ ] VMware vSphere
+- [ ] Apache CloudStack
 
 Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
@@ -124,6 +172,10 @@ Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructu
 If you're interested in contributing to the project, install the software listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
 
 Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
+
+## Get Involved
+
+You are invited to get involved and join the team!  The team collaborates on [Cisco Spark](http://www.webex.com/ciscospark) and [GitHub Issues](https://github.com/CiscoCloud/microservices-infrastructure/issues). Send an email to microservices-infrastructure-spark-room@external.cisco.com and we’ll add you to our Cisco Spark room!
 
 ## License
 

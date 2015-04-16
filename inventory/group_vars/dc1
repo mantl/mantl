@@ -8,3 +8,4 @@ os_tenant_name:
 os_tenant_id:
 os_net_id:
 consul_dc: dc1
+security_group: default

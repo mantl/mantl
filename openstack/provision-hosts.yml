@@ -19,7 +19,7 @@
         flavor_include: "{{ os_flavor_include }}"
         nics:
           - net-id: "{{ os_net_id }}"
-        security_groups: default
+        security_groups: "{{ security_group }}"
         state: "{{ nova_compute_state }}"
       always_run: yes
       register: host
