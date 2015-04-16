@@ -40,7 +40,8 @@ Operations
 
 Platform Support
 --------
-| |x| Vagrant
+| [x] Vagrant (Mac OSX + VirtualBox)
+| [ ] Vagrant (Windows + VirtualBox)
 | |x| OpenStack
 | |x| Cisco Cloud Services
 | |x| Cisco MetaCloud
