@@ -1,0 +1,11 @@
+/var/log/mesos/* {
+        daily
+        rotate 7
+        create
+        missingok
+        compress
+        delaycompress
+        notifempty
+        minsize 1
+}
+

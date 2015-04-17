@@ -21,6 +21,7 @@
     - nginx
     - consul
     - registrator
+    - logrotate
 
 - include: playbooks/consul-join-wan.yml
 
