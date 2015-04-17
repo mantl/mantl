@@ -89,3 +89,15 @@ Below are guides to customizing your host inventory, Ansible playbooks and addin
 .. _inventory file: http://docs.ansible.com/intro_inventory.html
 .. _playbook: http://docs.ansible.com/playbooks.html
 .. _working Ansible installation: http://docs.ansible.com/intro_installation.html#installing-the-control-machine
+
+
+Restarting your deployment
+--------------------------
+To restart your deployment and make sure all components are restarted and working correctly, it is recommended to leverage the
+``playbooks/reboot-hosts.yml`` playbook.
+
+.. code-block:: shell 
+
+    ansible-playbook -i inventory/1-datacenter playbooks/reboot-hosts.yml
+
+
