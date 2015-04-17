@@ -110,10 +110,17 @@ class Component(object):
         Ask the user for a password. If `purpose` is supplied, the password will
         be reused for other calls to the same purpose
         """
+        confirmed = False
         if purpose is not None and purpose in PASSWORDS:
             password = PASSWORDS[purpose]
         elif sys.stdin.isatty():
-            password = getpass.getpass(prompt)
+            while not confirmed:
+                password = getpass.getpass(prompt)
+                confpass = getpass.getpass('Confirm: ')
+                if password == confpass:
+                    confirmed = True
+                else:
+                    print ('Passwords dont match! Please retype password!')
         else:
             password = self.randpass()
 
