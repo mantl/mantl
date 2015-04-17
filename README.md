@@ -136,7 +136,7 @@ make html
 - [ ] Elasticsearch
 - [ ] HDFS
 - [ ] Spark
-- [ ] Storm
+- [ ] Chronos
 
 ### Security
 
