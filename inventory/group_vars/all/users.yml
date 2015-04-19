@@ -6,10 +6,10 @@
 #
 # users: 
 #   - name: user1
-#   - enabled: 1
-#   - pubkeys: 
+#     enabled: 1
+#     pubkeys: 
 #       - ssh-rsa AAAAB3NzaC1yc...
 #       - ssh-rsa AAAA31ybB5yc2...
 #
 #   - name: user2
-#   - enabled: 0
+#     enabled: 0
