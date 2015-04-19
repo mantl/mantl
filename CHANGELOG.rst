@@ -8,7 +8,7 @@ Changelog
 Features
 ^^^^^^^^
 * security-setup: add additional confirmation prompt for password #173
-* make consul domain name configurable #100 & #156
+* Make consul domain name configurable #100 & #156
 
 Fixes
 ^^^^^
