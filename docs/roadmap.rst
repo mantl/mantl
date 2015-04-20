@@ -11,14 +11,16 @@ Core Components and Features
 
 Mesos Frameworks
 --------
-| |x| Marathon framework
-| |_| Kubernetes framework
-| |_| Kafka framework
+| |x| Marathon
+| |_| Kubernetes
+| |_| Kafka
+| |_| Riak
 | |_| Cassandra
-| |_| ElasticSearch framework
-| |_| HDFS framework
-| |_| Spark framework
-| |_| Storm framework
+| |_| ElasticSearch
+| |_| HDFS
+| |_| Spark
+| |_| Storm
+| |_| Chronos
 
 Security
 --------

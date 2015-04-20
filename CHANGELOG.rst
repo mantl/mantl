@@ -5,9 +5,13 @@ Changelog
 0.3.0 (unreleased)
 ------------------
 
+Features
+^^^^^^^^
+* security-setup: add additional confirmation prompt for password #173
+* Make consul domain name configurable #100 & #156
+
 Fixes
 ^^^^^
-
 * Note Vagrant provider requirement #170
 
 

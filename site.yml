@@ -8,7 +8,8 @@
       fail:
         msg: |
           Security is not enabled. Please run `security-setup` in the root
-          directory and re-run this playbook with the `--extra-vars`/`-e` option           pointing to your `security.yml` (like `-e @security.yml`)
+          directory and re-run this playbook with the `--extra-vars`/`-e` option
+          pointing to your `security.yml` (e.g., `-e @security.yml`)
 
 - include: provision-openstack.yml
 
@@ -21,6 +22,7 @@
     - nginx
     - consul
     - registrator
+    - logrotate
 
 - include: playbooks/consul-join-wan.yml
 

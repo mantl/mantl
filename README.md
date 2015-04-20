@@ -137,6 +137,7 @@ make html
 - [ ] HDFS
 - [ ] Spark
 - [ ] Storm
+- [ ] Chronos
 
 ### Security
 

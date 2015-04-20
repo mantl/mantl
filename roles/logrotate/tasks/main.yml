@@ -1,0 +1,35 @@
+---
+- name: change log rotation interval
+  sudo: yes
+  lineinfile:
+    dest: /etc/logrotate.conf
+    regexp: '^weekly'
+    line: "daily"
+
+
+- name: change stored log files count
+  sudo: yes
+  lineinfile:
+    dest: /etc/logrotate.conf
+    regexp: '^rotate 4'
+    line: "rotate 7"
+
+- name: add mesos-specific logrotate config
+  sudo: yes
+  template:
+    src: mesos
+    dest: /etc/logrotate.d/mesos
+    mode: 644
+    owner: root
+    group: root
+
+- name: add docker-specific logrotate config
+  sudo: yes
+  template:
+    src: docker
+    dest: /etc/logrotate.d/docker
+    mode: 644
+    owner: root
+    group: root
+    
+
