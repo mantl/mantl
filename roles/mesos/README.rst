@@ -75,6 +75,14 @@ do so.)
 
    default: ``mesos-slave``
 
+.. data:: mesos_resources
+
+   Set resources for follower nodes. (useful for setting available ports
+   that applications can be bound to)
+   Format: ``name(role):value;name(role):value...``
+
+   default: ``ports(*):[4000-5000, 31000-32000]``
+
 .. data:: mesos_cluster
 
    default: ``cluster1``
