@@ -25,4 +25,7 @@
     name: httpd-tools
     state: present
 
+- name: disable firewalld
+  service: name=firewalld enabled=false state=stopped
+
 - include: users.yml
