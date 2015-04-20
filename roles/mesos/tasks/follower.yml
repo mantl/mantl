@@ -83,7 +83,7 @@
   copy:
     dest: /etc/mesos-slave/resources
     content: "{{ mesos_resources }}"
-  notify: restart mesos follower
+  notify: remove mesos follower metadata
   tags:
     - mesos
 
