@@ -8,7 +8,7 @@
   shell: "{{ item }}"
   with_items:
     - /bin/systemctl stop mesos-slave
-    - /bin/rm -rf /tmp/mesos/meta
+    - /bin/rm -rf /tmp/mesos/meta/slaves/latest
     - /bin/systemctl start mesos-slave
 
 - name: restart mesos follower

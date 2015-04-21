@@ -8,6 +8,7 @@ mesos_follower_port: 5051
 mesos_leader_cmd: mesos-master
 mesos_follower_cmd: mesos-slave
 mesos_executor_registration_timeout: 10mins
+mesos_resources: "ports(*):[4000-5000, 31000-32000]"
 mesos_cluster: cluster1
 
 #options for setting mesos hostname

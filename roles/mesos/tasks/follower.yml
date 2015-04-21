@@ -78,6 +78,15 @@
   tags:
     - mesos
 
+- name: set follower resources
+  sudo: yes
+  copy:
+    dest: /etc/mesos-slave/resources
+    content: "{{ mesos_resources }}"
+  notify: remove mesos follower metadata
+  tags:
+    - mesos
+
 - name: set follower node id
   sudo: yes
   copy: 
