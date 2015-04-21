@@ -13,6 +13,7 @@ Fixes
 ^^^^^
 * Note Vagrant provider requirement #170
 * Fix/dnsmasq host #188
+* update python novaclient verion #192
 * disable firewalld #193
 
 
