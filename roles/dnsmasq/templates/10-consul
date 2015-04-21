@@ -1,6 +1,8 @@
 #Listen on all interfaces
 interface=*
 
+addn-hosts=/etc/hosts
+
 # Never forward addresses in the non-routed address spaces.
 bogus-priv
 
