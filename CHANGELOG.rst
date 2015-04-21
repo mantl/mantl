@@ -6,6 +6,7 @@ Changelog
 ------------------
 Fixes
 ^^^^^
+* Fix/dnsmasq host #188
 * disable firewalld #193
 
 Features
