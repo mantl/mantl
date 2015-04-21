@@ -4,11 +4,6 @@ Changelog
 
 0.3.0 (unreleased)
 ------------------
-Fixes
-^^^^^
-* Fix/dnsmasq host #188
-* disable firewalld #193
-
 Features
 ^^^^^^^^
 * security-setup: add additional confirmation prompt for password #173
@@ -17,6 +12,8 @@ Features
 Fixes
 ^^^^^
 * Note Vagrant provider requirement #170
+* Fix/dnsmasq host #188
+* disable firewalld #193
 
 
 0.2.0 (04-10-2015)
