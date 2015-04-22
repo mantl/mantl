@@ -4,15 +4,18 @@ Changelog
 
 0.3.0 (unreleased)
 ------------------
-
 Features
 ^^^^^^^^
 * security-setup: add additional confirmation prompt for password #173
 * Make consul domain name configurable #100 & #156
+* enable mesos resource configurations for followers #194
 
 Fixes
 ^^^^^
 * Note Vagrant provider requirement #170
+* Fix/dnsmasq host #188
+* update python novaclient verion #192
+* disable firewalld #193
 
 
 0.2.0 (04-10-2015)
