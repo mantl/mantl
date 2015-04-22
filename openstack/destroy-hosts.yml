@@ -5,10 +5,10 @@
   gather_facts: no
   sudo: yes
   tasks:
-    - name: remove hosts from local /etc/hosts
+    - name: remove list of provisioned hosts
       local_action:
         module: lineinfile
-        dest: "/etc/hosts"
-        regexp: ".*{{ item }}$"
+        dest: "{{ playbook_dir }}/../hosts.merge"
+        regexp: ".+ {{ item }}$"
         state: absent
       with_items: groups['all']
