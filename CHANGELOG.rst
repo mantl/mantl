@@ -17,7 +17,7 @@ Fixes
 * Fix/dnsmasq host #188
 * update python novaclient verion #192
 * disable firewalld #193
-
+* Have awk read /proc/uptime directly #216
 
 0.2.0 (04-10-2015)
 ------------------
