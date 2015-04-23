@@ -9,6 +9,7 @@ Features
 * security-setup: add additional confirmation prompt for password #173
 * Make consul domain name configurable #100 & #156
 * enable mesos resource configurations for followers #194
+* generate sha256 signed CA/certs by default #213
 
 Fixes
 ^^^^^
