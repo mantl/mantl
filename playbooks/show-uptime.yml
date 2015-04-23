@@ -3,7 +3,7 @@
   gather_facts: no
   tasks:
   - name: get uptime
-    shell: cat /proc/uptime | awk '{ print $1 }'
+    shell: awk '{ print $1 }' /proc/uptime
     register: uptime
     changed_when: no
 
