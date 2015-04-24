@@ -181,10 +181,6 @@ If you're interested in contributing to the project, install the software listed
 
 Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
 
-## Get Involved
-
-You are invited to get involved and join the team!  The team collaborates on [Cisco Spark](http://www.webex.com/ciscospark) and [GitHub Issues](https://github.com/CiscoCloud/microservices-infrastructure/issues). Send an email to microservices-infrastructure-spark-room@external.cisco.com and we’ll add you to our Cisco Spark room!
-
 ## License
 
 Copyright © 2015 Cisco Systems, Inc.
