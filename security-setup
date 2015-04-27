@@ -38,6 +38,14 @@ parser.add_argument('--cert-email', default='operations@example.com')
 parser.add_argument('--consul-location', default='consul.example.com')  # used as common name
 parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
 
+# Consul authentication
+parser.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
+parser.add_argument('--enable-consul-auth', action='store_true', help='enable consul auth', dest='do_consul_auth')
+parser.add_argument('--disable-consul-ssl', action='store_false', help='disable consul ssl', dest='do_consul_ssl', default=None)
+parser.add_argument('--enable-consul-ssl', action='store_true', help='enable consul ssl', dest='do_consul_ssl')
+parser.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
+parser.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
+
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
 
@@ -229,6 +237,13 @@ class Component(object):
 
                 print('{} certificate is valid'.format(name))
 
+    def toggleBoolean(self, inFlag, inValue, inDefault):
+        with self.modify_security() as config:
+            if inFlag not in config:
+                config[inFlag] = inDefault
+            
+            if inValue is not None:
+                config[inFlag] = inValue
 
 class Certificates(Component):
     def check(self):
@@ -291,7 +306,13 @@ class Nginx(Component):
 
 class Consul(Component):
     def check(self):
-        return [self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
+        return [self.disable_security, self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
+
+    def disable_security(self):
+        "disable security"
+        self.toggleBoolean('do_consul_auth', self.args.do_consul_auth, True)
+        self.toggleBoolean('do_consul_ssl', self.args.do_consul_ssl, True)
+        self.toggleBoolean('do_consul_acl', self.args.do_consul_acl, True)
 
     def gossip_key(self):
         "gossip key"

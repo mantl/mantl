@@ -16,29 +16,6 @@
   tags: 
     - consul
 
-- name: deploy tls files
-  sudo: yes
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ item.owner | default('consul') }}"
-    mode: "{{ item.mode | default(0400) }}"
-  with_items:
-    - src: ssl/cacert.pem
-      dest: /etc/consul/ssl/{{ consul_ca_file }}
-    - src: ssl/certs/consul.cert.pem
-      dest: /etc/consul/ssl/{{ consul_cert_file }}
-    - src: ssl/private/consul.key.pem
-      dest: /etc/consul/ssl/{{ consul_key_file }}
-    - src: consul.nginx
-      dest: /etc/consul
-      mode: u=rw,g=r,o=r
-    - src: consul-acl-bootstrap.sh
-      dest: /usr/local/bin
-      mode: u=rwx
-  tags:
-    - consul
-
 - name: configure consul
   sudo: yes
   template:
@@ -50,11 +27,25 @@
       dest: /etc/sysconfig/consul
     - src: consul.json.j2
       dest: /etc/consul/consul.json
-    - src: consul_nginx.service.j2
-      dest: /usr/lib/systemd/system/nginx-consul.service
   notify:
     - reload consul
-    - restart nginx-consul
+  tags:
+    - consul
+
+- name: deploy tls files
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: ssl/cacert.pem
+      dest: /etc/consul/ssl/{{ consul_ca_file }}
+    - src: ssl/certs/consul.cert.pem
+      dest: /etc/consul/ssl/{{ consul_cert_file }}
+    - src: ssl/private/consul.key.pem
+      dest: /etc/consul/ssl/{{ consul_key_file }}
+  notify:
+    - restart consul
   tags:
     - consul
 
@@ -63,8 +54,6 @@
   template:
     src: acl.json.j2
     dest: /etc/consul/acl.json
-  when:
-    - consul_acl_master_token != ""
   notify:
     - reload consul
   tags:
@@ -85,44 +74,12 @@
     port: 8301
     delay: 10
 
-- name: create agent acl
-  sudo: yes
-  command: /usr/local/bin/consul-acl-bootstrap.sh {{ consul_acl_master_token }} {{ consul_agent_acl_token | default('') }}
-  run_once: yes
-  register: agent_acl
-  when:
-    - consul_acl_master_token != ""
-  tags:
-    - consul
+- include: acl.yml
+  when: do_consul_acl
 
-- name: get agent_token 
-  run_once: yes
-  set_fact:
-    consul_agent_token: "{{ (agent_acl.stdout|from_json).ID }}"
-  tags:
-    - consul
-
-- include: agent_acl.yml
-  when: consul_agent_acl_token is not defined or consul_agent_token != consul_agent_acl_token
-
-- name: configure nginx
-  sudo: yes
-  command: "{{ item }}"
-  with_items:
-   - curl -X PUT -d @/etc/consul/consul.nginx localhost:8500/v1/kv/service/nginx/templates/consul?token={{ consul_agent_token }}
-   - curl -X PUT -d '{{ nginx_admin_password_encrypted }}' localhost:8500/v1/kv/service/nginx/auth/users/admin?token={{ consul_agent_token }}
-  tags:
-    - consul
-
-- name: enable nginx-consul
-  sudo: yes
-  service:
-    name: nginx-consul
-    enabled: yes
-    state: started
-  notify:
-    - restart nginx-consul
-  tags:
-    - consul
+- include: noacl.yml
+  when: not do_consul_acl
 
 - meta: flush_handlers
+
+- include: nginx_proxy.yml
