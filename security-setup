@@ -249,7 +249,7 @@ class Component(object):
 
                 print('{} certificate is valid'.format(name))
 
-    def toggleBoolean(self, inFlag, inValue, inDefault):
+    def toggle_boolean(self, inFlag, inValue, inDefault):
         with self.modify_security() as config:
             if inFlag not in config:
                 config[inFlag] = inDefault
@@ -322,9 +322,9 @@ class Consul(Component):
 
     def disable_security(self):
         "disable security"
-        self.toggleBoolean('do_consul_auth', self.args.do_consul_auth, True)
-        self.toggleBoolean('do_consul_ssl', self.args.do_consul_ssl, True)
-        self.toggleBoolean('do_consul_acl', self.args.do_consul_acl, True)
+        self.toggle_boolean('do_consul_auth', self.args.do_consul_auth, True)
+        self.toggle_boolean('do_consul_ssl', self.args.do_consul_ssl, True)
+        self.toggle_boolean('do_consul_acl', self.args.do_consul_acl, True)
 
     def gossip_key(self):
         "gossip key"
@@ -364,8 +364,8 @@ class Marathon(Component):
 
     def disable_security(self):
         "disable security"
-        self.toggleBoolean('do_marathon_auth', self.args.do_marathon_auth, True)
-        self.toggleBoolean('do_marathon_ssl', self.args.do_marathon_ssl, True)
+        self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth, True)
+        self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl, True)
 
 
     def mesos_auth(self):
@@ -450,8 +450,8 @@ class Mesos(Component):  # Mesos should always come after any frameworks
 
     def disable_security(self):
         "disable security"
-        self.toggleBoolean('do_mesos_ssl', self.args.do_mesos_ssl, True)
-        self.toggleBoolean('do_mesos_auth', self.args.do_mesos_auth, True)
+        self.toggle_boolean('do_mesos_ssl', self.args.do_mesos_ssl, True)
+        self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth, True)
 
     def framework_auth(self):
         "framework auth"
