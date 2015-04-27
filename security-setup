@@ -46,6 +46,18 @@ parser.add_argument('--enable-consul-ssl', action='store_true', help='enable con
 parser.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
 parser.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
 
+# Mesos security
+parser.add_argument('--disable-mesos-ssl', action='store_false', help='disable mesos ssl', dest='do_mesos_ssl', default=None)
+parser.add_argument('--enable-mesos-ssl', action='store_false', help='enable mesos ssl', dest='do_mesos_ssl')
+parser.add_argument('--disable-mesos-auth', action='store_false', help='disable mesos auth', dest='do_mesos_auth', default=None)
+parser.add_argument('--enable-mesos-auth', action='store_false', help='enable mesos auth', dest='do_mesos_auth')
+
+# Marathon security
+parser.add_argument('--disable-marathon-ssl', action='store_false', help='disable marathon ssl', dest='do_marathon_ssl', default=None)
+parser.add_argument('--enable-marathon-ssl', action='store_false', help='enable marathon ssl', dest='do_marathon_ssl')
+parser.add_argument('--disable-marathon-auth', action='store_false', help='disable marathon auth', dest='do_marathon_auth', default=None)
+parser.add_argument('--enable-marathon-auth', action='store_false', help='enable marathon auth', dest='do_marathon_auth')
+
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
 
@@ -348,7 +360,13 @@ class Consul(Component):
 
 class Marathon(Component):
     def check(self):
-        return [self.mesos_auth, self.password]
+        return [self.disable_security, self.mesos_auth, self.password]
+
+    def disable_security(self):
+        "disable security"
+        self.toggleBoolean('do_marathon_auth', self.args.do_marathon_auth, True)
+        self.toggleBoolean('do_marathon_ssl', self.args.do_marathon_ssl, True)
+
 
     def mesos_auth(self):
         "marathon framework authentication"
@@ -428,7 +446,12 @@ class Zookeeper(Component):
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
-        return [self.framework_auth, self.follower_auth, self.deprecate]
+        return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
+
+    def disable_security(self):
+        "disable security"
+        self.toggleBoolean('do_mesos_ssl', self.args.do_mesos_ssl, True)
+        self.toggleBoolean('do_mesos_auth', self.args.do_mesos_auth, True)
 
     def framework_auth(self):
         "framework auth"

@@ -12,8 +12,9 @@ http {
 	keepalive_timeout	65;
 
 	server {
-		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:{{ marathon_proxy_port }} ssl;
+		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:{{ marathon_proxy_port }} {% if do_marathon_ssl %}ssl{% endif %};
 
+{% if do_marathon_ssl -}
 		ssl_certificate		/etc/nginx/ssl/nginx.cert;
 		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
 
@@ -24,6 +25,7 @@ http {
 		ssl_prefer_server_ciphers	on;
 
 		error_page 497 https://$host:$server_port$request_uri;
+{% endif %}
 
 		location / {
 			proxy_connect_timeout	600;
@@ -31,8 +33,10 @@ http {
 			proxy_read_timeout	600;
 			send_timeout		600;
 
+{% if do_marathon_auth %}
 			auth_basic on;
 			auth_basic_user_file /etc/nginx/nginx-auth.conf;
+{% endif %}
 
 			proxy_pass http://localhost:{{ marathon_port }}/;
 		}
