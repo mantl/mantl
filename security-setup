@@ -436,14 +436,6 @@ class Zookeeper(Component):
             else:
                 print('zk marathon user secret already set')
 
-    def consul_ssl(self):
-        "turn on consul ssl"
-        with self.modify_security() as config:
-             config.setdefault('zk_consul_ssl', 'true')
-             config.setdefault('zk_consul_ssl_verify', 'false')
-             print('configuring consul ssl defaults')
-
-
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]

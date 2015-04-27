@@ -14,7 +14,7 @@ http {
 	server {
 		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:{{ marathon_proxy_port }} {% if do_marathon_ssl %}ssl{% endif %};
 
-{% if do_marathon_ssl -}
+{% if do_marathon_ssl -%}
 		ssl_certificate		/etc/nginx/ssl/nginx.cert;
 		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
 

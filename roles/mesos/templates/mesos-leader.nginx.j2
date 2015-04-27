@@ -14,7 +14,7 @@ http {
 	server {
 		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:{{ mesos_leader_proxy_port }} {% if do_mesos_ssl %}ssl{% endif %};
 
-{% if do_mesos_ssl -}
+{% if do_mesos_ssl -%}
 		ssl_certificate		/etc/nginx/ssl/nginx.cert;
 		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
 
