@@ -24,54 +24,8 @@
     - registrator
     - logrotate
 
-- include: playbooks/consul-join-wan.yml
-
-- hosts: dc1:&zookeeper_servers
+- hosts: vault_servers
   gather_facts: no
   roles:
-    - zookeeper
+   - vault
 
-- hosts: dc1:&mesos_leaders
-  gather_facts: no
-  roles:
-    - mesos
-
-- hosts: dc1:&mesos_followers
-  gather_facts: no
-  roles:
-    - mesos
-
-- hosts: dc1:&marathon_servers
-  gather_facts: no
-  roles:
-    - marathon
-
-- hosts: dc2:&zookeeper_servers
-  gather_facts: no
-  roles:
-    - zookeeper
-
-- hosts: dc2:&mesos_leaders
-  gather_facts: no
-  roles:
-    - mesos
-
-- hosts: dc2:&mesos_followers
-  gather_facts: no
-  roles:
-    - mesos
-
-- hosts: dc2:&marathon_servers
-  gather_facts: no
-  roles:
-    - marathon
-
-- hosts: dc1:&proxy_servers
-  gather_facts: no
-  roles:
-    - haproxy
-
-- hosts: dc2:&proxy_servers
-  gather_facts: no
-  roles:
-    - haproxy

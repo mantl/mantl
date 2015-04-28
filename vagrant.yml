@@ -8,6 +8,7 @@
     - nginx
     - consul
     - registrator
+    - vault
     - zookeeper
     - mesos
     - marathon
