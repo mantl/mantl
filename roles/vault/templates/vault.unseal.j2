@@ -1,0 +1,6 @@
+#!/bin/bash
+
+{% for key in vault_keys %}vault unseal {{ vault_command_options }} {{ key }}
+{% endfor %}
+
+exit 0

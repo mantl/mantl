@@ -1,0 +1,13 @@
+backend "consul" {
+	address = "127.0.0.1:8500"
+	path = "vault"
+	scheme = "http"
+	token = "{{ consul_acl_master_token }}"
+	advertise_addr = "{{ ansible_default_ipv4.address }}"
+}
+
+listener "tcp" {
+	address = "127.0.0.1:8200"
+	tls_cert_file = "/etc/consul/ssl/consul.cert"
+	tls_key_file = "/etc/consul/ssl/consul.key"
+}

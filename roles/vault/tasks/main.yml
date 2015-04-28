@@ -1,0 +1,47 @@
+---
+- name: install vault
+  sudo: yes
+  yum:
+    name: "https://bintray.com/artifact/download/stevendborrelli/rpm/vault-0.1.0-1.el7.centos.x86_64.rpm"
+    state: present
+  notify:
+    - restart vault
+  tags:
+    - vault
+
+- name: configure vault service
+  sudo: yes
+  copy:
+    src: vault.service
+    dest: /usr/lib/systemd/system/vault.service
+  notify:
+    - restart vault
+  tags:
+    - vault
+
+- name: create vault directories
+  sudo: yes
+  file:
+    path: /etc/vault
+    state: directory
+  tags:
+    - vault
+
+- name: configure vault
+  sudo: yes
+  template:
+    src: vault.config.j2
+    dest: /etc/vault/vault.config
+  tags:
+    - vault
+
+- name: enable vault
+  sudo: yes
+  service:
+    name: vault
+    enabled: yes
+    state: started
+  tags:
+    - vault
+
+- include: bootstrap.yml
