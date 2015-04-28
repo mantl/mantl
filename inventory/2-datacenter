@@ -10,6 +10,10 @@ host-[01:05]
 host-[06:10]
 
 # control 
+[vault_servers]
+host-[01:03]
+host-[06:08]
+
 [consul_servers]
 host-[01:03]
 host-[06:08]
