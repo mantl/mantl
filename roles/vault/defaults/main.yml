@@ -1,0 +1,8 @@
+---
+vault_default_port: 8200
+vault_command_options: -insecure
+
+vault_init_json: '{
+	"secret_shares": 5,
+	"secret_threshold": 3
+}'
