@@ -11,7 +11,7 @@
 
 - name: write leader credentials
   sudo: yes
-  when: mesos_authenticate_frameworks|bool or mesos_authenticate_followers|bool
+  when: do_mesos_framework_auth|bool or do_mesos_follower_auth|bool
   template:
     src: master-credentials.j2
     dest: /etc/mesos/credentials
@@ -23,7 +23,7 @@
 
 - name: delete leader credentials
   sudo: yes
-  when: not mesos_authenticate_frameworks|bool and not mesos_authenticate_followers|bool
+  when: not do_mesos_framework_auth|bool and not do_mesos_follower_auth|bool
   file:
     dest: /etc/mesos/credentials
     state: absent
