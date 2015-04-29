@@ -30,7 +30,7 @@
   run_once: yes
   lineinfile:
     dest: security.yml
-    line: 'consul_agent_acl_token: {{ consul_agent_token }},'
+    line: 'consul_agent_acl_token: {{ consul_agent_token }}'
     regexp: '.*consul_agent_acl_token.*'
     insertbefore: "^consul_acl_master_token"
   when: consul_agent_acl_token is not defined or consul_agent_token != consul_agent_acl_token
