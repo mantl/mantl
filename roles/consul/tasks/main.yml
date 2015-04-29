@@ -59,6 +59,15 @@
   tags:
     - consul
 
+- name: install wait script
+  sudo: yes
+  copy:
+    src: consul-wait-for-leader.sh
+    dest: /usr/local/bin
+    mode: u=rwx,g=rx,o=rx
+  tags:
+    - consul
+
 - name: enable consul
   sudo: yes
   service:
@@ -70,9 +79,9 @@
 
 # Give consul time to elect a leader
 - name: wait for leader
-  wait_for:
-    port: 8301
-    delay: 10
+  command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
 
 - include: acl.yml
   when: do_consul_acl
