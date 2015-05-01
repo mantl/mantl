@@ -24,6 +24,10 @@ locations the script generates (for example the consul key and cert would be
 ``ssl/private/consul.key.pem`` and ``ssl/certs/consul.cert.pem``, respectively)
 and they'll be used instead of the generated files, and not overridden.
 
+In the event that you need to regenerate a certificate, rename or delete the
+appropriate CSR and certificate from the ``certs`` folder and the private
+component in ``private`` and re-run ``security-setup``.
+
 Options
 -------
 

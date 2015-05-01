@@ -18,6 +18,7 @@ Fixes
 * update python novaclient verion #192
 * disable firewalld #193
 * Have awk read /proc/uptime directly #216
+* security-setup now uses proper common names #228
 
 0.2.0 (04-10-2015)
 ------------------
