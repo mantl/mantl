@@ -22,7 +22,7 @@ marathon_proxy_port: 8080
 marathon_principal: marathon
 marathon_secret: ""
 
-# register serivce with consul
+# register service with consul
 consul_bin: /bin/consul
 consul_dir: /etc/consul
 consul_nginx_image: asteris/nginx-consul
