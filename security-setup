@@ -35,8 +35,8 @@ parser.add_argument('--cert-locality', default='Anytown')
 parser.add_argument('--cert-organization', default='Example Company Inc')
 parser.add_argument('--cert-unit', default='Operations')
 parser.add_argument('--cert-email', default='operations@example.com')
-parser.add_argument('--consul-location', default='consul.example.com')  # used as common name
-parser.add_argument('--nginx-location', default='nginx.example.com')  # used as common name
+parser.add_argument('--consul-location', default='consul.service.consul')  # used as common name
+parser.add_argument('--nginx-location', default='*.service.consul')  # used as common name
 
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
@@ -184,7 +184,7 @@ class Component(object):
         key = posixpath.join(CERT_PATH, 'private', name + '.key.pem')
         csr = posixpath.join(CERT_PATH, 'certs', name + '.csr.pem')
         cert = posixpath.join(CERT_PATH, 'certs', name + '.cert.pem')
-        common = getattr(self.args, name + '_location', name + '.example.com')
+        common = getattr(self.args, name + '_location', name + '.service.consul')
 
         with self.chdir(CERT_PATH):
             if posixpath.exists(key):

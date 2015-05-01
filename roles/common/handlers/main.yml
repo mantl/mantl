@@ -1,0 +1,4 @@
+---
+- name: update-ca-trust
+  sudo: yes
+  shell: update-ca-trust
