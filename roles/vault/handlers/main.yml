@@ -7,7 +7,7 @@
 
 - name: restart vault
   sudo: yes
-  command: systemctl reload vault
+  command: systemctl restart vault
   notify:
     - wait for vault to listen
 
