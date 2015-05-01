@@ -8,6 +8,7 @@ Features
 * `Mesos`_ cluster manager for efficient resource isolation and sharing across distributed services
 * `Marathon`_ for cluster management of long running containerized services
 * `Consul`_ for service discovery
+* `Vault`_ for managing secrets
 * `Docker`_ container runtime
 * Multi-datacenter support
 * High availablity
@@ -34,6 +35,7 @@ Contents:
 
 .. _Mesos: https://mesos.apache.org/
 .. _Consul: http://consul.io
+.. _Vault: http://vaultproject.io
 .. _Docker: http://docker.io
 .. _Marathon: https://mesosphere.github.io/marathon/
 
