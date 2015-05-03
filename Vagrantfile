@@ -29,6 +29,10 @@ Vagrant.configure(2) do |config|
   config.vm.network :forwarded_port, guest: 8600,  host: 8600  # Consul DNS
 
   # Mesos task ports
+  for i in 4000..5000
+    config.vm.network :forwarded_port, guest: i, host: i
+  end
+
   for i in 31000..32000
     config.vm.network :forwarded_port, guest: i, host: i
   end
