@@ -18,7 +18,7 @@ ExecStart=/usr/bin/docker run \
     --name=nginx-consul \
     --net=host \
     --privileged=true \
-    -v /etc/nginx/ssl:/etc/nginx/ssl \
+    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     -e NGINX_KV=service/nginx/templates/consul \
     -e NGINX_ENABLE_AUTH=true \
     -e NGINX_PUBLIC_IP={{ ansible_default_ipv4.address }} \
