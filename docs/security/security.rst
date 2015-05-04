@@ -178,7 +178,7 @@ CentOS. Docker 1.5 is the minimum version installed.
 
 -  ReST HTTP port is disabled
 -  Docker is started with SELinux enabled via
-   ``OPTIONS='--selinux-enabled'`` in ``/etc/default/docker``
+   ``OPTIONS='--selinux-enabled'`` in ``/etc/sysconfig/docker``
 
 Registrator
 ~~~~~~~~~~~
