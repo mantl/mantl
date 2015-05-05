@@ -15,7 +15,7 @@
 
 - name: configure mesos logrotate
   sudo: yes
-  file:
+  copy:
     src: mesos
     dest: /etc/logrotate.d/mesos
     mode: 644
@@ -24,7 +24,7 @@
 
 - name: configure docker logrotate
   sudo: yes
-  file:
+  copy:
     src: docker
     dest: /etc/logrotate.d/docker
     mode: 644
