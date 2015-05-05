@@ -13,7 +13,7 @@
     regexp: '^rotate 4'
     line: "rotate 7"
 
-- name: configured mesos logrotate
+- name: configure mesos logrotate
   sudo: yes
   file:
     src: mesos
