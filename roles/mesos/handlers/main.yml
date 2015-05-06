@@ -22,3 +22,7 @@
 - name: restart nginx-mesos-leader
   sudo: yes
   shell: systemctl restart nginx-mesos-leader
+
+- name: reload nginx-mesos-leader
+  sudo: yes
+  shell: systemctl reload nginx-mesos-leader

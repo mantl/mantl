@@ -21,6 +21,7 @@
   tags:
     - mesos
   tags:
+    - reload nginx-mesos-leader
     - restart nginx-mesos-leader
 
 - name: enable nginx-mesos-leader
