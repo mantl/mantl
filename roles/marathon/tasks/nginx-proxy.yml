@@ -21,6 +21,7 @@
     src: nginx-marathon.service.j2
     dest: /usr/lib/systemd/system/nginx-marathon.service
   notify:
+    - reload nginx-marathon
     - restart nginx-marathon
   tags:
     - marathon

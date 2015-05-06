@@ -14,3 +14,7 @@
 - name: restart nginx-marathon
   sudo: yes
   shell: systemctl restart nginx-marathon
+
+- name: reload nginx-marathon
+  sudo: yes
+  shell: systemctl reload nginx-marathon
