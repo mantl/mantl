@@ -25,4 +25,4 @@
 
 - name: reload nginx-mesos-leader
   sudo: yes
-  shell: systemctl reload nginx-mesos-leader
+  shell: /bin/systemctl daemon-reload
