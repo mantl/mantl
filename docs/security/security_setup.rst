@@ -47,8 +47,8 @@ Options
 .. option:: --change-admin-password
 
    ``security-setup`` will normally ask for an admin password only if it doesn't
-   already have one. Setting this option will cause ``auth-setup`` to re-prompt
-   for the admin password.
+   already have one. Setting this option will cause ``security-setup`` to
+   re-prompt for the admin password.
 
 .. option:: --cert-country
 
