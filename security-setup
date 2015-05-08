@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """set up authentication and security for various components"""
 from __future__ import print_function
-from argparse import ArgumentParser
+import argparse
 import base64
 from collections import OrderedDict
 from contextlib import contextmanager
@@ -18,7 +18,10 @@ import sys
 import uuid
 import yaml
 
-parser = ArgumentParser(__name__, __doc__)
+parser = argparse.ArgumentParser(
+    __name__, __doc__,
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+)
 parser.add_argument(
     '--no-verify-certificates', action='store_true',
     help='skip verifying certificates'
@@ -29,14 +32,43 @@ parser.add_argument(
 )
 
 # certificates
-parser.add_argument('--cert-country', default='US')
-parser.add_argument('--cert-state', default='New York')
-parser.add_argument('--cert-locality', default='Anytown')
-parser.add_argument('--cert-organization', default='Example Company Inc')
-parser.add_argument('--cert-unit', default='Operations')
-parser.add_argument('--cert-email', default='operations@example.com')
-parser.add_argument('--consul-location', default='consul.service.consul')  # used as common name
-parser.add_argument('--nginx-location', default='*.service.consul')  # used as common name
+certs = parser.add_argument_group(
+    "SSL Certificate Options",
+    "a certificate authority will be set up, and "
+    "certificates will be issued using these options",
+)
+certs.add_argument(
+    '--cert-country', default='US',
+    help='certificate country'
+)
+certs.add_argument(
+    '--cert-state', default='New York',
+    help='certificate state/province'
+)
+certs.add_argument(
+    '--cert-locality', default='Anytown',
+    help='certificate locality/city'
+)
+certs.add_argument(
+    '--cert-organization', default='Example Company Inc',
+    help='certificate organization'
+)
+certs.add_argument(
+    '--cert-unit', default='Operations',
+    help='organizational unit inside of organization',
+)
+certs.add_argument(
+    '--cert-email', default='operations@example.com',
+    help='contact email for organizational unit'
+)
+certs.add_argument(
+    '--consul-location', default='consul.service.consul',
+    help='internal name for Consul certificate, will be used as common name'
+)
+certs.add_argument(
+    '--nginx-location', default='*.service.consul',
+    help='internal name for Nginx proxies, will be used as common name'
+)
 
 # Consul authentication
 parser.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
