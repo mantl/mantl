@@ -6,6 +6,9 @@ iptables -X MARATHON
 
 iptables -N MARATHON
 
+{% if not do_marathon_iptables|bool %}exit 0
+{% endif %}
+
 {% raw %}{{ range service "marathon" "any" }}{% endraw %}
 iptables -A MARATHON -p tcp --dport {{ marathon_port }} -s {% raw %}{{ .Address }}{% endraw %} -j ACCEPT
 {% raw %}{{ end }}{% endraw %}

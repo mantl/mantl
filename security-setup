@@ -38,6 +38,34 @@ parser.add_argument('--cert-email', default='operations@example.com')
 parser.add_argument('--consul-location', default='consul.service.consul')  # used as common name
 parser.add_argument('--nginx-location', default='*.service.consul')  # used as common name
 
+# Consul authentication
+parser.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
+parser.add_argument('--enable-consul-auth', action='store_true', help='enable consul auth', dest='do_consul_auth')
+parser.add_argument('--disable-consul-ssl', action='store_false', help='disable consul ssl', dest='do_consul_ssl', default=None)
+parser.add_argument('--enable-consul-ssl', action='store_true', help='enable consul ssl', dest='do_consul_ssl')
+parser.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
+parser.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
+
+# Mesos security
+parser.add_argument('--disable-mesos-ssl', action='store_false', help='disable mesos ssl', dest='do_mesos_ssl', default=None)
+parser.add_argument('--enable-mesos-ssl', action='store_false', help='enable mesos ssl', dest='do_mesos_ssl')
+parser.add_argument('--disable-mesos-auth', action='store_false', help='disable mesos auth', dest='do_mesos_auth', default=None)
+parser.add_argument('--enable-mesos-auth', action='store_false', help='enable mesos auth', dest='do_mesos_auth')
+parser.add_argument('--disable-mesos-framework-auth', action='store_false', help='disable mesos framework auth', dest='do_mesos_framework_auth', default=None)
+parser.add_argument('--enable-mesos-framework-auth', action='store_false', help='enable mesos framework auth', dest='do_mesos_framework_auth')
+parser.add_argument('--disable-mesos-follower-auth', action='store_false', help='disable mesos follower auth', dest='do_mesos_follower_auth', default=None)
+parser.add_argument('--enable-mesos-follower-auth', action='store_false', help='enable mesos follower auth', dest='do_mesos_follower_auth')
+parser.add_argument('--disable-mesos-iptables', action='store_false', help='disable mesos iptables', dest='do_mesos_iptables', default=None)
+parser.add_argument('--enable-mesos-iptables', action='store_false', help='enable mesos iptables', dest='do_mesos_iptables', default=None)
+
+# Marathon security
+parser.add_argument('--disable-marathon-ssl', action='store_false', help='disable marathon ssl', dest='do_marathon_ssl', default=None)
+parser.add_argument('--enable-marathon-ssl', action='store_false', help='enable marathon ssl', dest='do_marathon_ssl')
+parser.add_argument('--disable-marathon-auth', action='store_false', help='disable marathon auth', dest='do_marathon_auth', default=None)
+parser.add_argument('--enable-marathon-auth', action='store_false', help='enable marathon auth', dest='do_marathon_auth')
+parser.add_argument('--disable-marathon-iptables', action='store_false', help='disable marathon iptables', dest='do_marathon_iptables', default=None)
+parser.add_argument('--enable-marathon-iptables', action='store_false', help='enable marathon iptables', dest='do_marathon_iptables', default=None)
+
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
 
@@ -229,6 +257,13 @@ class Component(object):
 
                 print('{} certificate is valid'.format(name))
 
+    def toggle_boolean(self, inFlag, inValue, inDefault):
+        with self.modify_security() as config:
+            if inFlag not in config:
+                config[inFlag] = inDefault
+            
+            if inValue is not None:
+                config[inFlag] = inValue
 
 class Certificates(Component):
     def check(self):
@@ -291,7 +326,13 @@ class Nginx(Component):
 
 class Consul(Component):
     def check(self):
-        return [self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
+        return [self.disable_security, self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
+
+    def disable_security(self):
+        "disable security"
+        self.toggle_boolean('do_consul_auth', self.args.do_consul_auth, True)
+        self.toggle_boolean('do_consul_ssl', self.args.do_consul_ssl, True)
+        self.toggle_boolean('do_consul_acl', self.args.do_consul_acl, True)
 
     def gossip_key(self):
         "gossip key"
@@ -327,7 +368,14 @@ class Consul(Component):
 
 class Marathon(Component):
     def check(self):
-        return [self.mesos_auth, self.password]
+        return [self.disable_security, self.mesos_auth, self.password]
+
+    def disable_security(self):
+        "disable security"
+        self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth, True)
+        self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl, True)
+        self.toggle_boolean('do_marathon_iptables', self.args.do_marathon_ssl, True)
+
 
     def mesos_auth(self):
         "marathon framework authentication"
@@ -356,7 +404,6 @@ class Zookeeper(Component):
     def check(self):
          return [
              self.super_auth, self.mesos_auth, self.marathon_auth,
-             self.consul_ssl
          ]
 
     def super_auth(self):
@@ -397,17 +444,17 @@ class Zookeeper(Component):
             else:
                 print('zk marathon user secret already set')
 
-    def consul_ssl(self):
-        "turn on consul ssl"
-        with self.modify_security() as config:
-             config.setdefault('zk_consul_ssl', 'true')
-             config.setdefault('zk_consul_ssl_verify', 'false')
-             print('configuring consul ssl defaults')
-
-
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
-        return [self.framework_auth, self.follower_auth, self.deprecate]
+        return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
+
+    def disable_security(self):
+        "disable security"
+        self.toggle_boolean('do_mesos_ssl', self.args.do_mesos_ssl, True)
+        self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth, True)
+        self.toggle_boolean('do_mesos_follower_auth', self.args.do_mesos_follower_auth, True)
+        self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth, True)
+        self.toggle_boolean('do_mesos_iptables', self.args.do_mesos_framework_auth, True)
 
     def framework_auth(self):
         "framework auth"

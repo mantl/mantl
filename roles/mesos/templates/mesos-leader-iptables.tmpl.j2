@@ -4,6 +4,14 @@ iptables -F MESOSLEADER
 iptables -D INPUT -p tcp --dport {{ mesos_leader_port }} -j MESOSLEADER
 iptables -X MESOSLEADER
 
+{% if not do_mesos_iptables|bool %}exit 0
+{% endif %}
+
+{# Don't add iptables rules if there are no mesos hosts #}
+{% raw %}
+{{ if eq 0 (len (service "mesos-leader" "any")) }}exit 0
+{{ end }}{% endraw %}
+
 iptables -N MESOSLEADER
 
 {% raw %}{{ range service "mesos-leader" "any" }}{% endraw %}

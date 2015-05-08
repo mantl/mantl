@@ -1,0 +1,51 @@
+---
+- name: deploy acl bootstrap
+  sudo: yes
+  copy:
+    src: consul-acl-bootstrap.sh
+    dest: /usr/local/bin
+    mode: u=rwx
+  tags:
+    - consul
+
+- name: create agent acl
+  sudo: yes
+  command: /usr/local/bin/consul-acl-bootstrap.sh {{ consul_acl_master_token }} {{ consul_agent_acl_token | default('') }}
+  run_once: yes
+  register: agent_acl
+  when:
+    - consul_acl_master_token != ""
+  tags:
+    - consul
+
+- name: get agent_token 
+  run_once: yes
+  set_fact:
+    consul_agent_token: "{{ (agent_acl.stdout|from_json).ID }}"
+  tags:
+    - consul
+
+- name: update security.yml with agent_token
+  connection: local
+  run_once: yes
+  lineinfile:
+    dest: security.yml
+    line: 'consul_agent_acl_token: {{ consul_agent_token }}'
+    regexp: '.*consul_agent_acl_token.*'
+    insertbefore: "^consul_acl_master_token"
+  when: consul_agent_acl_token is not defined or consul_agent_token != consul_agent_acl_token
+  tags:
+    - consul
+
+- name: update acl file with agent_token
+  sudo: yes
+  template:
+    src: acl.json.j2
+    dest: /etc/consul/acl.json
+  when: consul_agent_acl_token is not defined or consul_agent_token != consul_agent_acl_token
+  notify:
+    - reload consul
+  tags:
+    - consul
+
+- meta: flush_handlers

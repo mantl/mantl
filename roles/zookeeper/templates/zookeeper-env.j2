@@ -14,9 +14,7 @@ ZK_SUPER_PW={{ zk_super_user_secret }}
 {% if zk_consul_token is defined %}
 CONSUL_TOKEN={{ zk_consul_token }}
 {% endif %}
-{% if zk_consul_ssl is defined %}
-CONSUL_SSL={{ zk_consul_ssl }}
-{% endif %}
-{% if zk_consul_ssl_verify is defined %}
-CONSUL_SSL_VERIFY={{ zk_consul_ssl_verify }}
+{% if do_consul_ssl%}
+CONSUL_SSL=true
+CONSUL_SSL_VERIFY=false
 {% endif %}
