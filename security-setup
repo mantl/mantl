@@ -91,17 +91,17 @@ consul_opts = parser.add_argument_group(
 )
 consul_opts.add_argument(
     '--consul-auth', type=bool_opt, default=True,
-    help='enable or disable consul auth',
+    help='enable consul auth',
     dest='do_consul_auth'
 )
 consul_opts.add_argument(
     '--consul-ssl', type=bool_opt, default=True,
-    help='enable or disable consul auth',
+    help='enable consul auth',
     dest='do_consul_ssl',
 )
 consul_opts.add_argument(
     '--consul-acl', type=bool_opt, default=True,
-    help='enable or disable consul ACLs',
+    help='enable consul ACLs',
     dest='do_consul_acl'
 )
 
@@ -110,16 +110,31 @@ mesos_opts = parser.add_argument_group(
     "Mesos Options",
     "enable and disable auth components of Mesos"
 )
-mesos_opts.add_argument('--disable-mesos-ssl', action='store_false', help='disable mesos ssl', dest='do_mesos_ssl', default=None)
-mesos_opts.add_argument('--enable-mesos-ssl', action='store_false', help='enable mesos ssl', dest='do_mesos_ssl')
-mesos_opts.add_argument('--disable-mesos-auth', action='store_false', help='disable mesos auth', dest='do_mesos_auth', default=None)
-mesos_opts.add_argument('--enable-mesos-auth', action='store_false', help='enable mesos auth', dest='do_mesos_auth')
-mesos_opts.add_argument('--disable-mesos-framework-auth', action='store_false', help='disable mesos framework auth', dest='do_mesos_framework_auth', default=None)
-mesos_opts.add_argument('--enable-mesos-framework-auth', action='store_false', help='enable mesos framework auth', dest='do_mesos_framework_auth')
-mesos_opts.add_argument('--disable-mesos-follower-auth', action='store_false', help='disable mesos follower auth', dest='do_mesos_follower_auth', default=None)
-mesos_opts.add_argument('--enable-mesos-follower-auth', action='store_false', help='enable mesos follower auth', dest='do_mesos_follower_auth')
-mesos_opts.add_argument('--disable-mesos-iptables', action='store_false', help='disable mesos iptables', dest='do_mesos_iptables', default=None)
-mesos_opts.add_argument('--enable-mesos-iptables', action='store_false', help='enable mesos iptables', dest='do_mesos_iptables', default=None)
+mesos_opts.add_argument(
+    '--mesos-ssl', type=bool_opt,
+    help='enable mesos ssl',
+    dest='do_mesos_ssl', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-auth', type=bool_opt,
+    help='enable or enable mesos auth',
+    dest='do_mesos_auth', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-framework-auth', type=bool_opt,
+    help='enable mesos framework auth',
+    dest='do_mesos_framework_auth', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-follower-auth', type=bool_opt,
+    help='enable mesos follower auth',
+    dest='do_mesos_follower_auth', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-iptables', type=bool_opt,
+    help='enable mesos iptables',
+    dest='do_mesos_iptables', default=True,
+)
 
 # Marathon security
 marathon_opts = parser.add_argument_group(
