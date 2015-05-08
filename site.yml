@@ -16,13 +16,13 @@
 - hosts: all
   roles:
     - common
+    - logrotate
     - consul-template
     - docker
     - dnsmasq
     - nginx
     - consul
     - registrator
-    - logrotate
 
 - include: playbooks/consul-join-wan.yml
 

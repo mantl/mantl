@@ -1,35 +1,49 @@
 ---
-- name: change log rotation interval
+- name: set logrotate interval to daily
   sudo: yes
   lineinfile:
     dest: /etc/logrotate.conf
     regexp: '^weekly'
     line: "daily"
+  tags:
+    - logrotate
 
-
-- name: change stored log files count
+- name: set logrotate retention period to 7 days
   sudo: yes
   lineinfile:
     dest: /etc/logrotate.conf
     regexp: '^rotate 4'
     line: "rotate 7"
+  tags:
+    - logrotate
 
-- name: add mesos-specific logrotate config
+- name: configure mesos logrotate
   sudo: yes
-  template:
+  copy:
     src: mesos
     dest: /etc/logrotate.d/mesos
-    mode: 644
+    mode: 0644
     owner: root
     group: root
+  tags:
+    - logrotate
 
-- name: add docker-specific logrotate config
+- name: create mesos archive
   sudo: yes
-  template:
+  file:
+    path: /var/log/mesos/archive
+    mode: 0755
+    state: directory
+  tags:
+    - logrotate
+
+- name: configure docker logrotate
+  sudo: yes
+  copy:
     src: docker
     dest: /etc/logrotate.d/docker
-    mode: 644
+    mode: 0644
     owner: root
     group: root
-    
-
+  tags:
+    - logrotate
