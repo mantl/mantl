@@ -46,8 +46,6 @@
     dest: "{{ item.dest }}"
     mode: "{{ item.mode | default('u=rw,g=r,o=r') }}"
   with_items:
-    - src: consul.sysconfig.j2
-      dest: /etc/sysconfig/consul
     - src: consul.json.j2
       dest: /etc/consul/consul.json
     - src: consul_nginx.service.j2
