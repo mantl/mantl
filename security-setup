@@ -91,17 +91,17 @@ consul_opts = parser.add_argument_group(
 )
 consul_opts.add_argument(
     '--consul-auth', type=bool_opt, default=True,
-    help='enable consul auth',
+    help='enable Consul auth',
     dest='do_consul_auth'
 )
 consul_opts.add_argument(
     '--consul-ssl', type=bool_opt, default=True,
-    help='enable consul auth',
+    help='enable Consul auth',
     dest='do_consul_ssl',
 )
 consul_opts.add_argument(
     '--consul-acl', type=bool_opt, default=True,
-    help='enable consul ACLs',
+    help='enable Consul ACLs',
     dest='do_consul_acl'
 )
 
@@ -112,27 +112,27 @@ mesos_opts = parser.add_argument_group(
 )
 mesos_opts.add_argument(
     '--mesos-ssl', type=bool_opt,
-    help='enable mesos ssl',
+    help='enable Mesos SSL',
     dest='do_mesos_ssl', default=True,
 )
 mesos_opts.add_argument(
     '--mesos-auth', type=bool_opt,
-    help='enable or enable mesos auth',
+    help='enable Mesos authentication',
     dest='do_mesos_auth', default=True,
 )
 mesos_opts.add_argument(
     '--mesos-framework-auth', type=bool_opt,
-    help='enable mesos framework auth',
+    help='enable Mesos framework authentication',
     dest='do_mesos_framework_auth', default=True,
 )
 mesos_opts.add_argument(
     '--mesos-follower-auth', type=bool_opt,
-    help='enable mesos follower auth',
+    help='enable Mesos follower authentication',
     dest='do_mesos_follower_auth', default=True,
 )
 mesos_opts.add_argument(
     '--mesos-iptables', type=bool_opt,
-    help='enable mesos iptables',
+    help='enable Mesos iptables rules',
     dest='do_mesos_iptables', default=True,
 )
 
@@ -143,17 +143,17 @@ marathon_opts = parser.add_argument_group(
 )
 marathon_opts.add_argument(
     '--marathon-ssl', type=bool_opt,
-    help='enable marathon ssl',
+    help='enable Marathon SSL',
     dest='do_marathon_ssl', default=True
 )
 marathon_opts.add_argument(
     '--marathon-auth', type=bool_opt,
-    help='enable marathon auth',
+    help='enable Marathon authentication',
     dest='do_marathon_auth', default=True
 )
 marathon_opts.add_argument(
     '--marathon-iptables', type=bool_opt,
-    help='enable marathon iptables',
+    help='enable Marathon iptables rules',
     dest='do_marathon_iptables', default=True
 )
 
