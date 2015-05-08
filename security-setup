@@ -23,80 +23,92 @@ parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
 parser.add_argument(
-    '--no-verify-certificates', action='store_true',
-    help='skip verifying certificates'
-)
-parser.add_argument(
     '--change-admin-password', action='store_true',
     help='change admin password'
 )
 
 # certificates
-certs = parser.add_argument_group(
+cert_opts = parser.add_argument_group(
     "SSL Certificate Options",
     "a certificate authority will be set up, and "
     "certificates will be issued using these options",
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--cert-country', default='US',
     help='certificate country'
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--cert-state', default='New York',
     help='certificate state/province'
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--cert-locality', default='Anytown',
     help='certificate locality/city'
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--cert-organization', default='Example Company Inc',
     help='certificate organization'
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--cert-unit', default='Operations',
     help='organizational unit inside of organization',
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--cert-email', default='operations@example.com',
     help='contact email for organizational unit'
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--consul-location', default='consul.service.consul',
     help='internal name for Consul certificate, will be used as common name'
 )
-certs.add_argument(
+cert_opts.add_argument(
     '--nginx-location', default='*.service.consul',
     help='internal name for Nginx proxies, will be used as common name'
 )
+cert_opts.add_argument(
+    '--no-verify-certificates', action='store_true',
+    help='skip verifying certificates as part of setup process'
+)
 
 # Consul authentication
-parser.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
-parser.add_argument('--enable-consul-auth', action='store_true', help='enable consul auth', dest='do_consul_auth')
-parser.add_argument('--disable-consul-ssl', action='store_false', help='disable consul ssl', dest='do_consul_ssl', default=None)
-parser.add_argument('--enable-consul-ssl', action='store_true', help='enable consul ssl', dest='do_consul_ssl')
-parser.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
-parser.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
+consul_opts = parser.add_argument_group(
+    "Consul Options",
+    "enable and disable auth components of Consul"
+)
+consul_opts.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
+consul_opts.add_argument('--enable-consul-auth', action='store_true', help='enable consul auth', dest='do_consul_auth')
+consul_opts.add_argument('--disable-consul-ssl', action='store_false', help='disable consul ssl', dest='do_consul_ssl', default=None)
+consul_opts.add_argument('--enable-consul-ssl', action='store_true', help='enable consul ssl', dest='do_consul_ssl')
+consul_opts.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
+consul_opts.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
 
 # Mesos security
-parser.add_argument('--disable-mesos-ssl', action='store_false', help='disable mesos ssl', dest='do_mesos_ssl', default=None)
-parser.add_argument('--enable-mesos-ssl', action='store_false', help='enable mesos ssl', dest='do_mesos_ssl')
-parser.add_argument('--disable-mesos-auth', action='store_false', help='disable mesos auth', dest='do_mesos_auth', default=None)
-parser.add_argument('--enable-mesos-auth', action='store_false', help='enable mesos auth', dest='do_mesos_auth')
-parser.add_argument('--disable-mesos-framework-auth', action='store_false', help='disable mesos framework auth', dest='do_mesos_framework_auth', default=None)
-parser.add_argument('--enable-mesos-framework-auth', action='store_false', help='enable mesos framework auth', dest='do_mesos_framework_auth')
-parser.add_argument('--disable-mesos-follower-auth', action='store_false', help='disable mesos follower auth', dest='do_mesos_follower_auth', default=None)
-parser.add_argument('--enable-mesos-follower-auth', action='store_false', help='enable mesos follower auth', dest='do_mesos_follower_auth')
-parser.add_argument('--disable-mesos-iptables', action='store_false', help='disable mesos iptables', dest='do_mesos_iptables', default=None)
-parser.add_argument('--enable-mesos-iptables', action='store_false', help='enable mesos iptables', dest='do_mesos_iptables', default=None)
+mesos_opts = parser.add_argument_group(
+    "Mesos Options",
+    "enable and disable auth components of Mesos"
+)
+mesos_opts.add_argument('--disable-mesos-ssl', action='store_false', help='disable mesos ssl', dest='do_mesos_ssl', default=None)
+mesos_opts.add_argument('--enable-mesos-ssl', action='store_false', help='enable mesos ssl', dest='do_mesos_ssl')
+mesos_opts.add_argument('--disable-mesos-auth', action='store_false', help='disable mesos auth', dest='do_mesos_auth', default=None)
+mesos_opts.add_argument('--enable-mesos-auth', action='store_false', help='enable mesos auth', dest='do_mesos_auth')
+mesos_opts.add_argument('--disable-mesos-framework-auth', action='store_false', help='disable mesos framework auth', dest='do_mesos_framework_auth', default=None)
+mesos_opts.add_argument('--enable-mesos-framework-auth', action='store_false', help='enable mesos framework auth', dest='do_mesos_framework_auth')
+mesos_opts.add_argument('--disable-mesos-follower-auth', action='store_false', help='disable mesos follower auth', dest='do_mesos_follower_auth', default=None)
+mesos_opts.add_argument('--enable-mesos-follower-auth', action='store_false', help='enable mesos follower auth', dest='do_mesos_follower_auth')
+mesos_opts.add_argument('--disable-mesos-iptables', action='store_false', help='disable mesos iptables', dest='do_mesos_iptables', default=None)
+mesos_opts.add_argument('--enable-mesos-iptables', action='store_false', help='enable mesos iptables', dest='do_mesos_iptables', default=None)
 
 # Marathon security
-parser.add_argument('--disable-marathon-ssl', action='store_false', help='disable marathon ssl', dest='do_marathon_ssl', default=None)
-parser.add_argument('--enable-marathon-ssl', action='store_false', help='enable marathon ssl', dest='do_marathon_ssl')
-parser.add_argument('--disable-marathon-auth', action='store_false', help='disable marathon auth', dest='do_marathon_auth', default=None)
-parser.add_argument('--enable-marathon-auth', action='store_false', help='enable marathon auth', dest='do_marathon_auth')
-parser.add_argument('--disable-marathon-iptables', action='store_false', help='disable marathon iptables', dest='do_marathon_iptables', default=None)
-parser.add_argument('--enable-marathon-iptables', action='store_false', help='enable marathon iptables', dest='do_marathon_iptables', default=None)
+marathon_opts = parser.add_argument_group(
+    "Marathon Options",
+    "enable and disable auth components of Marathon"
+)
+marathon_opts.add_argument('--disable-marathon-ssl', action='store_false', help='disable marathon ssl', dest='do_marathon_ssl', default=None)
+marathon_opts.add_argument('--enable-marathon-ssl', action='store_false', help='enable marathon ssl', dest='do_marathon_ssl')
+marathon_opts.add_argument('--disable-marathon-auth', action='store_false', help='disable marathon auth', dest='do_marathon_auth', default=None)
+marathon_opts.add_argument('--enable-marathon-auth', action='store_false', help='enable marathon auth', dest='do_marathon_auth')
+marathon_opts.add_argument('--disable-marathon-iptables', action='store_false', help='disable marathon iptables', dest='do_marathon_iptables', default=None)
+marathon_opts.add_argument('--enable-marathon-iptables', action='store_false', help='enable marathon iptables', dest='do_marathon_iptables', default=None)
 
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
