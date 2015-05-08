@@ -141,12 +141,21 @@ marathon_opts = parser.add_argument_group(
     "Marathon Options",
     "enable and disable auth components of Marathon"
 )
-marathon_opts.add_argument('--disable-marathon-ssl', action='store_false', help='disable marathon ssl', dest='do_marathon_ssl', default=None)
-marathon_opts.add_argument('--enable-marathon-ssl', action='store_false', help='enable marathon ssl', dest='do_marathon_ssl')
-marathon_opts.add_argument('--disable-marathon-auth', action='store_false', help='disable marathon auth', dest='do_marathon_auth', default=None)
-marathon_opts.add_argument('--enable-marathon-auth', action='store_false', help='enable marathon auth', dest='do_marathon_auth')
-marathon_opts.add_argument('--disable-marathon-iptables', action='store_false', help='disable marathon iptables', dest='do_marathon_iptables', default=None)
-marathon_opts.add_argument('--enable-marathon-iptables', action='store_false', help='enable marathon iptables', dest='do_marathon_iptables', default=None)
+marathon_opts.add_argument(
+    '--marathon-ssl', type=bool_opt,
+    help='enable marathon ssl',
+    dest='do_marathon_ssl', default=True
+)
+marathon_opts.add_argument(
+    '--marathon-auth', type=bool_opt,
+    help='enable marathon auth',
+    dest='do_marathon_auth', default=True
+)
+marathon_opts.add_argument(
+    '--marathon-iptables', type=bool_opt,
+    help='enable marathon iptables',
+    dest='do_marathon_iptables', default=True
+)
 
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
