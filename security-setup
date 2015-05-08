@@ -27,6 +27,20 @@ parser.add_argument(
     help='change admin password'
 )
 
+def bool_opt(string):
+    if len(string) == 0:
+        raise argparse.ArgumentTypeError('blank is not allowed')
+
+    char = string[0].lower()
+    if char in ['1', 't']:
+        return True
+    elif char in ['0', 'f']:
+        return False
+    else:
+        raise argparse.ArgumentTypeError(
+            '"%s" is not allowed. Try "true" or "false"' % string
+        )
+
 # certificates
 cert_opts = parser.add_argument_group(
     "SSL Certificate Options",
@@ -75,12 +89,21 @@ consul_opts = parser.add_argument_group(
     "Consul Options",
     "enable and disable auth components of Consul"
 )
-consul_opts.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
-consul_opts.add_argument('--enable-consul-auth', action='store_true', help='enable consul auth', dest='do_consul_auth')
-consul_opts.add_argument('--disable-consul-ssl', action='store_false', help='disable consul ssl', dest='do_consul_ssl', default=None)
-consul_opts.add_argument('--enable-consul-ssl', action='store_true', help='enable consul ssl', dest='do_consul_ssl')
-consul_opts.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
-consul_opts.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
+consul_opts.add_argument(
+    '--consul-auth', type=bool_opt, default=True,
+    help='enable or disable consul auth',
+    dest='do_consul_auth'
+)
+consul_opts.add_argument(
+    '--consul-ssl', type=bool_opt, default=True,
+    help='enable or disable consul auth',
+    dest='do_consul_ssl',
+)
+consul_opts.add_argument(
+    '--consul-acl', type=bool_opt, default=True,
+    help='enable or disable consul ACLs',
+    dest='do_consul_acl'
+)
 
 # Mesos security
 mesos_opts = parser.add_argument_group(
