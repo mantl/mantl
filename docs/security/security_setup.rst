@@ -99,3 +99,69 @@ Options
    the nginx certificate.
 
    default: ``nginx.example.com``
+
+.. option:: --consul-auth
+
+   enable Consul authentication
+
+   default: ``True``
+
+.. option:: --consul-ssl
+
+   enable Consul SSL
+
+   default: ``True``
+
+.. option:: --consul-acl
+
+   enable Consul ACLs
+
+   default: ``True``
+
+.. option:: --mesos-ssl
+
+   enable Mesos SSL
+
+   default: ``True``
+
+.. option:: --mesos-auth
+
+   enable Mesos authentication
+
+   default: ``True``
+
+.. option:: --mesos-framework-auth
+
+   enable Mesos framework authentication
+
+   default: ``True``
+
+.. option:: --mesos-follower-auth
+
+   enable Mesos follower authentication
+
+   default: ``True``
+
+.. option:: --mesos-iptables
+
+   enable Mesos iptables rules to restrict access
+
+   default: ``True``
+
+.. option:: --marathon-ssl
+
+   enable Marathon SSL
+
+   default: ``True``
+
+.. option:: --marathon-auth
+
+   enable Marathon authentication
+
+   default: ``True``
+
+.. option:: --marathon-iptables
+
+   enable Marathon iptables rules to restrict access
+
+   default: ``True``
