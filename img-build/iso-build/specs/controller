@@ -1,0 +1,20 @@
+BASE_DIR="$(dirname "$(readlink -f "${0}")")"
+source "${BASE_DIR}/specs/base"
+
+PKGS+=(
+    marathon
+    consul-ui
+    vault
+)
+
+REPOS+=(
+    [stevendborrelli]
+    name=stevendborrelli
+    baseurl=https://dl.bintray.com/stevendborrelli/rpm
+    gpgcheck=0
+)
+
+IMAGES+=(
+    asteris/nginx-consul:latest
+    asteris/zookeeper:latest
+)

@@ -1,0 +1,10 @@
+BASE_DIR="$(dirname "$(readlink -f "${0}")")"
+source "${BASE_DIR}/specs/base"
+
+PKGS+=()
+
+REPOS+=()
+
+IMAGES+=(
+    asteris/haproxy-consul:latest
+)
