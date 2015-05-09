@@ -12,7 +12,7 @@ http {
 	keepalive_timeout	65;
 
 	server {
-		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:{{ marathon_proxy_port }} {% if do_marathon_ssl|bool %}ssl{% endif %};
+		listen {{ marathon_proxy_port }} {% if do_marathon_ssl|bool %}ssl{% endif %};
 
 {% if do_marathon_ssl|bool -%}
 		ssl_certificate		/etc/nginx/ssl/nginx.cert;
@@ -38,7 +38,7 @@ http {
 			auth_basic_user_file /etc/nginx/nginx-auth.conf;
 {% endif %}
 
-			proxy_pass http://localhost:{{ marathon_port }}/;
+			proxy_pass http://{% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:{{ marathon_port }}/;
 		}
 	}
 }

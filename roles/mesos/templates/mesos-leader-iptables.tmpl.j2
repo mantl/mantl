@@ -21,6 +21,7 @@ iptables -A MESOSLEADER -p tcp --dport {{ mesos_leader_port }} -s {% raw %}{{ .A
 iptables -A MESOSLEADER -p tcp --dport {{ mesos_leader_port }} -s {% raw %}{{ .Address }}{% endraw %} -j ACCEPT
 {% raw %}{{ end }}{% endraw %}
 iptables -A MESOSLEADER -p tcp --dport {{ mesos_leader_port }} -d 127.0.0.1 -j ACCEPT
+iptables -A MESOSLEADER -p tcp --dport {{ mesos_leader_port }} -i docker0 -j ACCEPT
 iptables -A MESOSLEADER -p tcp --dport {{ mesos_leader_port }} -j DROP
 
 iptables -A INPUT -p tcp --dport {{ mesos_leader_port }} -j MESOSLEADER
