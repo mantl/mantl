@@ -27,3 +27,6 @@ consul_bin: /bin/consul
 consul_dir: /etc/consul
 consul_nginx_image: asteris/nginx-consul
 consul_nginx_image_tag: latest
+
+mesos_consul_image: drifting/mesos-consul
+mesos_consul_image_tag: latest

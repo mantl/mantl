@@ -22,9 +22,13 @@
     - dnsmasq
     - nginx
     - consul
-    - registrator
 
 - include: playbooks/consul-join-wan.yml
+
+- hosts: mesos_leaders
+  gather_facts: no
+  roles:
+    - registrator
 
 - hosts: vault_servers
   gather_facts: no
