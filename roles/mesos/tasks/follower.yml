@@ -1,15 +1,4 @@
 ---
-- name: generate follower consul service
-  sudo: yes
-  template:
-    src: mesos-follower-consul.j2
-    dest: "{{ consul_dir }}/mesos-follower.json"
-  notify:
-    - reload consul
-  tags:
-    - consul-service
-    - mesos
-
 - name: disable mesos leader
   sudo: yes
   service:
