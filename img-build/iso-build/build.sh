@@ -220,8 +220,8 @@ build_iso() {
         -input-charset utf-8 -no-emul-boot \
         -boot-load-size 4 -boot-info-table \
         -b isolinux/isolinux.bin -c isolinux/boot.cat \
-        -o "${ARTIFACT_DIR}/${SPEC}-${BUILD}".iso "${ISO_STAGE_DIR}"
-    ARTIFACTS+=("${ARTIFACT_DIR}/${SPEC}-${BUILD}".iso)
+        -o "${ARTIFACT_DIR}/${SPEC}-${BUILD}.iso" "${ISO_STAGE_DIR}"
+    ARTIFACTS+=("${ARTIFACT_DIR}/${SPEC}-${BUILD}.iso")
 }
 
 summary() {
