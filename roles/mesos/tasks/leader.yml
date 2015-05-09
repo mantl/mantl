@@ -30,17 +30,6 @@
   tags:
     - mesos
 
-- name: generate leader consul service
-  sudo: yes
-  template:
-    src: mesos-leader-consul.j2
-    dest: "{{ consul_dir }}/mesos-leader.json"
-  notify:
-    - reload consul
-  tags:
-    - consul-service
-    - mesos
-
 - name: create zookeeper acl 
   sudo: yes 
   shell: "{{ mesos_zk_acl_cmd }}" 

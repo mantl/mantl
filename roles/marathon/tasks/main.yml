@@ -80,3 +80,5 @@
     - reload consul
   tags:
     - marathon
+
+- include: jobs.yml
