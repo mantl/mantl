@@ -1,0 +1,16 @@
+---
+- name: create mesos_consul json
+  sudo: yes
+  template:
+    src: mesos-consul.json.j2
+    dest: /etc/marathon/mesos-consul.json
+  tags:
+    - marathon
+
+- name: run mesos_consul
+  run_once: true
+  sudo: yes
+  command: 'curl -X POST -d@/etc/marathon/mesos-consul.json -H "Content-Type: application/json" http://localhost:18080/v2/apps'
+  changed_when: false
+  tags:
+    - marathon
