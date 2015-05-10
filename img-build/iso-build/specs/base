@@ -1,4 +1,7 @@
 PKGS+=(
+    iptables-services
+    teamd
+    centos-release
     kernel
     authconfig
     e2fsprogs
@@ -19,7 +22,7 @@ PKGS+=(
     teamd
     kexec-tools
     httpd-tools
-    gpg-pubkey
+    nmap-ncat
     rootfiles
     consul
     consul-template
