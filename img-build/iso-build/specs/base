@@ -1,23 +1,26 @@
 PKGS+=(
     kernel
-    iptables-services
-    teamd
     authconfig
     e2fsprogs
     grub2
     bash
     vim-minimal
-    centos-release
     shadow-utils
     initscripts
+    openssh-clients
     openssh-server
     rsyslog
     cronie
     firewalld
     acpid
+    yum
     sudo
+    passwd
+    teamd
     kexec-tools
     httpd-tools
+    gpg-pubkey
+    rootfiles
     consul
     consul-template
     docker
@@ -47,12 +50,6 @@ REPOS+=(
     baseurl=https://mirrors.kernel.org/centos/7/extras/x86_64/
     gpgcheck=1
     gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
-
-    [virt7-testing]
-    name=virt7-testing
-    baseurl=http://cbs.centos.org/repos/virt7-testing/x86_64/os/
-    gpgcheck=0
-    exclude=kernel
 
     [ciscocloud]
     name=ciscocloud

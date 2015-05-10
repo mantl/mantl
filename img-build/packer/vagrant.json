@@ -1,0 +1,52 @@
+{
+    "variables": {
+            "iso_url": "",
+            "iso_checksum": ""
+    },
+    "builders": [
+        {
+            "name": "microservices-infrastructure",
+            "type": "virtualbox-iso",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": "vbox_version",
+            "guest_os_type": "RedHat_64",
+            "iso_url": "{{user `iso_url`}}",
+            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_checksum_type": "sha256",
+            "boot_wait": "10s",
+            "ssh_wait_timeout": "10000s",
+            "ssh_username": "root",
+            "ssh_password": "root",
+            "shutdown_command": "/sbin/halt -h -p",
+            "disk_size": 20480,
+            "vboxmanage": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--memory",
+                    "1024"
+                ]
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "bash '{{.Path}}'",
+            "scripts": [
+                "scripts/disable-root.sh",
+                "scripts/vagrant.sh",
+                "scripts/virtualbox-guest-additions.sh",
+                "scripts/clean.sh"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "output": "microservices-infrastructure.box",
+            "compression_level": 9,
+            "keep_input_artifact": false
+        }
+    ]
+}

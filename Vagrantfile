@@ -17,7 +17,8 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox"
   config.vm.provider "vmware_fusion"
 
-  config.vm.box = "CiscoCloud/shipped-devbox"
+  # config.vm.box = "CiscoCloud/shipped-devbox"
+  config.vm.box = "microservices-infrastructure"
 
   config.vm.network :forwarded_port, guest: 2181,  host: 2181  # ZooKeeper
   config.vm.network :forwarded_port, guest: 5050,  host: 5050  # Mesos leader
