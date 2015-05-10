@@ -1,7 +1,7 @@
 ---
 - name: create zookeeper acl 
   sudo: yes 
-  shell: "{{ marathon_zk_acl_cmd }}" 
+  command: "{{ marathon_zk_acl_cmd }}" 
   notify:
     - restart marathon
   when: zk_marathon_user_secret is defined

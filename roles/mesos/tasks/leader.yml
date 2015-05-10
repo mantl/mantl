@@ -32,7 +32,7 @@
 
 - name: create zookeeper acl 
   sudo: yes 
-  shell: "{{ mesos_zk_acl_cmd }}" 
+  command: "{{ mesos_zk_acl_cmd }}" 
   notify:
     - restart mesos leader
   when: zk_mesos_user_secret is defined

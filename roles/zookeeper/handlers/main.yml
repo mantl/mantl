@@ -1,7 +1,7 @@
 ---
 - name: reload systemd daemon
   sudo: yes
-  command: /bin/systemctl daemon-reload
+  command: systemctl daemon-reload
   tags: 
     - zookeeper 
 
@@ -9,7 +9,7 @@
   sudo: yes 
   service:  
     enabled: yes 
-    name: "{{zookeeper_service}}"  
+    name: "{{ zookeeper_service }}"  
     state: started 
   tags:  
     - zookeeper  
@@ -17,7 +17,12 @@
 - name: restart zookeeper
   sudo: yes
   service:
-    name: "{{zookeeper_service}}"
+    name: "{{ zookeeper_service }}"
     state: restarted
-  tags: 
-    - zookeeper 
+  notify:
+    - wait for zookeeper to listen
+  tags:
+    - zookeeper
+
+- name: wait for zookeeper to listen
+  command: zookeeper-wait-for-listen.sh
