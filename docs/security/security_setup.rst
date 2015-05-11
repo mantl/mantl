@@ -50,6 +50,36 @@ Options
    already have one. Setting this option will cause ``security-setup`` to
    re-prompt for the admin password.
 
+.. option:: --disable
+
+   Disable all security. This overrides all other options.
+
+   Default: ``False``
+
+.. option:: --consul
+
+   Enable Consul security. This overrides all other Consul options.
+
+   Default: ``True``
+
+.. option:: --mesos
+
+   Enable Mesos security. This overrides all other Mesos options.
+
+   Default: ``True``
+
+.. option:: --marathon
+
+   Enable Marathon security. This overrides all other Marathon options.
+
+   Default: ``True``
+
+.. option:: --iptables
+
+   Use iptables rules. This overrides all other options related to iptables.
+
+   Default: ``True``
+
 .. option:: --cert-country
 
    Country to be used for certificates

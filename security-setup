@@ -53,19 +53,19 @@ disable_opts.add_argument(
 )
 disable_opts.add_argument(
     '--consul', type=bool_opt, default=True,
-    help='enable or disable all Consul security'
+    help='Enable Consul security. This overrides all other Consul options.'
 )
 disable_opts.add_argument(
     '--mesos', type=bool_opt, default=True,
-    help='disable all Mesos security'
+    help='Enable Mesos security. This overrides all other Mesos options.'
 )
 disable_opts.add_argument(
     '--marathon', type=bool_opt, default=True,
-    help='disable all Marathon security'
+    help='Enable Marathon security. This overrides all other Marathon options.'
 )
 disable_opts.add_argument(
     '--iptables', type=bool_opt, default=True,
-    help='disable all iptable rules'
+    help='Use iptables rules. This overrides all other options related to iptables.'
 )
 
 # certificates
