@@ -28,6 +28,27 @@ In the event that you need to regenerate a certificate, rename or delete the
 appropriate CSR and certificate from the ``certs`` folder and the private
 component in ``private`` and re-run ``security-setup``.
 
+Boolean Options
+---------------
+
+Options like :ref:`--mesos` take a boolean argument. You can use the following
+values (and their ilk) in these options:
+
+======= ==============
+Value   Interpreted as
+======= ==============
+`t`     True
+`t`     True
+`1`     True
+`True`  True
+`true`  True
+`f`     False
+`F`     False
+`0`     False
+`False` False
+`false` False
+======= ==============
+
 Options
 -------
 
