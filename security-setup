@@ -48,23 +48,23 @@ disable_opts = parser.add_argument_group(
     "options set from the sections below."
 )
 disable_opts.add_argument(
-    '--disable', action='store_true',
+    '--disable', action='store_true', default=False,
     help='disable all security. This overrides everything.'
 )
 disable_opts.add_argument(
-    '--disable-consul', action='store_true',
-    help='disable all Consul security'
+    '--consul', type=bool_opt, default=True,
+    help='enable or disable all Consul security'
 )
 disable_opts.add_argument(
-    '--disable-mesos', action='store_true',
+    '--mesos', type=bool_opt, default=True,
     help='disable all Mesos security'
 )
 disable_opts.add_argument(
-    '--disable-marathon', action='store_true',
+    '--marathon', type=bool_opt, default=True,
     help='disable all Marathon security'
 )
 disable_opts.add_argument(
-    '--disable-iptables', action='store_true',
+    '--iptables', type=bool_opt, default=True,
     help='disable all iptable rules'
 )
 
@@ -457,7 +457,7 @@ class Consul(Component):
 
     @property
     def disabled(self):
-        return self.args.disable or self.args.disable_consul
+        return self.args.disable or not self.args.consul
 
     def disable_security(self):
         "disable security"
@@ -503,7 +503,7 @@ class Marathon(Component):
 
     @property
     def disabled(self):
-        return self.args.disable or self.args.disable_marathon
+        return self.args.disable or not self.args.marathon
 
     def disable_security(self):
         "disable security"
@@ -511,7 +511,7 @@ class Marathon(Component):
         self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl and self.enabled, True)
         self.toggle_boolean(
             'do_marathon_iptables',
-            self.args.do_marathon_ssl and self.enabled and not self.args.disable_iptables,
+            self.args.do_marathon_ssl and self.enabled and self.args.iptables,
             True
         )
 
@@ -589,7 +589,7 @@ class Mesos(Component):  # Mesos should always come after any frameworks
 
     @property
     def disabled(self):
-        return self.args.disable or self.args.disable_consul
+        return self.args.disable or not self.args.mesos
 
     def disable_security(self):
         "disable security"
@@ -599,7 +599,7 @@ class Mesos(Component):  # Mesos should always come after any frameworks
         self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth and self.enabled, True)
         self.toggle_boolean(
             'do_mesos_iptables',
-            self.args.do_mesos_framework_auth and self.enabled and not self.args.disable_iptables,
+            self.args.do_mesos_framework_auth and self.enabled and self.args.iptables,
             True
         )
 
