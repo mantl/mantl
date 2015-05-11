@@ -17,8 +17,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox"
   config.vm.provider "vmware_fusion"
 
-  # config.vm.box = "CiscoCloud/shipped-devbox"
-  config.vm.box = "microservices-infrastructure"
+  config.vm.box = "CiscoCloud/microservices-infrastructure"
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
