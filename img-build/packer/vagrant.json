@@ -1,8 +1,4 @@
 {
-    "variables": {
-            "iso_url": "",
-            "iso_checksum": ""
-    },
     "builders": [
         {
             "name": "microservices-infrastructure",
@@ -10,13 +6,17 @@
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": "vbox_version",
             "guest_os_type": "RedHat_64",
-            "iso_url": "{{user `iso_url`}}",
-            "iso_checksum": "{{user `iso_checksum`}}",
+            "iso_url": "https://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
+            "iso_checksum": "7cf1ac8da13f54d6be41e3ccf228dc5bb35792f515642755ff4780d5714d4278",
             "iso_checksum_type": "sha256",
             "boot_wait": "10s",
             "ssh_wait_timeout": "10000s",
             "ssh_username": "root",
             "ssh_password": "root",
+            "http_directory": "kickstarts",
+            "boot_command": [
+                "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.ks<enter>"
+            ],
             "shutdown_command": "/sbin/halt -h -p",
             "disk_size": 20480,
             "vboxmanage": [
@@ -34,18 +34,23 @@
             "type": "shell",
             "execute_command": "bash '{{.Path}}'",
             "scripts": [
+                "scripts/upgrade.sh",
+                "scripts/common.sh",
+                "scripts/dnsmasq.sh",
+                "scripts/docker.sh",
+                "scripts/consul.sh",
+                "scripts/consul-ui.sh",
+                "scripts/consul-template.sh",
+                "scripts/vault.sh",
+                "scripts/zookeeper.sh",
+                "scripts/nginx.sh",
+                "scripts/mesos.sh",
+                "scripts/marathon.sh",
+                "scripts/haproxy.sh",
                 "scripts/disable-root.sh",
                 "scripts/vagrant.sh",
                 "scripts/clean.sh"
             ]
-        }
-    ],
-    "post-processors": [
-        {
-            "type": "vagrant",
-            "output": "microservices-infrastructure.box",
-            "compression_level": 9,
-            "keep_input_artifact": false
         }
     ]
 }
