@@ -36,7 +36,6 @@
             "scripts": [
                 "scripts/disable-root.sh",
                 "scripts/vagrant.sh",
-                "scripts/virtualbox-guest-additions.sh",
                 "scripts/clean.sh"
             ]
         }
