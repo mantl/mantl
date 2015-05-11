@@ -135,12 +135,6 @@ Future roadmap items:
    to "deny" (version 0.3+)
    )
 -  Create ACL policies on K/V store and service endpoints
--  Per node acl\_tokens for registrator
--  ``/v1/agent/*`` endpoints: Add ACL for writing. This is pending
-   adding authentication/token support to registrator `Registrator
-   #135 <https://github.com/gliderlabs/registrator/issues/135>`__
-   Current compensating control is to use nginx proxy for non-localhost
-   connections (version 0.3+)
 
 Consul template
 ^^^^^^^^^^^^^^^
@@ -179,34 +173,6 @@ CentOS. Docker 1.5 is the minimum version installed.
 -  ReST HTTP port is disabled
 -  Docker is started with SELinux enabled via
    ``OPTIONS='--selinux-enabled'`` in ``/etc/sysconfig/docker``
-
-Registrator
-~~~~~~~~~~~
-
-`Registrator <https://github.com/gliderlabs/registrator>`__ does not
-currently (as of 3/2015) support any authentication options for Consul.
-
-Github issue
-`#135 <https://github.com/gliderlabs/registrator/issues/135>`__ has been
-opened to add support for ACL tokens, HTTP basic authentication and SSL.
-
-Short-term remediation:
-
--  Connect to consul agent listening on localhost:8500, as Consul agents
-   listening on other interfaces will be using SSL/http basic
-   authentication.
-
-Roadmap:
-
--  Implement read-only ACL on all Consul service endpoints, add token to
-   Registrator start.
-
-   ::
-
-       # Default all services 
-       service "" {
-           policy = "read"
-       }
 
 Marathon
 ~~~~~~~~

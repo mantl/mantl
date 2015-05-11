@@ -11,5 +11,4 @@ which can be customized, generally using Ansible variables.
    haproxy.rst
    marathon.rst
    mesos.rst
-   registrator.rst
    zookeeper.rst

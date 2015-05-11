@@ -1,7 +1,5 @@
 .. versionadded:: 0.1
 
-.. todo:: make a reference to registrator in the paragraph below.
-
 `Consul <https://www.consul.io/>`_ is used in the project to
 coordinate service discovery, specifically using the inbuilt DNS
 server.
