@@ -1,6 +1,7 @@
 PKGS+=(
     iptables-services
     teamd
+    net-tools
     centos-release
     kernel
     authconfig
