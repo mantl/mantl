@@ -59,6 +59,10 @@ disable_opts.add_argument(
     '--disable-mesos', action='store_true',
     help='disable all Mesos security'
 )
+disable_opts.add_argument(
+    '--disable-marathon', action='store_true',
+    help='disable all Marathon security'
+)
 
 # certificates
 cert_opts = parser.add_argument_group(
@@ -492,6 +496,10 @@ class Consul(Component):
 class Marathon(Component):
     def check(self):
         return [self.disable_security, self.mesos_auth, self.password]
+
+    @property
+    def disabled(self):
+        return self.args.disable or self.args.disable_marathon
 
     def disable_security(self):
         "disable security"
