@@ -55,6 +55,12 @@ REPOS+=(
     gpgcheck=1
     gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
 
+    [virt7-testing]
+    name=virt7-testing
+    baseurl=http://cbs.centos.org/repos/virt7-testing/x86_64/os/
+    gpgcheck=0
+    exclude=kernel
+
     [ciscocloud]
     name=ciscocloud
     baseurl=https://dl.bintray.com/ciscocloud/rpm/
