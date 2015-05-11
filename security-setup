@@ -27,18 +27,18 @@ parser.add_argument(
     help='change admin password during this run'
 )
 
-def bool_opt(string):
-    if len(string) == 0:
+def bool_opt(raw_opt):
+    if len(raw_opt) == 0:
         raise argparse.ArgumentTypeError('blank is not allowed')
 
-    char = string[0].lower()
+    char = raw_opt[0].lower()
     if char in ['1', 't']:
         return True
     elif char in ['0', 'f']:
         return False
     else:
         raise argparse.ArgumentTypeError(
-            '"%s" is not allowed. Try "true" or "false"' % string
+            '"%s" is not allowed. Try "true" or "false"' % raw_opt
         )
 
 # disables
