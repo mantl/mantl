@@ -1,5 +1,5 @@
 the security-setup script
-=====================
+=========================
 
 The ``security-setup`` script is located in the root of the project. It will set up
 authentication and authorization for you, as described in the :doc:`component
