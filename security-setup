@@ -63,6 +63,10 @@ disable_opts.add_argument(
     '--disable-marathon', action='store_true',
     help='disable all Marathon security'
 )
+disable_opts.add_argument(
+    '--disable-iptables', action='store_true',
+    help='disable all iptable rules'
+)
 
 # certificates
 cert_opts = parser.add_argument_group(
@@ -505,7 +509,11 @@ class Marathon(Component):
         "disable security"
         self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth and self.enabled, True)
         self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl and self.enabled, True)
-        self.toggle_boolean('do_marathon_iptables', self.args.do_marathon_ssl and self.enabled, True)
+        self.toggle_boolean(
+            'do_marathon_iptables',
+            self.args.do_marathon_ssl and self.enabled and not self.args.disable_iptables,
+            True
+        )
 
     def mesos_auth(self):
         "marathon framework authentication"
@@ -589,7 +597,11 @@ class Mesos(Component):  # Mesos should always come after any frameworks
         self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth and self.enabled, True)
         self.toggle_boolean('do_mesos_follower_auth', self.args.do_mesos_follower_auth and self.enabled, True)
         self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth and self.enabled, True)
-        self.toggle_boolean('do_mesos_iptables', self.args.do_mesos_framework_auth and self.enabled, True)
+        self.toggle_boolean(
+            'do_mesos_iptables',
+            self.args.do_mesos_framework_auth and self.enabled and not self.args.disable_iptables,
+            True
+        )
 
     def framework_auth(self):
         "framework auth"
