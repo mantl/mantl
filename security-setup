@@ -55,6 +55,10 @@ disable_opts.add_argument(
     '--disable-consul', action='store_true',
     help='disable all Consul security'
 )
+disable_opts.add_argument(
+    '--disable-mesos', action='store_true',
+    help='disable all Mesos security'
+)
 
 # certificates
 cert_opts = parser.add_argument_group(
@@ -566,6 +570,10 @@ class Zookeeper(Component):
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
+
+    @property
+    def disabled(self):
+        return self.args.disable or self.args.disable_consul
 
     def disable_security(self):
         "disable security"
