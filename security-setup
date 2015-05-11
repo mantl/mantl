@@ -41,6 +41,17 @@ def bool_opt(string):
             '"%s" is not allowed. Try "true" or "false"' % string
         )
 
+# disables
+disable_opts = parser.add_argument_group(
+    "Broad Disable Options",
+    "disable security for entire components. This overrides any more specific "
+    "options set from the sections below."
+)
+disable_opts.add_argument(
+    '--disable', action='store_true',
+    help='disable all security. This overrides everything.'
+)
+
 # certificates
 cert_opts = parser.add_argument_group(
     "SSL Certificate Options",
@@ -181,6 +192,14 @@ class Component(object):
     def check(self, subset):
         """return tasks which need to be run"""
         return []
+
+    @property
+    def disabled(self):
+        return self.args.disable
+
+    @property
+    def enabled(self):
+        return not self.disabled
 
     def read_security(self):
         try:
@@ -352,9 +371,10 @@ class Component(object):
         with self.modify_security() as config:
             if inFlag not in config:
                 config[inFlag] = inDefault
-            
+
             if inValue is not None:
                 config[inFlag] = inValue
+
 
 class Certificates(Component):
     def check(self):
@@ -421,9 +441,9 @@ class Consul(Component):
 
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_consul_auth', self.args.do_consul_auth, True)
-        self.toggle_boolean('do_consul_ssl', self.args.do_consul_ssl, True)
-        self.toggle_boolean('do_consul_acl', self.args.do_consul_acl, True)
+        self.toggle_boolean('do_consul_auth', self.args.do_consul_auth and self.enabled, True)
+        self.toggle_boolean('do_consul_ssl', self.args.do_consul_ssl and self.enabled, True)
+        self.toggle_boolean('do_consul_acl', self.args.do_consul_acl and self.enabled, True)
 
     def gossip_key(self):
         "gossip key"
@@ -463,10 +483,9 @@ class Marathon(Component):
 
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth, True)
-        self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl, True)
-        self.toggle_boolean('do_marathon_iptables', self.args.do_marathon_ssl, True)
-
+        self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth and self.enabled, True)
+        self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl and self.enabled, True)
+        self.toggle_boolean('do_marathon_iptables', self.args.do_marathon_ssl and self.enabled, True)
 
     def mesos_auth(self):
         "marathon framework authentication"
@@ -535,17 +554,18 @@ class Zookeeper(Component):
             else:
                 print('zk marathon user secret already set')
 
+
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
 
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_mesos_ssl', self.args.do_mesos_ssl, True)
-        self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth, True)
-        self.toggle_boolean('do_mesos_follower_auth', self.args.do_mesos_follower_auth, True)
-        self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth, True)
-        self.toggle_boolean('do_mesos_iptables', self.args.do_mesos_framework_auth, True)
+        self.toggle_boolean('do_mesos_ssl', self.args.do_mesos_ssl and self.enabled, True)
+        self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth and self.enabled, True)
+        self.toggle_boolean('do_mesos_follower_auth', self.args.do_mesos_follower_auth and self.enabled, True)
+        self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth and self.enabled, True)
+        self.toggle_boolean('do_mesos_iptables', self.args.do_mesos_framework_auth and self.enabled, True)
 
     def framework_auth(self):
         "framework auth"
