@@ -23,7 +23,7 @@ gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
 EOF
 
 # Upgrade all packages
-yum clean -y
+yum clean all
 yum makecache -y
 yum upgrade -y
 

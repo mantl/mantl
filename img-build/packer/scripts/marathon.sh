@@ -13,6 +13,7 @@ baseurl=http://repos.mesosphere.io/el/7/noarch/
 gpgcheck=0
 EOF
 
+yum clean all
 yum makecache -y
 yum install -y marathon
 yum upgrade -y marathon
