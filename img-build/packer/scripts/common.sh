@@ -22,12 +22,17 @@ gpgcheck=1
 gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
 EOF
 
-# Install httpd-tools as required for ./security-setup
+# Upgrade all packages
+yum clean -y
 yum makecache -y
+yum upgrade -y
+
+# Install httpd-tools as required for ./security-setup
 yum install -y httpd-tools
 yum upgrade -y httpd-tools
 
 # Set time to Etc/UTC
+rm /etc/localtime
 ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
 # Disable firewalld

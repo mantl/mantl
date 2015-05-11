@@ -34,7 +34,6 @@
             "type": "shell",
             "execute_command": "bash '{{.Path}}'",
             "scripts": [
-                "scripts/upgrade.sh",
                 "scripts/common.sh",
                 "scripts/dnsmasq.sh",
                 "scripts/docker.sh",
