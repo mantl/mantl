@@ -44,8 +44,6 @@
     enabled: yes
     name: marathon
     state: started
-  notify:
-    - wait for marathon to listen
   tags:
     - marathon
 

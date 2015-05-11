@@ -20,6 +20,8 @@ Vagrant.configure(2) do |config|
   # config.vm.box = "CiscoCloud/shipped-devbox"
   config.vm.box = "microservices-infrastructure"
 
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
   config.vm.network :forwarded_port, guest: 2181,  host: 2181  # ZooKeeper
   config.vm.network :forwarded_port, guest: 5050,  host: 5050  # Mesos leader
   config.vm.network :forwarded_port, guest: 15050, host: 15050 # Mesos leader UI
