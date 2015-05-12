@@ -5,18 +5,19 @@
     },
     "builders": [
         {
-            "ami_name": "aws-west",
+            "ami_name": "aio-aws-west",
             "type": "amazon-ebs",
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
             "region": "us-west-2",
             "source_ami": "ami-c7d092f7",
             "instance_type": "t2.micro",
+            "ami_groups": "all",
             "ssh_username": "centos",
             "ssh_timeout": "10m"
         },
         {
-            "name": "vagrant-virtualbox",
+            "name": "aio-vagrant-virtualbox",
             "type": "virtualbox-iso",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": "vbox_version",
@@ -75,6 +76,14 @@
             "only": [
                 "vagrant-virtualbox"
             ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "output": "microservices-infrastructure-vbox.box",
+            "compression_level": 9,
+            "keep_input_artifact": false
         }
     ]
 }
