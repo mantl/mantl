@@ -71,11 +71,11 @@ Options
    already have one. Setting this option will cause ``security-setup`` to
    re-prompt for the admin password.
 
-.. option:: --disable
+.. option:: --enable
 
-   Disable all security. This overrides all other options.
+   Enable (or disable, if False) all security. This overrides all other options.
 
-   Default: ``False``
+   Default: ``True``
 
 .. option:: --consul
 
