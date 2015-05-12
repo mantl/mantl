@@ -19,52 +19,78 @@ import uuid
 import yaml
 
 parser = argparse.ArgumentParser(
-    __name__, __doc__,
+    __file__, __doc__,
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    epilog='''
+    Examples:
+
+    ...
+    '''
 )
 parser.add_argument(
     '--change-admin-password', action='store_true',
     help='change admin password during this run'
 )
 
-def bool_opt(raw_opt):
-    if len(raw_opt) == 0:
-        raise argparse.ArgumentTypeError('blank is not allowed')
 
-    char = raw_opt[0].lower()
-    if char in ['1', 't']:
-        return True
-    elif char in ['0', 'f']:
-        return False
-    else:
-        raise argparse.ArgumentTypeError(
-            '"%s" is not allowed. Try "true" or "false"' % raw_opt
-        )
+class ImplicitBool(object):
+    TRUE = True
+    FALSE = False
+    IMPLICIT_TRUE = 'True'  # this just has to be a different type/value than the real True
+
+    def __init__(self, value, explicit):
+        self.value = value
+        self.explicit = explicit
+
+    def __nonzero__(self):
+        return self.value
+
+    @classmethod
+    def represent(cls, dumper, obj):
+        return dumper.represent_bool(obj.value)
+
+    @classmethod
+    def parse_opt(cls, opt):
+        if len(opt) == 0:
+            raise argparse.ArgumentTypeError('blank is not allowed')
+
+        char = opt[0].lower()
+
+        if opt == cls.IMPLICIT_TRUE:
+            return cls(True, False)
+        elif char in ['1', 't']:
+            return cls(True, True)
+        elif char in ['0', 'f']:
+            return cls(False, True)
+        else:
+            raise argparse.ArgumentTypeError(
+                '"%s" is not allowed. Try "true" or "false"' % raw_opt
+            )
 
 # disables
-disable_opts = parser.add_argument_group(
-    "Broad Disable Options",
+broad_opts = parser.add_argument_group(
+    "Broad Options",
     "disable security for entire components. This overrides any more specific "
     "options set from the sections below."
 )
-disable_opts.add_argument(
-    '--disable', action='store_true', default=False,
-    help='disable all security. This overrides everything.'
+broad_opts.add_argument(
+    '--enable', type=ImplicitBool.parse_opt, default=ImplicitBool.IMPLICIT_TRUE,
+    help='enable all security. This overrides everything.'
 )
-disable_opts.add_argument(
-    '--consul', type=bool_opt, default=True,
+broad_opts.add_argument(
+    '--consul', type=ImplicitBool.parse_opt, default=True,
     help='Enable Consul security. This overrides all other Consul options.'
 )
-disable_opts.add_argument(
-    '--mesos', type=bool_opt, default=True,
+broad_opts.add_argument(
+    '--mesos', type=ImplicitBool.parse_opt, default=True,
     help='Enable Mesos security. This overrides all other Mesos options.'
 )
-disable_opts.add_argument(
-    '--marathon', type=bool_opt, default=True,
+broad_opts.add_argument(
+    '--marathon', type=ImplicitBool.parse_opt, default=True,
     help='Enable Marathon security. This overrides all other Marathon options.'
 )
-disable_opts.add_argument(
-    '--iptables', type=bool_opt, default=True,
+broad_opts.add_argument(
+    '--iptables', type=ImplicitBool.parse_opt, default=True,
     help='Use iptables rules. This overrides all other options related to iptables.'
 )
 
@@ -117,17 +143,17 @@ consul_opts = parser.add_argument_group(
     "enable and disable auth components of Consul"
 )
 consul_opts.add_argument(
-    '--consul-auth', type=bool_opt, default=True,
+    '--consul-auth', type=ImplicitBool.parse_opt, default=True,
     help='enable Consul auth',
     dest='do_consul_auth'
 )
 consul_opts.add_argument(
-    '--consul-ssl', type=bool_opt, default=True,
+    '--consul-ssl', type=ImplicitBool.parse_opt, default=True,
     help='enable Consul auth',
     dest='do_consul_ssl',
 )
 consul_opts.add_argument(
-    '--consul-acl', type=bool_opt, default=True,
+    '--consul-acl', type=ImplicitBool.parse_opt, default=True,
     help='enable Consul ACLs',
     dest='do_consul_acl'
 )
@@ -138,27 +164,27 @@ mesos_opts = parser.add_argument_group(
     "enable and disable auth components of Mesos"
 )
 mesos_opts.add_argument(
-    '--mesos-ssl', type=bool_opt,
+    '--mesos-ssl', type=ImplicitBool.parse_opt,
     help='enable Mesos SSL',
     dest='do_mesos_ssl', default=True,
 )
 mesos_opts.add_argument(
-    '--mesos-auth', type=bool_opt,
+    '--mesos-auth', type=ImplicitBool.parse_opt,
     help='enable Mesos authentication',
     dest='do_mesos_auth', default=True,
 )
 mesos_opts.add_argument(
-    '--mesos-framework-auth', type=bool_opt,
+    '--mesos-framework-auth', type=ImplicitBool.parse_opt,
     help='enable Mesos framework authentication',
     dest='do_mesos_framework_auth', default=True,
 )
 mesos_opts.add_argument(
-    '--mesos-follower-auth', type=bool_opt,
+    '--mesos-follower-auth', type=ImplicitBool.parse_opt,
     help='enable Mesos follower authentication',
     dest='do_mesos_follower_auth', default=True,
 )
 mesos_opts.add_argument(
-    '--mesos-iptables', type=bool_opt,
+    '--mesos-iptables', type=ImplicitBool.parse_opt,
     help='enable Mesos iptables rules',
     dest='do_mesos_iptables', default=True,
 )
@@ -169,17 +195,17 @@ marathon_opts = parser.add_argument_group(
     "enable and disable auth components of Marathon"
 )
 marathon_opts.add_argument(
-    '--marathon-ssl', type=bool_opt,
+    '--marathon-ssl', type=ImplicitBool.parse_opt,
     help='enable Marathon SSL',
     dest='do_marathon_ssl', default=True
 )
 marathon_opts.add_argument(
-    '--marathon-auth', type=bool_opt,
+    '--marathon-auth', type=ImplicitBool.parse_opt,
     help='enable Marathon authentication',
     dest='do_marathon_auth', default=True
 )
 marathon_opts.add_argument(
-    '--marathon-iptables', type=bool_opt,
+    '--marathon-iptables', type=ImplicitBool.parse_opt,
     help='enable Marathon iptables rules',
     dest='do_marathon_iptables', default=True
 )
@@ -197,6 +223,10 @@ yaml.SafeDumper.add_representer(
     OrderedDict,
     lambda dumper, od: dumper.represent_dict(od.iteritems())
 )
+yaml.SafeDumper.add_representer(
+    ImplicitBool,
+    ImplicitBool.represent
+)
 
 PASSWORDS = {}  # KV is purpose: password
 
@@ -209,13 +239,11 @@ class Component(object):
         """return tasks which need to be run"""
         return []
 
-    @property
-    def disabled(self):
-        return self.args.disable
-
-    @property
-    def enabled(self):
-        return not self.disabled
+    def component_enabled(self, component):
+        if self.args.enable and self.args.enable.explicit:
+            return True
+        else:
+            return self.args.enable and component
 
     def read_security(self):
         try:
@@ -455,15 +483,11 @@ class Consul(Component):
     def check(self):
         return [self.disable_security, self.gossip_key, self.master_acl_token, self.cert, self.default_acl_policy]
 
-    @property
-    def disabled(self):
-        return self.args.disable or not self.args.consul
-
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_consul_auth', self.args.do_consul_auth and self.enabled, True)
-        self.toggle_boolean('do_consul_ssl', self.args.do_consul_ssl and self.enabled, True)
-        self.toggle_boolean('do_consul_acl', self.args.do_consul_acl and self.enabled, True)
+        self.toggle_boolean('do_consul_auth', self.component_enabled(self.args.do_consul_auth), True)
+        self.toggle_boolean('do_consul_ssl', self.component_enabled(self.args.do_consul_ssl), True)
+        self.toggle_boolean('do_consul_acl', self.component_enabled(self.args.do_consul_acl), True)
 
     def gossip_key(self):
         "gossip key"
@@ -501,17 +525,13 @@ class Marathon(Component):
     def check(self):
         return [self.disable_security, self.mesos_auth, self.password]
 
-    @property
-    def disabled(self):
-        return self.args.disable or not self.args.marathon
-
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth and self.enabled, True)
-        self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl and self.enabled, True)
+        self.toggle_boolean('do_marathon_auth', self.component_enabled(self.args.do_marathon_auth), True)
+        self.toggle_boolean('do_marathon_ssl', self.component_enabled(self.args.do_marathon_ssl), True)
         self.toggle_boolean(
             'do_marathon_iptables',
-            self.args.do_marathon_ssl and self.enabled and self.args.iptables,
+            self.component_enabled(self.args.do_marathon_iptables and self.args.iptables),
             True
         )
 
@@ -587,19 +607,15 @@ class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
 
-    @property
-    def disabled(self):
-        return self.args.disable or not self.args.mesos
-
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_mesos_ssl', self.args.do_mesos_ssl and self.enabled, True)
-        self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth and self.enabled, True)
-        self.toggle_boolean('do_mesos_follower_auth', self.args.do_mesos_follower_auth and self.enabled, True)
-        self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth and self.enabled, True)
+        self.toggle_boolean('do_mesos_ssl', self.component_enabled(self.args.do_mesos_ssl), True)
+        self.toggle_boolean('do_mesos_auth', self.component_enabled(self.args.do_mesos_auth), True)
+        self.toggle_boolean('do_mesos_follower_auth', self.component_enabled(self.args.do_mesos_follower_auth), True)
+        self.toggle_boolean('do_mesos_framework_auth', self.component_enabled(self.args.do_mesos_framework_auth), True)
         self.toggle_boolean(
             'do_mesos_iptables',
-            self.args.do_mesos_framework_auth and self.enabled and self.args.iptables,
+            self.component_enabled(self.args.do_mesos_iptables and self.args.iptables),
             True
         )
 
