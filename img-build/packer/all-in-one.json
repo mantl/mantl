@@ -68,7 +68,10 @@
         {
             "type": "shell",
             "execute_command": "sudo -E sh '{{ .Path }}'",
-            "script": "scripts/vagrant.sh",
+            "scripts": [
+                "scripts/disable-firewalld",
+                "scripts/vagrant.sh"
+            ]
             "only": [
                 "vagrant-virtualbox"
             ]
