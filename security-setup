@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """set up authentication and security for various components"""
 from __future__ import print_function
-from argparse import ArgumentParser
+import argparse
 import base64
 from collections import OrderedDict
 from contextlib import contextmanager
@@ -15,56 +15,214 @@ import stat
 import string
 from subprocess import Popen, PIPE
 import sys
+import textwrap
 import uuid
 import yaml
 
-parser = ArgumentParser(__name__, __doc__)
-parser.add_argument(
-    '--no-verify-certificates', action='store_true',
-    help='skip verifying certificates'
+
+class HelpFormatter(argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
+    pass
+
+parser = argparse.ArgumentParser(
+    __file__, __doc__,
+    formatter_class=HelpFormatter,
+    epilog=textwrap.dedent('''\
+    Examples:
+
+      {name}
+                            enable or re-enable all security options
+      {name} --enable=false
+                            disable all security options
+      {name} --iptables=false --consul-ssl=false
+                            disable iptables rules and Consul SSL
+      {name} --change-admin-password --enable=true
+                            explicitly enable or re-enable every service (any
+                            other disables will be ignored) and re-prompt for
+                            the admin password.
+    '''.format(name=__file__))
 )
 parser.add_argument(
     '--change-admin-password', action='store_true',
-    help='change admin password'
+    help='change admin password during this run'
+)
+
+
+class ImplicitBool(object):
+    TRUE = True
+    FALSE = False
+    IMPLICIT_TRUE = 'True'  # this just has to be a different type/value than the real True
+
+    def __init__(self, value, explicit):
+        self.value = value
+        self.explicit = explicit
+
+    def __nonzero__(self):
+        return self.value
+
+    @classmethod
+    def represent(cls, dumper, obj):
+        return dumper.represent_bool(obj.value)
+
+    @classmethod
+    def parse_opt(cls, opt):
+        if len(opt) == 0:
+            raise argparse.ArgumentTypeError('blank is not allowed')
+
+        char = opt[0].lower()
+
+        if opt == cls.IMPLICIT_TRUE:
+            return cls(True, False)
+        elif char in ['1', 't']:
+            return cls(True, True)
+        elif char in ['0', 'f']:
+            return cls(False, True)
+        else:
+            raise argparse.ArgumentTypeError(
+                '"%s" is not allowed. Try "true" or "false"' % raw_opt
+            )
+
+# disables
+broad_opts = parser.add_argument_group(
+    "Broad Options",
+    "enable or disable security for entire components. This overrides any more "
+    "specific options set from the sections below."
+)
+broad_opts.add_argument(
+    '--enable', type=ImplicitBool.parse_opt, default=ImplicitBool.IMPLICIT_TRUE,
+    help='enable all security. This overrides everything.'
+)
+broad_opts.add_argument(
+    '--consul', type=ImplicitBool.parse_opt, default=True,
+    help='Enable Consul security. This overrides all other Consul options.'
+)
+broad_opts.add_argument(
+    '--mesos', type=ImplicitBool.parse_opt, default=True,
+    help='Enable Mesos security. This overrides all other Mesos options.'
+)
+broad_opts.add_argument(
+    '--marathon', type=ImplicitBool.parse_opt, default=True,
+    help='Enable Marathon security. This overrides all other Marathon options.'
+)
+broad_opts.add_argument(
+    '--iptables', type=ImplicitBool.parse_opt, default=True,
+    help='Use iptables rules. This overrides all other options related to iptables.'
 )
 
 # certificates
-parser.add_argument('--cert-country', default='US')
-parser.add_argument('--cert-state', default='New York')
-parser.add_argument('--cert-locality', default='Anytown')
-parser.add_argument('--cert-organization', default='Example Company Inc')
-parser.add_argument('--cert-unit', default='Operations')
-parser.add_argument('--cert-email', default='operations@example.com')
-parser.add_argument('--consul-location', default='consul.service.consul')  # used as common name
-parser.add_argument('--nginx-location', default='*.service.consul')  # used as common name
+cert_opts = parser.add_argument_group(
+    "SSL Certificate Options",
+    "a certificate authority will be set up, and "
+    "certificates will be issued using these options",
+)
+cert_opts.add_argument(
+    '--cert-country', default='US',
+    help='certificate country'
+)
+cert_opts.add_argument(
+    '--cert-state', default='New York',
+    help='certificate state/province'
+)
+cert_opts.add_argument(
+    '--cert-locality', default='Anytown',
+    help='certificate locality/city'
+)
+cert_opts.add_argument(
+    '--cert-organization', default='Example Company Inc',
+    help='certificate organization'
+)
+cert_opts.add_argument(
+    '--cert-unit', default='Operations',
+    help='organizational unit inside of organization',
+)
+cert_opts.add_argument(
+    '--cert-email', default='operations@example.com',
+    help='contact email for organizational unit'
+)
+cert_opts.add_argument(
+    '--consul-location', default='consul.service.consul',
+    help='internal name for Consul certificate, will be used as common name'
+)
+cert_opts.add_argument(
+    '--nginx-location', default='*.service.consul',
+    help='internal name for Nginx proxies, will be used as common name'
+)
+cert_opts.add_argument(
+    '--no-verify-certificates', action='store_true',
+    help='skip verifying certificates as part of setup process'
+)
 
 # Consul authentication
-parser.add_argument('--disable-consul-auth', action='store_false', help='disable consul auth', dest='do_consul_auth', default=None)
-parser.add_argument('--enable-consul-auth', action='store_true', help='enable consul auth', dest='do_consul_auth')
-parser.add_argument('--disable-consul-ssl', action='store_false', help='disable consul ssl', dest='do_consul_ssl', default=None)
-parser.add_argument('--enable-consul-ssl', action='store_true', help='enable consul ssl', dest='do_consul_ssl')
-parser.add_argument('--disable-consul-acl', action='store_false', help='disable consul ACLs', dest='do_consul_acl', default=None)
-parser.add_argument('--enable-consul-acl', action='store_true', help='enable consul ACLs', dest='do_consul_acl')
+consul_opts = parser.add_argument_group(
+    "Consul Options",
+    "enable and disable auth components of Consul"
+)
+consul_opts.add_argument(
+    '--consul-auth', type=ImplicitBool.parse_opt, default=True,
+    help='enable Consul auth',
+    dest='do_consul_auth'
+)
+consul_opts.add_argument(
+    '--consul-ssl', type=ImplicitBool.parse_opt, default=True,
+    help='enable Consul auth',
+    dest='do_consul_ssl',
+)
+consul_opts.add_argument(
+    '--consul-acl', type=ImplicitBool.parse_opt, default=True,
+    help='enable Consul ACLs',
+    dest='do_consul_acl'
+)
 
 # Mesos security
-parser.add_argument('--disable-mesos-ssl', action='store_false', help='disable mesos ssl', dest='do_mesos_ssl', default=None)
-parser.add_argument('--enable-mesos-ssl', action='store_false', help='enable mesos ssl', dest='do_mesos_ssl')
-parser.add_argument('--disable-mesos-auth', action='store_false', help='disable mesos auth', dest='do_mesos_auth', default=None)
-parser.add_argument('--enable-mesos-auth', action='store_false', help='enable mesos auth', dest='do_mesos_auth')
-parser.add_argument('--disable-mesos-framework-auth', action='store_false', help='disable mesos framework auth', dest='do_mesos_framework_auth', default=None)
-parser.add_argument('--enable-mesos-framework-auth', action='store_false', help='enable mesos framework auth', dest='do_mesos_framework_auth')
-parser.add_argument('--disable-mesos-follower-auth', action='store_false', help='disable mesos follower auth', dest='do_mesos_follower_auth', default=None)
-parser.add_argument('--enable-mesos-follower-auth', action='store_false', help='enable mesos follower auth', dest='do_mesos_follower_auth')
-parser.add_argument('--disable-mesos-iptables', action='store_false', help='disable mesos iptables', dest='do_mesos_iptables', default=None)
-parser.add_argument('--enable-mesos-iptables', action='store_false', help='enable mesos iptables', dest='do_mesos_iptables', default=None)
+mesos_opts = parser.add_argument_group(
+    "Mesos Options",
+    "enable and disable auth components of Mesos"
+)
+mesos_opts.add_argument(
+    '--mesos-ssl', type=ImplicitBool.parse_opt,
+    help='enable Mesos SSL',
+    dest='do_mesos_ssl', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-auth', type=ImplicitBool.parse_opt,
+    help='enable Mesos authentication',
+    dest='do_mesos_auth', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-framework-auth', type=ImplicitBool.parse_opt,
+    help='enable Mesos framework authentication',
+    dest='do_mesos_framework_auth', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-follower-auth', type=ImplicitBool.parse_opt,
+    help='enable Mesos follower authentication',
+    dest='do_mesos_follower_auth', default=True,
+)
+mesos_opts.add_argument(
+    '--mesos-iptables', type=ImplicitBool.parse_opt,
+    help='enable Mesos iptables rules',
+    dest='do_mesos_iptables', default=True,
+)
 
 # Marathon security
-parser.add_argument('--disable-marathon-ssl', action='store_false', help='disable marathon ssl', dest='do_marathon_ssl', default=None)
-parser.add_argument('--enable-marathon-ssl', action='store_false', help='enable marathon ssl', dest='do_marathon_ssl')
-parser.add_argument('--disable-marathon-auth', action='store_false', help='disable marathon auth', dest='do_marathon_auth', default=None)
-parser.add_argument('--enable-marathon-auth', action='store_false', help='enable marathon auth', dest='do_marathon_auth')
-parser.add_argument('--disable-marathon-iptables', action='store_false', help='disable marathon iptables', dest='do_marathon_iptables', default=None)
-parser.add_argument('--enable-marathon-iptables', action='store_false', help='enable marathon iptables', dest='do_marathon_iptables', default=None)
+marathon_opts = parser.add_argument_group(
+    "Marathon Options",
+    "enable and disable auth components of Marathon"
+)
+marathon_opts.add_argument(
+    '--marathon-ssl', type=ImplicitBool.parse_opt,
+    help='enable Marathon SSL',
+    dest='do_marathon_ssl', default=True
+)
+marathon_opts.add_argument(
+    '--marathon-auth', type=ImplicitBool.parse_opt,
+    help='enable Marathon authentication',
+    dest='do_marathon_auth', default=True
+)
+marathon_opts.add_argument(
+    '--marathon-iptables', type=ImplicitBool.parse_opt,
+    help='enable Marathon iptables rules',
+    dest='do_marathon_iptables', default=True
+)
 
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
@@ -79,6 +237,10 @@ yaml.SafeDumper.add_representer(
     OrderedDict,
     lambda dumper, od: dumper.represent_dict(od.iteritems())
 )
+yaml.SafeDumper.add_representer(
+    ImplicitBool,
+    ImplicitBool.represent
+)
 
 PASSWORDS = {}  # KV is purpose: password
 
@@ -90,6 +252,12 @@ class Component(object):
     def check(self, subset):
         """return tasks which need to be run"""
         return []
+
+    def component_enabled(self, component):
+        if self.args.enable and self.args.enable.explicit:
+            return True
+        else:
+            return self.args.enable and component
 
     def read_security(self):
         try:
@@ -261,9 +429,10 @@ class Component(object):
         with self.modify_security() as config:
             if inFlag not in config:
                 config[inFlag] = inDefault
-            
+
             if inValue is not None:
                 config[inFlag] = inValue
+
 
 class Certificates(Component):
     def check(self):
@@ -330,9 +499,9 @@ class Consul(Component):
 
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_consul_auth', self.args.do_consul_auth, True)
-        self.toggle_boolean('do_consul_ssl', self.args.do_consul_ssl, True)
-        self.toggle_boolean('do_consul_acl', self.args.do_consul_acl, True)
+        self.toggle_boolean('do_consul_auth', self.component_enabled(self.args.do_consul_auth), True)
+        self.toggle_boolean('do_consul_ssl', self.component_enabled(self.args.do_consul_ssl), True)
+        self.toggle_boolean('do_consul_acl', self.component_enabled(self.args.do_consul_acl), True)
 
     def gossip_key(self):
         "gossip key"
@@ -372,10 +541,13 @@ class Marathon(Component):
 
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_marathon_auth', self.args.do_marathon_auth, True)
-        self.toggle_boolean('do_marathon_ssl', self.args.do_marathon_ssl, True)
-        self.toggle_boolean('do_marathon_iptables', self.args.do_marathon_ssl, True)
-
+        self.toggle_boolean('do_marathon_auth', self.component_enabled(self.args.do_marathon_auth), True)
+        self.toggle_boolean('do_marathon_ssl', self.component_enabled(self.args.do_marathon_ssl), True)
+        self.toggle_boolean(
+            'do_marathon_iptables',
+            self.component_enabled(self.args.do_marathon_iptables and self.args.iptables),
+            True
+        )
 
     def mesos_auth(self):
         "marathon framework authentication"
@@ -444,17 +616,22 @@ class Zookeeper(Component):
             else:
                 print('zk marathon user secret already set')
 
+
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
         return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
 
     def disable_security(self):
         "disable security"
-        self.toggle_boolean('do_mesos_ssl', self.args.do_mesos_ssl, True)
-        self.toggle_boolean('do_mesos_auth', self.args.do_mesos_auth, True)
-        self.toggle_boolean('do_mesos_follower_auth', self.args.do_mesos_follower_auth, True)
-        self.toggle_boolean('do_mesos_framework_auth', self.args.do_mesos_framework_auth, True)
-        self.toggle_boolean('do_mesos_iptables', self.args.do_mesos_framework_auth, True)
+        self.toggle_boolean('do_mesos_ssl', self.component_enabled(self.args.do_mesos_ssl), True)
+        self.toggle_boolean('do_mesos_auth', self.component_enabled(self.args.do_mesos_auth), True)
+        self.toggle_boolean('do_mesos_follower_auth', self.component_enabled(self.args.do_mesos_follower_auth), True)
+        self.toggle_boolean('do_mesos_framework_auth', self.component_enabled(self.args.do_mesos_framework_auth), True)
+        self.toggle_boolean(
+            'do_mesos_iptables',
+            self.component_enabled(self.args.do_mesos_iptables and self.args.iptables),
+            True
+        )
 
     def framework_auth(self):
         "framework auth"
