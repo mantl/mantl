@@ -9,12 +9,22 @@
             "type": "amazon-ebs",
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
-            "region": "us-west-2",
+            "region": "us-west-1",
+            "ami_regions": [
+                "us-west-1",
+                "us-west-2",
+                "us-east-1",
+                "eu-west-1",
+                "ap-northeast-1",
+                "sa-east-1",
+                "ap-southeast-1",
+                "ap-southeast-2"
+            ],
             "source_ami": "ami-c7d092f7",
             "instance_type": "t2.micro",
             "ami_groups": "all",
             "ssh_username": "centos",
-            "ssh_timeout": "10m"
+            "ssh_timeout": "10m",
         },
         {
             "name": "aio-vagrant-virtualbox",
