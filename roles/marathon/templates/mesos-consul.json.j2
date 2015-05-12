@@ -1,10 +1,10 @@
 {
   "args": [
-    "--zk=zk://zookeeper.service.{{ consul_dns_domain }}:2181/mesos",
+    "--zk=zk://zookeeper.service.{{ consul_dns_domain }}:2181/mesos"{% if do_consul_ssl %},
     "--registry-ssl",
-    "--registry-ssl-verify=false",
-    "--registry-auth=admin:{{ nginx_admin_password }}",
-    "--registry-token={{ consul_acl_master_token }}"
+    "--registry-ssl-verify=false"{% endif %}{% if do_consul_auth %},
+    "--registry-auth=admin:{{ nginx_admin_password }}"{% endif %}{% if do_consul_acl %},
+    "--registry-token={{ consul_acl_master_token }}"{% endif %}
   ],
   "container": {
     "type": "DOCKER",

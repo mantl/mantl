@@ -32,6 +32,8 @@
       value: "{{ marathon_keystore_password }}"
     - key: http_port
       value: 18080
+    - key: event_subscriber
+      value: http_callback
   notify:
     - restart marathon
   tags:
