@@ -5,7 +5,7 @@
     },
     "builders": [
         {
-            "ami_name": "microservices-infrastructure",
+            "ami_name": "aws-west",
             "type": "amazon-ebs",
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
@@ -16,7 +16,7 @@
             "ssh_timeout": "10m"
         },
         {
-            "name": "microservices-infrastructure",
+            "name": "vagrant-virtualbox",
             "type": "virtualbox-iso",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": "vbox_version",
@@ -70,7 +70,7 @@
             "execute_command": "sudo -E sh '{{ .Path }}'",
             "script": "scripts/vagrant.sh",
             "only": [
-                "virtualbox-iso"
+                "vagrant-virtualbox"
             ]
         }
     ]
