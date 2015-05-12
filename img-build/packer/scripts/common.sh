@@ -35,7 +35,4 @@ yum upgrade -y httpd-tools
 rm /etc/localtime
 ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
-# Disable firewalld
-[[ -z "$(rpm -qa | grep -q firewalld)" ]] && sudo systemctl disable firewalld
-
 # EOF
