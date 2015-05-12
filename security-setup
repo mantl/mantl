@@ -15,17 +15,31 @@ import stat
 import string
 from subprocess import Popen, PIPE
 import sys
+import textwrap
 import uuid
 import yaml
 
+
+class HelpFormatter(argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
+    pass
+
 parser = argparse.ArgumentParser(
     __file__, __doc__,
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    epilog='''
+    formatter_class=HelpFormatter,
+    epilog=textwrap.dedent('''\
     Examples:
 
-    ...
-    '''
+      {name}
+                            enable or re-enable all security options
+      {name} --enable=false
+                            disable all security options
+      {name} --iptables=false --consul-ssl=false
+                            disable iptables rules and Consul SSL
+      {name} --change-admin-password --enable=true
+                            explicitly enable or re-enable every service (any
+                            other disables will be ignored) and re-prompt for
+                            the admin password.
+    '''.format(name=__file__))
 )
 parser.add_argument(
     '--change-admin-password', action='store_true',
