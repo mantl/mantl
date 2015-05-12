@@ -84,8 +84,8 @@ class ImplicitBool(object):
 # disables
 broad_opts = parser.add_argument_group(
     "Broad Options",
-    "Control security for entire components. This overrides any more specific "
-    "options set from the sections below."
+    "enable or disable security for entire components. This overrides any more "
+    "specific options set from the sections below."
 )
 broad_opts.add_argument(
     '--enable', type=ImplicitBool.parse_opt, default=ImplicitBool.IMPLICIT_TRUE,
