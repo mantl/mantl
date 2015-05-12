@@ -1,5 +1,20 @@
 {
+    "variables": {
+            "aws_access_key": "",
+            "aws_secret_key": ""
+    },
     "builders": [
+        {
+            "ami_name": "microservices-infrastructure",
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "us-west-2",
+            "source_ami": "ami-c7d092f7",
+            "instance_type": "t2.micro",
+            "ssh_username": "centos",
+            "ssh_timeout": "10m"
+        },
         {
             "name": "microservices-infrastructure",
             "type": "virtualbox-iso",
@@ -32,7 +47,7 @@
     "provisioners": [
         {
             "type": "shell",
-            "execute_command": "bash '{{.Path}}'",
+            "execute_command": "sudo -E sh '{{ .Path }}'",
             "scripts": [
                 "scripts/common.sh",
                 "scripts/dnsmasq.sh",
