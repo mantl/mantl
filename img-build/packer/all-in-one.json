@@ -1,7 +1,7 @@
 {
     "variables": {
-            "aws_access_key": "",
-            "aws_secret_key": ""
+        "aws_access_key": "",
+        "aws_secret_key": ""
     },
     "builders": [
         {
@@ -62,8 +62,15 @@
                 "scripts/marathon.sh",
                 "scripts/haproxy.sh",
                 "scripts/disable-root.sh",
-                "scripts/vagrant.sh",
                 "scripts/clean.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "sudo -E sh '{{ .Path }}'",
+            "script": "scripts/vagrant.sh",
+            "only": [
+                "virtualbox-iso"
             ]
         }
     ]
