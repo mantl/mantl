@@ -1,7 +1,10 @@
 {
     "variables": {
         "aws_access_key": "",
-        "aws_secret_key": ""
+        "aws_secret_key": "",
+        "gce_creds_file": "",
+        "gce_project_id": "extreme-ability-94315",
+        "gce_zone": "us-central1-a"
     },
     "builders": [
         {
@@ -24,7 +27,18 @@
             "instance_type": "t2.micro",
             "ami_groups": "all",
             "ssh_username": "centos",
-            "ssh_timeout": "10m",
+            "ssh_timeout": "10m"
+        },
+        {
+            "name": "googlecompute",
+            "type": "googlecompute",
+            "account_file": "{{user `gce_creds_file`}}",
+            "project_id": "{{user `gce_project_id`}}",
+            "zone": "{{user `gce_zone`}}",
+            "source_image": "centos-7-v20150423",
+            "image_name": "microservices-infrastructure-centos7-{{isotime \"020106\"}}",
+            "ssh_username": "centos",
+            "ssh_timeout": "10m"
         },
         {
             "name": "aio-vagrant-virtualbox",
