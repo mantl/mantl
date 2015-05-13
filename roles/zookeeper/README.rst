@@ -19,15 +19,6 @@ to do so.)
 
    default: zookeeper
 
-.. data:: zookeeper_service_tags
-
-   Comma separated list of tags to be used by registrator to register
-   the service with consul.
-
-   Generated automatically from :data:`zookeeper_service`,
-   :data:`zookeeper_env`, :data:`zookeeper_ensemble`, and
-   :data:`zk_id` if not set.
-
 .. data:: zookeeper_env
 
    default: ``dev``

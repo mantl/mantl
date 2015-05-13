@@ -25,6 +25,12 @@
     name: httpd-tools
     state: present
 
+- name: install nc
+  sudo: yes
+  yum:
+    name: nmap-ncat
+    state: present
+
 - name: disable firewalld
   service: 
     name: firewalld 

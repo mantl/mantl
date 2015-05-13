@@ -20,4 +20,29 @@
   tags: 
     - zookeeper
 
+- name: install zookeeper scripts
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0755
+  with_items:
+    - src: zookeeper_check.sh
+      dest: /usr/local/bin
+  tags:
+    - zookeeper
+
+- name: generate zookeeper consul services
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: zk-consul.json.j2
+      dest: /etc/consul/zk-consul.json
+  notify:
+    - reload consul
+  tags:
+    - zookeeper
+
 - meta: flush_handlers

@@ -53,7 +53,7 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 ### Resource Nodes
 
-Resource nodes launch containers and other Mesos-based workloads. [Registrator](https://github.com/gliderlabs/registrator) is used to update Consul as containers are launched and exit. 
+Resource nodes launch containers and other Mesos-based workloads. 
 
 ![Resource Node](docs/_static/resource_node.png)
 
