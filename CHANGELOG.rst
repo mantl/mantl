@@ -10,6 +10,7 @@ Features
 * Make consul domain name configurable #100 & #156
 * enable mesos resource configurations for followers #194
 * generate sha256 signed CA/certs by default #213
+* remove registrator for mesos-consul #263 
 
 Fixes
 ^^^^^
@@ -19,6 +20,7 @@ Fixes
 * disable firewalld #193
 * Have awk read /proc/uptime directly #216
 * security-setup now uses proper common names #228
+* serialize consul restarts #262
 
 0.2.0 (04-10-2015)
 ------------------
