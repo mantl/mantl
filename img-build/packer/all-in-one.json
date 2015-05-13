@@ -84,7 +84,7 @@
                 "scripts/vagrant.sh"
             ],
             "only": [
-                "vagrant-virtualbox"
+                "aio-vagrant-virtualbox"
             ]
         }
     ],
