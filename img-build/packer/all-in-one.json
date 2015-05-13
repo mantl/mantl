@@ -93,7 +93,8 @@
             "type": "vagrant",
             "output": "microservices-infrastructure-vbox.box",
             "compression_level": 9,
-            "keep_input_artifact": false
+            "keep_input_artifact": false,
+            "only": [ "aio-vagrant-virtualbox" ]
         }
     ]
 }
