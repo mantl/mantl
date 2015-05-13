@@ -1,2 +1,14 @@
 ---
 - include: provision-hosts.yml nova_compute_state=absent
+
+- hosts: localhost
+  gather_facts: no
+  sudo: yes
+  tasks:
+    - name: remove list of provisioned hosts
+      local_action:
+        module: lineinfile
+        dest: "{{ playbook_dir }}/../hosts.merge"
+        regexp: ".+ {{ item }}$"
+        state: absent
+      with_items: groups['all']
