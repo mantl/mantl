@@ -57,12 +57,17 @@
   tags:
     - consul
 
-- name: install wait script
+- name: install consul script
   sudo: yes
   copy:
-    src: consul-wait-for-leader.sh
-    dest: /usr/local/bin
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     mode: u=rwx,g=rx,o=rx
+  with_items:
+    - src: consul-wait-for-leader.sh
+      dest: /usr/local/bin
+    - src: consul-rolling-restart.sh
+      dest: /usr/local/bin
   tags:
     - consul
 

@@ -1,7 +1,7 @@
 ---
 - name: restart consul
   sudo: yes
-  command: systemctl restart consul
+  command: /usr/local/bin/consul-rolling-restart.sh
   notify:
     - wait for consul to listen
 
