@@ -41,11 +41,6 @@ Below are some examples of creating a custom playbook.
       roles:
         - consul
     
-    - hosts: all
-      gather_facts: no
-      roles:
-        - registrator
-    
     # remember that zk_id and other ZooKeeper variables are set in our
     # inventory in this case, so we don't need to define them in the
     # playbook

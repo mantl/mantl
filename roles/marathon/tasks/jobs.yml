@@ -1,16 +1,29 @@
 ---
-- name: create mesos_consul json
+- name: create json files for jobs
   sudo: yes
   template:
-    src: mesos-consul.json.j2
-    dest: /etc/marathon/mesos-consul.json
+    src: '{{ item }}.json.j2'
+    dest: /etc/marathon/{{ item }}.json
+  with_items:
+    - mesos-consul
+    - marathon-consul
   tags:
     - marathon
 
-- name: run mesos_consul
+- name: start jobs
   run_once: true
   sudo: yes
-  command: 'curl -X POST -d@/etc/marathon/mesos-consul.json -H "Content-Type: application/json" http://localhost:8080/v2/apps'
+  command: 'curl -X PUT -d@/etc/marathon/{{ item }}.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/{{ item }}'
   changed_when: false
+  with_items:
+    - mesos-consul
+    - marathon-consul
   tags:
     - marathon
+
+- name: set event hooks
+  run_once: true
+  command: 'curl -X POST http://localhost:18080/v2/eventSubscriptions?callbackUrl={{ item }}'
+  changed_when: false
+  with_items:
+    - http://marathon-consul.service.consul:4000/events

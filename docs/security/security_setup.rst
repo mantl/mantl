@@ -1,5 +1,5 @@
 the security-setup script
-=====================
+=========================
 
 The ``security-setup`` script is located in the root of the project. It will set up
 authentication and authorization for you, as described in the :doc:`component
@@ -28,6 +28,27 @@ In the event that you need to regenerate a certificate, rename or delete the
 appropriate CSR and certificate from the ``certs`` folder and the private
 component in ``private`` and re-run ``security-setup``.
 
+Boolean Options
+---------------
+
+Options like :ref:`--mesos` take a boolean argument. You can use the following
+values (and their ilk) in these options:
+
+======= ==============
+Value   Interpreted as
+======= ==============
+`t`     True
+`t`     True
+`1`     True
+`True`  True
+`true`  True
+`f`     False
+`F`     False
+`0`     False
+`False` False
+`false` False
+======= ==============
+
 Options
 -------
 
@@ -47,8 +68,38 @@ Options
 .. option:: --change-admin-password
 
    ``security-setup`` will normally ask for an admin password only if it doesn't
-   already have one. Setting this option will cause ``auth-setup`` to re-prompt
-   for the admin password.
+   already have one. Setting this option will cause ``security-setup`` to
+   re-prompt for the admin password.
+
+.. option:: --enable
+
+   Enable (or disable, if False) all security. This overrides all other options.
+
+   Default: ``True``
+
+.. option:: --consul
+
+   Enable Consul security. This overrides all other Consul options.
+
+   Default: ``True``
+
+.. option:: --mesos
+
+   Enable Mesos security. This overrides all other Mesos options.
+
+   Default: ``True``
+
+.. option:: --marathon
+
+   Enable Marathon security. This overrides all other Marathon options.
+
+   Default: ``True``
+
+.. option:: --iptables
+
+   Use iptables rules. This overrides all other options related to iptables.
+
+   Default: ``True``
 
 .. option:: --cert-country
 
@@ -99,3 +150,69 @@ Options
    the nginx certificate.
 
    default: ``nginx.example.com``
+
+.. option:: --consul-auth
+
+   enable Consul authentication
+
+   default: ``True``
+
+.. option:: --consul-ssl
+
+   enable Consul SSL
+
+   default: ``True``
+
+.. option:: --consul-acl
+
+   enable Consul ACLs
+
+   default: ``True``
+
+.. option:: --mesos-ssl
+
+   enable Mesos SSL
+
+   default: ``True``
+
+.. option:: --mesos-auth
+
+   enable Mesos authentication
+
+   default: ``True``
+
+.. option:: --mesos-framework-auth
+
+   enable Mesos framework authentication
+
+   default: ``True``
+
+.. option:: --mesos-follower-auth
+
+   enable Mesos follower authentication
+
+   default: ``True``
+
+.. option:: --mesos-iptables
+
+   enable Mesos iptables rules to restrict access
+
+   default: ``True``
+
+.. option:: --marathon-ssl
+
+   enable Marathon SSL
+
+   default: ``True``
+
+.. option:: --marathon-auth
+
+   enable Marathon authentication
+
+   default: ``True``
+
+.. option:: --marathon-iptables
+
+   enable Marathon iptables rules to restrict access
+
+   default: ``True``

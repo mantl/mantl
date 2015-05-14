@@ -5,7 +5,7 @@ marathon_zk_port: 2181
 marathon_zk_chroot: marathon
 marathon_zk_connect: "zk://{{ marathon_zk_auth}}{{ marathon_zk_dns }}:{{ marathon_zk_port }}/{{ marathon_zk_chroot }}"
 
-zk_docker_image: "asteris/zookeeper:latest"
+zk_docker_image: "ciscocloud/zookeeper:0.2"
 marathon_zk_acl_world: "world:anyone:cdrwa"
 marathon_zk_acl: "{% if zk_marathon_user_secret is defined %}digest:{{ zk_marathon_user }}:{{ zk_marathon_user_secret_digest}}:cdraw{% endif  %}"
   
@@ -28,5 +28,8 @@ consul_dir: /etc/consul
 consul_nginx_image: asteris/nginx-consul
 consul_nginx_image_tag: latest
 
+# jobs
 mesos_consul_image: drifting/mesos-consul
 mesos_consul_image_tag: latest
+marathon_consul_image: brianhicks/marathon-consul
+marathon_consul_image_tag: latest

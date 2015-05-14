@@ -3,12 +3,13 @@
 require 'yaml'
 
 def load_security
-  if !File.exist? "security.yml"
+  fname = File.join(File.dirname(__FILE__), "security.yml")
+  if !File.exist? fname
     $stderr.puts "security.yml not found - please run `./security-setup` and try again."
     exit 1
   end
 
-  YAML.load_file("security.yml")
+  YAML.load_file(fname)
 end
 
 Vagrant.configure(2) do |config|

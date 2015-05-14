@@ -2,7 +2,8 @@ Roadmap
 =======
 
 Core Components and Features
---------
+----------------------------
+
 | |x| Mesos
 | |x| Consul
 | |x| Multi-datacenter
@@ -10,7 +11,8 @@ Core Components and Features
 | |x| Rapid immutable deployment (with Terraform + Packer)
 
 Mesos Frameworks
---------
+----------------
+
 | |x| Marathon
 | |_| Kubernetes
 | |_| Kafka
@@ -24,6 +26,7 @@ Mesos Frameworks
 
 Security
 --------
+
 | |x| Manage Linux user accounts
 | |x| Authentication and authorization for Consul
 | |x| Authentication and authorization for Mesos
@@ -32,7 +35,8 @@ Security
 | |x| Application dynamic firewalls (using consul template)
 
 Operations
---------
+----------
+
 | |_| Logging
 | |_| Metrics
 | |_| In-service upgrade with rollback
@@ -41,7 +45,8 @@ Operations
 | |_| Self healing system (automatic failed instance replacement, etc)
 
 Platform Support
---------
+----------------
+
 | [x] Vagrant (Mac OSX + VirtualBox)
 | [ ] Vagrant (Windows + VirtualBox)
 | |x| OpenStack
