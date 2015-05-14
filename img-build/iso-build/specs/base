@@ -1,0 +1,82 @@
+PKGS+=(
+    iptables-services
+    teamd
+    net-tools
+    centos-release
+    kernel
+    authconfig
+    e2fsprogs
+    grub2
+    bash
+    vim-minimal
+    shadow-utils
+    initscripts
+    openssh-clients
+    openssh-server
+    rsyslog
+    cronie
+    firewalld
+    acpid
+    yum
+    sudo
+    passwd
+    teamd
+    kexec-tools
+    httpd-tools
+    nmap-ncat
+    rootfiles
+    consul
+    consul-template
+    docker
+    device-mapper-libs
+    dnsmasq
+    bind-utils
+    NetworkManager
+    mesos
+    cyrus-sasl-md5
+)
+
+REPOS+=(
+    [centos-7-os]
+    name=centos-7-os
+    baseurl=https://mirrors.kernel.org/centos/7/os/x86_64/
+    gpgcheck=1
+    gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+
+    [centos-7-updates]
+    name=centos-7-updates
+    baseurl=https://mirrors.kernel.org/centos/7/updates/x86_64/
+    gpgcheck=1
+    gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+
+    [centos-7-extras]
+    name=centos-7-extras
+    baseurl=https://mirrors.kernel.org/centos/7/extras/x86_64/
+    gpgcheck=1
+    gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+
+    [virt7-testing]
+    name=virt7-testing
+    baseurl=http://cbs.centos.org/repos/virt7-testing/x86_64/os/
+    gpgcheck=0
+    exclude=kernel
+
+    [ciscocloud]
+    name=ciscocloud
+    baseurl=https://dl.bintray.com/ciscocloud/rpm/
+    gpgcheck=0
+
+    [mesosphere]
+    name=mesosphere
+    baseurl=http://repos.mesosphere.io/el/7/x86_64/
+    gpgcheck=0
+
+    [mesosphere-noarch]
+    name=mesosphere-noarch
+    baseurl=http://repos.mesosphere.io/el/7/noarch/
+    gpgcheck=0
+)
+
+IMAGES+=(
+    gliderlabs/registrator:latest
+)

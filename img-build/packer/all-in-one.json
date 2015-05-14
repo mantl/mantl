@@ -1,0 +1,114 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "gce_creds_file": "",
+        "gce_project_id": "extreme-ability-94315",
+        "gce_zone": "us-central1-a"
+    },
+    "builders": [
+        {
+            "ami_name": "aio-aws-west",
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "us-west-1",
+            "ami_regions": [
+                "us-west-1",
+                "us-west-2",
+                "us-east-1",
+                "eu-west-1",
+                "ap-northeast-1",
+                "sa-east-1",
+                "ap-southeast-1",
+                "ap-southeast-2"
+            ],
+            "source_ami": "ami-c7d092f7",
+            "instance_type": "t2.micro",
+            "ami_groups": "all",
+            "ssh_username": "centos",
+            "ssh_timeout": "10m"
+        },
+        {
+            "name": "googlecompute",
+            "type": "googlecompute",
+            "account_file": "{{user `gce_creds_file`}}",
+            "project_id": "{{user `gce_project_id`}}",
+            "zone": "{{user `gce_zone`}}",
+            "source_image": "centos-7-v20150423",
+            "image_name": "microservices-infrastructure-centos7-{{isotime \"020106\"}}",
+            "ssh_username": "centos",
+            "ssh_timeout": "10m"
+        },
+        {
+            "name": "aio-vagrant-virtualbox",
+            "type": "virtualbox-iso",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": "vbox_version",
+            "guest_os_type": "RedHat_64",
+            "iso_url": "https://mirrors.kernel.org/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso",
+            "iso_checksum": "7cf1ac8da13f54d6be41e3ccf228dc5bb35792f515642755ff4780d5714d4278",
+            "iso_checksum_type": "sha256",
+            "boot_wait": "10s",
+            "ssh_wait_timeout": "10000s",
+            "ssh_username": "root",
+            "ssh_password": "root",
+            "http_directory": "kickstarts",
+            "boot_command": [
+                "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/vagrant.ks<enter>"
+            ],
+            "shutdown_command": "/sbin/halt -h -p",
+            "disk_size": 20480,
+            "vboxmanage": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--memory",
+                    "1024"
+                ]
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "sudo -E sh '{{ .Path }}'",
+            "scripts": [
+                "scripts/common.sh",
+                "scripts/dnsmasq.sh",
+                "scripts/docker.sh",
+                "scripts/consul.sh",
+                "scripts/consul-ui.sh",
+                "scripts/consul-template.sh",
+                "scripts/vault.sh",
+                "scripts/zookeeper.sh",
+                "scripts/nginx.sh",
+                "scripts/mesos.sh",
+                "scripts/marathon.sh",
+                "scripts/haproxy.sh",
+                "scripts/disable-root.sh",
+                "scripts/clean.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "sudo -E sh '{{ .Path }}'",
+            "scripts": [
+                "scripts/disable-firewalld.sh",
+                "scripts/vagrant.sh"
+            ],
+            "only": [
+                "aio-vagrant-virtualbox"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "output": "microservices-infrastructure-vbox.box",
+            "compression_level": 9,
+            "keep_input_artifact": false,
+            "only": [ "aio-vagrant-virtualbox" ]
+        }
+    ]
+}

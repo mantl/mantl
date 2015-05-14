@@ -4,7 +4,7 @@
     "tags": [ "marathon" ],
     "port": 18080,
     "check": {
-      "script": "curl --silent --show-error  --fail --dump-header /dev/stderr --retry 2 {% if marathon_http_credentials is defined %}-u {{ marathon_http_credentials }}{% endif %} http://127.0.0.1:18080/ping",
+      "script": "curl --silent --show-error --fail --dump-header /dev/stderr --retry 2 {% if marathon_http_credentials is defined %}-u {{ marathon_http_credentials }}{% endif %} http://127.0.0.1:18080/ping",
       "interval": "10s"
     }
   }

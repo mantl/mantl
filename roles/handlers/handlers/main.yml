@@ -6,7 +6,7 @@
     - wait for consul to listen
 
 - name: wait for consul to listen
-  command: /usr/local/bin/consul-wait-for-leader.sh
+  command: consul-wait-for-leader.sh
 
 - name: reload consul-template
   sudo: yes
