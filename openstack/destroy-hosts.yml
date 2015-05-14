@@ -3,7 +3,6 @@
 
 - hosts: localhost
   gather_facts: no
-  sudo: yes
   tasks:
     - name: remove list of provisioned hosts
       local_action:
