@@ -11,9 +11,12 @@ Features
 * enable mesos resource configurations for followers #194
 * generate sha256 signed CA/certs by default #213
 * remove registrator for mesos-consul #263 
+* Create a local host file #146
+* Clean up security-setup options #258 
 
 Fixes
 ^^^^^
+* 
 * Note Vagrant provider requirement #170
 * Fix/dnsmasq host #188
 * update python novaclient verion #192
@@ -21,6 +24,7 @@ Fixes
 * Have awk read /proc/uptime directly #216
 * security-setup now uses proper common names #228
 * serialize consul restarts #262
+* Remove use of sudo for local file modify #272
 
 0.2.0 (04-10-2015)
 ------------------
