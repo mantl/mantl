@@ -7,16 +7,21 @@ Changelog
 Features
 ^^^^^^^^
 * security-setup: add additional confirmation prompt for password #173
+* security-setup: make security settings more granular #239
 * Make consul domain name configurable #100 & #156
 * enable mesos resource configurations for followers #194
 * generate sha256 signed CA/certs by default #213
+* Add support for Hashicorp Vault #225
+* Add mesos-consul support #251
 * remove registrator for mesos-consul #263 
 * Create a local host file #146
 * Clean up security-setup options #258 
+* Upgrade to consul 0.5.1 #270
+* Implement consul ACL upserts #266
+* Add marathon-consul support #264
 
 Fixes
 ^^^^^
-* 
 * Note Vagrant provider requirement #170
 * Fix/dnsmasq host #188
 * update python novaclient verion #192
@@ -26,6 +31,8 @@ Fixes
 * serialize consul restarts #262
 * Remove use of sudo for local file modify #272
 * Use ciscocloud data volume for zookeeper #282
+* Consul requires restart on acl_master_token change #283
+* Fix vault restart #231
 
 0.2.0 (04-10-2015)
 ------------------
