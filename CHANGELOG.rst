@@ -25,6 +25,7 @@ Fixes
 * security-setup now uses proper common names #228
 * serialize consul restarts #262
 * Remove use of sudo for local file modify #272
+* Use ciscocloud data volume for zookeeper #282
 
 0.2.0 (04-10-2015)
 ------------------

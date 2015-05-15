@@ -17,7 +17,7 @@ ExecStartPre=/bin/bash -c ' \
         --name={{ zookeeper_data_volume }} \
         -v /var/lib/zookeeper \
         -v /var/log/zookeeper \
-        tianon/true' 
+        ciscocloud/data-volume:0.1'
 
 ExecStart=/usr/bin/docker run \
     --name={{ zookeeper_container_name }} \
