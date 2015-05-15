@@ -1,6 +1,6 @@
 ---
 logstash_image: ciscocloud/docker-logstash
-logstash_image_tag: latest
+logstash_image_tag: 0.1
 
 # Stdout
 logstash_output_stdout: no
