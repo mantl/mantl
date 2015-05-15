@@ -127,12 +127,21 @@ def gce_host(resource, tfvars=None):
         'ansible_ssh_user': 'deploy',
     }
 
+    # attrs specific to microservices-infrastructure
+    attrs.update({
+        'consul_dc': attrs['metadata'].get('dc', attrs['zone']),
+    })
+
     try:
-        attrs['ansible_ssh_host'] = interfaces[0]['access_config'][0]['nat_ip']
-        attrs['publicly_routable'] = True
+        attrs.update({
+            'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'],
+            'publicly_routable': True,
+        })
     except (KeyError, ValueError):
-        attrs['ansible_ssh_host'] = ''
-        attrs['publicly_routable'] = False
+        attrs.update({
+            'ansible_ssh_host': '',
+            'publicly_routable': False,
+        })
 
     # add groups based on attrs
     groups.extend('gce_image=' + disk['image'] for disk in attrs['disks'])
@@ -161,12 +170,13 @@ def query_host(hosts, target):
 
 
 def query_list(hosts):
-    groups = defaultdict(list)
+    groups = defaultdict(dict)
     meta = {}
 
     for name, attrs, hostgroups in hosts:
         for group in hostgroups:
-            groups[group].append(name)
+            groups[group].setdefault('hosts', [])
+            groups[group]['hosts'].append(name)
 
         meta[name] = attrs
 
