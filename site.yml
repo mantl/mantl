@@ -23,6 +23,7 @@
     - dnsmasq
     - nginx
     - consul
+    - logging
 
 - include: playbooks/consul-join-wan.yml
 

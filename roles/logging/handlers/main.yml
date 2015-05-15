@@ -1,0 +1,23 @@
+---
+- name: reload systemd daemon
+  sudo: yes
+  command: /bin/systemctl daemon-reload
+  tags:
+    - logging
+
+- name: enable and start logstash
+  sudo: yes
+  service:
+    enabled: yes
+    name: "{{ logstash_service }}"
+    state: started
+  tags:
+    - logging
+
+- name: restart logstash
+  sudo: yes
+  service:
+    name: "{{ logstash_service }}"
+    state: restarted
+  tags:
+    - logging
