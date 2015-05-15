@@ -26,7 +26,7 @@
     - src: consul.json.j2
       dest: /etc/consul/consul.json
   notify:
-    - reload consul
+    - restart consul
   tags:
     - consul
 
