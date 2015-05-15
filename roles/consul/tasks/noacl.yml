@@ -1,9 +1,17 @@
 ---
 - name: delete agent acl
   run_once: yes
-  command: curl -X PUT localhost:8500/v1/acl/destroy/{{ consul_agent_acl_token }}?token={{ consul_acl_master_token }}
-  when: consul_agent_acl_token is defined
-  register: command_result
+  command: curl -X PUT localhost:8500/v1/acl/destroy/{{ consul_acl_agent_token }}?token={{ consul_acl_master_token }}
+  notify:
+    - restart consul
+  tags:
+    - consul
+
+- name: remove agent_acl consul config
+  sudo: yes
+  file:
+    path: /etc/consul/agent_acl.json
+    state: absent
   notify:
     - restart consul
   tags:
