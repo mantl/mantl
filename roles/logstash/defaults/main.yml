@@ -1,5 +1,5 @@
 ---
-logstash_image: ciscocloud/docker-logstash
+logstash_image: ciscocloud/logstash
 logstash_image_tag: 0.1
 
 # Stdout
