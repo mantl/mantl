@@ -57,8 +57,6 @@
   tags:
     - consul
 
-- meta: flush_handlers
-
 - name: install consul script
   sudo: yes
   copy:
@@ -87,6 +85,8 @@
   command: consul-wait-for-leader.sh
   tags:
     - consul
+
+- meta: flush_handlers
 
 - include: acl.yml
   when: do_consul_acl
