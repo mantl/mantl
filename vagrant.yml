@@ -13,4 +13,3 @@
     - zookeeper
     - mesos
     - marathon
-    - logging
