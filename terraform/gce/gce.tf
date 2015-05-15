@@ -97,6 +97,7 @@ resource "google_compute_instance" "mi-control-nodes" {
   metadata {
     sshKeys = "${var.ssh.username}:${file(var.ssh.key)} ${var.ssh.username}"
     role = "control"
+    dc = "gce"
   }
 
   count = 1
@@ -123,6 +124,7 @@ resource "google_compute_instance" "mi-worker-nodes" {
   metadata {
     sshKeys = "${var.ssh.username}:${file(var.ssh.key)} ${var.ssh.username}"
     role = "worker"
+    dc = "gce"
   }
 
   count = 3
