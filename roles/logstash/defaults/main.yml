@@ -1,5 +1,5 @@
 ---
-logstash_image: loshkovskyi/docker-logstash
+logstash_image: ciscocloud/docker-logstash
 logstash_image_tag: latest
 
 # Stdout
