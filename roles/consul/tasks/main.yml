@@ -53,9 +53,11 @@
     src: acl.json.j2
     dest: /etc/consul/acl.json
   notify:
-    - reload consul
+    - restart consul
   tags:
     - consul
+
+- meta: flush_handlers
 
 - name: install consul script
   sudo: yes
