@@ -86,6 +86,7 @@
                 "scripts/mesos.sh",
                 "scripts/marathon.sh",
                 "scripts/haproxy.sh",
+                "scripts/logstash.sh",
                 "scripts/disable-root.sh",
                 "scripts/clean.sh"
             ]
