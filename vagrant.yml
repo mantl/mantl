@@ -3,12 +3,12 @@
   roles:
     - common
     - logrotate
-    - logstash
     - consul-template
     - docker
     - dnsmasq
     - nginx
     - consul
+    - logstash
     - vault
     - zookeeper
     - mesos
