@@ -1,5 +1,5 @@
 ---
-- name: create directory structure for logstash
+- name: create configuration directory
   sudo: yes
   file:
     path: /etc/logstash/conf.d
@@ -8,7 +8,7 @@
   tags:
     - logstash
 
-- name: prepare config for logstash container
+- name: configure logstash
   sudo: yes
   template:
     src: logstash.conf.j2
