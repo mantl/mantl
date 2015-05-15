@@ -1,0 +1,20 @@
+---
+logstash_image: loshkovskyi/docker-logstash
+logstash_image_tag: latest
+
+# Stdout
+logstash_output_stdout: no
+
+# Log4j
+logstash_input_log4j: no
+logstash_log4j_port: 4560
+
+# Logentries
+logstash_output_logentries: no
+logstash_logentries_token: no
+
+# HDFS
+logstash_output_webhdfs: no
+logstash_webhdfs_host: "{{ groups['name_node'][0] }}"
+logstash_webhdfs_port: 50070
+logstash_webhdfs_user: hdfs

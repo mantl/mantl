@@ -1,0 +1,56 @@
+input {
+  file {
+    path => "/docker/*/*-json.log"
+    type => "docker"
+  }
+  file {
+    path => "/mesos/*"
+    type => "mesos"
+  }
+  syslog {
+    port => 5514
+    type => "syslog"
+  }
+  udp {
+    codec => "collectd"
+    port => 25826
+    type => "collectd"
+  }
+  udp {
+    port => 8125
+    type => "statsd"
+  }
+{% if logstash_input_log4j %}
+  log4j {
+    mode => "server"
+    port => {{ logstash_log4j_port }}
+    type => "log4j"
+  }
+{% endif %}
+}
+
+output {
+{% if logstash_output_stdout %}
+  stdout {
+    codec => rubydebug
+  }
+{% endif %}
+{% if logstash_output_webhdfs %}
+  webhdfs {
+    workers => 2
+    server => "{{ logstash_webhdfs_host }}:{{ logstash_webhdfs_port }}"
+    user => "{{ logstash_webhdfs_user }}"
+    path => "/logs/{{ ansible_hostname }}/logstash-%{type}-%{+YYYY-MM-dd}.log"
+    flush_size => 500
+    compress => "gzip"
+    idle_flush_time => 10
+    retry_interval => 0.5
+    retry_times => 3
+  }
+{% endif %}
+{% if logstash_output_logentries %}
+  logentries {
+    token => "{{ logstash_logentries_token }}"
+  }
+{% endif %}
+}

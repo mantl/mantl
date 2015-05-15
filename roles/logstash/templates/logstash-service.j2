@@ -1,0 +1,38 @@
+[Unit]
+Description=logstash
+After=docker.service
+Requires=docker.service
+Requires=dnsmasq.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker rm logstash
+ExecStartPre=-/usr/bin/docker pull {{ logstash_image }}:{{ logstash_image_tag }}
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=logstash \
+    --publish=5514:5514 \
+    --publish=25826:25826/udp \
+    --publish=8125:8125/udp \
+{% if logstash_input_log4j %}
+    --publish={{ logstash_log4j_port }}:{{ logstash_log4j_port }}/tcp \
+{% endif %}
+{% if logstash_output_webhdfs %}
+    --publish={{ logstash_webhdfs_port }} \
+{% endif %}
+    --volume=/etc/logstash/conf.d:/opt/logstash/conf.d \
+    --volume=/var/lib/docker/containers:/docker:ro \
+    --volume=/var/log/mesos:/mesos:ro \
+    {{ logstash_image }}:{{ logstash_image_tag }}
+
+ExecStop=/bin/bash -c " \
+    /usr/bin/docker kill logstash && \
+    /usr/bin/docker rm logstash"
+
+[Install]
+WantedBy=multi-user.target
+

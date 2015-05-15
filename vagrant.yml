@@ -3,6 +3,7 @@
   roles:
     - common
     - logrotate
+    - logstash
     - consul-template
     - docker
     - dnsmasq
