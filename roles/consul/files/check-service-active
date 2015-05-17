@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -eo pipefail
+
+usage() {
+    echo "usage: ${0##*/} [ service ]"
+    exit 1
+}
+
+check() {
+    systemctl is-active "$1" && exit 0 || exit 2
+}
+
+main() {
+    [[ -z "$1" ]] && usage || check "$1"
+}
+
+main "$@"
+
+# EOF

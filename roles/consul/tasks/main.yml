@@ -57,7 +57,7 @@
   tags:
     - consul
 
-- name: install consul script
+- name: install consul scripts
   sudo: yes
   copy:
     src: "{{ item.src }}"
@@ -70,6 +70,13 @@
       dest: /usr/local/bin
   tags:
     - consul
+
+- name: install check scripts
+  sudo: yes
+  copy:
+    src: check-service-active
+    dest: /usr/local/bin
+    mode: u=rwx,g=rx,o=rx
 
 - name: enable consul
   sudo: yes
