@@ -3,11 +3,11 @@
   roles:
     - common
     - logrotate
+    - consul
     - consul-template
     - docker
     - dnsmasq
     - nginx
-    - consul
     - vault
     - zookeeper
     - mesos
