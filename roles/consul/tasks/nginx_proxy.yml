@@ -34,6 +34,7 @@
   command: curl -X PUT -d '{{ nginx_admin_password_encrypted }}' localhost:8500/v1/kv/service/nginx/auth/users/admin
   register: command_result
   failed_when: "'true' not in command_result.stdout"
+  when: nginx_admin_password_encrypted is defined
   tags:
     - consul
 

@@ -17,11 +17,11 @@
   roles:
     - common
     - logrotate
-    - consul
     - consul-template
     - docker
     - dnsmasq
     - nginx
+    - consul
 
 - include: playbooks/consul-join-wan.yml
 
