@@ -1,0 +1,32 @@
+---
+- name: create configuration directory
+  sudo: yes
+  file:
+    path: /etc/logstash/conf.d
+    state: directory
+    mode: 0755
+  tags:
+    - logstash
+
+- name: configure logstash
+  sudo: yes
+  template:
+    src: logstash.conf.j2
+    dest: "/etc/logstash/conf.d/logstash.conf"
+  notify:
+    - restart logstash
+  tags:
+    - logstash
+
+- name: generate systemd service file
+  sudo: yes
+  template:
+    src: logstash-service.j2
+    dest: "/usr/lib/systemd/system/logstash.service"
+  notify:
+    - reload systemd daemon
+    - enable and start logstash
+  tags:
+    - logstash
+
+- meta: flush_handlers

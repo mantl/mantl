@@ -8,6 +8,7 @@
     - dnsmasq
     - nginx
     - consul
+    - logstash
     - vault
     - zookeeper
     - mesos

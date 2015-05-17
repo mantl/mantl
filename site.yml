@@ -22,6 +22,7 @@
     - dnsmasq
     - nginx
     - consul
+    - logstash
 
 - include: playbooks/consul-join-wan.yml
 
