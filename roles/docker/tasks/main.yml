@@ -28,6 +28,12 @@
   tags:
     - docker
 
+- name: register service with consul
+  sudo: yes
+  copy:
+    src: docker-service.json
+    dest: /etc/consul
+
 - name: enable docker
   sudo: yes
   service:

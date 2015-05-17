@@ -77,6 +77,8 @@
     src: check-service-active
     dest: /usr/local/bin
     mode: u=rwx,g=rx,o=rx
+  tags:
+    - consul
 
 - name: enable consul
   sudo: yes

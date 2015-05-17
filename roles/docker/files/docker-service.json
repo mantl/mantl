@@ -1,0 +1,9 @@
+{ 
+  "service": {
+    "name": "docker",
+    "check": {
+      "script": "/usr/local/bin/check-service-active docker",
+      "interval": "15s"
+    }
+  }
+}
