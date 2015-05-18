@@ -160,6 +160,11 @@ def gce_host(resource, tfvars=None):
     if attrs['publicly_routable']:
         groups.append('gce_publicly_routable')
 
+    # groups specific to microservices-infrastructure
+    if 'role' in attrs['metadata']:
+        groups.append('role=' + attrs['metadata']['role'])
+    groups.append('dc=' + attrs['consul_dc'])
+
     return name, attrs, groups
 
 
