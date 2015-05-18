@@ -8,18 +8,6 @@ import argparse
 from collections import defaultdict
 import json
 import os
-import sys
-
-parser = argparse.ArgumentParser(__file__, __doc__)
-modes = parser.add_mutually_exclusive_group()
-modes.add_argument('--list', action='store_true', help='list all variables')
-modes.add_argument('--host', help='list variables for a single host')
-parser.add_argument('--pretty',
-                    action='store_true',
-                    help='pretty-print output JSON')
-parser.add_argument('--nometa',
-                    action='store_true',
-                    help='with --list, exclude hostvars')
 
 
 def tfstates(root=None):
@@ -193,11 +181,19 @@ def query_list(hosts):
 
 
 def main():
+
+    parser = argparse.ArgumentParser(__file__, __doc__)
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument('--list', action='store_true', help='list all variables')
+    modes.add_argument('--host', help='list variables for a single host')
+    parser.add_argument('--pretty',
+                        action='store_true',
+                        help='pretty-print output JSON')
+    parser.add_argument('--nometa',
+                        action='store_true',
+                        help='with --list, exclude hostvars')
+
     args = parser.parse_args()
-    if not args.list and not args.host:
-        print('error: one of --list or --host is required', file=sys.stderr)
-        print('{}')
-        return 1
 
     hosts = iterhosts(iterresources(tfstates()))
     if args.list:
@@ -208,8 +204,8 @@ def main():
         output = query_host(hosts, args.host)
 
     print(json.dumps(output, indent=4 if args.pretty else None))
-    return 0
+    parser.exit()
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
