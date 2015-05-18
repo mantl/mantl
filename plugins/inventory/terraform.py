@@ -17,6 +17,9 @@ modes.add_argument('--host', help='list variables for a single host')
 parser.add_argument('--pretty',
                     action='store_true',
                     help='pretty-print output JSON')
+parser.add_argument('--nometa',
+                    action='store_true',
+                    help='with --list, exclude hostvars')
 
 
 def tfstates(root=None):
@@ -194,6 +197,8 @@ def main():
     hosts = iterhosts(iterresources(tfstates()))
     if args.list:
         output = query_list(hosts)
+        if args.nometa:
+            del output['_meta']
     else:
         output = query_host(hosts, args.host)
 
