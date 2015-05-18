@@ -15,6 +15,6 @@ logstash_logentries_token: no
 
 # HDFS
 logstash_output_webhdfs: no
-#logstash_webhdfs_host: "{{ groups['name_node'][0] | default([]) }}"
+logstash_webhdfs_host: "" 
 logstash_webhdfs_port: 50070
 logstash_webhdfs_user: hdfs
