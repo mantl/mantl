@@ -1,22 +1,12 @@
-variable "project" {
-  default = "asteris-mi"
-}
-variable "names" {
-  default = {
-    long = "microservices-infastructure"
-    short = "mi"
-  }
-}
-variable "region" {
-  default = "us-central1"
-}
-variable "instance_types" {
-  default = {
-    control = "n1-standard-1"
-    worker = "n1-highcpu-2"
-  }
-}
-variable "network_ipv4" { default = "10.0.0.0/16" }
+variable "control_count" {default = 3}
+variable "control_type" {default = "n1-standard-1"}
+variable "datacenter" {default = "gce"}
+variable "long_name" {default = "microservices-infastructure"}
+variable "network_ipv4" {default = "10.0.0.0/16"}
+variable "region" {default = "us-central1-a"}
+variable "short_name" {deafult = "mi"}
+variable "worker_count" {default = 1}
+variable "worker_type" {default = "n1-highcpu-2"}
 variable "ssh" {
   default = {
     username = "deploy"
@@ -24,22 +14,15 @@ variable "ssh" {
   }
 }
 
-# Configure the Google Cloud provider
-provider "google" {
-  account_file = "account.json"
-  project = "${var.project}"
-  region = "${var.region}"
-}
-
 # Network
 resource "google_compute_network" "mi-network" {
-  name = "${var.names.long}"
+  name = "${var.long_name}"
   ipv4_range = "${var.network_ipv4}"
 }
 
 # Firewall
 resource "google_compute_firewall" "mi-firewall-external" {
-  name = "${var.names.short}-firewall-external"
+  name = "${var.short_name}-firewall-external"
   network = "${google_compute_network.mi-network.name}"
   source_ranges = ["0.0.0.0/0"]
 
@@ -60,7 +43,7 @@ resource "google_compute_firewall" "mi-firewall-external" {
 }
 
 resource "google_compute_firewall" "mi-firewall-internal" {
-  name = "${var.names.short}-firewall-internal"
+  name = "${var.short_name}-firewall-internal"
   network = "${google_compute_network.mi-network.name}"
   source_ranges = ["${google_compute_network.mi-network.ipv4_range}"]
 
@@ -77,12 +60,12 @@ resource "google_compute_firewall" "mi-firewall-internal" {
 
 # Instances
 resource "google_compute_instance" "mi-control-nodes" {
-  name = "${var.names.short}-control-node-${format("%02d", count.index+1)}"
-  description = "${var.names.long} control node #${format("%02d", count.index+1)}"
-  machine_type = "${var.instance_types.control}"
-  zone = "${var.region}-a"
+  name = "${var.short_name}-control-${format("%02d", count.index+1)}"
+  description = "${var.long_name} control node #${format("%02d", count.index+1)}"
+  machine_type = "${var.control_type}"
+  zone = "${var.region}"
   can_ip_forward = false
-  tags = ["${var.names.short}", "control"]
+  tags = ["${var.short_name}", "control"]
 
   disk {
     image = "centos-7-v20150423"
@@ -97,19 +80,19 @@ resource "google_compute_instance" "mi-control-nodes" {
   metadata {
     sshKeys = "${var.ssh.username}:${file(var.ssh.key)} ${var.ssh.username}"
     role = "control"
-    dc = "gce"
+    dc = "${var.datacenter}"
   }
 
-  count = 1
+  count = "${var.control_count}"
 }
 
 resource "google_compute_instance" "mi-worker-nodes" {
-  name = "${var.names.short}-worker-node-${format("%03d", count.index+1)}"
-  description = "${var.names.long} worker node #${format("%03d", count.index+1)}"
-  machine_type = "${var.instance_types.worker}"
-  zone = "${var.region}-a"
+  name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
+  description = "${var.long_name} worker node #${format("%03d", count.index+1)}"
+  machine_type = "${var.worker_type}"
+  zone = "${var.region}"
   can_ip_forward = false
-  tags = ["${var.names.short}", "worker"]
+  tags = ["${var.short_name}", "worker"]
 
   disk {
     image = "centos-7-v20150423"
@@ -124,8 +107,8 @@ resource "google_compute_instance" "mi-worker-nodes" {
   metadata {
     sshKeys = "${var.ssh.username}:${file(var.ssh.key)} ${var.ssh.username}"
     role = "worker"
-    dc = "gce"
+    dc = "${var.datacenter}"
   }
 
-  count = 3
+  count = "${var.worker_count}"
 }
