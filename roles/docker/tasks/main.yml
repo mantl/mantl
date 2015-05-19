@@ -28,24 +28,6 @@
   tags:
     - docker
 
-- name: create directory for consul service check
-  sudo: yes
-  file:
-    path: /etc/consul
-    state: directory
-  tags:
-    - docker
-
-- name: register service with consul
-  sudo: yes
-  copy:
-    src: docker-service.json
-    dest: /etc/consul
-  notify:
-    - restart consul
-  tags:
-    - docker
-
 - name: enable docker
   sudo: yes
   service:

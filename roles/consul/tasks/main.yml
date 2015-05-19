@@ -30,6 +30,16 @@
   tags:
     - consul
 
+- name: register docker with consul
+  sudo: yes
+  copy:
+    src: docker-service.json
+    dest: /etc/consul
+  notify:
+    - reload consul
+  tags:
+    - consul
+
 - name: deploy tls files
   sudo: yes
   copy:
