@@ -18,8 +18,13 @@
 - name: configure nginx-marathon
   sudo: yes
   template:
-    src: nginx-marathon.service.j2
-    dest: /usr/lib/systemd/system/nginx-marathon.service
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: nginx-marathon.service.j2
+      dest: /usr/lib/systemd/system/nginx-marathon.service
+    - src: nginx-marathon.env.j2
+      dest: /etc/default/nginx-marathon.env
   notify:
     - reload nginx-marathon
     - restart nginx-marathon
