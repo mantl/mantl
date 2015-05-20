@@ -21,8 +21,17 @@
     - docker
     - dnsmasq
     - nginx
-    - consul
     - logstash
+
+- hosts: dc1
+  gather_facts: no
+  roles:
+    - consul
+    
+- hosts: dc2
+  gather_facts: no
+  roles:
+    - consul 
 
 - include: playbooks/consul-join-wan.yml
 
