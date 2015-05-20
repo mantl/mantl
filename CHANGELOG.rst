@@ -17,6 +17,7 @@ Features
 * Create a local host file #146
 * Clean up security-setup options #258 
 * Upgrade to consul 0.5.1 #270
+* Update consul to 0.5.2 #304
 * Implement consul ACL upserts #266
 * Add marathon-consul support #264
 * Add metadata to hosts in Openstack #290
