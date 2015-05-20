@@ -1,4 +1,4 @@
-ansible==1.9.0.1
+ansible>=1.9.0,<1.9.1
 python-novaclient>=2.23.0
 python-keystoneclient
 Sphinx==1.2.3
