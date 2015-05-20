@@ -16,13 +16,10 @@ ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_imag
 ExecStart=/usr/bin/docker run \
     --rm \
     --name=nginx-mesos-leader \
+    --env-file=/etc/default/nginx-mesos-leader.env \
     -p 5050:5050 \
     -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
-    -e NGINX_KV=service/nginx/templates/mesos-leader \
-    -e NGINX_ENABLE_AUTH=true \
-    -e NGINX_PUBLIC_IP={{ ansible_default_ipv4.address }} \
-    -e CONSUL_CONNECT=consul.service.consul:8500 \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
 
 ExecStop=/usr/bin/docker kill nginx-mesos-leader
