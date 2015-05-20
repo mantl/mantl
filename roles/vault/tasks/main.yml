@@ -44,4 +44,10 @@
   tags:
     - vault
 
+- name: wait for vault port
+  wait_for:
+    port: 8200
+  tags:
+    - vault
+
 - include: bootstrap.yml
