@@ -19,9 +19,7 @@ ExecStart=/usr/bin/docker run \
     --net=host \
     --privileged=true \
     -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
-    -e NGINX_KV=service/nginx/templates/consul \
-    -e NGINX_ENABLE_AUTH=true \
-    -e NGINX_PUBLIC_IP={{ ansible_default_ipv4.address }} \
+    --env-file=/etc/default/nginx-consul.env \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
 
 ExecStop=/usr/bin/docker kill nginx-consul
