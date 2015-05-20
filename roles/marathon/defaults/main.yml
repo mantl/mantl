@@ -25,8 +25,8 @@ marathon_secret: ""
 # register service with consul
 consul_bin: /bin/consul
 consul_dir: /etc/consul
-consul_nginx_image: asteris/nginx-consul
-consul_nginx_image_tag: latest
+consul_nginx_image: ciscocloud/nginx-consul
+consul_nginx_image_tag: 1.1
 
 # jobs
 mesos_consul_image: drifting/mesos-consul
