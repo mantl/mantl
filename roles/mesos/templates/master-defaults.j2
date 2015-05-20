@@ -1,7 +1,7 @@
 PORT={{ mesos_leader_port }}
 ZK=`cat /etc/mesos/zk`
 CLUSTER={{ mesos_cluster }}
-MESOS_QUORUM={{ groups.mesos_leaders|count // 2 + 1 }}
+MESOS_QUORUM={{ groups[mesos_leaders_group]|count // 2 + 1 }}
 {% if mesos_hostname is defined %}
 export MESOS_HOSTNAME={{ mesos_hostname }}
 {% endif %}
