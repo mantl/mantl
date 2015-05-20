@@ -21,6 +21,7 @@
           - net-id: "{{ os_net_id }}"
         security_groups: "{{ security_group }}"
         state: "{{ nova_compute_state }}"
+        meta: "{{ host_metadata | default() }}"
       always_run: yes
       register: host
       tags: host

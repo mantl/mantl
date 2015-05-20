@@ -2,6 +2,9 @@
 # os_tenant_name: tenant-name
 # os_tenant_id: 86e97371ad71450d91b292029ca9a8c2
 # os_net_id: e7b1ae4f-e0d2-4e24-a48f-b9e6c4933323
+# host_metadata:
+#  - group: controllers
+#  - key: value
 
 os_auth_url:
 os_tenant_name:
@@ -9,3 +12,4 @@ os_tenant_id:
 os_net_id:
 consul_dc: dc1
 security_group: default
+host_metadata:
