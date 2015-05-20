@@ -19,6 +19,7 @@ Features
 * Upgrade to consul 0.5.1 #270
 * Implement consul ACL upserts #266
 * Add marathon-consul support #264
+* Add metadata to hosts in Openstack #290
 
 Fixes
 ^^^^^
