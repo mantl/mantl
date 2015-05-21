@@ -1,6 +1,3 @@
-variable "region" { }
-variable "secret_key" { }
-variable "access_key" { }
 variable "cluster_id" { }
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "network_subnet_ip4" {default = "10.0.0.0/16"}
@@ -10,13 +7,7 @@ variable "control_type" {default = "m1.small"}
 variable "source_ami" { }
 variable "worker_type" {default = "m1.small"}
 variable "public_key" { }
-
-
-provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
-  region = "${var.region}"
-}
+variable "availability_zone" {}
 
 resource "aws_vpc" "main" {
      cidr_block = "${var.network_ipv4}"
@@ -25,6 +16,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "main" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.network_subnet_ip4}"
+    availability_zone = "${var.availability_zone}"
 }
 
 resource "aws_internet_gateway" "main" {
@@ -47,6 +39,7 @@ resource "aws_main_route_table_association" "main" {
 
 resource "aws_instance" "mi-control-nodes" {
     ami = "${var.source_ami}"
+    availability_zone = "${var.availability_zone}"
     instance_type = "${var.control_type}"
     count = "${var.control_count}"
     vpc_security_group_ids = ["${aws_security_group.external.id}",
@@ -65,6 +58,7 @@ resource "aws_instance" "mi-control-nodes" {
 
 resource "aws_instance" "mi-worker-nodes" {
     ami = "${var.source_ami}"
+    availability_zone = "${var.availability_zone}"
     instance_type = "${var.worker_type}"
     count = "${var.worker_count}"
 
