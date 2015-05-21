@@ -5,6 +5,7 @@
     dest: /etc/logrotate.conf
     regexp: '^weekly'
     line: "daily"
+    backrefs: yes
   tags:
     - logrotate
 
@@ -14,6 +15,7 @@
     dest: /etc/logrotate.conf
     regexp: '^rotate 4'
     line: "rotate 7"
+    backrefs: yes
   tags:
     - logrotate
 
