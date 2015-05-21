@@ -6,6 +6,7 @@ directory and generates an inventory based on them.
 from __future__ import unicode_literals, print_function
 import argparse
 from collections import defaultdict
+from functools import wraps
 import json
 import os
 
@@ -50,6 +51,22 @@ def parses(prefix):
     return inner
 
 
+def calculate_mi_vars(func):
+    """calculate microservices-infrastructure vars"""
+    @wraps(func)
+    def inner(*args, **kwargs):
+        name, attrs, groups = func(*args, **kwargs)
+
+        if attrs['role'] == 'control':
+            attrs['consul_is_server'] = True
+        elif attrs['role'] == 'worker':
+            attrs['consul_is_server'] = False
+
+        return name, attrs, groups
+
+    return inner
+
+
 def _parse_prefix(source, prefix):
     for compkey, value in source.items():
         try:
@@ -87,6 +104,7 @@ def parse_list(source, prefix):
 
 
 @parses('google_compute_instance')
+@calculate_mi_vars
 def gce_host(resource, tfvars=None):
     name = resource['primary']['id']
     raw_attrs = resource['primary']['attributes']
@@ -121,6 +139,7 @@ def gce_host(resource, tfvars=None):
     # attrs specific to microservices-infrastructure
     attrs.update({
         'consul_dc': attrs['metadata'].get('dc', attrs['zone']),
+        'role': attrs['metadata'].get('role', 'none')
     })
 
     try:
