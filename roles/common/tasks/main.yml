@@ -32,6 +32,7 @@
     state: present
 
 - name: disable firewalld
+  sudo: yes
   service: 
     name: firewalld 
     enabled: false 
