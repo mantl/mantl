@@ -10,13 +10,13 @@ variable "public_key" { }
 variable "availability_zone" {}
 
 resource "aws_vpc" "main" {
-     cidr_block = "${var.network_ipv4}"
+  cidr_block = "${var.network_ipv4}"
 }
 
 resource "aws_subnet" "main" {
-    vpc_id = "${aws_vpc.main.id}"
-    cidr_block = "${var.network_subnet_ip4}"
-    availability_zone = "${var.availability_zone}"
+  vpc_id = "${aws_vpc.main.id}"
+  cidr_block = "${var.network_subnet_ip4}"
+  availability_zone = "${var.availability_zone}"
 }
 
 resource "aws_internet_gateway" "main" {
@@ -38,41 +38,41 @@ resource "aws_main_route_table_association" "main" {
 }
 
 resource "aws_instance" "mi-control-nodes" {
-    ami = "${var.source_ami}"
-    availability_zone = "${var.availability_zone}"
-    instance_type = "${var.control_type}"
-    count = "${var.control_count}"
-    vpc_security_group_ids = ["${aws_security_group.external.id}",
-                              "${aws_vpc.main.default_security_group_id}"]
+  ami = "${var.source_ami}"
+  availability_zone = "${var.availability_zone}"
+  instance_type = "${var.control_type}"
+  count = "${var.control_count}"
+  vpc_security_group_ids = ["${aws_security_group.external.id}",
+    "${aws_vpc.main.default_security_group_id}"]
 
-    key_name = "${aws_key_pair.deployer.key_name}"
+  key_name = "${aws_key_pair.deployer.key_name}"
 
-    associate_public_ip_address=true
+  associate_public_ip_address=true
 
-    subnet_id = "${aws_subnet.main.id}"
+  subnet_id = "${aws_subnet.main.id}"
 
-    tags {
-      Name = "${var.cluster_id}_terraform_control"
-    }
+  tags {
+    Name = "${var.cluster_id}_terraform_control"
+  }
 }
 
 resource "aws_instance" "mi-worker-nodes" {
-    ami = "${var.source_ami}"
-    availability_zone = "${var.availability_zone}"
-    instance_type = "${var.worker_type}"
-    count = "${var.worker_count}"
+  ami = "${var.source_ami}"
+  availability_zone = "${var.availability_zone}"
+  instance_type = "${var.worker_type}"
+  count = "${var.worker_count}"
 
-    vpc_security_group_ids = ["${aws_security_group.external.id}",
-                              "${aws_vpc.main.default_security_group_id}"]
+  vpc_security_group_ids = ["${aws_security_group.external.id}",
+    "${aws_vpc.main.default_security_group_id}"]
 
 
-    key_name = "${aws_key_pair.deployer.key_name}"
+  key_name = "${aws_key_pair.deployer.key_name}"
 
-    subnet_id = "${aws_subnet.main.id}"
+  subnet_id = "${aws_subnet.main.id}"
 
-    tags {
-      Name = "${var.cluster_id}_terraform_worker"
-    }
+  tags {
+    Name = "${var.cluster_id}_terraform_worker"
+  }
 }
 
 resource "aws_security_group" "allow_all_icmp" {
@@ -80,10 +80,10 @@ resource "aws_security_group" "allow_all_icmp" {
   description = "Allow all icmp traffic"
 
   ingress {
-      from_port = -1
-      to_port = -1
-      protocol = "icmp"
-      cidr_blocks = ["0.0.0.0/0"]
+    from_port = -1
+    to_port = -1
+    protocol = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags {
@@ -96,10 +96,10 @@ resource "aws_security_group" "allow_all_ssh" {
   description = "Allow ssh traffic"
 
   ingress {
-      from_port = 22
-      to_port = 22
-      protocol = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags {
@@ -114,10 +114,10 @@ resource "aws_security_group" "allow_all_tcp_within_subnet" {
   vpc_id="${aws_vpc.main.id}"
 
   ingress {
-      from_port = 0
-      to_port = 65535
-      protocol = "tcp"
-      cidr_blocks = ["${var.network_subnet_ip4}"]
+    from_port = 0
+    to_port = 65535
+    protocol = "tcp"
+    cidr_blocks = ["${var.network_subnet_ip4}"]
   }
 
   tags {
@@ -132,10 +132,10 @@ resource "aws_security_group" "allow_all_udp_within_subnet" {
   vpc_id="${aws_vpc.main.id}"
 
   ingress {
-      from_port = 0
-      to_port = 65535
-      protocol = "udp"
-      cidr_blocks = ["${var.network_subnet_ip4}"]
+    from_port = 0
+    to_port = 65535
+    protocol = "udp"
+    cidr_blocks = ["${var.network_subnet_ip4}"]
   }
 
   tags {
@@ -156,51 +156,51 @@ resource "aws_security_group" "external" {
 }
 
 resource "aws_security_group_rule" "allow_ssh" {
-    type = "ingress"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  type = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
 
-    security_group_id = "${aws_security_group.external.id}"
+  security_group_id = "${aws_security_group.external.id}"
 }
 resource "aws_security_group_rule" "allow_rdp" {
-    type = "ingress"
-    from_port = 3389
-    to_port = 3389
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  type = "ingress"
+  from_port = 3389
+  to_port = 3389
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
 
-    security_group_id = "${aws_security_group.external.id}"
+  security_group_id = "${aws_security_group.external.id}"
 }
 resource "aws_security_group_rule" "allow_mesos" {
-    type = "ingress"
-    from_port = 5050
-    to_port = 5050
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  type = "ingress"
+  from_port = 5050
+  to_port = 5050
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
 
-    security_group_id = "${aws_security_group.external.id}"
+  security_group_id = "${aws_security_group.external.id}"
 }
 
 resource "aws_security_group_rule" "allow_marathon" {
-    type = "ingress"
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+  type = "ingress"
+  from_port = 8080
+  to_port = 8080
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
 
-    security_group_id = "${aws_security_group.external.id}"
+  security_group_id = "${aws_security_group.external.id}"
 }
 
 resource "aws_security_group_rule" "allow_icmp" {
-    type = "ingress"
-    from_port=-1
-    to_port=-1
-    protocol = "icmp"
-    cidr_blocks=["0.0.0.0/0"]
+  type = "ingress"
+  from_port=-1
+  to_port=-1
+  protocol = "icmp"
+  cidr_blocks=["0.0.0.0/0"]
 
-    security_group_id = "${aws_security_group.external.id}"
+  security_group_id = "${aws_security_group.external.id}"
 }
 
 resource "aws_key_pair" "deployer" {
