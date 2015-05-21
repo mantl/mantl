@@ -52,7 +52,7 @@ resource "aws_instance" "mi-control-nodes" {
     subnet_id = "${aws_subnet.main.id}"
 
     tags {
-      Name = "${var.cluster_id}_terraform"
+      Name = "${var.cluster_id}_terraform_control"
     }
 }
 
@@ -71,7 +71,7 @@ resource "aws_instance" "mi-worker-nodes" {
     subnet_id = "${aws_subnet.main.id}"
 
     tags {
-      Name = "${var.cluster_id}_terraform"
+      Name = "${var.cluster_id}_terraform_worker"
     }
 }
 
