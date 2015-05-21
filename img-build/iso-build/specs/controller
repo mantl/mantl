@@ -16,5 +16,5 @@ REPOS+=(
 
 IMAGES+=(
     asteris/nginx-consul:latest
-    asteris/zookeeper:latest
+    ciscocloud/zookeeper:0.2
 )
