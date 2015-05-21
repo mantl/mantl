@@ -77,7 +77,7 @@ resource "aws_instance" "mi-worker-nodes" {
 
 resource "aws_security_group" "allow_all_icmp" {
   name = "allow_all_icmp_${var.cluster_id}"
-  description = "Allow all traffic within our subnet"
+  description = "Allow all icmp traffic"
 
   ingress {
       from_port = -1
@@ -93,7 +93,7 @@ resource "aws_security_group" "allow_all_icmp" {
 
 resource "aws_security_group" "allow_all_ssh" {
   name = "allow_all_ssh_${var.cluster_id}"
-  description = "Allow all traffic within our subnet"
+  description = "Allow ssh traffic"
 
   ingress {
       from_port = 22
@@ -109,7 +109,7 @@ resource "aws_security_group" "allow_all_ssh" {
 
 resource "aws_security_group" "allow_all_tcp_within_subnet" {
   name = "allow_all_tcp_within_subnet_${var.cluster_id}"
-  description = "Allow all traffic within our subnet"
+  description = "Allow all tcp traffic within our subnet"
 
   vpc_id="${aws_vpc.main.id}"
 
@@ -193,7 +193,6 @@ resource "aws_security_group_rule" "allow_marathon" {
     security_group_id = "${aws_security_group.external.id}"
 }
 
-
 resource "aws_security_group_rule" "allow_icmp" {
     type = "ingress"
     from_port=-1
@@ -208,4 +207,3 @@ resource "aws_key_pair" "deployer" {
   key_name = "key-${var.cluster_id}"
   public_key = "${var.public_key}"
 }
-
