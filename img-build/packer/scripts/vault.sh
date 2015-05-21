@@ -10,7 +10,6 @@ EOF
 
 yum clean all
 yum makecache -y
-yum install -y vault
-yum upgrade -y vault
+yum install -y vault-0.1.0-1.el7.centos.x86_64
 
 # EOF

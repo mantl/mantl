@@ -4,7 +4,7 @@ source "${BASE_DIR}/specs/base"
 PKGS+=(
     marathon
     consul-ui
-    vault
+    vault-0.1.0-1.el7.centos.x86_64
 )
 
 REPOS+=(
