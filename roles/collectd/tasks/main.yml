@@ -1,0 +1,26 @@
+---
+- name: enable epel repository
+  sude: yes
+  yum:
+    name: epel-release
+    state: present
+  tags:
+    - collectd
+
+- name: install collectd
+  sudo: yes
+  yum:
+    name: collectd
+    state: present
+  tags:
+    - collectd
+
+- name: configure collectd
+  sudo: yes
+  template:
+    src: collectd.conf.j2
+    dest: /etc/collectd.conf
+  notify:
+    - restart collectd
+  tags:
+    - collectd
