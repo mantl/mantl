@@ -16,6 +16,7 @@
 - hosts: all
   roles:
     - common
+    - collectd
     - logrotate
     - consul-template
     - docker
