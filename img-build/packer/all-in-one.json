@@ -75,6 +75,7 @@
             "execute_command": "sudo -E sh '{{ .Path }}'",
             "scripts": [
                 "scripts/common.sh",
+                "scripts/collectd.sh",
                 "scripts/dnsmasq.sh",
                 "scripts/docker.sh",
                 "scripts/consul.sh",

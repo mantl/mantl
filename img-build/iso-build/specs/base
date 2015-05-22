@@ -34,6 +34,7 @@ PKGS+=(
     NetworkManager
     mesos
     cyrus-sasl-md5
+    collectd
 )
 
 REPOS+=(
@@ -60,6 +61,12 @@ REPOS+=(
     baseurl=http://cbs.centos.org/repos/virt7-testing/x86_64/os/
     gpgcheck=0
     exclude=kernel
+
+    [epel-release]
+    name=epel-release
+    baseurl=https://mirrors.kernel.org/fedora-epel/7/x86_64/
+    gpgcheck=1
+    gpgkey=https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
 
     [ciscocloud]
     name=ciscocloud
