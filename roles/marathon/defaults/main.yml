@@ -29,7 +29,7 @@ consul_nginx_image: ciscocloud/nginx-consul
 consul_nginx_image_tag: 1.1
 
 # jobs
-mesos_consul_image: drifting/mesos-consul
-mesos_consul_image_tag: latest
+mesos_consul_image: ciscocloud/mesos-consul
+mesos_consul_image_tag: v0.1
 marathon_consul_image: brianhicks/marathon-consul
 marathon_consul_image_tag: latest
