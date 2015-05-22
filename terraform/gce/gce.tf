@@ -5,14 +5,10 @@ variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "region" {default = "us-central1-a"}
 variable "short_name" {deafult = "mi"}
+variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
+variable "ssh_username" {default = "deploy"}
 variable "worker_count" {default = 1}
 variable "worker_type" {default = "n1-highcpu-2"}
-variable "ssh" {
-  default = {
-    username = "deploy"
-    key = "~/.ssh/id_rsa.pub"
-  }
-}
 
 # Network
 resource "google_compute_network" "mi-network" {
@@ -79,7 +75,7 @@ resource "google_compute_instance" "mi-control-nodes" {
   }
 
   metadata {
-    sshKeys = "${var.ssh.username}:${file(var.ssh.key)} ${var.ssh.username}"
+    sshKeys = "${var.ssh_username}:${file(var.ssh_key)} ${var.ssh_username}"
     role = "control"
     dc = "${var.datacenter}"
   }
@@ -106,7 +102,7 @@ resource "google_compute_instance" "mi-worker-nodes" {
   }
 
   metadata {
-    sshKeys = "${var.ssh.username}:${file(var.ssh.key)} ${var.ssh.username}"
+    sshKeys = "${var.ssh_username}:${file(var.ssh_key)} ${var.ssh_username}"
     role = "worker"
     dc = "${var.datacenter}"
   }
