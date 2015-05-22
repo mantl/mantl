@@ -27,6 +27,8 @@ Features
 * Add Dockerfile to provide operational environment #325
 * Move to ciscocloud/mesos-consul container #333
 * Add collectd to system #335
+* Remove NetworkManger dependency for dnsmasq #330
+
 Fixes
 ^^^^^
 * Note Vagrant provider requirement #170
