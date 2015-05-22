@@ -23,8 +23,19 @@
   sudo: yes
   template: 
     src: 10-consul 
-    dest: /etc/NetworkManager/dnsmasq.d/10-consul
+    dest: /etc/dnsmasq.d/10-consul
     mode: 755
+  notify:
+    - restart dnsmasq
+  tags:
+    - dnsmasq
+
+- name: enable dnsmasq
+  sudo: yes
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
   tags:
     - dnsmasq
 
@@ -32,10 +43,19 @@
   sudo: yes
   lineinfile:
     dest: /etc/NetworkManager/NetworkManager.conf
-    line: "dns=dnsmasq"
-    insertbefore: "^plugins"
+    line: "dns=none"
+    insertafter: "^\\[main\\]$"
   notify:
     - restart networkmanager
+  tags:
+    - dnsmasq
+
+- name: add dnsmasq to /etc/resolv.conf
+  sudo: yes
+  lineinfile:
+    dest: /etc/resolv.conf
+    line: "search {{ consul_dns_domain }}\nnameserver 127.0.0.1"
+    insertbefore: BOF
   tags:
     - dnsmasq
 
