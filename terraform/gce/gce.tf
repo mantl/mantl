@@ -37,7 +37,8 @@ resource "google_compute_firewall" "mi-firewall-external" {
       "22",   # SSH
       "3389", # RDP
       "5050", # Mesos
-      "8080"  # Marathon
+      "8080", # Marathon
+      "8500"  # Consul UI
     ]
   }
 }
