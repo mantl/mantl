@@ -20,7 +20,11 @@ Features
 * Update consul to 0.5.2 #304
 * Implement consul ACL upserts #266
 * Add marathon-consul support #264
+* Add Logstash role #275
+* Add consul service active check script #287
 * Add metadata to hosts in Openstack #290
+* Update usage of argparse #296
+* Add Dockerfile to provide operational environment #325
 
 Fixes
 ^^^^^
@@ -35,6 +39,13 @@ Fixes
 * Use ciscocloud data volume for zookeeper #282
 * Consul requires restart on acl_master_token change #283
 * Fix vault restart #231
+* Fix issue with Consul restart #293
+* Fix/marathon race #305
+* vault: wait for port to open #307
+* Fix for "install nginx admin password" task in consul role #313
+* Feature/nginx update #317
+* ansible nova_compute module bug #320
+* Updated Ansible version constraint #321
 
 0.2.0 (04-10-2015)
 ------------------
