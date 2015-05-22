@@ -26,7 +26,7 @@ Features
 * Update usage of argparse #296
 * Add Dockerfile to provide operational environment #325
 * Move to ciscocloud/mesos-consul container #333
-
+* Add collectd to system #335
 Fixes
 ^^^^^
 * Note Vagrant provider requirement #170
