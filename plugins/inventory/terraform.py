@@ -6,20 +6,9 @@ directory and generates an inventory based on them.
 from __future__ import unicode_literals, print_function
 import argparse
 from collections import defaultdict
+from functools import wraps
 import json
 import os
-import sys
-
-parser = argparse.ArgumentParser(__file__, __doc__)
-modes = parser.add_mutually_exclusive_group()
-modes.add_argument('--list', action='store_true', help='list all variables')
-modes.add_argument('--host', help='list variables for a single host')
-parser.add_argument('--pretty',
-                    action='store_true',
-                    help='pretty-print output JSON')
-parser.add_argument('--nometa',
-                    action='store_true',
-                    help='with --list, exclude hostvars')
 
 
 def tfstates(root=None):
@@ -58,6 +47,22 @@ def parses(prefix):
     def inner(func):
         PARSERS[prefix] = func
         return func
+
+    return inner
+
+
+def calculate_mi_vars(func):
+    """calculate microservices-infrastructure vars"""
+    @wraps(func)
+    def inner(*args, **kwargs):
+        name, attrs, groups = func(*args, **kwargs)
+
+        if attrs['role'] == 'control':
+            attrs['consul_is_server'] = True
+        elif attrs['role'] == 'worker':
+            attrs['consul_is_server'] = False
+
+        return name, attrs, groups
 
     return inner
 
@@ -124,6 +129,7 @@ def openstack_host(resource, tfvars=None):
 
 
 @parses('google_compute_instance')
+@calculate_mi_vars
 def gce_host(resource, tfvars=None):
     name = resource['primary']['id']
     raw_attrs = resource['primary']['attributes']
@@ -158,6 +164,7 @@ def gce_host(resource, tfvars=None):
     # attrs specific to microservices-infrastructure
     attrs.update({
         'consul_dc': attrs['metadata'].get('dc', attrs['zone']),
+        'role': attrs['metadata'].get('role', 'none')
     })
 
     try:
@@ -218,11 +225,19 @@ def query_list(hosts):
 
 
 def main():
+
+    parser = argparse.ArgumentParser(__file__, __doc__)
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument('--list', action='store_true', help='list all variables')
+    modes.add_argument('--host', help='list variables for a single host')
+    parser.add_argument('--pretty',
+                        action='store_true',
+                        help='pretty-print output JSON')
+    parser.add_argument('--nometa',
+                        action='store_true',
+                        help='with --list, exclude hostvars')
+
     args = parser.parse_args()
-    if not args.list and not args.host:
-        print('error: one of --list or --host is required', file=sys.stderr)
-        print('{}')
-        return 1
 
     hosts = iterhosts(iterresources(tfstates()))
     if args.list:
@@ -233,8 +248,8 @@ def main():
         output = query_host(hosts, args.host)
 
     print(json.dumps(output, indent=4 if args.pretty else None))
-    return 0
+    parser.exit()
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()

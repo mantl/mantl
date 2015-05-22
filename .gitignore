@@ -8,4 +8,4 @@ ssl/serial*
 
 # terraform
 **/*.tfstate*
-.terraform
+**/.terraform

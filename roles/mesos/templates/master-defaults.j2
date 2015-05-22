@@ -1,10 +1,8 @@
 PORT={{ mesos_leader_port }}
 ZK=`cat /etc/mesos/zk`
 CLUSTER={{ mesos_cluster }}
-MESOS_QUORUM={{ groups.mesos_leaders|count // 2 + 1 }}
-{% if mesos_hostname is defined %}
-export MESOS_HOSTNAME={{ mesos_hostname }}
-{% endif %}
+MESOS_QUORUM={{ groups[mesos_leaders_group]|count // 2 + 1 }}
+export MESOS_HOSTNAME={{ mesos_hostname | default(ansible_hostname) }}
 export MESOS_AUTHENTICATORS=crammd5
 {% if do_mesos_framework_auth|bool %}export MESOS_AUTHENTICATE=true
 {% endif %}

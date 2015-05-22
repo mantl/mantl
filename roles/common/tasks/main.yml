@@ -19,19 +19,18 @@
   when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: groups['all']
 
-- name: install httpd-tools
+- name: install system utilities
   sudo: yes
   yum:
     name: httpd-tools
-    state: present
-
-- name: install nc
-  sudo: yes
-  yum:
-    name: nmap-ncat
-    state: present
+    state: latest
+  with_items:
+    - httpd-tools
+    - nc
+    - openssh
 
 - name: disable firewalld
+  sudo: yes
   service: 
     name: firewalld 
     enabled: false 
