@@ -1,6 +1,6 @@
 ---
 - name: enable epel repository
-  sude: yes
+  sudo: yes
   yum:
     name: epel-release
     state: present
