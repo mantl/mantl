@@ -25,6 +25,7 @@ Features
 * Add metadata to hosts in Openstack #290
 * Update usage of argparse #296
 * Add Dockerfile to provide operational environment #325
+* Move to ciscocloud/mesos-consul container #333
 
 Fixes
 ^^^^^
