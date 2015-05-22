@@ -1,4 +1,3 @@
-variable "cluster_id" { }
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "network_subnet_ip4" {default = "10.0.0.0/16"}
 variable "control_count" {default = "3"}
@@ -8,19 +7,32 @@ variable "source_ami" { }
 variable "worker_type" {default = "m1.small"}
 variable "public_key" { }
 variable "availability_zone" {}
+variable "datacenter" {default = "aws"}
+variable "long_name" {default = "microservices-infastructure"}
+variable "short_name" {default = "mi"}
+
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
+  tags {
+    Name = "${var.long_name}"
+  }
 }
 
 resource "aws_subnet" "main" {
   vpc_id = "${aws_vpc.main.id}"
   cidr_block = "${var.network_subnet_ip4}"
   availability_zone = "${var.availability_zone}"
+  tags {
+    Name = "${var.long_name}"
+  }
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
+  tags {
+    Name = "${var.long_name}"
+  }
 }
 
 resource "aws_route_table" "main" {
@@ -29,6 +41,10 @@ resource "aws_route_table" "main" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = "${aws_internet_gateway.main.id}"
+  }
+
+  tags {
+    Name = "${var.long_name}"
   }
 }
 
@@ -52,7 +68,9 @@ resource "aws_instance" "mi-control-nodes" {
   subnet_id = "${aws_subnet.main.id}"
 
   tags {
-    Name = "${var.cluster_id}_terraform_control"
+    Name = "${var.short_name}-control-${format("%02d", count.index+1)}"
+    role = "control"
+    dc = "${var.datacenter}"
   }
 }
 
@@ -73,12 +91,14 @@ resource "aws_instance" "mi-worker-nodes" {
   subnet_id = "${aws_subnet.main.id}"
 
   tags {
-    Name = "${var.cluster_id}_terraform_worker"
+    Name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
+    role = "worker"
+    dc = "${var.datacenter}"
   }
 }
 
 resource "aws_security_group" "control" {
-  name = "control_group_${var.cluster_id}"
+  name = "${var.short_name}-control"
   description = "Allow inbound traffic for control nodes"
   vpc_id="${aws_vpc.main.id}"
 
@@ -110,13 +130,10 @@ resource "aws_security_group" "control" {
     cidr_blocks=["0.0.0.0/0"]
   }
 
-  tags {
-    Name = "${var.cluster_id}_terraform"
-  }
 }
 
 resource "aws_security_group" "worker" {
-  name = "worker_group_${var.cluster_id}"
+  name = "${var.short_name}-worker"
   description = "Allow inbound traffic for worker nodes"
   vpc_id="${aws_vpc.main.id}"
 
@@ -155,12 +172,9 @@ resource "aws_security_group" "worker" {
     cidr_blocks=["0.0.0.0/0"]
   }
 
-  tags {
-    Name = "${var.cluster_id}_terraform"
-  }
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name = "key-${var.cluster_id}"
+  key_name = "key-${var.short_name}"
   public_key = "${var.public_key}"
 }
