@@ -102,6 +102,31 @@ def parse_dict(source, prefix):
 def parse_list(source, prefix):
     return [value for _, value in _parse_prefix(source, prefix)]
 
+@parses('openstack_compute_instance_v2')
+def openstack_host(resource, tfvars=None):
+    raw_attr = resource['primary']['attributes']
+    name = raw_attr['name']
+    groups = []
+
+    attrs = {}
+
+    attrs.update({
+        'consul_dc': raw_attr['region']
+    })
+
+    try:
+        attrs.update({
+            'ansible_ssh_host': raw_attr['access_ip_v4'],
+        })
+    except (KeyError, ValueError):
+        attrs.update({
+            'ansible_ssh_host': '',
+        })
+
+    groups.append('role=%s' % raw_attr['metadata.role'])
+
+    return name, attrs, groups
+
 
 @parses('google_compute_instance')
 @calculate_mi_vars
