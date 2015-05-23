@@ -41,6 +41,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
+    ansible.raw_ssh_args = ['-o IdentitiesOnly=yes']
     ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
     ansible.playbook = "vagrant.yml"
     ansible.groups = {
