@@ -3,7 +3,7 @@
 Hostname "{{ ansible_hostname }}"
 FQDNLookup false
 Interval 10
-Include "/etc/collectd/conf.d/"
+Include "/etc/collectd.d/"
 TypesDB "/usr/share/collectd/types.db"
 
 LoadPlugin "cpu"
