@@ -52,6 +52,11 @@ LoadPlugin "users"
   ReportInodes true
 </Plugin>
 
+<Plugin "interface">
+  Interface "/^veth/"
+  IgnoreSelected true
+</Plugin>
+
 <Plugin "syslog">
   LogLevel "err"
 </Plugin>
