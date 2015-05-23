@@ -7,7 +7,7 @@
   tags:
     - consul-template
 
-- name: deploy consul config
+- name: configure consul-template
   sudo: yes
   copy:
     src: consul.cfg
