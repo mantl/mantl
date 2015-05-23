@@ -85,6 +85,6 @@ REPOS+=(
 )
 
 IMAGES+=(
-    ciscocloud/logstash:0.1
+    ciscocloud/logstash:0.2
     gliderlabs/registrator:latest
 )
