@@ -29,7 +29,6 @@ yum upgrade -y
 
 # Install httpd-tools as required for ./security-setup
 yum install -y httpd-tools
-yum upgrade -y httpd-tools
 
 # Set time to Etc/UTC
 rm /etc/localtime

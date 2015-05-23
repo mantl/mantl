@@ -11,10 +11,7 @@ gpgcheck=0
 exclude=kernel
 EOF
 
-yum clean all
-yum makecache -y
 yum install -y docker
-yum upgrade -y docker
 
 systemctl enable docker
 systemctl start docker

@@ -8,9 +8,6 @@ baseurl=https://dl.bintray.com/ciscocloud/rpm/
 gpgcheck=0
 EOF
 
-yum clean all
-yum makecache -y
 yum install -y consul-template
-yum upgrade -y consul-template
 
 # EOF
