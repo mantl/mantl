@@ -8,8 +8,8 @@
 - name: enable and start logstash
   sudo: yes
   service:
-    enabled: yes
     name: logstash
+    enabled: yes
     state: started
   tags:
     - logstash
@@ -18,6 +18,14 @@
   sudo: yes
   service:
     name: logstash
+    state: restarted
+  tags:
+    - logstash
+
+- name: restart rsyslog
+  sudo: yes
+  service:
+    name: rsyslog
     state: restarted
   tags:
     - logstash

@@ -2,7 +2,7 @@
 - name: create configuration directory
   sudo: yes
   file:
-    path: /etc/logstash/conf.d
+    path: /etc/logstash.d
     state: directory
     mode: 0755
   tags:
@@ -12,7 +12,7 @@
   sudo: yes
   template:
     src: logstash.conf.j2
-    dest: "/etc/logstash/conf.d/logstash.conf"
+    dest: /etc/logstash.d/logstash.conf
   notify:
     - restart logstash
   tags:
@@ -22,10 +22,20 @@
   sudo: yes
   template:
     src: logstash-service.j2
-    dest: "/usr/lib/systemd/system/logstash.service"
+    dest: /usr/lib/systemd/system/logstash.service
   notify:
     - reload systemd daemon
     - enable and start logstash
+  tags:
+    - logstash
+
+- name: forward all logs from rsyslog to logstash
+  sudo: yes
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    line: '*.* @@localhost:1514'
+  notify:
+    - restart rsyslog
   tags:
     - logstash
 
