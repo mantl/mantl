@@ -162,6 +162,34 @@ def openstack_host(resource, tfvars=None):
     return name, attrs, groups
 
 
+@parses('aws_instance')
+def aws_host(resource, tfvars=None):
+    name = resource['primary']['attributes']['tags.Name']
+    raw_attrs = resource['primary']['attributes']
+
+    groups = []
+
+    attrs = {
+        'ansible_ssh_port': 22,
+        'ansible_ssh_user': raw_attrs['tags.sshUser'],
+        'ansible_ssh_host': raw_attrs['public_ip'],
+        'metadata': parse_dict(raw_attrs, 'tags'),
+    }
+
+    attrs.update({
+        'consul_dc': attrs['metadata'].get('dc')
+    })
+
+    # groups specific to microservices-infrastructure
+    if 'role' in attrs['metadata']:
+        groups.append('role=' + attrs['metadata']['role'])
+
+    groups.append('dc=' + attrs['consul_dc'])
+
+    return name, attrs, groups
+
+
+
 @parses('google_compute_instance')
 @calculate_mi_vars
 def gce_host(resource, tfvars=None):
