@@ -1,6 +1,6 @@
 FROM alpine:3.1
 
-RUN apk add --update openssl python py-pip \
+RUN apk add --update openssh openssl python py-pip \
     && rm -rf /var/cache/apk/*
 
 # load microservices-infrastructure and default setup
