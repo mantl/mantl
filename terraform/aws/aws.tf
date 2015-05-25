@@ -5,12 +5,12 @@ variable "worker_count" {default = "1"}
 variable "control_type" {default = "m1.small"}
 variable "source_ami" { }
 variable "worker_type" {default = "m1.small"}
-variable "public_key" { }
 variable "availability_zone" {}
 variable "datacenter" {default = "aws"}
 variable "long_name" {default = "microservices-infastructure"}
 variable "short_name" {default = "mi"}
-
+variable "ssh_username"  {default = "centos"}
+variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
@@ -69,6 +69,7 @@ resource "aws_instance" "mi-control-nodes" {
 
   tags {
     Name = "${var.short_name}-control-${format("%02d", count.index+1)}"
+    sshUser = "${var.ssh_username}"
     role = "control"
     dc = "${var.datacenter}"
   }
@@ -92,6 +93,7 @@ resource "aws_instance" "mi-worker-nodes" {
 
   tags {
     Name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
+    sshUser = "${var.ssh_username}"
     role = "worker"
     dc = "${var.datacenter}"
   }
@@ -176,5 +178,5 @@ resource "aws_security_group" "worker" {
 
 resource "aws_key_pair" "deployer" {
   key_name = "key-${var.short_name}"
-  public_key = "${var.public_key}"
+  public_key = "${file(var.ssh_key)}"
 }
