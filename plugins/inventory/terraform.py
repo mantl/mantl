@@ -9,6 +9,7 @@ from collections import defaultdict
 from functools import wraps
 import json
 import os
+import re
 
 
 def tfstates(root=None):
@@ -29,6 +30,12 @@ def iterresources(filenames):
 
 ## READ RESOURCES
 PARSERS = {}
+
+
+def _clean_dc(dcname):
+    # Consul DCs are strictly alphanumeric with underscores and hyphens -
+    # ensure that the consul_dc attribute meets these requirements.
+    return re.sub('[^\w_\-]', '-', dcname)
 
 
 def iterhosts(resources):
@@ -144,7 +151,7 @@ def openstack_host(resource, tfvars=None):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': attrs['metadata'].get('dc', attrs['region']),
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
         'role': attrs['metadata'].get('role', 'none')
     })
 
@@ -197,7 +204,7 @@ def gce_host(resource, tfvars=None):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': attrs['metadata'].get('dc', attrs['zone']),
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['zone'])),
         'role': attrs['metadata'].get('role', 'none')
     })
 
