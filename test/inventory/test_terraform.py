@@ -11,7 +11,7 @@ class UnittestMixin(object):
                 self.assertDictContainsSubsetDeeply(expected[key], actual[key], msg)
 
             elif type(value) == list and type(actual[key]) == list:
-                self.assertItemsEqual(expected[key], actual[key], msg)
+                self.assertItemsEqual(expected[key], actual[key], "{0}: {1}".format(key, msg))
 
             else:
                 self.assertEqual(expected[key], actual[key], msg)
@@ -63,6 +63,35 @@ class TerraformStateParserTests(UnittestMixin, unittest.TestCase):
                 "mi-control-01"
             ]
         },
+        "dc1" : {
+            "hosts": ["mi-control-01", "mi-worker-001"]
+        },
+        "consul_servers": {
+            "hosts": ["mi-control-01"]
+        },
+         "vault_servers": {
+            "hosts": ["mi-control-01"]
+        },
+         "zookeeper_servers": {
+            "hosts": ["mi-control-01"]
+        },
+         "mesos_leaders": {
+            "hosts": ["mi-control-01"]
+        },
+         "marathon_servers": {
+            "hosts": ["mi-control-01"]
+        },
+        "consul_clients": {
+            "hosts": ["mi-worker-001"]
+        },
+        "mesos_followers": {
+            "hosts": ["mi-worker-001"]
+        },
+        "proxy_servers": {
+            "hosts": ["mi-worker-001"]
+        },
+
+
     }
 
     def load_tfstate(self, mock_filenames):
