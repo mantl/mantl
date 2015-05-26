@@ -14,6 +14,7 @@ variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
+  enable_dns_hostnames = true
   tags {
     Name = "${var.long_name}"
   }
