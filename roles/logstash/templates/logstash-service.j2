@@ -16,7 +16,7 @@ ExecStart=/usr/bin/docker run \
     --rm \
     --name=logstash \
     --privileged=true \
-    --publish=1514:1514/udp \
+    --publish=1514:1514 \
     --publish=25826:25826/udp \
     --publish=8125:8125/udp \
 {% if logstash_input_log4j %}
