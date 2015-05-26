@@ -45,19 +45,18 @@ Vagrant.configure(2) do |config|
     ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
     ansible.playbook = "vagrant.yml"
     ansible.groups = {
-      "consul_servers" => ["default"],
-      "mesos_leaders" => ["default"],
-      "vagrant" => ["default"],
-      "zookeeper_servers" => ["default"]
+      "role=control" => ["default"],
+      "role=worker" => ["default"],
+      "dc=vagrant" => ["default"],
     }
     ansible.extra_vars = load_security.merge({
-      "consul_servers_group" => "consul_servers",
       "consul_dns_domain" => "consul",
       "consul_dc" => "vagrant",
       "consul_acl_datacenter" => "vagrant",
       "consul_bootstrap_expect" => 1,
       "mesos_cluster" => "vagrant",
-      "mesos_mode" => "mixed"
+      "mesos_mode" => "mixed",
+      "mesos_hostname" => "default"
     })
   end
 
