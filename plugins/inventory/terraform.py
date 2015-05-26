@@ -163,26 +163,30 @@ def openstack_host(resource, tfvars=None):
 
 
 @parses('aws_instance')
+@calculate_mi_vars
 def aws_host(resource, tfvars=None):
     name = resource['primary']['attributes']['tags.Name']
     raw_attrs = resource['primary']['attributes']
 
     groups = []
 
+    tags = parse_dict(raw_attrs, 'tags')
     attrs = {
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs['tags.sshUser'],
+        'ansible_ssh_user': tags['sshUser'],
         'ansible_ssh_host': raw_attrs['public_ip'],
-        'metadata': parse_dict(raw_attrs, 'tags'),
+        'metadata': tags,
+        'role': tags.get('role', 'none'),
     }
 
     attrs.update({
         'consul_dc': attrs['metadata'].get('dc')
     })
 
+
     # groups specific to microservices-infrastructure
-    if 'role' in attrs['metadata']:
-        groups.append('role=' + attrs['metadata']['role'])
+    if 'role' in tags:
+        groups.append('role=' + tags['role'])
 
     groups.append('dc=' + attrs['consul_dc'])
 
