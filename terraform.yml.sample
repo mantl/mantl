@@ -11,12 +11,13 @@
           directory and re-run this playbook with the `--extra-vars`/`-e` option
           pointing to your `security.yml` (e.g., `-e @security.yml`)
 
-# basics
+# first we'll apply some basic roles to all servers. These need to be present
+# for service discovery, maintenance, et cetera.
 - hosts: all
   vars:
+    # replace this with the datacenter that you want to use for ACL handling.
     consul_acl_datacenter: your_primary_datacenter
     consul_dns_domain: consul
-    consul_servers_group: role=control
   roles:
     - common
     - logrotate
@@ -26,6 +27,8 @@
     - consul
     - dnsmasq
 
+# next we'll provision the workers. We do this before the controls to avoid any
+# race conditions caused by mesos not being able to schedule work.
 - hosts: role=worker
   gather_facts: no
   vars:
@@ -35,14 +38,13 @@
     - mesos
     - haproxy
 
+# finally, we can provision the control servers. These are the Mesos, Marathon,
+# and ZooKeeper leaders of the cluster(s).
 - hosts: role=control
   gather_facts: no
   vars:
     consul_dns_domain: consul
-    consul_servers_group: role=control
-    mesos_leaders_group: role=control
     mesos_mode: leader
-    zookeeper_server_group: role=control
   roles:
     - vault
     - zookeeper

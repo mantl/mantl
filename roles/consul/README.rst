@@ -17,6 +17,12 @@ variables are roughly sorted from most commonly used to least.
 
    If set, consul will advertise this datacenter (default ``dc1``)
 
+.. data:: consul_dc_group
+
+   The group to look in for the local datacenter. Using the Terraform plugins,
+   this should be ``dc=dcname``, and it will default to that with the current
+   datacenter name.
+
 .. data:: consul_servers_group
 
    Group to configure join IPs from. For example, if this value is

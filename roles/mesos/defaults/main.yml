@@ -11,21 +11,12 @@ mesos_executor_registration_timeout: 10mins
 mesos_resources: "ports(*):[4000-5000, 31000-32000]"
 mesos_cluster: cluster1
 
-#options for setting mesos hostname
-#if unset, mesos will use the local ip
-
-#metadata for public ip
-#mesos_hostname: $(curl --silent http://169.254.169.254/latest/meta-data/public-ipv4) 
-
-#metadata for private ip
-#mesos_hostname: $(curl --silent http://169.254.169.254/latest/meta-data/local-ipv4) 
-
 mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
 mesos_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
 mesos_zk_port: 2181
 mesos_zk_chroot: mesos
 zk_docker_image: "ciscocloud/zookeeper:0.2"
-mesos_leaders_group: mesos_leaders
+mesos_leaders_group: role=control
 
 mesos_zk_acl_world: "world:anyone:r"
 mesos_zk_acl: "{% if zk_mesos_user_secret is defined %}digest:{{ zk_mesos_user }}:{{ zk_mesos_user_secret_digest}}:cdraw{% endif %}"
