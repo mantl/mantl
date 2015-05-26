@@ -17,7 +17,7 @@ class UnittestMixin(object):
                 self.assertEqual(expected[key], actual[key], msg)
 
 
-class TestStringMethods(UnittestMixin, unittest.TestCase):
+class TerraformStateParserTests(UnittestMixin, unittest.TestCase):
 
     expected_unified_data = {
         "_meta": {
@@ -27,6 +27,7 @@ class TestStringMethods(UnittestMixin, unittest.TestCase):
                     "ansible_ssh_user": "deploy",
                     "ansible_ssh_port": 22,
                     "consul_dc": "dc1",
+                    "consul_is_server": False,
                     "metadata": {
                         "dc": "dc1",
                         "role": "worker"
@@ -36,6 +37,7 @@ class TestStringMethods(UnittestMixin, unittest.TestCase):
                     "ansible_ssh_host": "104.197.77.162",
                     "ansible_ssh_user": "deploy",
                     "ansible_ssh_port": 22,
+                    "consul_is_server": True,
                     "consul_dc": "dc1",
                     "metadata": {
                         "dc": "dc1",
