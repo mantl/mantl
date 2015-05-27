@@ -54,7 +54,7 @@ If any servers fail to connect, check your connection by adding ``-vvvv``
 for verbose SSH debugging and try again to view the errors in more detail.
 
 Next, deploy the software. First, you'll need to customize a playbook. A sample
-can be found at ``terraform.yml.sample`` in the root directory. The main change
+can be found at ``terraform.sample.yml`` in the root directory. The main change
 you'll want to make is changing ``consul_acl_datacenter`` to your preferred ACL
 datacenter. If you only have one datacenter, you can remove this variable. Next,
 assuming you've placed the filled-out template at ``terraform.yml``:
