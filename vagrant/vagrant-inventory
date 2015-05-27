@@ -1,0 +1,10 @@
+default ansible_connection=local
+
+[role=worker]
+default
+
+[role=control]
+default
+
+[dc=vagrant]
+default

@@ -38,14 +38,7 @@
   tags:
     - marathon
 
-- name: enable and start marathon
-  sudo: yes
-  service:
-    enabled: yes
-    name: marathon
-    state: started
-  tags:
-    - marathon
+- meta: flush_handlers
 
 - meta: flush_handlers
 

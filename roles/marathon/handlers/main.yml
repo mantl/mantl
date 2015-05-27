@@ -12,7 +12,7 @@
     - wait for marathon to listen
 
 - name: wait for marathon to listen
-  command: marathon-wait-for-listen.sh
+  command: /usr/local/bin/marathon-wait-for-listen.sh
 
 - name: reload consul
   sudo: yes
