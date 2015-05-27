@@ -18,7 +18,7 @@ ExecStart=/usr/bin/docker run \
     --name=haproxy \
     --net=host \
     --env-file={{ haproxy_env }}  \
-    {{ haproxy_image }}:{{ haproxy_image_tag }} 
+    {{ haproxy_image }}:{{ haproxy_image_tag }} {{ haproxy_args | default("") }}
 
 ExecStop=/usr/bin/docker kill haproxy
 
