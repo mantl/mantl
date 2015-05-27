@@ -2,7 +2,8 @@ variable auth_url { }
 variable tenant_id { }
 variable tenant_name { }
 variable region { }
-variable flavor_name { }
+variable control_flavor_name { }
+variable resource_flavor_name { }
 variable net_id { }
 variable keypair_name { }
 variable image_name { }
@@ -23,7 +24,7 @@ resource "openstack_compute_instance_v2" "control" {
   name			= "${ var.short_name}-control-${format("%02d", count.index+1) }"
   key_pair		= "${ var.keypair_name }"
   image_name		= "${ var.image_name }"
-  flavor_name		= "${ var.flavor_name }"
+  flavor_name		= "${ var.control_flavor_name }"
   security_groups	= [ "${ var.security_groups }" ]
   network		= { uuid = "${ var.net_id }" }
   metadata		= { role = "control" }
@@ -35,7 +36,7 @@ resource "openstack_compute_instance_v2" "resource" {
   name			= "${ var.short_name}-worker-${format("%02d", count.index+1) }"
   key_pair		= "${ var.keypair_name }"
   image_name		= "${ var.image_name }"
-  flavor_name		= "${ var.flavor_name }"
+  flavor_name		= "${ var.resource_flavor_name }"
   security_groups	= [ "${ var.security_groups }" ]
   network		= { uuid = "${ var.net_id }" }
   metadata		= { role = "worker" }
