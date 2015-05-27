@@ -229,7 +229,7 @@ latex_documents = [
 #latex_show_pagerefs = False
 
 # If true, show URL addresses after external links.
-#latex_show_urls = False
+latex_show_urls = 'footnote'
 
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
@@ -283,3 +283,11 @@ intersphinx_mapping = {
 
 # -- Options for todo ext ------------------------------------------------
 todo_include_todos = os.getenv('INCLUDE_TODOS', '0') == '1' or version != release
+
+# -- setup ---------------------------------------------------------------
+def setup(app):
+    from sphinx.util.texescape import tex_replacements
+    tex_replacements.extend([
+        (u'☐', u'[ ]'),
+        (u'☑', u'[x]'),
+    ])
