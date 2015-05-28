@@ -54,10 +54,11 @@ If any servers fail to connect, check your connection by adding ``-vvvv``
 for verbose SSH debugging and try again to view the errors in more detail.
 
 Next, deploy the software. First, you'll need to customize a playbook. A sample
-can be found at ``terraform.sample.yml`` in the root directory. The main change
-you'll want to make is changing ``consul_acl_datacenter`` to your preferred ACL
-datacenter. If you only have one datacenter, you can remove this variable. Next,
-assuming you've placed the filled-out template at ``terraform.yml``:
+can be found at ``terraform.sample.yml`` in the root directory, you can find
+more about customizing this at :doc:`playbook`. The main change you'll want
+to make is changing ``consul_acl_datacenter`` to your preferred ACL datacenter.
+If you only have one datacenter, you can remove this variable. Next, assuming
+you've placed the filled-out template at ``terraform.yml``:
 
 .. code-block:: shell
 
@@ -74,13 +75,14 @@ for Mesos (on control nodes port 5050), Marathon (port 8080) and Consul (port
 
 Customizing your deployment
 ---------------------------
-Below are guides to customizing your host inventory, Ansible playbooks and adding users.
+
+Below are guides customizing your deployment:
 
 .. toctree::
    :maxdepth: 1
 
-   playbook.rst
    ssh_users.rst  
+   playbook.rst
         
 .. _generated dynamically: http://docs.ansible.com/intro_dynamic_inventory.html
 .. _inventory file: http://docs.ansible.com/intro_inventory.html

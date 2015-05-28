@@ -1,9 +1,10 @@
 Custom Playbook
 ===============
 
-Your customized ``terraform.yml`` `playbook`_ should be used to start.
+Your customized ``terraform.yml`` `playbook`_ should be used to deploy
+microservices-infrastructure to your servers.
 
-Below is an explanation of the values in the custom playbook:
+Below is an annotated playbook explaining the values:
 
 .. literalinclude:: ../../terraform.sample.yml
    :language: yaml+jinja
