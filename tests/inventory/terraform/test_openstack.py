@@ -79,6 +79,7 @@ def test_name(openstack_resource, openstack_host):
     'consul_dc': 'eu-amsterdam-1',
     'role': 'control',
     # and the bugfix
+    'use_host_domain': True,
     'host_domain': 'novalocal',
 }.items())
 def test_attrs(openstack_resource, openstack_host, attr, should):

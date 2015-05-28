@@ -142,6 +142,7 @@ def openstack_host(resource, tfvars=None):
         # workaround for an OpenStack bug where hosts have a different domain
         # after they're restarted
         'host_domain': 'novalocal',
+        'use_host_domain': True,
     }
 
     try:
