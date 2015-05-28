@@ -1,0 +1,90 @@
+{
+    "version": 1,
+    "serial": 45,
+    "modules": [
+        {
+            "path": [
+                "root"
+            ],
+            "outputs": {},
+            "resources": {}
+        },
+        {
+            "path": [
+                "root",
+                "aws"
+            ],
+            "outputs": {},
+            "resources": {
+                "aws_instance.mi-control-nodes": {
+                    "type": "aws_instance",
+                    "depends_on": [
+                    ],
+                    "primary": {
+                        "id": "i-a0f8e846",
+                        "attributes": {
+                            "ami": "ami-5df2832a",
+                            "associate_public_ip_address": "true",
+                            "availability_zone": "eu-west-1a",
+                            "id": "i-a0f8e846",
+                            "instance_type": "m1.small",
+                            "key_name": "key-mi",
+                            "private_dns": "ip-10-0-1-28.eu-west-1.compute.internal",
+                            "private_ip": "10.0.1.28",
+                            "public_dns": "",
+                            "public_ip": "104.197.77.162",
+                            "security_groups.#": "0",
+                            "subnet_id": "subnet-973b90ce",
+                            "tags.#": "4",
+                            "tags.Name": "mi-control-01",
+                            "tags.dc": "dc1",
+                            "tags.role": "control",
+                            "tags.sshUser": "deploy",
+                            "tenancy": "default",
+                            "vpc_security_group_ids.#": "2",
+                            "vpc_security_group_ids.2957279233": "sg-09d2fd6c",
+                            "vpc_security_group_ids.590754644": "sg-0ed2fd6b"
+                        },
+                        "meta": {
+                            "schema_version": "1"
+                        }
+                    }
+                },
+                "aws_instance.mi-worker-nodes": {
+                    "type": "aws_instance",
+                    "depends_on": [
+                    ],
+                    "primary": {
+                        "id": "i-49f7e7af",
+                        "attributes": {
+                            "ami": "ami-5df2832a",
+                            "associate_public_ip_address": "true",
+                            "availability_zone": "eu-west-1a",
+                            "id": "i-49f7e7af",
+                            "instance_type": "m1.small",
+                            "key_name": "key-mi",
+                            "private_dns": "ip-10-0-1-242.eu-west-1.compute.internal",
+                            "private_ip": "10.0.1.242",
+                            "public_dns": "",
+                            "public_ip": "130.211.119.96",
+                            "security_groups.#": "0",
+                            "subnet_id": "subnet-973b90ce",
+                            "tags.#": "4",
+                            "tags.Name": "mi-worker-001",
+                            "tags.dc": "dc1",
+                            "tags.role": "worker",
+                            "tags.sshUser": "deploy",
+                            "tenancy": "default",
+                            "vpc_security_group_ids.#": "2",
+                            "vpc_security_group_ids.2287410710": "sg-08d2fd6d",
+                            "vpc_security_group_ids.590754644": "sg-0ed2fd6b"
+                        },
+                        "meta": {
+                            "schema_version": "1"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
