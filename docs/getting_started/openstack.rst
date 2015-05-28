@@ -73,18 +73,6 @@ the location of your OpenStack RC file:
 .. note:: The default OpenStack RC file will prompt for your password in order
           to set OS_PASSWORD.
 
-You'll also need to add these settings as a provider in your Terraform file:
-
-.. again, this isn't JS, but a superset. This is just the nicest highlighter.
-.. code-block:: javascript
-
-   provider "openstack" {
-     user_name = ""
-     tenant_name = ""
-     password = ""
-     auth_url = "https://my.openstack.com:5000/v2.0"
-   }
-
 Once you're all set up there, run ``terraform get`` to prepare Terraform to
 provision your cluster, ``terraform plan`` to see what will be created, and
 ``terraform apply`` to provision the cluster. Afterwards, you can use the
