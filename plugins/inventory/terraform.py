@@ -263,7 +263,11 @@ def query_list(hosts):
 
 def main():
 
-    parser = argparse.ArgumentParser(__file__, __doc__)
+    parser = argparse.ArgumentParser(
+        __file__,
+        __doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     modes = parser.add_mutually_exclusive_group(required=True)
     modes.add_argument('--list',
                        action='store_true',
@@ -275,8 +279,10 @@ def main():
     parser.add_argument('--nometa',
                         action='store_true',
                         help='with --list, exclude hostvars')
+    default_root = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                '..', '..', ))
     parser.add_argument('--root',
-                        default=None,
+                        default=default_root,
                         help='custom root to search for `.tfstate`s in')
 
     args = parser.parse_args()
