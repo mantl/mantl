@@ -13,7 +13,7 @@ module "dc2-hosts" {
 	auth_url = ""
 	tenant_id = ""
 	tenant_name = ""
-	region = ""
+	region = "${ module.dc2-keypair.region }"
 	flavor_name = ""
 	net_id = ""
 	image_name = ""
