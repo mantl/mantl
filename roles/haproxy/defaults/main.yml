@@ -8,3 +8,5 @@ haproxy_image_tag: latest
 haproxy_domain: example.com 
 
 haproxy_env: /etc/default/haproxy
+
+haproxy_args: "/launch.sh -ssl -ssl-verify=false"
