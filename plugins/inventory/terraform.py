@@ -147,7 +147,7 @@ def openstack_host(resource, tfvars=None):
             'publicly_routable': True,
         })
     except (KeyError, ValueError):
-        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False, })
+        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False})
 
     # attrs specific to microservices-infrastructure
     attrs.update({
