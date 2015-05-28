@@ -61,7 +61,7 @@ assuming you've placed the filled-out template at ``terraform.yml``:
 
 .. code-block:: shell
 
-  ansible-playbook -i plugins/inventory/terraform.py terraform.yml
+  ansible-playbook -i plugins/inventory/terraform.py -e @security.yml terraform.yml
 
 The deployment will probably take a while as all tasks are completed. 
 
