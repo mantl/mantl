@@ -75,20 +75,6 @@ def calculate_mi_vars(func):
         if attrs.get('publicly_routable', False):
             groups.append('publicly_routable')
 
-        groups.append(attrs['consul_dc'])  # datacenter
-
-        if attrs['role'] == 'control':
-            groups.append('vault_servers')
-            groups.append('zookeeper_servers')
-            groups.append('mesos_leaders')
-            groups.append('marathon_servers')
-            groups.append('consul_servers')
-        elif attrs['role'] == 'worker':
-            groups.append('consul_clients')
-            groups.append('mesos_followers')
-            groups.append('proxy_servers')
-
-
         return name, attrs, groups
 
     return inner
