@@ -66,9 +66,9 @@ def calculate_mi_vars(func):
         name, attrs, groups = func(*args, **kwargs)
 
         # attrs
-        if attrs['role'] == 'control':
+        if attrs.get('role', '') == 'control':
             attrs['consul_is_server'] = True
-        elif attrs['role'] == 'worker':
+        else:
             attrs['consul_is_server'] = False
 
         # groups
@@ -150,6 +150,10 @@ def openstack_host(resource, tfvars=None):
         #ansible
         'ansible_ssh_port': 22,
         'ansible_ssh_user': 'centos',
+        # workaround for an OpenStack bug where hosts have a different domain
+        # after they're restarted
+        'host_domain': 'novalocal',
+        'use_host_domain': True,
     }
 
     try:
@@ -158,7 +162,7 @@ def openstack_host(resource, tfvars=None):
             'publicly_routable': True,
         })
     except (KeyError, ValueError):
-        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False, })
+        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False})
 
     # attrs specific to microservices-infrastructure
     attrs.update({
@@ -333,7 +337,11 @@ def query_list(hosts):
 
 def main():
 
-    parser = argparse.ArgumentParser(__file__, __doc__)
+    parser = argparse.ArgumentParser(
+        __file__,
+        __doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     modes = parser.add_mutually_exclusive_group(required=True)
     modes.add_argument('--list',
                        action='store_true',
@@ -345,10 +353,15 @@ def main():
     parser.add_argument('--nometa',
                         action='store_true',
                         help='with --list, exclude hostvars')
+    default_root = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                '..', '..', ))
+    parser.add_argument('--root',
+                        default=default_root,
+                        help='custom root to search for `.tfstate`s in')
 
     args = parser.parse_args()
 
-    hosts = iterhosts(iterresources(tfstates()))
+    hosts = iterhosts(iterresources(tfstates(args.root)))
     if args.list:
         output = query_list(hosts)
         if args.nometa:
