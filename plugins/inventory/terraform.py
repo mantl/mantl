@@ -116,6 +116,17 @@ def parse_list(source, prefix, sep='.'):
     return [value for _, value in _parse_prefix(source, prefix, sep)]
 
 
+def parse_bool(string_form):
+    token = string_form.lower()[0]
+
+    if token == 't':
+        return True
+    elif token == 'f':
+        return False
+    else:
+        raise ValueError('could not convert %r to a bool' % string_form)
+
+
 @parses('openstack_compute_instance_v2')
 @calculate_mi_vars
 def openstack_host(resource, tfvars=None):
