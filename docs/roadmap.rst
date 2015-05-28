@@ -47,15 +47,16 @@ Operations
 Platform Support
 ----------------
 
-| [x] Vagrant (Mac OSX + VirtualBox)
-| [ ] Vagrant (Windows + VirtualBox)
+| |x| Vagrant (Mac OSX + VirtualBox)
+| |x| Vagrant (Linux + VirtualBox)
+| |_| Vagrant (Windows + VirtualBox)
 | |x| OpenStack
 | |x| Cisco Cloud Services
 | |x| Cisco MetaCloud
 | |_| Cisco Unified Computing System
 | |_| Amazon Web Services
 | |_| Microsoft Azure
-| |_| Google Compute Engine
+| |x| Google Compute Engine
 | |_| VMware vSphere
 | |_| Apache CloudStack
 |

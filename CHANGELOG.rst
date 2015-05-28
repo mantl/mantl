@@ -4,8 +4,10 @@ Changelog
 
 0.3.0 (unreleased)
 ------------------
+
 Features
 ^^^^^^^^
+
 * security-setup: add additional confirmation prompt for password #173
 * security-setup: make security settings more granular #239
 * Make consul domain name configurable #100 & #156
@@ -30,9 +32,11 @@ Features
 * Remove NetworkManger dependency for dnsmasq #330
 * terraform: allow different openstack flavors #367
 * haproxy: use versioned container #369
+* Create OpenStack and Google Compute Engine clusters with Terraform #336
 
 Fixes
 ^^^^^
+
 * Note Vagrant provider requirement #170
 * Fix/dnsmasq host #188
 * update python novaclient verion #192

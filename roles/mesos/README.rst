@@ -1,53 +1,51 @@
+Mesos
+=====
+
 .. versionadded:: 0.1
 
-`Mesos <https://mesos.apache.org/>`_ is the distributed system kernel
-that manages resources across multiple nodes. When combined with
-:doc:`marathon`, you can basically think of it as a distributed init
-system.
+`Mesos <https://mesos.apache.org/>`_ is the distributed system kernel that
+manages resources across multiple nodes. When combined with :doc:`marathon`, you
+can basically think of it as a distributed init system.
 
 Modes
 -----
 
-Marathon has two "modes" it can run:
+Marathon can be run in one of two "modes":
 
  - A server mode (called "master" or "leader")
  - A client mode (called "slave" or "follower")
 
-This project prefers the "leader/follower nomenclature". In addition
-to the "official" modes described below, :data:`mesos_mode` supports
-running both modes on a single machine for testing or development
-scenarios.
+This project prefers the "leader/follower nomenclature". In addition to the
+"official" modes described below, :data:`mesos_mode` supports running both modes
+on a single machine for testing or development scenarios.
 
 Leader
 ^^^^^^
 
-Leaders will communicate with each other via :doc:`zookeeper` to
-coordinate which leader controls the cluster. Because of this, you can
-run as many leader nodes as you like, but you should consider keeping
-an odd number in the cluster to make attaining a quorum easier. A
-single leader node will also work fine, but will not be highly
-available.
+Leaders will communicate with each other via :doc:`zookeeper` to coordinate
+which leader controls the cluster. Because of this, you can run as many leader
+nodes as you like, but you should consider keeping an odd number in the cluster
+to make attaining a quorum easier. A single leader node will also work fine, but
+will not be highly available.
 
 Follower
 ^^^^^^^^
 
-Follower nodes need to know where the leaders are, and there can be
-any number of them. You should keep the follower machines free of
-"heavier" services running outside Mesos, as this will cause
-inaccurate resource availability counts in the cluster.
+Follower nodes need to know where the leaders are, and there can be any number
+of them. You should keep the follower machines free of "heavier" services
+running outside Mesos, as this will cause inaccurate resource availability
+counts in the cluster.
 
 Variables
 ---------
 
-You can use these variables to customize your Mesos installation (see
-the :ref:`Mesos Example Playbook <mesos-example-playbook>` for how to
-do so.)
+You can use these variables to customize your Mesos installation.
 
 .. data:: mesos_mode
 
-   Set to ``leader`` for leader mode, and ``follower`` for follower
-   mode. Set to ``mixed`` to run both leader and follower on the same
-   machine (useful for development or testing.)
+   Set to ``leader`` for leader mode, and ``follower`` for follower mode. Set to
+   ``mixed`` to run both leader and follower on the same machine (useful for
+   development or testing.)
 
    default: ``follower``
 
@@ -77,9 +75,9 @@ do so.)
 
 .. data:: mesos_resources
 
-   Set resources for follower nodes. (useful for setting available ports
-   that applications can be bound to)
-   Format: ``name(role):value;name(role):value...``
+   Set resources for follower nodes. (useful for setting available ports that
+   applications can be bound to) Format:
+   ``name(role):value;name(role):value...``
 
    default: ``ports(*):[4000-5000, 31000-32000]``
 
@@ -101,8 +99,8 @@ do so.)
 
 .. data:: mesos_credentials
 
-   A list of credentials to add for authentication. These should be in
-   the form ``{ principal: "...", secret: "..." }``.
+   A list of credentials to add for authentication. These should be in the form
+   ``{ principal: "...", secret: "..." }``.
 
    default: ``[]``
 
@@ -131,21 +129,3 @@ do so.)
    The secret to use for follower authentication
 
    default: not set. Set this to enable follower authentication.
-
-.. _mesos-example-playbook:
-
-Example Playbook
-----------------
-
-.. code-block:: yaml+jinja
-
-    ---
-    - hosts: mesos_leaders
-      roles: 
-        - role: mesos
-          mesos_mode: leader
-    
-    - hosts: mesos_followers
-      roles: 
-        - role: mesos
-          mesos_mode: follower
