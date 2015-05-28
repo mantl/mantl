@@ -56,6 +56,9 @@ screen under "APIs & Auth" in the GCE UI (marked 1 and 2 in the image below.)
 Service accounts are created under the "Create new Client ID" button (marked 3
 in the image below.)
 
+.. note:: You'll need to be an account owner to create this file - if you're
+          not, ask your account owner to do this step for you.
+
 .. image:: /_static/gce_service_account.png
    :alt: The GCE UI for creating a service account.
 
