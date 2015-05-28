@@ -28,6 +28,7 @@ Features
 * Move to ciscocloud/mesos-consul container #333
 * Add collectd to system #335
 * Remove NetworkManger dependency for dnsmasq #330
+* terraform: allow different openstack flavors #367
 
 Fixes
 ^^^^^
@@ -49,6 +50,8 @@ Fixes
 * Feature/nginx update #317
 * ansible nova_compute module bug #320
 * Updated Ansible version constraint #321
+* Add ssl args to the haproxy container #370
+* added openssh to image #341
 
 0.2.0 (04-10-2015)
 ------------------
