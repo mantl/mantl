@@ -26,6 +26,7 @@ platforms:
 
    openstack.rst
    gce.rst
+   aws.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
