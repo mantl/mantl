@@ -188,28 +188,55 @@ def aws_host(resource, tfvars=None):
 
     groups = []
 
-    tags = parse_dict(raw_attrs, 'tags')
     attrs = {
+        'ami': raw_attrs['ami'],
+        'availability_zone': raw_attrs['availability_zone'],
+        'ebs_block_device': parse_attr_list(raw_attrs, 'ebs_block_device'),
+        'ebs_optimized': parse_bool(raw_attrs['ebs_optimized']),
+        'ephemeral_block_device': parse_attr_list(raw_attrs,
+                                                  'ephemeral_block_device'),
+        'id': raw_attrs['id'],
+        'key_name': raw_attrs['key_name'],
+        'private': parse_dict(raw_attrs, 'private',
+                              sep='_'),
+        'public': parse_dict(raw_attrs, 'public',
+                             sep='_'),
+        'root_block_device': parse_attr_list(raw_attrs, 'root_block_device'),
+        'security_groups': parse_attr_list(raw_attrs, 'security_groups'),
+        'subnet': parse_dict(raw_attrs, 'subnet',
+                             sep='_'),
+        'tags': parse_dict(raw_attrs, 'tags'),
+        'tenancy': raw_attrs['tenancy'],
+        'vpc_security_group_ids': parse_list(raw_attrs,
+                                             'vpc_security_group_ids'),
+        # ansible-specific
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': tags['sshUser'],
+        'ansible_ssh_user': raw_attrs['tags.sshUser'],
         'ansible_ssh_host': raw_attrs['public_ip'],
-        'metadata': tags,
-        'role': tags.get('role', 'none'),
     }
 
+    # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': attrs['metadata'].get('dc')
+        'consul_dc': attrs['tags'].get('dc'),
+        'role': attrs['tags'].get('role', 'none')
     })
 
+    # groups specific to microservices-infrastructure
+    groups.extend(['aws_ami=' + attrs['ami'],
+                   'aws_az=' + attrs['availability_zone'],
+                   'aws_key_name=' + attrs['key_name'],
+                   'aws_tenancy=' + attrs['tenancy']])
+    groups.extend('aws_tag_%s=%s' % item for item in attrs['tags'].items())
+    groups.extend('aws_vpc_security_group=' + group
+                  for group in attrs['vpc_security_group_ids'])
+    groups.extend('aws_subnet_%s=%s' % subnet
+                  for subnet in attrs['subnet'].items())
 
     # groups specific to microservices-infrastructure
-    if 'role' in tags:
-        groups.append('role=' + tags['role'])
-
+    groups.append('role=' + attrs['role'])
     groups.append('dc=' + attrs['consul_dc'])
 
     return name, attrs, groups
-
 
 
 @parses('google_compute_instance')
