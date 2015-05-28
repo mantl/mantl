@@ -139,6 +139,9 @@ def openstack_host(resource, tfvars=None):
         #ansible
         'ansible_ssh_port': 22,
         'ansible_ssh_user': 'centos',
+        # workaround for an OpenStack bug where hosts have a different domain
+        # after they're restarted
+        'host_domain': 'novalocal',
     }
 
     try:
