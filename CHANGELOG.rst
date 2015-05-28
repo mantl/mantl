@@ -29,6 +29,7 @@ Features
 * Add collectd to system #335
 * Remove NetworkManger dependency for dnsmasq #330
 * terraform: allow different openstack flavors #367
+* haproxy: use versioned container #369
 
 Fixes
 ^^^^^
