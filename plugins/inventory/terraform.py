@@ -66,9 +66,9 @@ def calculate_mi_vars(func):
         name, attrs, groups = func(*args, **kwargs)
 
         # attrs
-        if attrs['role'] == 'control':
+        if attrs.get('role', '') == 'control':
             attrs['consul_is_server'] = True
-        elif attrs['role'] == 'worker':
+        else:
             attrs['consul_is_server'] = False
 
         # groups
@@ -275,10 +275,13 @@ def main():
     parser.add_argument('--nometa',
                         action='store_true',
                         help='with --list, exclude hostvars')
+    parser.add_argument('--root',
+                        default=None,
+                        help='custom root to search for `.tfstate`s in')
 
     args = parser.parse_args()
 
-    hosts = iterhosts(iterresources(tfstates()))
+    hosts = iterhosts(iterresources(tfstates(args.root)))
     if args.list:
         output = query_list(hosts)
         if args.nometa:
