@@ -17,6 +17,11 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
     - [Documentation](#documentation)
     - [Roadmap](#roadmap)
+        - [Core Components and Features](#core-components-and-features)
+        - [Mesos Frameworks](#mesos-frameworks)
+        - [Security](#security)
+        - [Operations](#operations)
+        - [Platform Support](#platform-support)
     - [Development](#development)
     - [License](#license)
 
