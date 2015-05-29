@@ -65,7 +65,7 @@ resource "google_compute_instance" "mi-control-nodes" {
   tags = ["${var.short_name}", "control"]
 
   disk {
-    image = "centos-7-v20150423"
+    image = "centos-7-v20150526"
     auto_delete = true
   }
 
@@ -92,7 +92,7 @@ resource "google_compute_instance" "mi-worker-nodes" {
   tags = ["${var.short_name}", "worker"]
 
   disk {
-    image = "centos-7-v20150423"
+    image = "centos-7-v20150526"
     auto_delete = true
   }
 
