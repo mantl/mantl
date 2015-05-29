@@ -39,8 +39,8 @@ Deploying software via Ansible
 
 .. note:: Ansible requres a Python 2 binary. If yours is not at /usr/bin/python,
           please view the `Ansible FAQ <http://docs.ansible.com/faq.html>`_. You
-          can probably add an extra variable to the following commands,
-          e.g. ``ansible -e ansible_python_interpreter=/path/to/python2``.
+          can add an extra variable to the following commands, e.g.
+          ``ansible -e ansible_python_interpreter=/path/to/python2``.
 
 
 In the following examples, we're going to assume you deployed hosts using
