@@ -1,5 +1,13 @@
 ---
 - hosts: all
+  vars:
+    consul_servers_group: role=control
+    consul_dns_domain: consul
+    consul_dc: vagrant
+    consul_acl_datacenter: vagrant
+    consul_bootstrap_expect: 1
+    mesos_cluster: vagrant
+    mesos_mode: mixed
   roles:
     - common
     - collectd

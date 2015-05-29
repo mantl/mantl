@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = "CiscoCloud/microservices-infrastructure"
 
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder ".", "/vagrant", type: "rsync"
 
   config.vm.network :forwarded_port, guest: 2181,  host: 2181  # ZooKeeper
   config.vm.network :forwarded_port, guest: 5050,  host: 5050  # Mesos leader
@@ -40,25 +40,8 @@ Vagrant.configure(2) do |config|
     config.vm.network :forwarded_port, guest: i, host: i
   end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.raw_ssh_args = ['-o IdentitiesOnly=yes']
-    ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
-    ansible.playbook = "vagrant.yml"
-    ansible.groups = {
-      "consul_servers" => ["default"],
-      "mesos_leaders" => ["default"],
-      "vagrant" => ["default"],
-      "zookeeper_servers" => ["default"]
-    }
-    ansible.extra_vars = load_security.merge({
-      "consul_servers_group" => "consul_servers",
-      "consul_dns_domain" => "consul",
-      "consul_dc" => "vagrant",
-      "consul_acl_datacenter" => "vagrant",
-      "consul_bootstrap_expect" => 1,
-      "mesos_cluster" => "vagrant",
-      "mesos_mode" => "mixed"
-    })
+  config.vm.provision "shell" do |s|
+    s.path = "vagrant/provision.sh"
   end
 
   config.vm.provider :virtualbox do |vb|

@@ -25,4 +25,4 @@
     - zookeeper
 
 - name: wait for zookeeper to listen
-  command: zookeeper-wait-for-listen.sh
+  command: /usr/local/bin/zookeeper-wait-for-listen.sh

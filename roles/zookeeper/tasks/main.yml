@@ -37,6 +37,12 @@
   tags: 
     - zookeeper
 
+- name: ensure zookeeper image is present
+  sudo: yes
+  command: docker pull {{ zookeeper_image }}:{{ zookeeper_image_tag }}
+  tags:
+    - zookeeper
+
 - name: install zookeeper scripts
   sudo: yes
   copy:
