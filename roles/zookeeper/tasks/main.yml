@@ -68,4 +68,6 @@
   tags:
     - zookeeper
 
+- include: collectd.yml
+
 - meta: flush_handlers
