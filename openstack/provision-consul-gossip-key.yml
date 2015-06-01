@@ -1,3 +1,0 @@
----
-- include: provision-hosts.yml
-- include: ../playbooks/provision-consul-gossip-key.yml

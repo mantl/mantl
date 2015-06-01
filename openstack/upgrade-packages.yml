@@ -1,3 +1,0 @@
----
-- include: provision-hosts.yml
-- include: ../playbooks/upgrade-packages.yml
