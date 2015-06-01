@@ -28,6 +28,8 @@
     - httpd-tools
     - nc
     - openssh
+  tags:
+    - bootstrap
 
 - name: disable firewalld
   sudo: yes

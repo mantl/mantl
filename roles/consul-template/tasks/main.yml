@@ -6,6 +6,7 @@
     state: present
   tags:
     - consul-template
+    - bootstrap
 
 - name: configure consul-template
   sudo: yes

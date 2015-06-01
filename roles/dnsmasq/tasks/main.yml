@@ -10,6 +10,7 @@
     - NetworkManager
   tags:
     - dnsmasq
+    - bootstrap
 
 - name: ensure dnsmasq.d directory exists
   sudo: yes

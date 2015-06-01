@@ -6,6 +6,7 @@
     state: present
   tags:
     - zookeeper
+    - bootstrap
 
 - name: install wait script
   sudo: yes
@@ -37,7 +38,7 @@
   tags: 
     - zookeeper
 
-- name: ensure zookeeper image is present
+- name: ensure zookeeper docker image is present
   sudo: yes
   command: docker pull {{ zookeeper_image }}:{{ zookeeper_image_tag }}
   tags:

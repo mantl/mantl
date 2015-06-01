@@ -7,6 +7,7 @@
     state: latest
   tags:
     - docker
+    - bootstrap
 
 - name: install docker
   sudo: yes
@@ -15,6 +16,7 @@
     state: present
   tags:
     - docker
+    - bootstrap
 
 - name: configure docker consul dns
   sudo: yes
@@ -36,3 +38,4 @@
     state: started
   tags:
     - docker
+    - bootstrap # needed to install Docker images during bootstrap

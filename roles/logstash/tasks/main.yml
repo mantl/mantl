@@ -18,6 +18,13 @@
   tags:
     - logstash
 
+- name: ensure logstash docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ logstash_image }}:{{ logstash_image_tag }}
+  tags:
+    - logstash
+    - bootstrap
+
 - name: generate systemd service file
   sudo: yes
   template:

@@ -15,6 +15,13 @@
   tags:
     - marathon
 
+- name: ensure consul-nginx docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
+  tags:
+    - marathon
+    - bootstrap
+
 - name: configure nginx-marathon
   sudo: yes
   template:
