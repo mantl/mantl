@@ -36,3 +36,5 @@
     state: started
   tags:
     - docker
+
+- include: collectd.yml 
