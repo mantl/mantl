@@ -69,7 +69,7 @@
   tags:
     - marathon
 
-include: collectd.yml
+- include: collectd.yml
 
 - name: ensure consul.d is present
   sudo: yes
