@@ -1,6 +1,4 @@
 ---
-- include: ../openstack/provision-hosts.yml
-
 - hosts: all
   serial: 1
   gather_facts: no
