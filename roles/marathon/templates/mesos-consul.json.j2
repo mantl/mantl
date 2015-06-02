@@ -4,7 +4,8 @@
     "--registry-ssl",
     "--registry-ssl-verify=false"{% endif %}{% if do_consul_auth %},
     "--registry-auth=admin:{{ nginx_admin_password }}"{% endif %}{% if do_consul_acl %},
-    "--registry-token={{ consul_acl_master_token }}"{% endif %}
+    "--registry-token={{ consul_acl_master_token }}"{% endif %},
+    "--refresh={{ mesos_consul_refresh }}"
   ],
   "container": {
     "type": "DOCKER",
