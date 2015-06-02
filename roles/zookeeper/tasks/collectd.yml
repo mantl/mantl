@@ -1,0 +1,21 @@
+---
+- name: install collectd zookeeper plugin
+  sudo: yes
+  copy:
+    src: zookeeper-collectd-plugin.py
+    dest: /usr/share/collectd/plugins/zookeeper.py
+    mode: u=r
+  tags:
+    - zookeeper
+    - collectd
+
+- name: configure collectd zookeeper plugin
+  sudo: yes
+  copy:
+    src: zookeeper-collectd-plugin.conf
+    dest: /etc/collectd.d/zookeeper.conf
+  notify:
+    - restart collectd
+  tags:
+    - zookeeper
+    - collectd
