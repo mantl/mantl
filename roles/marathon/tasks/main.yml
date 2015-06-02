@@ -2,10 +2,11 @@
 - name: add mesosphere repository
   sudo: yes
   yum:
-    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
     state: present
   tags:
     - marathon
+    - bootstrap
 
 - name: install marathon package
   sudo: yes
@@ -14,6 +15,7 @@
     state: present
   tags:
     - marathon
+    - bootstrap
 
 - name: install wait script
   sudo: yes
@@ -38,14 +40,7 @@
   tags:
     - marathon
 
-- name: enable and start marathon
-  sudo: yes
-  service:
-    enabled: yes
-    name: marathon
-    state: started
-  tags:
-    - marathon
+- meta: flush_handlers
 
 - meta: flush_handlers
 
@@ -73,6 +68,8 @@
     - reload consul-template
   tags:
     - marathon
+
+- include: collectd.yml
 
 - name: ensure consul.d is present
   sudo: yes

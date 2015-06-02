@@ -3,19 +3,19 @@
   sudo: yes
   service:
     name: mesos-master
-    enabled: no 
-  when: mesos_mode == "follower" 
+    enabled: no
+  when: mesos_mode == "follower"
   tags:
     - mesos
 
 - name: set containerizers
   sudo: yes
-  copy: 
-    content: "docker,mesos" 
+  copy:
+    content: "docker,mesos"
     dest: /etc/mesos-slave/containerizers
   notify: restart mesos follower
   tags:
-    - mesos  
+    - mesos
 
 - name: write credential
   when: do_mesos_follower_auth|bool
@@ -57,10 +57,10 @@
   notify: restart mesos follower
   tags:
     - mesos
-    
-- name: set executor registration timeout 
+
+- name: set executor registration timeout
   sudo: yes
-  copy: 
+  copy:
     dest: /etc/mesos-slave/executor_registration_timeout
     content: "{{ mesos_executor_registration_timeout }}"
   notify: restart mesos follower
@@ -78,10 +78,30 @@
 
 - name: set follower node id
   sudo: yes
-  copy: 
+  copy:
     dest: /etc/mesos-slave/attributes
     content: "node_id:{{ inventory_hostname }}"
-  notify: remove mesos follower metadata 
+  notify: remove mesos follower metadata
   tags:
     - mesos
 
+- name: install collectd mesos-slave plugin
+  sudo: yes
+  copy:
+    src: mesos-slave.py
+    dest: /usr/share/collectd/plugins
+    mode: u=r
+  tags:
+    - mesos
+    - collectd
+
+- name: configure collectd mesos-slave plugin
+  sudo: yes
+  copy:
+    src: mesos-slave.conf
+    dest: /etc/collectd.d
+  notify:
+    - restart collectd
+  tags:
+    - mesos
+    - collectd

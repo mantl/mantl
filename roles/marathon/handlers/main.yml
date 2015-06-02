@@ -5,14 +5,14 @@
   notify:
     - wait for marathon to listen
 
-- name: restart marathon 
+- name: restart marathon
   sudo: yes
   command: systemctl restart marathon
   notify:
     - wait for marathon to listen
 
 - name: wait for marathon to listen
-  command: marathon-wait-for-listen.sh
+  command: /usr/local/bin/marathon-wait-for-listen.sh
 
 - name: reload consul
   sudo: yes
@@ -25,3 +25,9 @@
 - name: reload nginx-marathon
   sudo: yes
   command: systemctl daemon-reload
+
+- name: restart collectd
+  sudo: yes
+  service:
+    name: collectd
+    state: restarted

@@ -4,3 +4,9 @@
   service:
     name: docker
     state: restarted
+
+- name: restart collectd
+  sudo: yes
+  service:
+    name: collectd
+    state: restarted

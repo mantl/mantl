@@ -4,8 +4,10 @@ Changelog
 
 0.3.0 (unreleased)
 ------------------
+
 Features
 ^^^^^^^^
+
 * security-setup: add additional confirmation prompt for password #173
 * security-setup: make security settings more granular #239
 * Make consul domain name configurable #100 & #156
@@ -28,9 +30,13 @@ Features
 * Move to ciscocloud/mesos-consul container #333
 * Add collectd to system #335
 * Remove NetworkManger dependency for dnsmasq #330
+* terraform: allow different openstack flavors #367
+* haproxy: use versioned container #369
+* Create OpenStack and Google Compute Engine clusters with Terraform #336
 
 Fixes
 ^^^^^
+
 * Note Vagrant provider requirement #170
 * Fix/dnsmasq host #188
 * update python novaclient verion #192
@@ -49,6 +55,8 @@ Fixes
 * Feature/nginx update #317
 * ansible nova_compute module bug #320
 * Updated Ansible version constraint #321
+* Add ssl args to the haproxy container #370
+* added openssh to image #341
 
 0.2.0 (04-10-2015)
 ------------------

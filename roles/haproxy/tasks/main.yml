@@ -1,4 +1,11 @@
 ---
+- name: ensure haproxy docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ haproxy_image }}:{{ haproxy_image_tag }}
+  tags:
+    - haproxy
+    - bootstrap
+  
 - name: set haproxy environment
   sudo: yes
   template:

@@ -28,13 +28,36 @@
     - httpd-tools
     - nc
     - openssh
+  tags:
+    - bootstrap
 
 - name: disable firewalld
   sudo: yes
-  service: 
-    name: firewalld 
-    enabled: false 
+  service:
+    name: firewalld
+    enabled: false
     state: stopped
+
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
+- name: install pip
+  sudo: yes
+  yum:
+    name: python-pip
+    state: latest
+
+- name: update setuptools and pip
+  sudo: yes
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - name: pip
+    - name: setuptools
 
 - include: users.yml
 - include: ssl.yml

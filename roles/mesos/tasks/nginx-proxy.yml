@@ -13,6 +13,13 @@
   tags:
     - mesos
 
+- name: ensure nginx-consul docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
+  tags:
+    - marathon
+    - bootstrap
+
 - name: configure nginx-mesos-leader
   sudo: yes
   template:

@@ -11,7 +11,7 @@ RestartSec=20
 TimeoutStartSec=0
 
 ExecStartPre=-/usr/bin/docker rm nginx-marathon
-ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }} 
+ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
 
 ExecStart=/usr/bin/docker run \
     --rm \
@@ -20,7 +20,7 @@ ExecStart=/usr/bin/docker run \
     -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
     --env-file=/etc/default/nginx-marathon.env \
     -p 8080:8080 \
-    {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
+    {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
 
 ExecStop=/usr/bin/docker kill nginx-marathon
 

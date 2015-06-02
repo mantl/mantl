@@ -25,6 +25,8 @@ platforms:
    :maxdepth: 1
 
    openstack.rst
+   gce.rst
+   aws.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
@@ -37,66 +39,69 @@ certificates. For more information, see the :doc:`security-setup
 Deploying software via Ansible
 ------------------------------
 
+.. note:: Ansible requres a Python 2 binary. If yours is not at /usr/bin/python,
+          please view the `Ansible FAQ <http://docs.ansible.com/faq.html>`_. You
+          can add an extra variable to the following commands, e.g.
+          ``ansible -e ansible_python_interpreter=/path/to/python2``.
+
 In the following examples, we're going to assume you deployed hosts using
-``inventory/1-datacenter``.
+Terraform. This project ships with a dynamic inventory file to read Terraform
+``.tfstate`` files. To use it, just use the ``-i
+plugins/inventory/terraform.py`` argument of ``ansible`` or
+``ansible-playbook``.
 
 First, ping the servers to ensure they are reachable via ssh:
 
 .. code-block:: shell
 
- ansible all -i inventory/1-datacenter -m ping 
+  ansible all -i plugins/inventory/terraform.py -m ping 
 
-If any servers fail to connect, check your connection by adding ``-vvvv`` 
+If any servers fail to connect, check your connection by adding ``-vvvv``
 for verbose SSH debugging and try again to view the errors in more detail.
 
-Next, deploy the software
+Next, deploy the software. First, you'll need to customize a playbook. A sample
+can be found at ``terraform.sample.yml`` in the root directory, you can find
+more about customizing this at :doc:`playbook`. The main change you'll want
+to make is changing ``consul_acl_datacenter`` to your preferred ACL datacenter.
+If you only have one datacenter, you can remove this variable. Next, assuming
+you've placed the filled-out template at ``terraform.yml``:
 
 .. code-block:: shell
 
-  ansible-playbook -i inventory/1-datacenter site.yml
+  ansible-playbook -i plugins/inventory/terraform.py -e @security.yml terraform.yml
 
-The deployment will probably take a while as all tasks are completed. 
-
+The deployment will probably take a while as all tasks are completed.
 
 Checking your deployment
 ------------------------
-If the playbooks are successful, you should be able to reach the web
-consoles for Mesos, Marathon and Consul.
 
-Here are some links to test on host-01 (make sure host-01 resolves via ``/etc/hosts`` or DNS):
-
-*  `mesos-leader`_ on port 5050
-*  `marathon`_ on port 8080
-*  `consul`_ on port 8500
-
-.. _marathon: http://host-01:8080
-.. _mesos-leader: http://host-01:5050
-.. _consul: http://host-01:8500
-
+If the playbooks are successful, you should be able to reach the web consoles
+for Mesos (on control nodes port 5050), Marathon (port 8080) and Consul (port
+8500.)
 
 Customizing your deployment
 ---------------------------
-Below are guides to customizing your host inventory, Ansible playbooks and adding users.
+
+Below are guides customizing your deployment:
 
 .. toctree::
    :maxdepth: 1
 
-   inventory.rst
-   playbook.rst
    ssh_users.rst  
-        
+   playbook.rst
+
 .. _generated dynamically: http://docs.ansible.com/intro_dynamic_inventory.html
 .. _inventory file: http://docs.ansible.com/intro_inventory.html
 .. _playbook: http://docs.ansible.com/playbooks.html
 .. _working Ansible installation: http://docs.ansible.com/intro_installation.html#installing-the-control-machine
 
-
 Restarting your deployment
 --------------------------
-To restart your deployment and make sure all components are restarted and working correctly, it is recommended to leverage the
-``playbooks/reboot-hosts.yml`` playbook.
 
-.. code-block:: shell 
+To restart your deployment and make sure all components are restarted and
+working correctly, use the ``playbooks/reboot-hosts.yml`` playbook.
+
+.. code-block:: shell
 
     ansible-playbook -i inventory/1-datacenter playbooks/reboot-hosts.yml
 

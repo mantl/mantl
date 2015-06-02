@@ -12,7 +12,7 @@ zookeeper_container_name: "{{ zookeeper_service }}"
 zookeeper_data_volume: "{{ zookeeper_service }}-data-volume"
 
 # Set the ZooKeeper ID
-zookeeper_server_group: zookeeper_servers
+zookeeper_server_group: role=control
 zookeeper_id: "
   {%- if zk_id is defined -%}
     {{ zk_id }}
