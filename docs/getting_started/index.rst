@@ -27,6 +27,7 @@ platforms:
    openstack.rst
    gce.rst
    aws.rst
+   digitalocean.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
