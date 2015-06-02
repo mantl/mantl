@@ -26,3 +26,9 @@
 - name: reload nginx-mesos-leader
   sudo: yes
   command: systemctl daemon-reload
+
+- name: restart collectd
+  sudo: yes
+  service:
+    name: collectd
+    state: restarted

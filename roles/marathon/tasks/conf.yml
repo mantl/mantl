@@ -1,14 +1,14 @@
 ---
-- name: create zookeeper acl 
-  sudo: yes 
-  command: "{{ marathon_zk_acl_cmd }}" 
+- name: create zookeeper acl
+  sudo: yes
+  command: "{{ marathon_zk_acl_cmd }}"
   notify:
     - restart marathon
   when: zk_marathon_user_secret is defined
   run_once: true
   tags:
     - marathon
-   
+
 - name: create marathon conf directory
   sudo: yes
   file:
@@ -95,4 +95,4 @@
     state: absent
   tags:
     - marathon
-      
+

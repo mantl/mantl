@@ -1,0 +1,33 @@
+---
+- name: install collectd docker plugin dependencies
+  sudo: yes
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - py-dateutil
+    - docker-py>=1.0.0
+  tags:
+    - docker
+    - collectd
+
+- name: install collectd docker plugin
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/collectd/plugins/{{ item }}"
+    mode: u=r
+  with_items:
+    - dockerplugin.py
+    - dockerplugin.db
+
+- name: configure collectd docker plugin
+  sudo: yes
+  copy:
+    src: dockerplugin.conf
+    dest: /etc/collectd.d/docker.conf
+  notify:
+    - restart collectd
+  tags:
+    - docker
+    - collectd
