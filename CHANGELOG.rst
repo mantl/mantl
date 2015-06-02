@@ -33,6 +33,7 @@ Features
 * terraform: allow different openstack flavors #367
 * haproxy: use versioned container #369
 * Create OpenStack and Google Compute Engine clusters with Terraform #336
+* Remove OpenStack-specific requirements and playbooks in favor of Terraform provisioning #402
 
 Fixes
 ^^^^^
