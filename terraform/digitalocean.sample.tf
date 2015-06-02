@@ -4,7 +4,7 @@ provider "digitalocean" {
 
 module "do-keypair" {
 	source = "./terraform/digitalocean/keypair"
-  public_key = "${file("~/.ssh/id_rsa.pub")}"
+  public_key_filename = "~/.ssh/id_rsa.pub"
 }
 
 module "do-hosts" {

@@ -15,10 +15,8 @@ resource "digitalocean_droplet" "control" {
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.control_size}"
-  ssh_keys = ["${vars.ssh_key}"]
-  user_data = {
-    role = "control"
-  }
+  ssh_keys = ["${var.ssh_key}"]
+  user_data = "{\"role\":\"control\"}"
 }
 
 resource "digitalocean_droplet" "worker" {
@@ -27,8 +25,6 @@ resource "digitalocean_droplet" "worker" {
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.worker_size}"
-  ssh_keys = ["${vars.ssh_key}"]
-  user_data = {
-    role = "worker"
-  }
+  ssh_keys = ["${var.ssh_key}"]
+  user_data = "{\"role\":\"worker\"}"
 }
