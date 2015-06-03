@@ -11,6 +11,16 @@
     - docker
     - collectd
 
+- name: create collectd config directory
+  sudo: yes
+  file:
+    path: /etc/collectd.d
+    state: directory
+    mode: 0755
+  tags:
+    - docker
+    - collectd
+
 - name: create collectd plugin directory
   sudo: yes
   file:
