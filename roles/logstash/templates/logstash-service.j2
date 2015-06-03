@@ -25,6 +25,7 @@ ExecStart=/usr/bin/docker run \
     --volume=/etc/logstash.d:/logstash/config \
     --volume=/var/lib/docker/containers:/logs/docker:ro \
     --volume=/var/log/mesos:/logs/mesos:ro \
+    --volumes-from {{ zookeeper_data_volume }} \
     {{ logstash_image }}:{{ logstash_image_tag }}
 
 ExecStop=/bin/bash -c " \
