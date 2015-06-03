@@ -34,6 +34,7 @@
     - common
     - logrotate
     - consul-template
+    - collectd
     - docker
     - nginx
     - consul
