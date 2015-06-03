@@ -20,3 +20,7 @@ resource "openstack_compute_keypair_v2" "keypair" {
 output "keypair_name" {
 	value = "${ openstack_compute_keypair_v2.keypair.name }"
 }
+
+output "region" {
+	value = "${ openstack_compute_keypair_v2.keypair.region }"
+}
