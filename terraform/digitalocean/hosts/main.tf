@@ -21,7 +21,7 @@ resource "digitalocean_droplet" "control" {
 
 resource "digitalocean_droplet" "worker" {
   count = "${var.worker_count}"
-  name = "${var.short_name}-control-${format("%03d", count.index+1)}"
+  name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.worker_size}"
