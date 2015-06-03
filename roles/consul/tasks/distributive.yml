@@ -1,0 +1,21 @@
+---
+- name: install distributive
+  sudo: yes
+  yum:
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/distributive-0.0.1-1.x86_64.rpm"
+    state: present
+  tags:
+    - consul
+  notify:
+    - reload consul
+
+# will eventually include tests for other packages
+- name: register distributive tests with consul
+  sudo: yes
+  copy:
+    src: distributive-service-consul.json
+    dest: /etc/consul
+  notify:
+    - reload consul
+  tags:
+    - consul
