@@ -25,7 +25,7 @@
     state: directory
     mode: 0755
   tags:
-  - collectd
+    - collectd
 
 - name: create collectd plugin directory
   sudo: yes
