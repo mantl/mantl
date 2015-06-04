@@ -59,5 +59,13 @@
     - name: pip
     - name: setuptools
 
+- name: install distributive
+  sudo: yes
+  yum:
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/distributive-0.0.1-1.x86_64.rpm"
+    state: present
+  tags:
+    - distributive
+
 - include: users.yml
 - include: ssl.yml
