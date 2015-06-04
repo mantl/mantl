@@ -127,6 +127,51 @@ def parse_bool(string_form):
         raise ValueError('could not convert %r to a bool' % string_form)
 
 
+@parses('digitalocean_droplet')
+@calculate_mi_vars
+def digitalocean_host(resource, tfvars=None):
+    raw_attrs = resource['primary']['attributes']
+    name = raw_attrs['name']
+    groups = []
+
+    attrs = {
+        'id': raw_attrs['id'],
+        'image': raw_attrs['image'],
+        'ipv4_address': raw_attrs['ipv4_address'],
+        'locked': parse_bool(raw_attrs['locked']),
+        'metadata': json.loads(raw_attrs['user_data']),
+        'region': raw_attrs['region'],
+        'size': raw_attrs['size'],
+        'ssh_keys': parse_list(raw_attrs, 'ssh_keys'),
+        'status': raw_attrs['status'],
+        # ansible
+        'ansible_ssh_host': raw_attrs['ipv4_address'],
+        'ansible_ssh_port': 22,
+        'ansible_ssh_user': 'root',  # it's always "root" on DO
+    }
+
+    # attrs specific to microservices-infrastructure
+    attrs.update({
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
+        'role': attrs['metadata'].get('role', 'none')
+    })
+
+    # add groups based on attrs
+    groups.append('do_image=' + attrs['image'])
+    groups.append('do_locked=%s' % attrs['locked'])
+    groups.append('do_region=' + attrs['region'])
+    groups.append('do_size=' + attrs['size'])
+    groups.append('do_status=' + attrs['status'])
+    groups.extend('do_metadata_%s=%s' % item
+                  for item in attrs['metadata'].items())
+
+    # groups specific to microservices-infrastructure
+    groups.append('role=' + attrs['role'])
+    groups.append('dc=' + attrs['consul_dc'])
+
+    return name, attrs, groups
+
+
 @parses('openstack_compute_instance_v2')
 @calculate_mi_vars
 def openstack_host(resource, tfvars=None):
@@ -147,7 +192,7 @@ def openstack_host(resource, tfvars=None):
         'network': parse_attr_list(raw_attrs, 'network'),
         'region': raw_attrs['region'],
         'security_groups': parse_list(raw_attrs, 'security_groups'),
-        #ansible
+        # ansible
         'ansible_ssh_port': 22,
         'ansible_ssh_user': 'centos',
         # workaround for an OpenStack bug where hosts have a different domain
@@ -338,10 +383,8 @@ def query_list(hosts):
 def main():
 
     parser = argparse.ArgumentParser(
-        __file__,
-        __doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
+        __file__, __doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, )
     modes = parser.add_mutually_exclusive_group(required=True)
     modes.add_argument('--list',
                        action='store_true',
