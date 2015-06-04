@@ -9,7 +9,6 @@
   notify:
     - reload consul
 
-# will eventually include tests for other packages
 - name: register distributive tests with consul
   sudo: yes
   copy:
@@ -17,5 +16,17 @@
     dest: /etc/consul
   notify:
     - reload consul
+  tags:
+    - consul
+
+- name: copy distributive consul test
+  sudo: yes
+  copy:
+    src: distributive-checklist-consul.json
+    dest: /usr/share/distributive/consul.json
+
+- name: run distributive consul test
+  sudo: yes
+  command: /usr/bin/distributive -f /usr/share/distributive/consul.json
   tags:
     - consul

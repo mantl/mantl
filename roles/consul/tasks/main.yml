@@ -121,15 +121,3 @@
 
 # install distributive, register checks, and run check on provisioning
 - include: distributive.yml
-
-- name: copy distributive consul test
-  sudo: yes
-  copy:
-    src: distributive-consul-checklist.json
-    dest: /usr/share/distributive/consul.json
-
-- name: run distributive consul test
-  sudo: yes
-  command: /usr/bin/distributive -f /usr/share/distributive/consul.json
-  tags:
-    - consul
