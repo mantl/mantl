@@ -18,6 +18,15 @@
   tags:
     - collectd
 
+- name: enable collectd
+  sudo: yes
+  service:
+    name: collectd
+    enabled: yes
+    state: started
+  tags:
+    - collectd
+
 - name: create collectd plugin directory
   sudo: yes
   file:
