@@ -148,6 +148,9 @@ def digitalocean_host(resource, tfvars=None):
         'ansible_ssh_host': raw_attrs['ipv4_address'],
         'ansible_ssh_port': 22,
         'ansible_ssh_user': 'root',  # it's always "root" on DO
+        # generic
+        'public_ipv4': raw_attrs['ipv4_address'],
+        'private_ipv4': raw_attrs['ipv4_address'],
     }
 
     # attrs specific to microservices-infrastructure
@@ -199,6 +202,9 @@ def openstack_host(resource, tfvars=None):
         # after they're restarted
         'host_domain': 'novalocal',
         'use_host_domain': True,
+        # generic
+        'public_ipv4': raw_attrs['access_ip_v4'],
+        'private_ipv4': raw_attrs['access_ip_v4'],
     }
 
     try:
@@ -262,6 +268,9 @@ def aws_host(resource, tfvars=None):
         'ansible_ssh_port': 22,
         'ansible_ssh_user': raw_attrs['tags.sshUser'],
         'ansible_ssh_host': raw_attrs['public_ip'],
+        # generic
+        'public_ipv4': raw_attrs['public_ip'],
+        'private_ipv4': raw_attrs['private_ip']
     }
 
     # attrs specific to microservices-infrastructure
@@ -330,6 +339,8 @@ def gce_host(resource, tfvars=None):
     try:
         attrs.update({
             'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'],
+            'public_ipv4': interfaces[0]['access_config'][0]['nat_ip'],
+            'private_ipv4': interfaces[0]['address'],
             'publicly_routable': True,
         })
     except (KeyError, ValueError):
