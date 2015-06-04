@@ -4,7 +4,6 @@ variable tenant_name { }
 variable region { }
 variable control_flavor_name { }
 variable resource_flavor_name { }
-variable flavor_name { }
 variable net_id { }
 variable keypair_name { }
 variable image_name { }
