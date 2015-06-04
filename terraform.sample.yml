@@ -35,11 +35,11 @@
   # installation of Distributive
   roles:
     - common
-    - consul
     - logrotate
     - consul-template
     - docker
     - nginx
+    - consul
     - dnsmasq
 
 # ROLES - after provisioning the software that's common to all hosts, we do
