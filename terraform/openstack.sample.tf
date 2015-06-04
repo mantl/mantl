@@ -16,7 +16,6 @@ module "dc2-hosts" {
 	region = "${ module.dc2-keypair.region }"
 	control_flavor_name = ""
 	resource_flavor_name  = ""
-	flavor_name = ""
 	net_id = ""
 	image_name = ""
 	keypair_name = "${ module.dc2-keypair.keypair_name }"
