@@ -21,7 +21,6 @@ ExecStartPre=/bin/bash -c ' \
 ExecStart=/usr/bin/docker run \
     --name={{ zookeeper_container_name }} \
     {{ zookeeper_ports }} \
-    --privileged=true \
     --env-file={{ zookeeper_env }} \
     --volumes-from {{ zookeeper_data_volume }} \
     --volume=/var/log/zookeeper:/var/log/zookeeper \
