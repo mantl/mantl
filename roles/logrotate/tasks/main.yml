@@ -49,3 +49,26 @@
     group: root
   tags:
     - logrotate
+
+- name: configure zookeeper logrotate
+  sudo: yes
+  copy:
+    src: zookeeper
+    dest: /etc/logrotate.d/zookeeper
+    mode: 0644
+    owner: root
+    group: root
+  when: "'role=control' in group_names"
+  tags:
+    - logrotate
+
+- name: create zookeeper archive
+  sudo: yes
+  file:
+    path: /var/log/zookeeper/archive
+    mode: 0755
+    state: directory
+  when: "'role=control' in group_names"
+  tags:
+    - logrotate
+

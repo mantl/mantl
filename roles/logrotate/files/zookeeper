@@ -1,0 +1,12 @@
+/var/log/zookeeper/* {
+        daily
+        rotate 7
+        create
+        missingok
+        compress
+        delaycompress
+        notifempty
+        minsize 1
+        olddir archive
+}
+
