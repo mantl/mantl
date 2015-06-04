@@ -104,6 +104,10 @@ broad_opts.add_argument(
     help='Enable Marathon security. This overrides all other Marathon options.'
 )
 broad_opts.add_argument(
+    '--chronos', type=ImplicitBool.parse_opt, default=True,
+    help='Enable Chronos security. This overrides all other Chronos options.'
+)
+broad_opts.add_argument(
     '--iptables', type=ImplicitBool.parse_opt, default=True,
     help='Use iptables rules. This overrides all other options related to iptables.'
 )
@@ -222,6 +226,27 @@ marathon_opts.add_argument(
     '--marathon-iptables', type=ImplicitBool.parse_opt,
     help='enable Marathon iptables rules',
     dest='do_marathon_iptables', default=True
+)
+
+# Chronos security
+chronos_opts = parser.add_argument_group(
+    "Chronos Options",
+    "enable and disable auth components of Chronos"
+)
+chronos_opts.add_argument(
+    '--chronos-ssl', type=ImplicitBool.parse_opt,
+    help='enable Chronos SSL',
+    dest='do_chronos_ssl', default=True
+)
+chronos_opts.add_argument(
+    '--chronos-auth', type=ImplicitBool.parse_opt,
+    help='enable Chronos authentication',
+    dest='do_chronos_auth', default=True
+)
+chronos_opts.add_argument(
+    '--chronos-iptables', type=ImplicitBool.parse_opt,
+    help='enable Chronos iptables rules',
+    dest='do_chronos_iptables', default=True
 )
 
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
@@ -580,11 +605,47 @@ class Marathon(Component):
             else:
                 print('marathon http credentials already set')
 
+class Chronos(Component):
+    def check(self):
+        return [self.disable_security, self.mesos_auth, self.password]
+
+    def disable_security(self):
+        "disable security"
+        self.toggle_boolean('do_chronos_auth', self.component_enabled(self.args.do_chronos_auth), True)
+        self.toggle_boolean('do_chronos_ssl', self.component_enabled(self.args.do_chronos_ssl), True)
+        self.toggle_boolean(
+            'do_chronos_iptables',
+            self.component_enabled(self.args.do_chronos_iptables and self.args.iptables),
+            True
+        )
+
+    def mesos_auth(self):
+        "chronos framework authentication"
+        with self.modify_security() as config:
+            config.setdefault('chronos_principal', 'chronos')
+            if 'chronos_secret' not in config:
+                config['chronos_secret'] = self.random()
+                print('set chronos framework secret')
+            else:
+                print('chronos secret already set')
+
+    def password(self):
+        "admin password"
+        with self.modify_security() as config:
+            if 'chronos_http_credentials' not in config or self.args.change_admin_password:
+                config['chronos_http_credentials'] = 'admin:{}'.format(self.ask_pass(
+                    prompt='Admin Password: ',
+                    purpose='admin',
+                ))
+                print('set chronos http credentials')
+            else:
+                print('chronos http credentials already set')
+
 
 class Zookeeper(Component):
     def check(self):
          return [
-             self.super_auth, self.mesos_auth, self.marathon_auth,
+             self.super_auth, self.mesos_auth, self.marathon_auth, self.chronos_auth,
          ]
 
     def super_auth(self):
@@ -625,6 +686,20 @@ class Zookeeper(Component):
             else:
                 print('zk marathon user secret already set')
 
+    def chronos_auth(self):
+        "chronos user auth"
+        with self.modify_security() as config:
+            config.setdefault('zk_chronos_user', 'chronos')
+            if 'zk_chronos_user_secret' not in config:
+                credential = self.randpass()
+                config['zk_chronos_user_secret'] = credential
+                config['zk_chronos_user_secret_digest'] = self.zk_digest(
+                    user='chronos', credential=credential
+                )
+                print('set zk chronos user secret')
+            else:
+                print('zk chronos user secret already set')
+
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
@@ -654,6 +729,15 @@ class Mesos(Component):  # Mesos should always come after any frameworks
                 if credential not in config['mesos_credentials']:
                     config['mesos_credentials'].append(credential)
                     print('set auth for Marathon')
+            if 'chronos_principal' in config and 'chronos_secret' in config:
+#                config.setdefault('mesos_credentials', [])
+                credential = {
+                    'principal': config['chronos_principal'],
+                    'secret': config['chronos_secret'],
+                }
+                if credential not in config['mesos_credentials']:
+                    config['mesos_credentials'].append(credential)
+                    print('set auth for Chronos')
 
     def follower_auth(self):
         "follower auth"
