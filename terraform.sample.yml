@@ -32,9 +32,11 @@
     consul_servers_group: role=control
   roles:
     - common
+    - collectd
     - logrotate
     - consul-template
     - docker
+    - logstash
     - nginx
     - consul
     - dnsmasq
