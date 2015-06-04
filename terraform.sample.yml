@@ -30,9 +30,6 @@
     # service discovery.
     consul_dns_domain: consul
     consul_servers_group: role=control
-  # The ordering is important here: in order to run Distributive-based tests upon
-  # provisioning, consul's role must come before all others (as it includes the
-  # installation of Distributive
   roles:
     - common
     - logrotate
