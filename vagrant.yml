@@ -10,13 +10,13 @@
     mesos_mode: mixed
   roles:
     - common
-    - consul
     - collectd
     - logrotate
     - consul-template
     - docker
     - dnsmasq
     - nginx
+    - consul
     - logstash
     - vault
     - zookeeper
