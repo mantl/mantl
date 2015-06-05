@@ -34,6 +34,8 @@
       value: 18080
     - key: event_subscriber
       value: http_callback
+    - key: hostname
+      value: "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
   notify:
     - restart marathon
   tags:
