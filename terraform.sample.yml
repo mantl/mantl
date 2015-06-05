@@ -35,6 +35,7 @@
     - collectd
     - logrotate
     - consul-template
+    - collectd
     - docker
     - logstash
     - nginx
