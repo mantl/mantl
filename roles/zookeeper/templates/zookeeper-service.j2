@@ -16,7 +16,6 @@ ExecStartPre=/bin/bash -c ' \
     /usr/bin/docker run \
         --name={{ zookeeper_data_volume }} \
         -v /var/lib/zookeeper \
-        -v /var/log/zookeeper \
         ciscocloud/data-volume:0.1'
 
 ExecStart=/usr/bin/docker run \
@@ -24,6 +23,7 @@ ExecStart=/usr/bin/docker run \
     {{ zookeeper_ports }} \
     --env-file={{ zookeeper_env }} \
     --volumes-from {{ zookeeper_data_volume }} \
+    --volume=/var/log/zookeeper:/var/log/zookeeper \
     {{ zookeeper_image }}:{{ zookeeper_image_tag }}
 
 ExecStop=/bin/bash -c " \
