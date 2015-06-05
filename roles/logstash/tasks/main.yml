@@ -36,6 +36,23 @@
   tags:
     - logstash
 
+- name: check if logstash syslog port is authorized
+  sudo: yes
+  shell: semanage port --list | grep "^syslogd_port_t.*tcp.*1514"
+  register: selinux_syslog_port_check
+  failed_when: no
+  changed_when: no
+  when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
+  tags:
+    - logstash
+
+- name: authorize logstash syslog port
+  sudo: yes
+  shell: semanage port -a -t syslogd_port_t -p tcp 1514
+  when: selinux_syslog_port_check.rc is defined and selinux_syslog_port_check.rc != 0
+  tags:
+    - logstash
+
 - name: forward all logs from rsyslog to logstash
   sudo: yes
   lineinfile:
