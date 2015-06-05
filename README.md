@@ -28,7 +28,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 <!-- markdown-toc end -->
 
 ## Features
-
+* [Terraform](https://terraform.io) deployment to multiple cloud providers
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery
@@ -149,8 +149,8 @@ make html
 
 ### Operations
 
-- [ ] Logging
-- [ ] Metrics
+- [x] Logging
+- [x] Metrics
 - [ ] In-service upgrade with rollback
 - [ ] Autoscaling of Resource Nodes
 - [ ] Self maintaining system (log rotation, etc)
@@ -162,13 +162,14 @@ make html
 - [ ] Vagrant (Windows + VirtualBox)
 - [x] OpenStack
 - [x] Cisco Cloud Services
-- [X] Cisco MetaCloud
+- [x] Cisco MetaCloud
 - [ ] Cisco Unified Computing System
-- [ ] Amazon Web Services
+- [x] Amazon Web Services
 - [ ] Microsoft Azure
-- [ ] Google Compute Engine
+- [x] Google Compute Engine
 - [ ] VMware vSphere
 - [ ] Apache CloudStack
+- [ ] Digital Ocean
 
 Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
