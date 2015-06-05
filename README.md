@@ -50,7 +50,7 @@ Once WAN joining is configured, each cluster can locate services in other data c
 
 ### Control Nodes
 
-The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
+The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon.
 
 In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned.
 
@@ -58,13 +58,13 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 ### Resource Nodes
 
-Resource nodes launch containers and other Mesos-based workloads. 
+Resource nodes launch containers and other Mesos-based workloads.
 
 ![Resource Node](docs/_static/resource_node.png)
 
 ## Getting Started
 
-All development is done on the `master` branch. Tested, stable versions are identified via git tags. 
+All development is done on the `master` branch. Tested, stable versions are identified via git tags.
 
 ```
     git clone https://github.com/CiscoCloud/microservices-infrastructure.git
@@ -81,7 +81,7 @@ git tag
 git checkout 0.2.0
 ```
 
-A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
+A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your sytem has 4GB of RAM free, then:
 
 ```
 sudo pip install -r requirements.txt
@@ -100,20 +100,11 @@ Requirements for running the project are listed in `requirements.txt`. Of note: 
 
 ### Deploying on multiple servers
 
-If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
-
-1. Install the software components: `pip install -r requirements.txt`.
-2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
-	- [`inventory/1-datacenter`](inventory/1-datacenter)
-	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
-3. Set up security. Run: `./security-setup` 
-4. Run `ansible-playbook -i <your_inventory_file> site.yml -e @security.yml`
-
-The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
+Please refer to the [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html), which covers multi-server and OpenStack deployments.
 
 ## Documentation
 
-All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest). 
+All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest).
 
 To build the documentation locally, run:
 

@@ -35,3 +35,14 @@
     mode: 0755
   tags:
   - collectd
+
+- name: enable collectd
+  sudo: yes
+  service:
+    name: collectd
+    enabled: yes
+    state: started
+  tags:
+    - collectd
+
+
