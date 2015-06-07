@@ -82,6 +82,7 @@ Fixes
 * Remove ansible openstack playbooks. Fixes #402 #411
 * Fix/remove inventory #424
 * Bug in ansible collectd role #431
+* authorize logstash syslog port when selinux enforcing #459
 
 0.2.0 (04-10-2015)
 ------------------
