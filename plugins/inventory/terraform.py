@@ -183,8 +183,8 @@ def openstack_host(resource, module_name):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': module_name,
-        'role': attrs['metadata'].get('role', 'none')
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
     })
 
     # add groups based on attrs
@@ -238,7 +238,7 @@ def aws_host(resource, module_name):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': module_name,
+        'consul_dc': _clean_dc(attrs['tags'].get('dc', module_name)),
         'role': attrs['tags'].get('role', 'none')
     })
 
@@ -295,8 +295,8 @@ def gce_host(resource, module_name):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': module_name,
-        'role': attrs['metadata'].get('role', 'none')
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
     })
 
     try:
