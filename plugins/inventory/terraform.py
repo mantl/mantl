@@ -1,4 +1,18 @@
 #!/usr/bin/env python
+#
+# Copyright 2015 Cisco Systems, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """\
 Dynamic inventory for Terraform - finds all `.tfstate` files below the working
 directory and generates an inventory based on them.
@@ -10,6 +24,8 @@ from functools import wraps
 import json
 import os
 import re
+
+VERSION = '0.3.0pre'
 
 
 def tfstates(root=None):
@@ -25,8 +41,9 @@ def iterresources(filenames):
         with open(filename, 'r') as json_file:
             state = json.load(json_file)
             for module in state['modules']:
+                name = module['path'][-1]
                 for key, resource in module['resources'].items():
-                    yield key, resource
+                    yield name, key, resource
 
 ## READ RESOURCES
 PARSERS = {}
@@ -40,14 +57,14 @@ def _clean_dc(dcname):
 
 def iterhosts(resources):
     '''yield host tuples of (name, attributes, groups)'''
-    for key, resource in resources:
+    for module_name, key, resource in resources:
         resource_type, name = key.split('.', 1)
         try:
             parser = PARSERS[resource_type]
         except KeyError:
             continue
 
-        yield parser(resource)
+        yield parser(resource, module_name)
 
 
 def parses(prefix):
@@ -129,7 +146,7 @@ def parse_bool(string_form):
 
 @parses('openstack_compute_instance_v2')
 @calculate_mi_vars
-def openstack_host(resource, tfvars=None):
+def openstack_host(resource, module_name):
     raw_attrs = resource['primary']['attributes']
     name = raw_attrs['name']
     groups = []
@@ -145,7 +162,7 @@ def openstack_host(resource, tfvars=None):
         'key_pair': raw_attrs['key_pair'],
         'metadata': parse_dict(raw_attrs, 'metadata'),
         'network': parse_attr_list(raw_attrs, 'network'),
-        'region': raw_attrs['region'],
+        'region': raw_attrs.get('region', ''),
         'security_groups': parse_list(raw_attrs, 'security_groups'),
         #ansible
         'ansible_ssh_port': 22,
@@ -166,8 +183,8 @@ def openstack_host(resource, tfvars=None):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
-        'role': attrs['metadata'].get('role', 'none')
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
     })
 
     # add groups based on attrs
@@ -186,7 +203,7 @@ def openstack_host(resource, tfvars=None):
 
 @parses('aws_instance')
 @calculate_mi_vars
-def aws_host(resource, tfvars=None):
+def aws_host(resource, module_name):
     name = resource['primary']['attributes']['tags.Name']
     raw_attrs = resource['primary']['attributes']
 
@@ -221,7 +238,7 @@ def aws_host(resource, tfvars=None):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': attrs['tags'].get('dc'),
+        'consul_dc': _clean_dc(attrs['tags'].get('dc', module_name)),
         'role': attrs['tags'].get('role', 'none')
     })
 
@@ -245,7 +262,7 @@ def aws_host(resource, tfvars=None):
 
 @parses('google_compute_instance')
 @calculate_mi_vars
-def gce_host(resource, tfvars=None):
+def gce_host(resource, module_name):
     name = resource['primary']['id']
     raw_attrs = resource['primary']['attributes']
     groups = []
@@ -278,8 +295,8 @@ def gce_host(resource, tfvars=None):
 
     # attrs specific to microservices-infrastructure
     attrs.update({
-        'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['zone'])),
-        'role': attrs['metadata'].get('role', 'none')
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
     })
 
     try:
@@ -347,6 +364,9 @@ def main():
                        action='store_true',
                        help='list all variables')
     modes.add_argument('--host', help='list variables for a single host')
+    modes.add_argument('--version',
+                       action='store_true',
+                       help='print version and exit')
     parser.add_argument('--pretty',
                         action='store_true',
                         help='pretty-print output JSON')
@@ -360,6 +380,10 @@ def main():
                         help='custom root to search for `.tfstate`s in')
 
     args = parser.parse_args()
+
+    if args.version:
+        print('%s %s' % (__file__, VERSION))
+        parser.exit()
 
     hosts = iterhosts(iterresources(tfstates(args.root)))
     if args.list:
