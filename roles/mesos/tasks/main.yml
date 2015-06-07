@@ -34,6 +34,15 @@
   tags: 
     - mesos
 
+- name: configure /etc/mesos/hostname
+  sudo: yes
+  template:
+    src: hostname.j2
+    dest: /etc/mesos/hostname
+    mode: 0600
+  tags:
+    - mesos
+
 - name: disable mesos leader
   sudo: yes
   service:
