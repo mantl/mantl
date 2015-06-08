@@ -1,11 +1,17 @@
 microservices-infrastructure documentation
 ==========================================
 
+.. image:: /_static/gitter.svg
+   :alt: Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure
+   :target: https://gitter.im/CiscoCloud/microservices-infrastructure
+
 microservices-infrastructure is a modern platform for rapidly deploying globally
 distributed services.
 
 Features
 --------
+
+* `Terraform`_ deployment to multiple cloud providers
 * `Mesos`_ cluster manager for efficient resource isolation and sharing across
   distributed services
 * `Marathon`_ for cluster management of long running containerized services
@@ -14,6 +20,7 @@ Features
 * `Docker`_ container runtime
 * Multi-datacenter support
 * High availablity
+* Security
 
 Contents:
 
@@ -35,6 +42,7 @@ Contents:
    * :ref:`genindex`
    * :ref:`search`
 
+.. _Terraform: https://terraform.io/
 .. _Mesos: https://mesos.apache.org/
 .. _Consul: http://consul.io
 .. _Vault: http://vaultproject.io
