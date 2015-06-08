@@ -191,7 +191,7 @@ If you encounter any issues, please open a [Github Issue](https://github.com/Cis
 
 We also have a [gitter chat room](https://gitter.im/CiscoCloud/microservices-infrastructure). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
 
-Cisco Intercloud Services provides support for OpenStack based deployments of Microservices Infrastructure.
+[Cisco Intercloud Services](https://developer.cisco.com/cloud) provides support for OpenStack based deployments of Microservices Infrastructure.
 
 ## License
 
