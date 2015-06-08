@@ -39,7 +39,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul service discovery with Mesos tasks
 * [marathon-consul](https://github.com/CiscoCloud/marathon-consul) update consul k/v with Marathon tasks
 * Multi-datacenter support
-* High availablity
+* High availability
 * Security
 
 ### Architecture
@@ -87,7 +87,7 @@ git tag
 git checkout 0.3.0
 ```
 
-A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your sytem has 4GB of RAM free, then:
+A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your system has 4GB of RAM free, then:
 
 ```
 sudo pip install -r requirements.txt
@@ -128,7 +128,7 @@ make html
 - [x] Mesos
 - [x] Consul
 - [x] Multi-datacenter
-- [x] High availablity
+- [x] High availability
 - [ ] Rapid immutable deployment (with Terraform + Packer)
 
 ### Mesos Frameworks
@@ -187,11 +187,11 @@ Good issues to start with are marked with the [low hanging fruit](https://github
 
 ## Getting Support
 
-If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily and are dedicated to quick turnaround times.
+If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily.
 
 We also have a [gitter chat room](https://gitter.im/CiscoCloud/microservices-infrastructure). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
 
-Cisco Intercloud Services providees support for OpenStack based deployments of Microservices Infrastructure.
+Cisco Intercloud Services provides support for OpenStack based deployments of Microservices Infrastructure.
 
 ## License
 
