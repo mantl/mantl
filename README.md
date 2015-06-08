@@ -34,6 +34,10 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 * [Consul](http://consul.io) for service discovery
 * [Vault](http://vaultproject.io) for managing secrets
 * [Docker](http://docker.io) container runtime
+* [collectd](https://collectd.org/) for metrics collection
+* [Logstash](https://github.com/elastic/logstash) for log forwarding
+* [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul service discovery with Mesos tasks
+* [marathon-consul](https://github.com/CiscoCloud/marathon-consul) update consul k/v with Marathon tasks
 * Multi-datacenter support
 * High availablity
 * Security
@@ -77,8 +81,10 @@ To use a stable version, use `git tag` to list the stable versions:
 git tag
 0.1.0
 0.2.0
+...
+0.3.0
 
-git checkout 0.2.0
+git checkout 0.3.0
 ```
 
 A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your sytem has 4GB of RAM free, then:
@@ -175,9 +181,17 @@ Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructu
 
 ## Development
 
-If you're interested in contributing to the project, install the software listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
+If you're interested in contributing to the project, install [Terraform](https://www.terraform.io/downloads.html) and the Python modules listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
 
 Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
+
+## Getting Support
+
+If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily and are dedicated to quick turnaround times.
+
+We also have a [gitter chat room](https://gitter.im/CiscoCloud/microservices-infrastructure). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
+
+Cisco Intercloud Services providees support for OpenStack based deployments of Microservices Infrastructure.
 
 ## License
 
