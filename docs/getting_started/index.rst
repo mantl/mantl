@@ -103,6 +103,6 @@ working correctly, use the ``playbooks/reboot-hosts.yml`` playbook.
 
 .. code-block:: shell
 
-    ansible-playbook -i inventory/1-datacenter playbooks/reboot-hosts.yml
+    ansible-playbook playbooks/reboot-hosts.yml
 
 
