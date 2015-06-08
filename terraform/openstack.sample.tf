@@ -3,7 +3,6 @@ module "dc2-keypair" {
 	auth_url = ""
 	tenant_id = ""
 	tenant_name = ""
-	region = ""
 	public_key = ""
 	keypair_name = ""
 }
@@ -11,9 +10,9 @@ module "dc2-keypair" {
 module "dc2-hosts" {
 	source = "./terraform/openstack/hosts"
 	auth_url = ""
+	datacenter = "dc2"
 	tenant_id = ""
 	tenant_name = ""
-	region = "${ module.dc2-keypair.region }"
 	control_flavor_name = ""
 	resource_flavor_name  = ""
 	net_id = ""
@@ -23,4 +22,3 @@ module "dc2-hosts" {
 	resource_count = "3"
 	security_groups = "default"
 }
-
