@@ -2,8 +2,8 @@ OpenStack
 =========
 
 microservices-infrastructure uses Terraform to provision hosts in OpenStack. You
-can _`download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`.
+can `download Terraform from terraform.io
+<http://www.terraform.io/downloads.html>`_.
 
 This project provides a number of playbooks designed for doing host maintenance
 tasks on OpenStack hosts. You can find them in ``playbooks/`` in the main
