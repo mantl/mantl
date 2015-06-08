@@ -4,7 +4,9 @@ Amazon Web Services
 .. versionadded:: 0.3
 
 As of microservices-infrastructure 0.3 you can bring up Amazon Web Services
-environments using Terraform.
+environments using Terraform. microservices-infrastructure uses Terraform to
+provision hosts in OpenStack. You can _`download Terraform from terraform.io
+<http://www.terraform.io/downloads.html>`.
 
 Configuring Amazon Web Services for Terraform
 -----------------------------------------------

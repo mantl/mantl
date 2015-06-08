@@ -18,7 +18,7 @@ module "dc2-hosts" {
 	net_id = ""
 	image_name = ""
 	keypair_name = "${ module.dc2-keypair.keypair_name }"
-	control_count = "2"
-	resource_count = "3"
-	security_groups = "default"
+	control_count = 2
+	resource_count = 3
+	security_groups = ""
 }
