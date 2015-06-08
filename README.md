@@ -102,7 +102,7 @@ Note:
 
 ### Software Requirements
 
-Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.8 or later is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
+Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.9 or later is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
 
 ### Deploying on multiple servers
 
