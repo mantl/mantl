@@ -11,13 +11,20 @@ distributed services.
 Features
 --------
 
-* `Terraform`_ deployment to multiple cloud providers
-* `Mesos`_ cluster manager for efficient resource isolation and sharing across
-  distributed services
-* `Marathon`_ for cluster management of long running containerized services
-* `Consul`_ for service discovery
-* `Vault`_ for managing secrets
-* `Docker`_ container runtime
+* `Terraform <https://terraform.io/>`_ deployment to multiple cloud providers
+* `Mesos <https://mesos.apache.org/>`_ cluster manager for efficient resource
+  isolation and sharing across distributed services
+* `Marathon <https://mesosphere.github.io/marathon/>`_ for cluster management of
+  long running containerized services
+* `Consul <http://consul.io>`_ for service discovery
+* `Vault <http://vaultproject.io>`_ for managing secrets
+* `Docker <http://docker.io>`_ container runtime
+* `collectd <https://collectd.org/>`_ for metrics collection
+* `Logstash <https://github.com/elastic/logstash>`_ for log forwarding
+* `mesos-consul <https://github.com/CiscoCloud/mesos-consul>`_ populating Consul
+  service discovery with Mesos tasks
+* `marathon-consul <https://github.com/CiscoCloud/marathon-consul>`_ update
+  consul k/v with Marathon tasks
 * Multi-datacenter support
 * High availablity
 * Security
@@ -41,13 +48,6 @@ Contents:
 
    * :ref:`genindex`
    * :ref:`search`
-
-.. _Terraform: https://terraform.io/
-.. _Mesos: https://mesos.apache.org/
-.. _Consul: http://consul.io
-.. _Vault: http://vaultproject.io
-.. _Docker: http://docker.io
-.. _Marathon: https://mesosphere.github.io/marathon/
 
 
 License
