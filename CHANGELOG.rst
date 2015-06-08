@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3.0-RC1 (June 4, 2015)
-------------------------
+0.3.0 (June 8, 2015)
+--------------------
 
 Features
 ^^^^^^^^
@@ -89,8 +89,8 @@ Deprecations
   Because of this change, you will need to use the new :doc:`Terraform-based
   Getting Started Guide </getting_started/index>`.
 
-0.2.0 (04-10-2015)
-------------------
+0.2.0 (April 10, 2015)
+----------------------
 
 Features
 ^^^^^^^^
@@ -138,8 +138,8 @@ Fixes
 * Security-setup script hangs on low entropy linux hosts due to /dev/random bug #153
 
 
-0.1.0 (03-02-2015)
-------------------
+0.1.0 (March 2, 2015)
+---------------------
 
 - Initial release.
 
