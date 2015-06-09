@@ -328,6 +328,38 @@ def gce_host(resource, module_name):
     return name, attrs, groups
 
 
+@parses('vsphere_virtual_machine')
+@calculate_mi_vars
+def vsphere_host(resource, module_name):
+    raw_attrs = resource['primary']['attributes']
+    name = raw_attrs['name']
+    groups = []
+
+    attrs = {
+        'id': raw_attrs['id'],
+        'ip_address': raw_attrs['ip_address'],
+        'metadata': parse_dict(raw_attrs, 'configuration_parameters'),
+        'ansible_ssh_port': 22,
+    }
+
+    try:
+        attrs.update({
+            'ansible_ssh_host': raw_attrs['ip_address'],
+        })
+    except (KeyError, ValueError):
+        attrs.update({'ansible_ssh_host': '', })
+
+    attrs.update({
+        'consul_dc': _clean_dc(attrs['metadata'].get('consul_dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
+    })
+
+    groups.append('role=' + attrs['role'])
+    groups.append('dc=' + attrs['consul_dc'])
+
+    return name, attrs, groups
+
+
 ## QUERY TYPES
 def query_host(hosts, target):
     for name, attrs, _ in hosts:
