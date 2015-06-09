@@ -20,7 +20,8 @@ The detailed information about this plugin you can find `here <https://github.co
 VMware template
 ^^^^^^^^^^^^^^^^^
 
-Create `VMware template <https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.vsphere.vm_admin.doc_50%2FGUID-40BC4243-E4FA-4A46-8C8B-F50D92C186ED.html>`_ for microservices cluster. You will able to change CPU and RAM parameters while provisioning a virtual machine from template with Terraform. It's recommended to disable SELinux. Create user and add public RSA keys for SSH into the $HOME/.ssh/authorized_keys. 
+Create `VMware template <https://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.vsphere.vm_admin.doc_50%2FGUID-40BC4243-E4FA-4A46-8C8B-F50D92C186ED.html>`_ for microservices cluster. You will able to change CPU and RAM parameters while provisioning a virtual machine from template with Terraform. It's recommended to disable SELinux. Create user and add public RSA keys for SSH into the $HOME/.ssh/authorized_keys.
+It is required to have VMware tools in the template, because we need to populate resulting ``.tfstate`` file with IP addresses of provisioned machines.
 This configuration was tested on CentOS 7.1 x64. 
 
 
