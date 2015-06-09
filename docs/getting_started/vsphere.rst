@@ -54,7 +54,7 @@ Basic settings
 
 ``short_name`` is the prefix that will be used for the new virtual machines.
 
-``ssh_user`` is the username for the further service provisioning.
+``ssh_user`` is the username for the further service provisioning. This user has to be in the sudoers group with NOPASSWD option.
 
 ``ssh_key`` is the path to the SSH private key.
 
