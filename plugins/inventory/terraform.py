@@ -352,7 +352,7 @@ def vsphere_host(resource, module_name):
     attrs.update({
         'consul_dc': _clean_dc(attrs['metadata'].get('consul_dc', module_name)),
         'role': attrs['metadata'].get('role', 'none'),
-        'ansible_ssh_user": attrs['metadata'].get('ssh_user', 'centos'),
+        'ansible_ssh_user': attrs['metadata'].get('ssh_user', 'centos'),
     })
 
     groups.append('role=' + attrs['role'])
