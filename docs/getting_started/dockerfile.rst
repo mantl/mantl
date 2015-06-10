@@ -20,9 +20,9 @@ Setup
    .. toctree::
       :maxdepth: 1
 
-      * openstack.rst
-      * gce.rst
-      * aws.rst
+      openstack.rst
+      gce.rst
+      aws.rst
 
 3. Finally, you need to create a custom ansible playbook for your cluster. You
    can copy `terraform.sample.yml` to `terraform.yml` in your root directory to
