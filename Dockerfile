@@ -1,22 +1,34 @@
-FROM alpine:3.1
+FROM centos:7
 
-RUN apk add --update openssh openssl python py-pip \
-    && rm -rf /var/cache/apk/*
+ENV TERRAFORM_VERSION 0.5.3
+ENV TERRAFORM_STATE_ROOT /state
+
+RUN mkdir -p /tmp/terraform/ && \
+    cd /tmp/terraform/ && \
+    curl -SLO https://dl.bintray.com/mitchellh/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    cd /usr/local/bin/ && \
+    yum install -y unzip && \
+    unzip /tmp/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    rm -rf /tmp/terraform/ && \
+    yum remove -y unzip && \
+    yum -y clean all
 
 # load microservices-infrastructure and default setup
 COPY . /mi/
 
 # install all dependencies
-RUN apk add --update g++ python-dev \
-    && pip install -U -r /mi/requirements.txt \
-    && apk del --purge g++ python-dev \
-    && rm -rf /var/cache/apk/*
+RUN yum install -y epel-release
+RUN yum install -y python-pip python-crypto openssl openssh-clients && \
+    pip install -U -r /mi/requirements.txt
 
 # load user custom setup
 ONBUILD COPY ssl/ /mi/ssl/
-ONBUILD COPY inventory/ /mi/inventory/
 ONBUILD COPY security.yml /mi/security.yml
+ONBUILD COPY terraform.yml /mi/terraform.yml
+ONBUILD COPY *.tf /mi/
+
+RUN mkdir -p /state
+VOLUME /state
 
 WORKDIR /mi
-CMD ["ansible-playbook", "site.yml", "--extra-vars=@security.yml"]
-
+CMD ["/mi/docker_launch.sh"]
