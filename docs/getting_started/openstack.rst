@@ -24,6 +24,11 @@ the template located at ``terraform/openstack.sample.tf``. It looks like this:
 Copy that file in it's entirety to the root of the project to start
 customization. In the next sections, we'll explain how to obtain these settings.
 
+There is another sample called ``openstack-floating.sample.tf`` in the
+``terraform`` directory. The default sample assumes you are booting VMs directly
+on a public network. Use the floating sample instead if you'd like to provision
+your virtual machines on a private network with floating IPs.
+
 You can also use this file as a base for further customization. For example, you
 can change the names of the modules to be specific to your environment. While we
 will explore the authentication variables in the next sections, you will need to
