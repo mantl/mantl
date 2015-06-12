@@ -22,7 +22,7 @@
 - name: install system utilities
   sudo: yes
   yum:
-    name: httpd-tools
+    name: "{{ item }}"
     state: latest
   with_items:
     - httpd-tools
