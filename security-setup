@@ -605,6 +605,7 @@ class Marathon(Component):
             else:
                 print('marathon http credentials already set')
 
+
 class Chronos(Component):
     def check(self):
         return [self.disable_security, self.mesos_auth, self.password]
