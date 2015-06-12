@@ -80,3 +80,4 @@
     - zookeeper
     - mesos
     - marathon
+    - chronos

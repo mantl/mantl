@@ -1,0 +1,134 @@
+---
+- name: add mesosphere repository
+  sudo: yes
+  yum:
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm 
+    state: present
+  tags:
+    - chronos
+
+- name: install chronos package
+  sudo: yes
+  yum:
+    name: chronos
+    state: present
+  tags:
+    - chronos
+
+- name: create zookeeper acl
+  sudo: yes
+  command: "{{ chronos_zk_acl_cmd }}"
+  notify:
+    - restart chronos
+  when: zk_chronos_user_secret is defined
+  run_once: true
+  tags:
+    - chronos
+
+- name: create chronos conf directory
+  sudo: yes
+  file:
+    dest: /etc/chronos/conf
+    state: directory
+  tags:
+    - chronos
+
+- include: framework_auth.yml
+
+- name: configure chronos unit file
+  sudo: yes
+  replace:
+    dest: /usr/lib/systemd/system/chronos.service
+    regexp: "=network.target"
+    replace: '=mesos-master.service'
+  notify:
+    - reload chronos
+    - restart chronos
+  tags:
+    - chronos
+
+- name: fix chronos bin file
+  sudo: yes
+  replace:
+    dest: /usr/bin/chronos
+    regexp: '\[\[ -s /etc/mesos/zk \]\]'
+    replace: 'false'
+  notify:
+    - restart chronos
+  tags:
+    - chronos
+
+- name: set key/value options
+  sudo: yes
+  when: item.value != ""
+  copy:
+    dest: /etc/chronos/conf/{{ item.key }}
+    content: "{{ item.value }}"
+  with_items:
+    - key: zk_hosts
+      value: "{{ chronos_zk_connect }}"
+    - key: master
+      value: "{{ chronos_zk_mesos_master }}"
+    - key: http_port
+      value: "{{ chronos_port }}"
+    - key: mesos_framework_name
+      value: "chronos"
+  notify:
+    - restart chronos
+  tags:
+    - chronos
+
+- name: enable and start chronos
+  sudo: yes
+  service:
+    enabled: yes
+    name: chronos
+    state: started
+  tags:
+    - chronos
+
+- meta: flush_handlers
+
+- include: nginx-proxy.yml
+
+- name: deploy iptables configuration
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: chronos-consul.cfg
+      dest: /etc/consul-template/config.d
+  notify:
+    - reload consul-template
+  tags:
+    - chronos
+
+- name: deploy iptables template
+  sudo: yes
+  template:
+    src: chronos-iptables.tmpl.j2
+    dest: /etc/consul-template/templates/chronos-iptables.tmpl
+  notify:
+    - reload consul-template
+  tags:
+    - chronos
+
+- name: ensure consul.d is present
+  sudo: yes
+  file:
+    path: "{{ consul_dir }}"
+    state: directory
+  tags:
+    - chronos
+
+- name: generate chronos consul service
+  sudo: yes
+  template:
+    src: chronos-consul.j2
+    dest: "{{ consul_dir }}/chronos.json"
+  notify:
+    - reload consul
+  tags:
+    - chronos
+

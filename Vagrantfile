@@ -23,6 +23,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ".", "/vagrant", type: "rsync"
 
   config.vm.network :forwarded_port, guest: 2181,  host: 2181  # ZooKeeper
+  config.vm.network :forwarded_port, guest: 4400,  host: 4400  # Chronos
   config.vm.network :forwarded_port, guest: 5050,  host: 5050  # Mesos leader
   config.vm.network :forwarded_port, guest: 15050, host: 15050 # Mesos leader UI
   config.vm.network :forwarded_port, guest: 5051,  host: 5051  # Mesos follower
