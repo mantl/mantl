@@ -5,6 +5,10 @@ microservices-infrastructure documentation
    :alt: Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure
    :target: https://gitter.im/CiscoCloud/microservices-infrastructure
 
+.. image:: https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready
+   :alt: Stories in Ready
+   :target: https://waffle.io/CiscoCloud/microservices-infrastructure
+
 microservices-infrastructure is a modern platform for rapidly deploying globally
 distributed services.
 
