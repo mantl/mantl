@@ -12,6 +12,7 @@ variable resource_count {}
 variable security_groups {}
 variable short_name { default = "mi" }
 variable long_name { default = "microservices-infrastructure" }
+variable ssh_user { default = "centos" }
 
 provider "openstack" {
   auth_url = "${ var.auth_url }"
@@ -29,6 +30,7 @@ resource "openstack_compute_instance_v2" "control" {
   metadata = {
      dc = "${var.datacenter}"
      role = "control"
+     ssh_user = "${ var.ssh_user }"
    }
   count = "${ var.control_count }"
 }
@@ -41,8 +43,9 @@ resource "openstack_compute_instance_v2" "resource" {
   security_groups = [ "${ var.security_groups }" ]
   network = { uuid = "${ var.net_id }" }
   metadata = {
-     dc = "${var.datacenter}"
-     role = "worker"
+    dc = "${var.datacenter}"
+    role = "worker"
+    ssh_user = "${ var.ssh_user }"
    }
   count = "${ var.resource_count }"
 }
