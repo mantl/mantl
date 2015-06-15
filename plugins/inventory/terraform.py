@@ -214,7 +214,7 @@ def openstack_host(resource, module_name):
         'security_groups': parse_list(raw_attrs, 'security_groups'),
         # ansible
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos')
+        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
         # workaround for an OpenStack bug where hosts have a different domain
         # after they're restarted
         'host_domain': 'novalocal',
