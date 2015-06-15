@@ -5,16 +5,16 @@ variable keypair_name {}
 variable public_key {}
 
 provider "openstack" {
-  auth_url      = "${ var.auth_url }"
-  tenant_id     = "${ var.tenant_id }"
-  tenant_name   = "${ var.tenant_name }"
+  auth_url = "${ var.auth_url }"
+  tenant_id = "${ var.tenant_id }"
+  tenant_name = "${ var.tenant_name }"
 }
 
 resource "openstack_compute_keypair_v2" "keypair" {
-  name          = "${ var.keypair_name }"
-  public_key    = "${ file(var.public_key) }"
+  name = "${ var.keypair_name }"
+  public_key = "${ file(var.public_key) }"
 }
 
 output "keypair_name" {
-	value = "${ openstack_compute_keypair_v2.keypair.name }"
+ value = "${ openstack_compute_keypair_v2.keypair.name }"
 }
