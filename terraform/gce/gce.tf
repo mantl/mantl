@@ -6,7 +6,7 @@ variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "region" {default = "us-central1-a"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
-variable "ssh_username" {default = "deploy"}
+variable "ssh_user" {default = "deploy"}
 variable "worker_count" {default = 1}
 variable "worker_type" {default = "n1-highcpu-2"}
 
@@ -76,9 +76,10 @@ resource "google_compute_instance" "mi-control-nodes" {
   }
 
   metadata {
-    sshKeys = "${var.ssh_username}:${file(var.ssh_key)} ${var.ssh_username}"
-    role = "control"
     dc = "${var.datacenter}"
+    role = "control"
+    sshKeys = "${var.ssh_user}:${file(var.ssh_key)} ${var.ssh_user}"
+    ssh_user = "${var.ssh_user}"
   }
 
   count = "${var.control_count}"
@@ -103,9 +104,10 @@ resource "google_compute_instance" "mi-worker-nodes" {
   }
 
   metadata {
-    sshKeys = "${var.ssh_username}:${file(var.ssh_key)} ${var.ssh_username}"
-    role = "worker"
     dc = "${var.datacenter}"
+    role = "worker"
+    sshKeys = "${var.ssh_user}:${file(var.ssh_key)} ${var.ssh_user}"
+    ssh_user = "${var.ssh_user}"
   }
 
   count = "${var.worker_count}"
