@@ -4,7 +4,7 @@ variable image_name { default = "centos-7-0-x64" }
 variable region_name { default = "nyc3" }
 variable control_count { default = 1 }
 variable worker_count { default = 3 }
-variable control_size { default = "1gb" }
+variable control_size { default = "4gb" }
 variable worker_size { default = "4gb" }
 variable ssh_key { }
 
