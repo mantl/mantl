@@ -27,9 +27,9 @@
   file:
     path: /usr/share/distributive
     state: directory
-    mode: 0770
-    owner: consul
-    group: consul
+    mode: 0775
+    owner: root
+    group: root
   tags:
     - distributive
 
@@ -38,9 +38,9 @@
   copy:
     src: distributive-checklist-consul.json
     dest: /usr/share/distributive/consul.json
-    mode: 0770
-    owner: consul
-    group: consul
+    mode: 0775
+    owner: root
+    group: root
   tags:
     - distributive
 
