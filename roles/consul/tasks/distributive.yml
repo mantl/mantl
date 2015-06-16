@@ -1,6 +1,6 @@
 ---
 # some created directories may be redundant, but are kept in case anything else
-# changes.
+# changes, and to enable the picking and choosing of components/roles.
 - name: create consul configuration directory
   sudo: yes
   file:
@@ -14,7 +14,7 @@
 - name: register distributive tests with consul
   sudo: yes
   copy:
-    src: distributive-service-consul.json
+    src: distributive-consul-config.json
     dest: /etc/consul
   notify:
     - reload consul
@@ -28,6 +28,8 @@
     path: /usr/share/distributive
     state: directory
     mode: 0770
+    owner: consul
+    group: consul
   tags:
     - distributive
 
@@ -36,6 +38,11 @@
   copy:
     src: distributive-checklist-consul.json
     dest: /usr/share/distributive/consul.json
+    mode: 0770
+    owner: consul
+    group: consul
+  tags:
+    - distributive
 
 - name: run distributive consul test
   sudo: yes
