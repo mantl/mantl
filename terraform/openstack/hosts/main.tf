@@ -12,38 +12,41 @@ variable resource_count {}
 variable security_groups { default = "default" }
 variable short_name { default = "mi" }
 variable long_name { default = "microservices-infrastructure" }
+variable ssh_user { default = "centos" }
 
 provider "openstack" {
-  auth_url	= "${ var.auth_url }"
+  auth_url = "${ var.auth_url }"
   tenant_id	= "${ var.tenant_id }"
   tenant_name	= "${ var.tenant_name }"
 }
 
 resource "openstack_compute_instance_v2" "control" {
-  name			= "${ var.short_name}-control-${format("%02d", count.index+1) }"
-  key_pair		= "${ var.keypair_name }"
-  image_name		= "${ var.image_name }"
-  flavor_name		= "${ var.control_flavor_name }"
-  security_groups	= [ "${ var.security_groups }" ]
-  network		= { uuid = "${ var.net_id }" }
-  metadata		= {
-			    dc = "${var.datacenter}"
-			    role = "control"
-			  }
-  count			= "${ var.control_count }"
+  name = "${ var.short_name}-control-${format("%02d", count.index+1) }"
+  key_pair = "${ var.keypair_name }"
+  image_name = "${ var.image_name }"
+  flavor_name = "${ var.control_flavor_name }"
+  security_groups = [ "${ var.security_groups }" ]
+  network = { uuid  = "${ var.net_id }" }
+  metadata = {
+     dc = "${var.datacenter}"
+     role = "control"
+     ssh_user = "${ var.ssh_user }"
+   }
+  count = "${ var.control_count }"
 }
 
 resource "openstack_compute_instance_v2" "resource" {
-  name			= "${ var.short_name}-worker-${format("%02d", count.index+1) }"
-  key_pair		= "${ var.keypair_name }"
-  image_name		= "${ var.image_name }"
-  flavor_name		= "${ var.resource_flavor_name }"
-  security_groups	= [ "${ var.security_groups }" ]
-  network		= { uuid = "${ var.net_id }" }
-  metadata		= {
-			    dc = "${var.datacenter}"
-			    role = "worker"
-			  }
-  count			= "${ var.resource_count }"
+  name = "${ var.short_name}-worker-${format("%02d", count.index+1) }"
+  key_pair = "${ var.keypair_name }"
+  image_name = "${ var.image_name }"
+  flavor_name = "${ var.resource_flavor_name }"
+  security_groups = [ "${ var.security_groups }" ]
+  network = { uuid = "${ var.net_id }" }
+  metadata = {
+    dc = "${var.datacenter}"
+    role = "worker"
+    ssh_user = "${ var.ssh_user }"
+   }
+  count = "${ var.resource_count }"
 }
 
