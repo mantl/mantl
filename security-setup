@@ -520,10 +520,10 @@ class Nginx(Component):
 
 class Consul(Component):
     def check(self):
-        return [self.disable_security, self.gossip_key, self.master_acl_token, self.agent_acl_token, self.cert, self.default_acl_policy]
+        return [self.check_security, self.gossip_key, self.master_acl_token, self.agent_acl_token, self.cert, self.default_acl_policy]
 
-    def disable_security(self):
-        "disable security"
+    def check_security(self):
+        "check security"
         self.toggle_boolean('do_consul_auth', self.component_enabled(self.args.do_consul_auth), True)
         self.toggle_boolean('do_consul_ssl', self.component_enabled(self.args.do_consul_ssl), True)
         self.toggle_boolean('do_consul_acl', self.component_enabled(self.args.do_consul_acl), True)
@@ -571,10 +571,10 @@ class Consul(Component):
 
 class Marathon(Component):
     def check(self):
-        return [self.disable_security, self.mesos_auth, self.password]
+        return [self.check_security, self.mesos_auth, self.password]
 
-    def disable_security(self):
-        "disable security"
+    def check_security(self):
+        "check security"
         self.toggle_boolean('do_marathon_auth', self.component_enabled(self.args.do_marathon_auth), True)
         self.toggle_boolean('do_marathon_ssl', self.component_enabled(self.args.do_marathon_ssl), True)
         self.toggle_boolean(
@@ -608,10 +608,10 @@ class Marathon(Component):
 
 class Chronos(Component):
     def check(self):
-        return [self.disable_security, self.mesos_auth, self.password]
+        return [self.check_security, self.mesos_auth, self.password]
 
-    def disable_security(self):
-        "disable security"
+    def check_security(self):
+        "check security"
         self.toggle_boolean('do_chronos_auth', self.component_enabled(self.args.do_chronos_auth), True)
         self.toggle_boolean('do_chronos_ssl', self.component_enabled(self.args.do_chronos_ssl), True)
         self.toggle_boolean(
@@ -704,10 +704,10 @@ class Zookeeper(Component):
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
-        return [self.disable_security, self.framework_auth, self.follower_auth, self.deprecate]
+        return [self.check_security, self.framework_auth, self.follower_auth, self.deprecate]
 
-    def disable_security(self):
-        "disable security"
+    def check_security(self):
+        "check security"
         self.toggle_boolean('do_mesos_ssl', self.component_enabled(self.args.do_mesos_ssl), True)
         self.toggle_boolean('do_mesos_auth', self.component_enabled(self.args.do_mesos_auth), True)
         self.toggle_boolean('do_mesos_follower_auth', self.component_enabled(self.args.do_mesos_follower_auth), True)
