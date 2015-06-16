@@ -17,6 +17,15 @@
   tags:
     - mesos
 
+- name: set ip
+  sudo: yes
+  copy:
+    content: "{{ private_ipv4 }}"
+    dest: /etc/mesos-slave/ip
+  notify: restart mesos follower
+  tags:
+    - mesos
+
 - name: write credential
   when: do_mesos_follower_auth|bool
   sudo: yes

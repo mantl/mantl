@@ -27,6 +27,7 @@ platforms:
    openstack.rst
    gce.rst
    aws.rst
+   digitalocean.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
@@ -103,6 +104,9 @@ working correctly, use the ``playbooks/reboot-hosts.yml`` playbook.
 
 .. code-block:: shell
 
-    ansible-playbook -i inventory/1-datacenter playbooks/reboot-hosts.yml
+    ansible-playbook playbooks/reboot-hosts.yml
 
+Using a Docker Container to Provision your Cluster
+---------------------------------------------------
 
+You can also provision your cluster by running a docker container. See :doc:`dockerfile` for more information.

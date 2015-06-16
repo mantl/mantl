@@ -4,7 +4,9 @@ Amazon Web Services
 .. versionadded:: 0.3
 
 As of microservices-infrastructure 0.3 you can bring up Amazon Web Services
-environments using Terraform.
+environments using Terraform. microservices-infrastructure uses Terraform to
+provision hosts in OpenStack. You can `download Terraform from terraform.io
+<http://www.terraform.io/downloads.html>`_.
 
 Configuring Amazon Web Services for Terraform
 -----------------------------------------------
@@ -21,6 +23,74 @@ the template located at ``terraform/aws.sample.tf``. It looks like this:
 Copy that file in it's entirety to the root of the project to start
 customization. In the next sections, we'll describe the settings that you need
 to configure.
+
+Creating an IAM User
+^^^^^^^^^^^^^^^^^^^^^
+
+Before running Terraform, we need to supply it with valid AWS credentials. While
+you could use the credentials for your AWS root account, it is `not recommended
+<http://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html>`_.
+In this section, we'll cover creating an `IAM User
+<http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html>`_
+that has the necessary permissions to build your cluster with Terraform.
+
+.. note:: You'll need to have an existing AWS account with sufficient IAM
+          permissions in order to follow along. If not, ask your account owner
+          to perform this step for you.
+
+First, sign in to your AWS Console and navigate to the `Identity & Access
+Management (IAM) <https://console.aws.amazon.com/iam/home>`_ service.
+
+.. image:: /_static/aws_iam.png
+   :alt: The AWS Identity & Access Management Service
+
+Next, navigate to the "Users" screen and click the "Create New Users" button.
+
+.. image:: /_static/aws_iam_users.png
+   :alt: Create IAM User
+
+You will be given the opportunity to create 5 different users on the next
+screen. For our purposes, we are just going to create one:
+"microservices-infrastructure". Make sure that you leave the "Generate an access
+key for each user" option checked and click the "Create" button.
+
+.. image:: /_static/aws_iam_create_user.png
+   :alt: IAM Create User
+
+On the next screen, you will be able to view and download your new Access Key ID
+and Secret Access Key. Make sure you capture these values in a safe and secure
+place as you will need them in the next section. You won't be able to retrieve
+your secret key later (although you can generate a new one, if needed).
+
+The next step is to grant permissions to your new IAM user. Navigate back to the
+"Users" section and then click on the user name you just created. On the next
+screen, you will be able to manage the groups your user belongs to and to grant
+the permissions to view and modify AWS resources. For this example, we will not
+be using groups but that would be an option if you wanted to create multiple IAM
+users with the same permissions. We are going to keep it simple and use a
+managed policy to grant the necessary permissions to our IAM user.
+
+Click the "Attach Policy" button.
+
+.. image:: /_static/aws_iam_attach_policy.png
+   :alt: IAM User attach policy
+
+On the "Attach Policy" screen you will see a long list of pre-built permissions
+policies. You can either scroll through the list or use the search filter to
+find the policy named "AmazonEC2FullAccess". Check the box next to that policy
+and click the "Attach Policy" button.
+
+.. image:: /_static/aws_ec2fullaccess.png
+   :alt: IAM AmazonEC2FullAccess Managed Policy
+
+That's it. At this point, your IAM user has sufficient privileges to provision
+your cluster with Terraform.
+
+.. note:: Technically the "AmazonEC2FullAccess" managed policy grants more
+          permissions than are actually needed. If you are interested in
+          configuring your IAM user with the minimum set of permissions to
+          provision a cluster, you can see the custom policy included at the
+          bottom of this document.
 
 Provider Settings
 ^^^^^^^^^^^^^^^^^^
@@ -80,3 +150,12 @@ Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
 microservices-infrastructure on your new cluster.
+
+Custom IAM Policy
+^^^^^^^^^^^^^^^^^^
+
+At the time of this writing, the following IAM policy grants the minimal
+permissions needed to provision an AWS cluster with Terraform.
+
+.. literalinclude:: /_static/aws_custom_iam_policy.json
+   :language: javascript

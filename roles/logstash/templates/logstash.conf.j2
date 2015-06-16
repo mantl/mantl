@@ -7,6 +7,10 @@ input {
     path => "/logs/mesos/*"
     type => mesos
   }
+  file {
+    path => "/logs/zookeeper/*"
+    type => zookeeper
+  }
   syslog {
     port => 1514
     type => syslog

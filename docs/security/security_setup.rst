@@ -9,7 +9,7 @@ it again, as many times as you want. It will only set the variables it needs to.
 After you've set up security with the script, you can include it in your
 playbook runs by specifying the ``-e`` or ``--extra-vars`` option, like so::
 
-    ansible-playbook site.yml --extra-vars=@security.yml
+    ansible-playbook --extra-vars=@security.yml your_playbook.yml
 
 Certificates
 ------------

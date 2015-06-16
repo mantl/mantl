@@ -1,7 +1,6 @@
 variable auth_url {}
 variable tenant_id {}
 variable tenant_name {}
-variable region {}
 variable keypair_name {}
 variable public_key {}
 
@@ -12,7 +11,6 @@ provider "openstack" {
 }
 
 resource "openstack_compute_keypair_v2" "keypair" {
-  region        = "${ var.region }"
   name          = "${ var.keypair_name }"
   public_key    = "${ file(var.public_key) }"
 }

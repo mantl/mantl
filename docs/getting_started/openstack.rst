@@ -1,8 +1,12 @@
 OpenStack
 =========
 
+microservices-infrastructure uses Terraform to provision hosts in OpenStack. You
+can `download Terraform from terraform.io
+<http://www.terraform.io/downloads.html>`_.
+
 This project provides a number of playbooks designed for doing host maintenance
-tasks on OpenStack hosts. You can find them in ``openstack/`` in the main
+tasks on OpenStack hosts. You can find them in ``playbooks/`` in the main
 project directory.
 
 Configuring OpenStack authentication 
@@ -17,10 +21,20 @@ the template located at ``terraform/openstack.sample.tf``. It looks like this:
 .. literalinclude:: ../../terraform/openstack.sample.tf
    :language: javascript
 
-You can use that file as a base for further customization. For example, you can
-change the names of the modules to be specific to your environment. While we
+Copy that file in it's entirety to the root of the project to start
+customization. In the next sections, we'll explain how to obtain these settings.
+
+You can also use this file as a base for further customization. For example, you
+can change the names of the modules to be specific to your environment. While we
 will explore the authentication variables in the next sections, you will need to
-provide the ``region``, ``flavor_name``, and other such variables yourself.
+provide the ``region``, ``flavor_name``, and other such variables yourself. You
+can get these variables from the OpenStack command line tools. For example:
+
+- ``glance image-list`` for ``image_name``
+- ``keystone tenant-list`` for ``tenant_id`` and ``tenant_name``
+- ``nova flavor-list`` for ``control_flavor_name`` and ``resource_flavor_name``
+
+Or use the appropriate OpenStack commands such as ``openstack project list``.
 
 Getting OpenStack tenant settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

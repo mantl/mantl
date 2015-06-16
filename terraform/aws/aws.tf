@@ -126,6 +126,13 @@ resource "aws_security_group" "control" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress { # Chronos
+    from_port = 4400
+    to_port = 4400
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress { # Consul
     from_port = 8500
     to_port = 8500

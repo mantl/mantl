@@ -8,6 +8,15 @@
     - collectd
     - bootstrap
 
+- name: create collectd plugin directory
+  sudo: yes
+  file:
+    path: /usr/share/collectd/plugins
+    state: directory
+    mode: 0755
+  tags:
+  - collectd
+
 - name: configure collectd
   sudo: yes
   template:
@@ -18,11 +27,13 @@
   tags:
     - collectd
 
-- name: create collectd plugin directory
+- name: enable collectd
   sudo: yes
-  file:
-    path: /usr/share/collectd/plugins
-    state: directory
-    mode: 0755
+  service:
+    name: collectd
+    enabled: yes
+    state: started
   tags:
-  - collectd
+    - collectd
+
+

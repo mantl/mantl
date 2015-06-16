@@ -8,6 +8,8 @@
     consul_bootstrap_expect: 1
     mesos_cluster: vagrant
     mesos_mode: mixed
+    private_ipv4: "{{ ansible_default_ipv4.address }}"
+    public_ipv4: "{{ ansible_default_ipv4.address }}"
   roles:
     - common
     - collectd
@@ -22,3 +24,4 @@
     - zookeeper
     - mesos
     - marathon
+    - chronos

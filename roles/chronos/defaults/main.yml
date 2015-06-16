@@ -1,0 +1,27 @@
+---
+# right now there is an issue with chronos zookeeper connection with auth, so leave it blank for now
+chronos_zk_auth: "" 
+chronos_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
+chronos_zk_port: 2181
+chronos_zk_chroot: chronos
+chronos_zk_connect: "zk://{{chronos_zk_auth}}{{ chronos_zk_dns }}:{{ chronos_zk_port }}/{{chronos_zk_chroot}}"
+
+chronos_zk_mesos_master: "zk://{{ chronos_zk_dns }}:{{ chronos_zk_port }}/mesos"
+
+# zookeeper
+zk_docker_image: "ciscocloud/zookeeper:0.2"
+chronos_zk_acl_world: "world:anyone:cdrwa"
+chronos_zk_acl: "{% if zk_chronos_user_secret is defined %}digest:{{ zk_chronos_user }}:{{ zk_chronos_user_secret_digest}}:cdraw{% endif  %}"
+
+chronos_zk_acl_cmd: "docker run --rm -e ZK_AUTH=super:{{ zk_super_user_secret }} -e ZNODE=/{{ chronos_zk_chroot }} -e ZNODE_ACL={{ chronos_zk_acl_world }},{{ chronos_zk_acl }} -e ZK_SERVER={{ chronos_zk_dns }}:{{ chronos_zk_port }} --entrypoint /usr/local/bin/setacl.sh {{ zk_docker_image }}"
+
+chronos_port: 14400
+chronos_proxy_port: 4400
+
+# framework authentication
+
+# register service with consul
+consul_bin: /bin/consul
+consul_dir: /etc/consul
+consul_nginx_image: ciscocloud/nginx-consul
+consul_nginx_image_tag: 1.1

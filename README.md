@@ -1,6 +1,7 @@
 # Overview
 
 [![Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/microservices-infrastructure?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Stories in Ready](https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready)](https://waffle.io/CiscoCloud/microservices-infrastructure)
 
 Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
 
@@ -28,14 +29,18 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 <!-- markdown-toc end -->
 
 ## Features
-
+* [Terraform](https://terraform.io) deployment to multiple cloud providers
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery
 * [Vault](http://vaultproject.io) for managing secrets
 * [Docker](http://docker.io) container runtime
+* [collectd](https://collectd.org/) for metrics collection
+* [Logstash](https://github.com/elastic/logstash) for log forwarding
+* [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul service discovery with Mesos tasks
+* [marathon-consul](https://github.com/CiscoCloud/marathon-consul) update consul k/v with Marathon tasks
 * Multi-datacenter support
-* High availablity
+* High availability
 * Security
 
 ### Architecture
@@ -50,7 +55,7 @@ Once WAN joining is configured, each cluster can locate services in other data c
 
 ### Control Nodes
 
-The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon. 
+The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon.
 
 In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned.
 
@@ -58,13 +63,13 @@ In general, it's best to provision 3 or 5 control nodes to achieve higher availa
 
 ### Resource Nodes
 
-Resource nodes launch containers and other Mesos-based workloads. 
+Resource nodes launch containers and other Mesos-based workloads.
 
 ![Resource Node](docs/_static/resource_node.png)
 
 ## Getting Started
 
-All development is done on the `master` branch. Tested, stable versions are identified via git tags. 
+All development is done on the `master` branch. Tested, stable versions are identified via git tags.
 
 ```
     git clone https://github.com/CiscoCloud/microservices-infrastructure.git
@@ -77,11 +82,13 @@ To use a stable version, use `git tag` to list the stable versions:
 git tag
 0.1.0
 0.2.0
+...
+0.3.0
 
-git checkout 0.2.0
+git checkout 0.3.0
 ```
 
-A Vagrantfile is provided that provisions everything on a single VM. To run (ensure that your sytem has 4GB or RAM free):
+A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your system has 4GB of RAM free, then:
 
 ```
 sudo pip install -r requirements.txt
@@ -96,24 +103,15 @@ Note:
 
 ### Software Requirements
 
-Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.8 or later is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
+Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.9 or later is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
 
 ### Deploying on multiple servers
 
-If you already have running instances (Centos7 is the only Linux distribution supported at this time), do the following to deploy the software:
-
-1. Install the software components: `pip install -r requirements.txt`.
-2. Create an [Ansible inventory](http://docs.ansible.com/intro_inventory.html) file. You can use the the following files as examples, replacing the host names with your instances: 
-	- [`inventory/1-datacenter`](inventory/1-datacenter)
-	- [`inventory/2-datacenter`](inventory/2-datacenter) Multi-DC with WAN join. Ensure that DCs have network connectivity to each other, especially for ports 8300-8302. 
-3. Set up security. Run: `./security-setup` 
-4. Run `ansible-playbook -i <your_inventory_file> site.yml -e @security.yml`
-
-The [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html) covers multi-server and OpenStack deployments.
+Please refer to the [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html), which covers multi-server and OpenStack deployments.
 
 ## Documentation
 
-All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest). 
+All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest).
 
 To build the documentation locally, run:
 
@@ -131,7 +129,7 @@ make html
 - [x] Mesos
 - [x] Consul
 - [x] Multi-datacenter
-- [x] High availablity
+- [x] High availability
 - [ ] Rapid immutable deployment (with Terraform + Packer)
 
 ### Mesos Frameworks
@@ -158,8 +156,8 @@ make html
 
 ### Operations
 
-- [ ] Logging
-- [ ] Metrics
+- [x] Logging
+- [x] Metrics
 - [ ] In-service upgrade with rollback
 - [ ] Autoscaling of Resource Nodes
 - [ ] Self maintaining system (log rotation, etc)
@@ -171,21 +169,30 @@ make html
 - [ ] Vagrant (Windows + VirtualBox)
 - [x] OpenStack
 - [x] Cisco Cloud Services
-- [X] Cisco MetaCloud
+- [x] Cisco MetaCloud
 - [ ] Cisco Unified Computing System
-- [ ] Amazon Web Services
+- [x] Amazon Web Services
 - [ ] Microsoft Azure
-- [ ] Google Compute Engine
+- [x] Google Compute Engine
 - [ ] VMware vSphere
 - [ ] Apache CloudStack
+- [ ] Digital Ocean
 
 Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
 ## Development
 
-If you're interested in contributing to the project, install the software listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
+If you're interested in contributing to the project, install [Terraform](https://www.terraform.io/downloads.html) and the Python modules listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
 
 Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
+
+## Getting Support
+
+If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily.
+
+We also have a [gitter chat room](https://gitter.im/CiscoCloud/microservices-infrastructure). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
+
+[Cisco Intercloud Services](https://developer.cisco.com/cloud) provides support for OpenStack based deployments of Microservices Infrastructure.
 
 ## License
 

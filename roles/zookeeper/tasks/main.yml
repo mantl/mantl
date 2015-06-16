@@ -44,6 +44,16 @@
   tags:
     - zookeeper
 
+- name: create zookeeper log directory
+  sudo: yes
+  file:
+    path: /var/log/zookeeper
+    state: directory
+    mode: 0755
+    setype: svirt_sandbox_file_t
+  tags:
+    - zookeeper
+
 - name: install zookeeper scripts
   sudo: yes
   copy:

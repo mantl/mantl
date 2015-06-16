@@ -1,6 +1,6 @@
 ---
-logstash_image: keithchambers/logstash
-logstash_image_tag: latest
+logstash_image: ciscocloud/logstash
+logstash_image_tag: 0.2
 
 # Stdout
 logstash_output_stdout: no

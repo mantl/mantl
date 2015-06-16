@@ -1,7 +1,7 @@
 variable auth_url { }
+variable datacenter { default = "openstack" }
 variable tenant_id { }
 variable tenant_name { }
-variable region { }
 variable control_flavor_name { }
 variable resource_flavor_name { }
 variable net_id { }
@@ -20,26 +20,30 @@ provider "openstack" {
 }
 
 resource "openstack_compute_instance_v2" "control" {
-  region		= "${ var.region }"
   name			= "${ var.short_name}-control-${format("%02d", count.index+1) }"
   key_pair		= "${ var.keypair_name }"
   image_name		= "${ var.image_name }"
   flavor_name		= "${ var.control_flavor_name }"
   security_groups	= [ "${ var.security_groups }" ]
   network		= { uuid = "${ var.net_id }" }
-  metadata		= { role = "control" }
+  metadata		= {
+			    dc = "${var.datacenter}"
+			    role = "control"
+			  }
   count			= "${ var.control_count }"
 }
 
 resource "openstack_compute_instance_v2" "resource" {
-  region		= "${ var.region }"
   name			= "${ var.short_name}-worker-${format("%02d", count.index+1) }"
   key_pair		= "${ var.keypair_name }"
   image_name		= "${ var.image_name }"
   flavor_name		= "${ var.resource_flavor_name }"
   security_groups	= [ "${ var.security_groups }" ]
   network		= { uuid = "${ var.net_id }" }
-  metadata		= { role = "worker" }
+  metadata		= {
+			    dc = "${var.datacenter}"
+			    role = "worker"
+			  }
   count			= "${ var.resource_count }"
 }
 
