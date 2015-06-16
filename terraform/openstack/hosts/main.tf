@@ -9,7 +9,7 @@ variable keypair_name { }
 variable image_name { }
 variable control_count {}
 variable resource_count {}
-variable security_groups {}
+variable security_groups { default = "default" }
 variable short_name { default = "mi" }
 variable long_name { default = "microservices-infrastructure" }
 
