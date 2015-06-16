@@ -1,6 +1,28 @@
 Changelog
 =========
 
+0.3.1-RC1 (June 16, 2015)
+------------------
+
+Features
+^^^^^^^^
+
+* Add Distributive system checker #434
+* Add Chronos role  #437
+* Add DigitalOcean terraform provider #449
+* Add VMware vSphere terraform provider #471
+* Support for terraform in Dockerfile #481
+
+Fixes
+^^^^^
+
+* OpenStack: Use default security group #477
+* Update variable underline to avoid showing up as component  #482
+* Digital ocean: 1GB is too small for a control node #490
+* terraform.py username #491
+* Terraform (digitalocean): add datacenter  #493
+* Security-setup: s/disable security/check security/ #494
+
 0.3.0 (June 8, 2015)
 --------------------
 
