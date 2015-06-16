@@ -4,7 +4,7 @@
   yum:
     name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.2-2.el7.centos.x86_64.rpm"
     state: present
-  tags: 
+  tags:
     - consul
     - bootstrap
 
@@ -13,8 +13,8 @@
   yum:
     name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.2-2.el7.centos.x86_64.rpm"
     state: present
-  when: consul_is_server 
-  tags: 
+  when: consul_is_server
+  tags:
     - consul
     - bootstrap
 
@@ -118,3 +118,6 @@
 - meta: flush_handlers
 
 - include: nginx_proxy.yml
+
+# install distributive, register checks, and run check on provisioning
+- include: distributive.yml
