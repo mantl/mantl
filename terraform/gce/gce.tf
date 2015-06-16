@@ -6,7 +6,7 @@ variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "region" {default = "us-central1-a"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
-variable "ssh_user" {default = "deploy"}
+variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 1}
 variable "worker_type" {default = "n1-highcpu-2"}
 

@@ -344,7 +344,7 @@ def gce_host(resource, module_name):
         'zone': raw_attrs['zone'],
         # ansible
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'deploy'),
+        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
     }
 
     # attrs specific to microservices-infrastructure
