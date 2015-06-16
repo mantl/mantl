@@ -67,16 +67,5 @@
   tags:
     - distributive
 
-- name: create distributive checklist directory
-  sudo: yes
-  file:
-    path: /usr/share/distributive
-    state: directory
-    mode: 0775
-    owner: root
-    group: root
-  tags:
-    - distributive
-
 - include: users.yml
 - include: ssl.yml

@@ -1,6 +1,6 @@
 {
   "service": {
-    "name": "distributive-service-consul",
+    "name": "Distributive check - Consul",
     "check": {
       "script": "/usr/bin/distributive -f /usr/share/distributive/consul.json",
       "interval": "10m"
