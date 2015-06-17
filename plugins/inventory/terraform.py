@@ -289,7 +289,7 @@ def aws_host(resource, module_name):
         'ansible_ssh_host': raw_attrs['public_ip'],
         # generic
         'public_ipv4': raw_attrs['public_ip'],
-        'private_ipv4': raw_attrs['private_ip']
+        'private_ipv4': raw_attrs['private_ip'],
         'provider': 'aws',
     }
 
