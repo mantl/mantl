@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3.1-RC1 (June 16, 2015)
-------------------
+0.3.1 (June 17, 2015)
+---------------------
 
 Features
 ^^^^^^^^
@@ -16,12 +16,10 @@ Features
 Fixes
 ^^^^^
 
-* OpenStack: Use default security group #477
-* Update variable underline to avoid showing up as component  #482
-* Digital ocean: 1GB is too small for a control node #490
-* terraform.py username #491
-* Terraform (digitalocean): add datacenter  #493
-* Security-setup: s/disable security/check security/ #494
+* Use default security group in OpenStack #477
+* Allow ``terraform.py`` to use configurable usernames #491
+* Change "disable security" to "check security" in ``security-setup`` #494
+* Stop logstash variables from showing up as a top-level component in docs #482
 
 0.3.0 (June 8, 2015)
 --------------------
