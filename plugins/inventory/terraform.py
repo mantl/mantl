@@ -168,6 +168,7 @@ def digitalocean_host(resource, tfvars=None):
         # generic
         'public_ipv4': raw_attrs['ipv4_address'],
         'private_ipv4': raw_attrs['ipv4_address'],
+        'provider': 'digitalocean',
     }
 
     # attrs specific to microservices-infrastructure
@@ -222,6 +223,7 @@ def openstack_host(resource, module_name):
         # generic
         'public_ipv4': raw_attrs['access_ip_v4'],
         'private_ipv4': raw_attrs['access_ip_v4'],
+        'provider': 'openstack',
     }
 
     try:
@@ -287,7 +289,8 @@ def aws_host(resource, module_name):
         'ansible_ssh_host': raw_attrs['public_ip'],
         # generic
         'public_ipv4': raw_attrs['public_ip'],
-        'private_ipv4': raw_attrs['private_ip']
+        'private_ipv4': raw_attrs['private_ip'],
+        'provider': 'aws',
     }
 
     # attrs specific to microservices-infrastructure
@@ -345,6 +348,7 @@ def gce_host(resource, module_name):
         # ansible
         'ansible_ssh_port': 22,
         'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
+        'provider': 'gce',
     }
 
     # attrs specific to microservices-infrastructure
@@ -396,6 +400,7 @@ def vsphere_host(resource, module_name):
         'ip_address': raw_attrs['ip_address'],
         'metadata': parse_dict(raw_attrs, 'configuration_parameters'),
         'ansible_ssh_port': 22,
+        'provider': 'vsphere',
     }
 
     try:
