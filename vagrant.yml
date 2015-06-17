@@ -10,6 +10,7 @@
     mesos_mode: mixed
     private_ipv4: "{{ ansible_default_ipv4.address }}"
     public_ipv4: "{{ ansible_default_ipv4.address }}"
+    provider: vagrant
   roles:
     - common
     - collectd
