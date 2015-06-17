@@ -69,6 +69,8 @@
       value: "{{ chronos_zk_connect }}"
     - key: master
       value: "{{ chronos_zk_mesos_master }}"
+    - key: hostname
+      value: "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
     - key: http_port
       value: "{{ chronos_port }}"
     - key: mesos_framework_name
