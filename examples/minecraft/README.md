@@ -1,0 +1,16 @@
+# Minecraft
+
+You can run a simple (not persisted) Minecraft server on
+microservices-infrastructure pretty easily. Just run the following command from
+the root of the project:
+
+```
+curl -k https://youruser:yourpass@mesos.yourcompany.com/v2/apps/minecraft -X PUT -d @examples/minecraft/minecraft.json
+```
+
+Be aware that the Minecraft server needs at least 2GB of RAM to function
+effectively. The DigitalOcean Terraform configuration is good to try this out
+on, as it uses 4GB instances.
+
+You can see a video of this configuration in action at
+https://asteris.wistia.com/medias/nd77k59sk6
