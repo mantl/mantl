@@ -75,9 +75,9 @@
 
 - name: configure collectd mesos-master plugin
   sudo: yes
-  copy:
-    src: mesos-master.conf
-    dest: /etc/collectd.d
+  template:
+    src: mesos-master.conf.j2
+    dest: /etc/collectd.d/mesos-master.conf
   notify:
     - restart collectd
   tags:
