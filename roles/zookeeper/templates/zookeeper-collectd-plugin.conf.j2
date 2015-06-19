@@ -4,6 +4,6 @@ LoadPlugin python
     ModulePath "/usr/share/collectd/python/"
     Import "zookeeper"
     <Module "zookeeper">
-        Hosts "localhost"
+        Hosts "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
     </Module>
 </Plugin>
