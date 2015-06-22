@@ -98,7 +98,7 @@ vagrant up
 
 Note:
 * There is no support for Windows at this time, however support is planned.
-* There is no support for the VMware Fusion Vagrant provider; hence your provider is set to Virtualbox in your Vagrantfile. When running `vagrant up` it is absolutely required to not to bring up mutliple in parallel so be sure to include the flag `--no-parallel`: `vagrant up --no-parallel`.
+* There is no support for the VMware Fusion Vagrant provider; hence your provider is set to Virtualbox in your Vagrantfile. In order to start running just issue the `vagrant up` command.
 
 
 ### Software Requirements
