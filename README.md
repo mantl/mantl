@@ -98,12 +98,12 @@ vagrant up
 
 Note:
 * There is no support for Windows at this time, however support is planned.
-* There is no support for the VMware Fusion Vagrant provider, so ensure that you set your provider to Virtualbox when running `vagrant up`: `vagrant up --provider=virtualbox`.
+* There is no support for the VMware Fusion Vagrant provider; hence your provider is set to Virtualbox in your Vagrantfile. When running `vagrant up` it is absolutely required to not to bring up mutliple in parallel so be sure to include the flag `--no-parallel`: `vagrant up --no-parallel`.
 
 
 ### Software Requirements
 
-Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.9 or later is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
+Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.9 or later is required; also Python 2 or greater is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
 
 ### Deploying on multiple servers
 
