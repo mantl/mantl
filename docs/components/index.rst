@@ -9,6 +9,7 @@ which can be customized, generally using Ansible variables.
 
    collectd.rst
    consul.rst
+   dnsmasq.rst
    haproxy.rst
    logstash.rst
    marathon.rst
