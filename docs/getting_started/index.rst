@@ -28,6 +28,7 @@ platforms:
    gce.rst
    aws.rst
    digitalocean.rst
+   vsphere.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
@@ -90,6 +91,7 @@ Below are guides customizing your deployment:
 
    ssh_users.rst  
    playbook.rst
+   dockerfile.rst
 
 .. _generated dynamically: http://docs.ansible.com/intro_dynamic_inventory.html
 .. _inventory file: http://docs.ansible.com/intro_inventory.html
