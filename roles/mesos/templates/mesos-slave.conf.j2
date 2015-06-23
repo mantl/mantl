@@ -5,7 +5,7 @@ LoadPlugin python
     Import "mesos-slave"
     <Module "mesos-slave">
         Host "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
-        Port 15050
+        Port 5051
         Verbose false
         Version "0.21.0"
     </Module>
