@@ -27,6 +27,23 @@
   tags:
     - collectd
 
+- name: check if collectd is authorized to make tcp connections
+  sudo: yes
+  shell: getsebool collectd_tcp_network_connect
+  register: selinux_collectd_tcp_network_connect
+  failed_when: no
+  changed_when: no
+  when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
+  tags:
+    - collectd
+
+- name: authorize collectd to make tcp connections
+  sudo: yes
+  shell: setsebool -P collectd_tcp_network_connect 1
+  when: selinux_collectd_tcp_network_connect.stdout is defined and selinux_collectd_tcp_network_connect.stdout | match(".*off$")
+  tags:
+    - collectd
+
 - name: enable collectd
   sudo: yes
   service:
