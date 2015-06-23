@@ -27,3 +27,12 @@ use:
    consul-template.rst
    logrotate.rst
    nginx.rst
+
+The following technology previews are also included. These may be used more
+fully in the future, but now just exist for preview purposes to gather feedback
+and build initial implementations against:
+
+.. toctree::
+   :maxdepth: 1
+
+   vault.rst
