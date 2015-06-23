@@ -33,6 +33,11 @@ The next sections will deal with each area.
 Provisioning
 ~~~~~~~~~~~~
 
+.. note:: SSH strict host key checking is turned off for now to make development
+          against the project easier. When you set up a production instance of
+          the project, you should change ``host_key_checking`` and
+          ``record_host_keys`` in ``ansible.cfg``
+
 Provisioning security involves setting up a secure cloud environment, basic
 server security, and securing secrets on the provisioning systems. `Ansible
 <http://ansible.com>`__ is the primary provisioning tool with a migration of
