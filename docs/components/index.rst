@@ -26,3 +26,4 @@ use:
    common.rst
    consul-template.rst
    logrotate.rst
+   nginx.rst
