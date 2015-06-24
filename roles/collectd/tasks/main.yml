@@ -30,6 +30,7 @@
 - name: authorize collectd to make tcp connections
   sudo: yes
   seboolean: name=collectd_tcp_network_connect state=yes persistent=yes
+  when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
   tags:
     - collectd
 
