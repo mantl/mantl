@@ -27,20 +27,33 @@
   tags:
     - collectd
 
-- name: check if collectd is authorized to make tcp connections
+- name: authorize collectd to make tcp connections
   sudo: yes
-  shell: getsebool collectd_tcp_network_connect
-  register: selinux_collectd_tcp_network_connect
+  seboolean: name=collectd_tcp_network_connect state=yes persistent=yes
+  tags:
+    - collectd
+
+- name: check if collectd is authorized to connect to docker
+  sudo: yes
+  shell: semodule -l
+  register: semodule_list
   failed_when: no
   changed_when: no
   when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
   tags:
     - collectd
 
-- name: authorize collectd to make tcp connections
+- name: copy collectd selinux docker policy
   sudo: yes
-  shell: setsebool -P collectd_tcp_network_connect 1
-  when: selinux_collectd_tcp_network_connect.stdout is defined and selinux_collectd_tcp_network_connect.stdout | match(".*off$")
+  copy: src=collectd_docker_plugin.pp dest=/tmp/collectd_docker_plugin.pp owner=root mode=0600
+  when: "semodule_list.stdout is defined and semodule_list.stdout.find('collectd_docker_plugin') == -1"
+  tags:
+    - collectd
+
+- name: authorize collectd to connect to docker
+  sudo: yes
+  shell: semodule -i /tmp/collectd_docker_plugin.pp
+  when: "semodule_list.stdout is defined and semodule_list.stdout.find('collectd_docker_plugin') == -1"
   tags:
     - collectd
 
