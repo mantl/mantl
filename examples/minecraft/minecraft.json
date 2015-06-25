@@ -1,0 +1,22 @@
+{
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "kitematic/minecraft",
+            "network": "BRIDGE",
+            "portMappings": [{
+                "containerPort": 25565,
+                "hostPort": 0
+            }]
+        },
+        "forcePullImage": false
+    },
+    "healthChecks": [{
+        "protocol": "TCP",
+        "portIndex": 0
+    }],
+    "id": "minecraft",
+    "instances": 1,
+    "cpus": 1,
+    "mem": 2048
+}
