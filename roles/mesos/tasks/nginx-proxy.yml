@@ -30,11 +30,12 @@
       dest: /usr/lib/systemd/system/nginx-mesos-leader.service
     - src: nginx-mesos-leader.env.j2
       dest: /etc/default/nginx-mesos-leader.env
-  tags:
-    - mesos
-  tags:
+  notify:
     - reload nginx-mesos-leader
     - restart nginx-mesos-leader
+  tags:
+    - mesos
+
 
 - name: enable nginx-mesos-leader
   sudo: yes
