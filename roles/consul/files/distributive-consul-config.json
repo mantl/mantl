@@ -1,9 +1,8 @@
 {
-  "service": {
-    "name": "Distributive check - Consul",
-    "check": {
-      "script": "/usr/bin/distributive -f /usr/share/distributive/consul.json",
-      "interval": "10m"
-    }
+  "check": {
+    "id": "distributive-health-checks",
+    "name": "Distributive Health Checks",
+    "script": "/bin/distributive -a /etc/distributive.d/",
+    "interval": "10m"
   }
 }
