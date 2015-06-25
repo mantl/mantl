@@ -14,6 +14,24 @@ You can use these variables to customize your Logstash installations:
 
    Default: false
 
+.. data :: logstash_output_elasticsearch
+
+   Configures an elasticsearch output for the local Logstash agent on all nodes.
+   You can set this variable to a dictionary that maps to the `Logstash
+   Elasticsearch output
+   <https://www.elastic.co/guide/en/logstash/current/plugins-outputs-elasticsearch.html>`_
+   settings.
+
+   Default: n/a
+
+   Example:
+
+.. code-block:: yaml
+
+   logstash_output_elasticsearch:
+     host: "elasticsearch.example.com"
+     protocol: "http"
+
 .. data :: logstash_input_log4j
 
    Read events over a TCP socket from a Log4j SocketAppender
