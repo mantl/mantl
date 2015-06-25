@@ -17,6 +17,14 @@
   tags:
     - marathon
 
+- name: create marathon store directory
+  sudo: yes
+  file:
+    dest: /etc/marathon/store
+    state: directory
+  tags:
+    - marathon
+
 - include: framework_auth.yml
 
 - name: set key/value options
@@ -36,6 +44,8 @@
       value: http_callback
     - key: hostname
       value: "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
+    - key: artifact_store
+      value: "file:///etc/marathon/store"
   notify:
     - restart marathon
   tags:
