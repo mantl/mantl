@@ -1,0 +1,46 @@
+{
+    "Name": "consul health check",
+    "Notes": "For use with Microservice Infrastructure",
+    "Checklist" : [
+        {
+            "Name": "consul installation check",
+            "Check": "installed",
+            "Parameters": ["consul"]
+        },
+        {
+            "Name": "consul health check configuration file check",
+            "Check": "file",
+            "Parameters": ["/etc/consul/consul.json"]
+        },
+        {
+            "Name": "docker health check configuration check",
+            "Check": "file",
+            "Parameters": ["/etc/consul/docker-service.json"]
+        },
+        {
+            "Name": "ssl directory check",
+            "Check": "directory",
+            "Parameters": ["/etc/consul/ssl/"]
+        },
+        {
+            "Name": "ACL existence check",
+            "Check": "file",
+            "Parameters": ["/etc/consul/acl.json"]
+        },
+        {
+            "Name": "wait for leader script check",
+            "Check": "file",
+            "Parameters": ["/usr/local/bin/consul-wait-for-leader.sh"]
+        },
+        {
+            "Name": "rolling restart script check",
+            "Check": "file",
+            "Parameters": ["/usr/local/bin/consul-rolling-restart.sh"]
+        },
+        {
+            "Name": "service active binary existence check",
+            "Check": "file",
+            "Parameters": ["/usr/local/bin/check-service-active"]
+        }
+    ]
+}
