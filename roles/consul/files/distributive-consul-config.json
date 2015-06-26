@@ -1,8 +1,8 @@
 {
   "check": {
-    "id": "distributive-health-checks",
-    "name": "Distributive Health Checks",
-    "script": "/bin/distributive -a /etc/distributive.d/",
+    "id": "distributive-consul-checks",
+    "name": "Distributive Consul Health Checks",
+    "script": "/bin/distributive -f /etc/distributive.d/consul.json",
     "interval": "10m"
   }
 }
