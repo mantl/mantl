@@ -18,6 +18,7 @@ Fixes
 * Update docs to clarify required Python version #515
 * Fix typo in the Nginx proxy setup for Mesos #521
 * Explicitly specify PyYAML version in ``requirements.txt``
+* Support SSH key passphrase and any key name in the Docker builder #517
 
 0.3.1 (June 17, 2015)
 ---------------------
