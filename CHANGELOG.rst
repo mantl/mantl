@@ -1,6 +1,24 @@
 Changelog
 =========
 
+0.3.2 (June 26, 2015)
+---------------------
+
+Features
+^^^^^^^^
+
+* Add Minecraft sample app #506
+* Add documentation for all components that were missing it #520
+* Add ElasticSearch output for Logstash #524 (see ``logstash_output_elasticsearch`` in :doc:`components/logstash`)
+* Add filesystem-backed Marathon artifact store #525
+
+Fixes
+^^^^^
+
+* Update docs to clarify required Python version #515
+* Fix typo in the Nginx proxy setup for Mesos #521
+* Explicitly specify PyYAML version in ``requirements.txt``
+
 0.3.1 (June 17, 2015)
 ---------------------
 
