@@ -65,13 +65,13 @@ easily access the ``terraform.tfstate`` file to use for future Terraform runs.
 
 Now we can use this information to run our container:
 
-``docker run -it -v ~/.ssh/:/root/.ssh/ -v $PWD:/state mi``
+``docker run -it -v ~/.ssh/:/ssh/ -v $PWD:/state mi``
 
 As discussed above, we are launching a container from the `mi` image we created
-earlier and are host mounting our local ``~/.ssh/`` directory to the container
-user's ``.ssh`` directory. And we are mounting our current directory to the
-container's ``/state`` volume. Therefore, the ``terraform.tfstate`` files will be
-accessible from our local host directory after the run. Note that we are also
+earlier and are host mounting our local ``~/.ssh/`` directory to a volume on the
+container called ``/ssh``. And we are mounting our current directory to the
+container's ``/state`` volume. Therefore, the ``terraform.tfstate`` files will
+be accessible from our local host directory after the run. Note that we are also
 allocating a TTY for the container process (using ``-it``) so that we can enter
 our SSH key passphrase if necessary.
 
@@ -83,4 +83,4 @@ Terraform template, and custom playbook that you configured in the Setup above.
           corresponding private key as an environment variable (``SSH_KEY``)
           when running the container. For example:
 
-          ``docker run -it -e SSH_KEY=/root/.ssh/otherpvtkey -v ~/.ssh/:/root/.ssh/ -v $PWD:/state mi``
+          ``docker run -it -e SSH_KEY=/root/.ssh/otherpvtkey -v ~/.ssh/:/ssh/ -v $PWD:/state mi``

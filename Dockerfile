@@ -29,7 +29,7 @@ ONBUILD COPY terraform.yml /mi/terraform.yml
 ONBUILD COPY *.tf /mi/
 
 RUN mkdir -p /state
-VOLUME /state
+VOLUME /state /ssh
 
 WORKDIR /mi
 CMD ["/mi/docker_launch.sh"]
