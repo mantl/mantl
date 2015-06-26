@@ -50,8 +50,8 @@ directory (along with a corresponding private key). Terraform uses this to
 authorize your key on the cluster nodes that it creates. This provides you with
 SSH access to the nodes which is required for the subsequent Ansible
 provisioning. The simplest way to handle this when running from a Docker
-container is to host mount your ``~/.ssh`` folder in the container. You will see
-an example of this later in the document.
+container is to mount your ``~/.ssh`` folder in the container. You will see an
+example of this later in the document.
 
 Another important thing to understand is how Terraform manages `state
 <https://terraform.io/docs/state/index.html>`_. Terraform uses a `JSON`
@@ -59,21 +59,21 @@ formatted file to store the state of your managed infrastructure. This state
 file is important as it will allow you to use Terraform to plan, inspect, modify
 and destroy resources in your infrastructure. By default, Terraform writes state
 to a file called ``terraform.tfstate`` in the same directory where you launched
-Terraform. Our ``Dockerfile`` is configured to store the state in a Docker volume
-called ``/state``. This will allow you to host mount that volume so that you can
-easily access the ``terraform.tfstate`` file to use for future Terraform runs.
+Terraform. Our ``Dockerfile`` is configured to store the state in a Docker
+volume called ``/state``. This will allow you to mount that volume so that you
+can easily access the ``terraform.tfstate`` file to use for future Terraform
+runs.
 
 Now we can use this information to run our container:
 
 ``docker run -it -v ~/.ssh/:/ssh/ -v $PWD:/state mi``
 
-As discussed above, we are launching a container from the `mi` image we created
-earlier and are host mounting our local ``~/.ssh/`` directory to a volume on the
-container called ``/ssh``. And we are mounting our current directory to the
-container's ``/state`` volume. Therefore, the ``terraform.tfstate`` files will
-be accessible from our local host directory after the run. Note that we are also
-allocating a TTY for the container process (using ``-it``) so that we can enter
-our SSH key passphrase if necessary.
+As discussed above we are launching a container from the ``mi`` image we created
+earlier, while mounting our local ``~/.ssh/`` to ``/ssh`` in the container, and
+our current directory to the container's ``/state``. Therefore, the
+``terraform.tfstate`` files will be accessible from our local host directory
+after the run. Note that we are also allocating a TTY for the container process
+(using ``-it``) so that we can enter our SSH key passphrase if necessary.
 
 The container should launch and provision the cluster using the ``security.yml``,
 Terraform template, and custom playbook that you configured in the Setup above.
