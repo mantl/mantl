@@ -13,13 +13,14 @@ RUN mkdir -p /tmp/terraform/ && \
     yum remove -y unzip && \
     yum -y clean all
 
-# load microservices-infrastructure and default setup
-COPY . /mi/
-
 # install all dependencies
+COPY requirements.txt /mi/
 RUN yum install -y epel-release
 RUN yum install -y python-pip python-crypto openssl openssh-clients && \
     pip install -U -r /mi/requirements.txt
+
+# load microservices-infrastructure and default setup
+COPY . /mi/
 
 # load user custom setup
 ONBUILD COPY ssl/ /mi/ssl/
@@ -28,7 +29,7 @@ ONBUILD COPY terraform.yml /mi/terraform.yml
 ONBUILD COPY *.tf /mi/
 
 RUN mkdir -p /state
-VOLUME /state
+VOLUME /state /ssh
 
 WORKDIR /mi
 CMD ["/mi/docker_launch.sh"]
