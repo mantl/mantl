@@ -4,6 +4,10 @@
   serial: "{{ serial | default(1) }}"
   tasks:
 
+  - name: clean yum
+    sudo: yes
+    command: yum clean all
+
   - name: refresh yum cache
     sudo: yes
     command: yum makecache
