@@ -176,7 +176,7 @@ make html
 - [x] Google Compute Engine
 - [ ] VMware vSphere
 - [ ] Apache CloudStack
-- [ ] Digital Ocean
+- [x] Digital Ocean
 
 Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
 
