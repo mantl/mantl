@@ -4,6 +4,6 @@
     "name": "Distributive Consul Health Checks",
     "service_id": "consul",
     "script": "/bin/distributive -f /etc/distributive.d/consul.json",
-    "interval": "10m"
+    "interval": "1m"
   }
 }
