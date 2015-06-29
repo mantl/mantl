@@ -11,8 +11,8 @@
 
 - name: configure collectd zookeeper plugin
   sudo: yes
-  copy:
-    src: zookeeper-collectd-plugin.conf
+  template:
+    src: zookeeper-collectd-plugin.conf.j2
     dest: /etc/collectd.d/zookeeper.conf
   notify:
     - restart collectd

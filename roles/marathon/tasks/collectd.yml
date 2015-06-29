@@ -11,8 +11,8 @@
 
 - name: configure collectd marathon plugin
   sudo: yes
-  copy:
-    src: marathon-collectd-plugin.conf
+  template:
+    src: marathon-collectd-plugin.conf.j2
     dest: /etc/collectd.d/marathon.conf
   notify:
     - restart collectd
