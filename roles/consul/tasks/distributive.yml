@@ -14,7 +14,7 @@
 - name: copy distributive consul test
   sudo: yes
   copy:
-    src: /usr/share/distributive/consul.json
+    src: distributive-consul-check.json
     dest: /etc/distributive.d/consul.json
     mode: 0664
     owner: root
