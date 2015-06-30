@@ -1,9 +1,12 @@
 ---
-- name: install collectd
+- name: install collectd packages
   sudo: yes
   yum:
-    name: collectd
+    name: "{{ item }}"
     state: present
+  with_items:
+    - collectd           # collectd itself
+    - libsemanage-python # for managing selinux settings here
   tags:
     - collectd
     - bootstrap
@@ -26,6 +29,7 @@
     - restart collectd
   tags:
     - collectd
+  
 
 - name: authorize collectd to make tcp connections
   sudo: yes
