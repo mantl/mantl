@@ -11,6 +11,17 @@
     - consul
     - distributive
 
+- name: copy distributive consul test
+  sudo: yes
+  copy:
+    src: distributive-consul-check.json
+    dest: /etc/distributive.d/consul.json
+    mode: 0664
+    owner: root
+    group: root
+  tags:
+    - distributive
+
 - name: register distributive tests with consul
   sudo: yes
   copy:
@@ -22,31 +33,9 @@
     - consul
     - distributive
 
-- name: create distributive checklist directory
-  sudo: yes
-  file:
-    path: /usr/share/distributive
-    state: directory
-    mode: 0775
-    owner: root
-    group: root
-  tags:
-    - distributive
-
-- name: copy distributive consul test
-  sudo: yes
-  copy:
-    src: distributive-checklist-consul.json
-    dest: /usr/share/distributive/consul.json
-    mode: 0775
-    owner: root
-    group: root
-  tags:
-    - distributive
-
 - name: run distributive consul test
   sudo: yes
-  command: /usr/bin/distributive -f /usr/share/distributive/consul.json
+  command: /usr/bin/distributive -f /etc/distributive.d/consul.json
   tags:
     - consul
     - distributive
