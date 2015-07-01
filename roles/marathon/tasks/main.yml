@@ -40,7 +40,18 @@
   tags:
     - marathon
 
-- meta: flush_handlers
+- name: configure marathon to wait for zookeeper before starting
+  sudo: yes
+  lineinfile:
+    dest: /usr/lib/systemd/system/marathon.service
+    line: "ExecStartPre=/bin/bash -c '(echo > /dev/tcp/{{ marathon_zk_dns }}/{{ marathon_zk_port }}) &> /dev/null'"
+    insertbefore: "^ExecStart="
+    state: present
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
 
 - meta: flush_handlers
 
