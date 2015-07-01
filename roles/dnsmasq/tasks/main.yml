@@ -12,6 +12,32 @@
     - dnsmasq
     - bootstrap
 
+- name: collect nameservers
+  sudo: yes
+  shell: "cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2"
+  register: nameservers_output
+  tags:
+    - dnsmasq
+
+- name: collect dns search list
+  sudo: yes
+  shell: "cat /etc/resolv.conf | grep -i '^search' | cut -d ' ' -f2- | tr ' ' '\n'"
+  register: dns_search_list_output
+  tags:
+    - dnsmasq
+
+- name: set nameservers
+  set_fact:
+    nameservers: "{{ nameservers_output.stdout_lines }}"
+  tags:
+    - dnsmasq
+
+- name: set dns search list
+  set_fact:
+    domain_search_list: "{{ dns_search_list_output.stdout_lines }}"
+  tags:
+    - dnsmasq
+
 - name: ensure dnsmasq.d directory exists
   sudo: yes
   file: 
@@ -53,10 +79,10 @@
 
 - name: add dnsmasq to /etc/resolv.conf
   sudo: yes
-  lineinfile:
+  template:
+    src: resolv.conf.j2
     dest: /etc/resolv.conf
-    line: "search {{ consul_dns_domain }}\nnameserver 127.0.0.1"
-    insertbefore: BOF
+    mode: 644
   tags:
     - dnsmasq
 
