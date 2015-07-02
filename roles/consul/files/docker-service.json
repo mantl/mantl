@@ -3,7 +3,8 @@
     "name": "docker",
     "check": {
       "script": "/usr/local/bin/check-service-active docker",
-      "interval": "15s"
+      "interval": "15s",
+      "timeout": "2s"
     }
   }
 }
