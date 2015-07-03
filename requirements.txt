@@ -1,5 +1,5 @@
 alabaster==0.6.3
-ansible>=1.9.0,<1.9.1
+ansible>=1.9.1,<2.0
 pytest==2.7.1
 PyYAML==3.11
 Sphinx==1.2.3
