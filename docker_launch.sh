@@ -3,8 +3,10 @@ set -e
 
 SSH_KEY=${SSH_KEY:-"/root/.ssh/id_rsa"}
 
-mkdir -p /root/.ssh/
-find /ssh/* ! -type l -print0 | xargs -0 cp -t /root/.ssh/
+if [ ! -f "$SSH_KEY" ]; then
+    mkdir -p /root/.ssh/
+    find /ssh/* ! -type l -print0 | xargs -0 cp -t /root/.ssh/
+fi
 chown root:root /root/.ssh/*
 
 eval `ssh-agent -s` && ssh-add $SSH_KEY
