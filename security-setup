@@ -373,10 +373,10 @@ class Component(object):
         print('exit status: {}'.format(status))
         if stdout:
             print(' stdout '.center(40, '~'))
-            print(stdout)
+            print(stdout.decode('utf-8'))
         if stderr:
             print(' stderr '.center(40, '~'))
-            print(stderr)
+            print(stderr.decode('utf-8'))
 
     def wrap_call(self, command, **kwargs):
         status, out, err = self.call(command, **kwargs)
