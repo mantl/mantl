@@ -5,7 +5,8 @@
     "port": 14400,
     "check": {
       "script": "curl --silent --show-error --fail --dump-header /dev/stderr --retry 2 http://127.0.0.1:14400/ping",
-      "interval": "10s"
+      "interval": "10s",
+      "timeout": "1s"
     }
   }
 }
