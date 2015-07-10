@@ -11,7 +11,7 @@
 
 - name: configure nginx
   sudo: yes
-  command: curl -X PUT -d @/etc/chronos/chronos.nginx localhost:8500/v1/kv/service/nginx/templates/chronos
+  command: consul-cli kv-write service/nginx/templates/chronos @/etc/chronos/chronos.nginx
   tags:
     - chronos
 
