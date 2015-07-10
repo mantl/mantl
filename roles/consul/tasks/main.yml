@@ -23,7 +23,6 @@
   yum:
     name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-utils-0.1.0-1.el7.centos.x86_64.rpm"
     state: present
-  when: consul_is_server
   tags:
     - consul
     - bootstrap
