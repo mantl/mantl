@@ -24,6 +24,7 @@ ExecStart=/usr/bin/docker run \
     --env-file={{ zookeeper_env }} \
     --volumes-from {{ zookeeper_data_volume }} \
     --volume=/var/log/zookeeper:/var/log/zookeeper \
+    --volume=/etc/consul/ssl/:/usr/local/share/ca-certificates/:ro \
     {{ zookeeper_image }}:{{ zookeeper_image_tag }}
 
 ExecStop=/bin/bash -c " \

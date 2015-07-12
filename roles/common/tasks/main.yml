@@ -19,6 +19,16 @@
   when: hostvars[item].ansible_default_ipv4.address is defined
   with_items: groups['all']
 
+- name: clean hosts file
+  sudo: yes
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "{{ item }}"
+    state: absent
+  with_items:
+    - '^127\.0\.0\.1(\s+){{ inventory_hostname }}.*'
+    - '^::1(\s+){{ inventory_hostname }}.*'
+
 - name: install system utilities
   sudo: yes
   yum:
@@ -69,6 +79,3 @@
 
 - include: users.yml
 - include: ssl.yml
-
-- include: digitalocean.yml
-  when: provider == 'digitalocean'
