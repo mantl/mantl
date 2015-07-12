@@ -1,6 +1,6 @@
 ---
-zookeeper_image: ciscocloud/zookeeper
-zookeeper_image_tag: 0.2
+zookeeper_image: "ciscocloud/zookeeper"
+zookeeper_image_tag: 0.3
 zookeeper_ports: "-p 2181:2181 -p 2888:2888 -p 3888:3888"
 zookeeper_env: "/etc/default/{{ zookeeper_service }}"
 
