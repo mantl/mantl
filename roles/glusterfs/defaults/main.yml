@@ -1,0 +1,5 @@
+---
+glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"
+glusterfs_server_data_location: /etc/glusterfs/data
+glusterfs_server_group: role=control
+glusterfs_volumes: ["docker"]
