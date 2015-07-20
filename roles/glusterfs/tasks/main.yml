@@ -40,16 +40,17 @@
   command: gluster peer probe {{ item }}.node.{{ consul_dns_domain }}
   with_items: groups[glusterfs_server_group]
 
-- name: create glusterfs volumes
+- name: create gluster_volume script
+  sudo: yes
+  template:
+    src: gluster_volume.sh.j2
+    dest: /etc/glusterfs/gluster_volume.sh
+    mode: 755
+
+- name: create gluserfs volumes
   run_once: true
   sudo: yes
-  gluster_volume:
-    brick: "{{ glusterfs_server_data_location }}/{{ item }}"
-    force: true # TODO: separate partitions so we don't have to do this
-    name: "{{ item }}"
-    rebalance: yes
-    replicas: "{{ glusterfs_replication }}"
-    state: present
+  command: /etc/glusterfs/gluster_volume.sh {{ item }}
   with_items: glusterfs_volumes
 
 - name: start glusterfs volumes
