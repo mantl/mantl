@@ -128,5 +128,5 @@
 
 - include: nginx_proxy.yml
 
-# install distributive, register checks, and run check on provisioning
+# symlink to distributive checklist, register check with Consul
 - include: distributive.yml

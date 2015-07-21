@@ -11,14 +11,15 @@
     - consul
     - distributive
 
-- name: copy distributive consul test
+- name: create symlink to distributive consul checklist
   sudo: yes
-  copy:
-    src: distributive-consul-check.json
+  file:
+    state: link
+    src: /usr/share/distributive/consul.json
     dest: /etc/distributive.d/consul.json
-  when: "'{{ consul_servers_group}}' in group_names"
   tags:
     - consul
+    - distributive
 
 - name: register distributive tests with consul
   sudo: yes
@@ -34,7 +35,7 @@
 
 - name: run distributive consul test
   sudo: yes
-  command: /usr/bin/distributive -f /usr/share/distributive/consul.json
+  command: /usr/bin/distributive -f /etc/distributive.d/consul.json -d "" --verbosity="warn"
   tags:
     - consul
     - distributive
