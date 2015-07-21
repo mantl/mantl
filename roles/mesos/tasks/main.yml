@@ -31,7 +31,7 @@
   template:
     src: zk.j2
     dest: /etc/mesos/zk
-  tags: 
+  tags:
     - mesos
 
 - name: configure /etc/mesos/hostname
@@ -78,6 +78,9 @@
     state: directory
   tags:
     - mesos
+
+# symlink to distributive checklist, register check with Consul
+- include: distributive.yml
 
 - include: leader.yml
   when: mesos_mode == "leader" or mesos_mode == "mixed"

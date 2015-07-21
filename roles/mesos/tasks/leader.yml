@@ -4,7 +4,7 @@
   template:
     src: master-defaults.j2
     dest: /etc/default/mesos-master
-  notify: 
+  notify:
     - restart mesos leader
   tags:
     - mesos
@@ -30,9 +30,9 @@
   tags:
     - mesos
 
-- name: create zookeeper acl 
-  sudo: yes 
-  command: "{{ mesos_zk_acl_cmd }}" 
+- name: create zookeeper acl
+  sudo: yes
+  command: "{{ mesos_zk_acl_cmd }}"
   notify:
     - restart mesos leader
   when: zk_mesos_user_secret is defined
