@@ -18,6 +18,15 @@
     - consul
     - bootstrap
 
+- name: install consul-utils
+  sudo: yes
+  yum:
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-utils-0.1.0-1.el7.centos.x86_64.rpm"
+    state: present
+  tags:
+    - consul
+    - bootstrap
+
 - name: configure consul
   sudo: yes
   template:
