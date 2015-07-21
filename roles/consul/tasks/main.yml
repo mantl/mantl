@@ -119,10 +119,6 @@
 - meta: flush_handlers
 
 - include: acl.yml
-  when: do_consul_acl
-
-- include: noacl.yml
-  when: not do_consul_acl
 
 - meta: flush_handlers
 

@@ -3,8 +3,8 @@
   "args": [
     "--verbose",
     "--registry={% if do_consul_ssl %}https{% else %}http{% endif %}://consul.service.{{ consul_dns_domain }}:8500"{% if do_consul_auth %},
-    "--registry-auth=admin:{{ nginx_admin_password }}"{% endif %}{% if do_consul_acl %},
-    "--registry-token={{ consul_acl_master_token }}"{% endif %}
+    "--registry-auth=admin:{{ nginx_admin_password }}"{% endif %},
+    "--registry-token={{ consul_acl_master_token }}"
   ],
   "container": {
     "type": "DOCKER",
