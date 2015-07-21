@@ -12,6 +12,7 @@
     - distributive
 
 - name: create symlink to distributive consul checklist
+  sudo: yes
   file:
     state: link
     src: /usr/share/distributive/consul.json
