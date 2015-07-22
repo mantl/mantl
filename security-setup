@@ -170,11 +170,6 @@ consul_opts.add_argument(
     help='enable Consul auth',
     dest='do_consul_ssl',
 )
-consul_opts.add_argument(
-    '--consul-acl', type=ImplicitBool.parse_opt, default=True,
-    help='enable Consul ACLs',
-    dest='do_consul_acl'
-)
 
 # Mesos security
 mesos_opts = parser.add_argument_group(
@@ -526,7 +521,6 @@ class Consul(Component):
         "check security"
         self.toggle_boolean('do_consul_auth', self.component_enabled(self.args.do_consul_auth), True)
         self.toggle_boolean('do_consul_ssl', self.component_enabled(self.args.do_consul_ssl), True)
-        self.toggle_boolean('do_consul_acl', self.component_enabled(self.args.do_consul_acl), True)
 
     def gossip_key(self):
         "gossip key"
