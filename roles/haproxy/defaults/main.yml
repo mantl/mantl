@@ -9,4 +9,4 @@ haproxy_domain: example.com
 
 haproxy_env: /etc/default/haproxy
 
-haproxy_args: "/launch.sh -ssl -ssl-verify=false"
+haproxy_args: "/launch.sh{% if do_consul_ssl %} -ssl -ssl-verify=false{% endif %}"
