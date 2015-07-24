@@ -32,6 +32,8 @@ resource "google_compute_firewall" "mi-firewall-external" {
     ports = [
       "22",   # SSH
       "3389", # RDP
+      "80",   # HTTP
+      "443",  # HTTPs
       "4400", # Chronos
       "5050", # Mesos
       "8080", # Marathon
