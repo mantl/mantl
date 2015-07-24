@@ -4,7 +4,7 @@ glusterfs_server_group: role=control
 
 # brick storage
 glusterfs_brick_mount: /mnt/glusterfs
-glusterfs_brick_device: "{% if provider == 'gce' %}/dev/disk/by-id/google-glusterfs{% endif %}"
+glusterfs_brick_device: "{% if provider == 'gce' %}/dev/disk/by-id/google-glusterfs{% elif provider == 'aws' %}/dev/xvdh{% endif %}"
 glusterfs_volume_force: "{% if glusterfs_brick_device %}no{% else %}yes{% endif %}"
 glusterfs_brick_location: "{% if glusterfs_brick_device %}{{ glusterfs_brick_mount }}{% else %}/etc/glusterfs/data{% endif %}"
 

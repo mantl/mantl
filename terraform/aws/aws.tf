@@ -1,16 +1,17 @@
+variable "availability_zone" {}
+variable "control_count" {default = "3"}
+variable "control_type" {default = "m1.small"}
+variable "datacenter" {default = "aws"}
+variable "glusterfs_volume_size" {default = "100"} # size is in gigabytes
+variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "network_subnet_ip4" {default = "10.0.0.0/16"}
-variable "control_count" {default = "3"}
-variable "worker_count" {default = "1"}
-variable "control_type" {default = "m1.small"}
-variable "source_ami" { }
-variable "worker_type" {default = "m1.small"}
-variable "availability_zone" {}
-variable "datacenter" {default = "aws"}
-variable "long_name" {default = "microservices-infastructure"}
 variable "short_name" {default = "mi"}
-variable "ssh_username"  {default = "centos"}
+variable "source_ami" { }
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
+variable "ssh_username"  {default = "centos"}
+variable "worker_count" {default = "1"}
+variable "worker_type" {default = "m1.small"}
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
@@ -54,6 +55,17 @@ resource "aws_main_route_table_association" "main" {
   route_table_id = "${aws_route_table.main.id}"
 }
 
+resource "aws_ebs_volume" "mi-control-glusterfs" {
+  availability_zone = "${var.availability_zone}"
+  count = "${var.control_count}"
+  size = "${var.glusterfs_volume_size}"
+  type = "gp2"
+
+  tags {
+    Name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
+  }
+}
+
 resource "aws_instance" "mi-control-nodes" {
   ami = "${var.source_ami}"
   availability_zone = "${var.availability_zone}"
@@ -68,12 +80,23 @@ resource "aws_instance" "mi-control-nodes" {
 
   subnet_id = "${aws_subnet.main.id}"
 
+  root_block_device {
+    delete_on_termination = true
+  }
+
   tags {
     Name = "${var.short_name}-control-${format("%02d", count.index+1)}"
     sshUser = "${var.ssh_username}"
     role = "control"
     dc = "${var.datacenter}"
   }
+}
+
+resource "aws_volume_attachment" "mi-control-nodes-glusterfs-attachment" {
+  count = "${var.control_count}"
+  device_name = "xvdh"
+  instance_id = "${element(aws_instance.mi-control-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-control-glusterfs.*.id, count.index)}"
 }
 
 resource "aws_instance" "mi-worker-nodes" {
@@ -91,6 +114,10 @@ resource "aws_instance" "mi-worker-nodes" {
   associate_public_ip_address=true
 
   subnet_id = "${aws_subnet.main.id}"
+
+  root_block_device {
+    delete_on_termination = true
+  }
 
   tags {
     Name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
