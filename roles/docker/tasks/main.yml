@@ -41,6 +41,3 @@
     - bootstrap # needed to install Docker images during bootstrap
 
 - include: collectd.yml
-
-# breaks/crashes Consul on provisioning
-#- include: distributive.yml

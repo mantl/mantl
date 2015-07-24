@@ -71,6 +71,3 @@
   when: "'role=control' in group_names"
   tags:
     - logrotate
-
-# breaks/crashes Consul on provisioning
-#- include: distributive.yml

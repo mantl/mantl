@@ -70,6 +70,3 @@
     state: started
   tags:
     - collectd
-
-# breaks/crashes Consul on provisioning
-#- include: distributive.yml

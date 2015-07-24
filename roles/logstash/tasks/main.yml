@@ -64,5 +64,3 @@
     - logstash
 
 - meta: flush_handlers
-
-- include: distributive.yml
