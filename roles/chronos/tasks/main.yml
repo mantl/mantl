@@ -47,6 +47,19 @@
   tags:
     - chronos
 
+- name: configure chronos to wait for zookeeper before starting
+  sudo: yes
+  lineinfile:
+    dest: /usr/lib/systemd/system/chronos.service
+    line: "ExecStartPre=/usr/local/bin/zookeeper-wait-for-listen.sh {{ chronos_zk_dns }}"
+    insertbefore: "^ExecStart="
+    state: present
+  notify:
+    - reload chronos
+    - restart chronos
+  tags:
+    - chronos
+
 - name: fix chronos bin file
   sudo: yes
   replace:

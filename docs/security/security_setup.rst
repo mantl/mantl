@@ -38,7 +38,7 @@ values in these options:
 Value   Interpreted as
 ======= ==============
 `t`     True
-`t`     True
+`T`     True
 `1`     True
 `True`  True
 `true`  True

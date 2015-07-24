@@ -1,0 +1,7 @@
+search {{ [consul_dns_domain] | union(domain_search_list) | unique | join(' ') }}
+nameserver 127.0.0.1
+{% for nameserver in nameservers | unique %}
+{% if nameserver != '127.0.0.1' %}
+nameserver {{ nameserver }}
+{% endif %}
+{% endfor %}
