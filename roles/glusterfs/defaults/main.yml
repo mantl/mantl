@@ -2,4 +2,7 @@
 glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"
 glusterfs_server_data_location: /etc/glusterfs/data
 glusterfs_server_group: role=control
-glusterfs_volumes: ["docker"]
+
+# docker volume
+glusterfs_container_data_name: container-volumes
+glusterfs_container_data_mount: /mnt/{{ glusterfs_container_data_name }}

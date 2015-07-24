@@ -5,3 +5,7 @@
     - systemctl daemon-reload
     - systemctl restart glusterd
     - systemctl restart glusterfsd
+
+- name: reload consul
+  sudo: yes
+  command: "consul reload"

@@ -1,18 +1,14 @@
 ---
 # TODO: external volume + formatting
 
-- name: ensure server data location is present
-  sudo: yes
-  file:
-    state: directory
-    path: "{{ glusterfs_server_data_location }}"
-
 - name: enable glusterfs community repo
   sudo: yes
   get_url:
     url: https://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo
     dest: /etc/yum.repos.d/glusterfs-epel.repo
     sha256sum: 11e24f4c7ea04cf51c38c7a8c5b24f3e0298c50f6119c4b58af207fedf85652e
+  tags:
+    - glusterfs
 
 - name: install glusterfs packages
   sudo: yes
@@ -21,42 +17,11 @@
     state: present
   with_items:
     - glusterfs
-    - glusterfs-cli
     - glusterfs-fuse
-    - glusterfs-server
-  notify:
-    - reload glusterfs
+  tags:
+    - glusterfs
 
-- name: start gluster services
-  sudo: yes
-  command: systemctl start {{ item }}
-  with_items:
-    - glusterd
-    - glusterfsd
+- include: server.yml
+  when: glusterfs_mode == "server"
 
-- name: probe servers
-  run_once: true
-  sudo: yes
-  command: gluster peer probe {{ item }}.node.{{ consul_dns_domain }}
-  with_items: groups[glusterfs_server_group]
-
-- name: create gluster_volume script
-  sudo: yes
-  template:
-    src: gluster_volume.sh.j2
-    dest: /etc/glusterfs/gluster_volume.sh
-    mode: 755
-
-- name: create gluserfs volumes
-  run_once: true
-  sudo: yes
-  command: /etc/glusterfs/gluster_volume.sh {{ item }}
-  with_items: glusterfs_volumes
-
-- name: start glusterfs volumes
-  sudo: yes
-  run_once: true
-  gluster_volume:
-    name: "{{ item }}"
-    state: started
-  with_items: glusterfs_volumes
+- include: client.yml
