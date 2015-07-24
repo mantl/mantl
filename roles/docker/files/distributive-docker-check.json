@@ -1,0 +1,11 @@
+{
+    "check": {
+        "id": "distributive-docker-checks",
+        "name": "Distributive docker Health Checks",
+        "service_id": "docker",
+        "script": "/bin/distributive -f /etc/distributive.d/docker.json -d '' --verbosity=info",
+        "status": "passing",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

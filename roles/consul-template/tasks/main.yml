@@ -26,3 +26,6 @@
     state: started
   tags:
     - consul-template
+
+# breaks/crashes Consul on provisioning
+#- include: distributive.yml

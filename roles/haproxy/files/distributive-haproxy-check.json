@@ -1,0 +1,10 @@
+{
+    "check": {
+        "id": "distributive-haproxy-checks",
+        "name": "Distributive haproxy Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/haproxy.json -d '' --verbosity=info",
+        "status": "passing",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

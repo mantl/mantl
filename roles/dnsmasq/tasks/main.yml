@@ -14,16 +14,16 @@
 
 - name: ensure dnsmasq.d directory exists
   sudo: yes
-  file: 
+  file:
     path: /etc/NetworkManager/dnsmasq.d
     state: directory
   tags:
     - dnsmasq
 
-- name: configure dnsmasq for consul 
+- name: configure dnsmasq for consul
   sudo: yes
-  template: 
-    src: 10-consul 
+  template:
+    src: 10-consul
     dest: /etc/dnsmasq.d/10-consul
     mode: 755
   notify:
@@ -61,3 +61,5 @@
     - dnsmasq
 
 - meta: flush_handlers
+
+- include: distributive.yml

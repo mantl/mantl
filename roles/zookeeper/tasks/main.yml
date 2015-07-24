@@ -20,22 +20,22 @@
 - name: generate default env file
   sudo: yes
   template:
-    src: zookeeper-env.j2 
+    src: zookeeper-env.j2
     dest: "/etc/default/{{ zookeeper_service }}"
-  notify: 
+  notify:
     - restart zookeeper
-  tags: 
+  tags:
     - zookeeper
 
-- name: generate systemd service file 
+- name: generate systemd service file
   sudo: yes
   template:
-    src: zookeeper-service.j2 
+    src: zookeeper-service.j2
     dest: "/usr/lib/systemd/system/{{ zookeeper_service }}.service"
-  notify: 
+  notify:
     - register zookeeper service
-    - reload systemd daemon 
-  tags: 
+    - reload systemd daemon
+  tags:
     - zookeeper
 
 - name: ensure zookeeper docker image is present
@@ -82,3 +82,5 @@
 - include: collectd.yml
 
 - meta: flush_handlers
+
+- include: distributive.yml

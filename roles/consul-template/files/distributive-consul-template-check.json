@@ -1,0 +1,9 @@
+{
+    "check": {
+        "id": "distributive-consul-template-checks",
+        "name": "Distributive consul-template Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/consul-template.json -d '' --verbosity=info",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

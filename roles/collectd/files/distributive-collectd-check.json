@@ -1,0 +1,10 @@
+{
+    "check": {
+        "id": "distributive-collectd-checks",
+        "name": "Distributive collectd Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/collectd.json -d '' --verbosity=info",
+        "status": "passing",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

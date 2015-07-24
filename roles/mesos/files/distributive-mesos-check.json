@@ -2,8 +2,8 @@
     "check": {
         "id": "distributive-mesos-checks",
         "name": "Distributive Mesos Health Checks",
-        "service_id": "mesos",
         "script": "/bin/distributive -f /etc/distributive.d/mesos.json -d '' --verbosity=info",
+        "status": "passing",
         "interval": "1m",
         "timeout": "30s"
     }

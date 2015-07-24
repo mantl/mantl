@@ -29,7 +29,7 @@
     - restart collectd
   tags:
     - collectd
-  
+
 
 - name: authorize collectd to make tcp connections
   sudo: yes
@@ -71,4 +71,5 @@
   tags:
     - collectd
 
-
+# breaks/crashes Consul on provisioning
+#- include: distributive.yml

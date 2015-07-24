@@ -79,8 +79,8 @@
   tags:
     - mesos
 
-# symlink to distributive checklist, register check with Consul
-- include: distributive.yml
+# breaks/crashes Consul on provisioning
+#- include: distributive.yml
 
 - include: leader.yml
   when: mesos_mode == "leader" or mesos_mode == "mixed"

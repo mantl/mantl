@@ -1,0 +1,36 @@
+---
+# some created directories may be redundant, but are kept in case anything else
+# changes, and to enable the picking and choosing of components/roles.
+- name: create consul configuration directory
+  sudo: yes
+  file:
+    path: /etc/consul
+    state: directory
+    mode: 0770
+  tags:
+    - consul
+    - distributive
+    - logstash
+
+- name: create symlink to distributive logstash checklist
+  sudo: yes
+  file:
+    state: link
+    src: /usr/share/distributive/logstash.json
+    dest: /etc/distributive.d/logstash.json
+  tags:
+    - consul
+    - distributive
+    - logstash
+
+- name: register distributive tests with consul
+  sudo: yes
+  copy:
+    src: distributive-logstash-check.json
+    dest: /etc/consul/
+  notify:
+    - reload consul
+  tags:
+    - consul
+    - distributive
+    - logstash
