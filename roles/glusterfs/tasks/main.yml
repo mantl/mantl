@@ -1,7 +1,5 @@
 ---
-# TODO: external volume + formatting
-
-- name: enable glusterfs community repo
+- name: enable community repo
   sudo: yes
   get_url:
     url: https://download.gluster.org/pub/gluster/glusterfs/LATEST/CentOS/glusterfs-epel.repo
@@ -10,7 +8,7 @@
   tags:
     - glusterfs
 
-- name: install glusterfs packages
+- name: install packages
   sudo: yes
   yum:
     name: "{{ item }}"
