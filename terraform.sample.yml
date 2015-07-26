@@ -57,6 +57,7 @@
     - nginx
     - consul
     - dnsmasq
+    - iptables
 
 # ROLES - after provisioning the software that's common to all hosts, we do
 # specialized hosts. This configuration has two major groups: control nodes and
