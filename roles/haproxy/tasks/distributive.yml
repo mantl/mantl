@@ -1,0 +1,36 @@
+---
+# some created directories may be redundant, but are kept in case anything else
+# changes, and to enable the picking and choosing of components/roles.
+- name: create consul configuration directory
+  sudo: yes
+  file:
+    path: /etc/consul
+    state: directory
+    mode: 0770
+  tags:
+    - consul
+    - distributive
+    - haproxy
+
+- name: create symlink to distributive haproxy checklist
+  sudo: yes
+  file:
+    state: link
+    src: /usr/share/distributive/haproxy.json
+    dest: /etc/distributive.d/haproxy.json
+  tags:
+    - consul
+    - distributive
+    - haproxy
+
+- name: register distributive tests with consul
+  sudo: yes
+  copy:
+    src: distributive-haproxy-check.json
+    dest: /etc/consul/
+  notify:
+    - reload consul
+  tags:
+    - consul
+    - distributive
+    - haproxy
