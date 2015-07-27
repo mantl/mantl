@@ -38,6 +38,7 @@
     - httpd-tools
     - nc
     - openssh
+    - policycoreutils-python
   tags:
     - bootstrap
 
