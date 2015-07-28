@@ -19,9 +19,3 @@ chronos_port: 14400
 chronos_proxy_port: 4400
 
 # framework authentication
-
-# register service with consul
-consul_bin: /bin/consul
-consul_dir: /etc/consul
-consul_nginx_image: ciscocloud/nginx-consul
-consul_nginx_image_tag: latest

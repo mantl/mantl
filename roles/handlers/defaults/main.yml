@@ -1,0 +1,4 @@
+consul_nginx_image: ciscocloud/nginx-consul
+consul_nginx_image_tag: latest
+consul_bin: /bin/consul
+consul_dir: /etc/consul

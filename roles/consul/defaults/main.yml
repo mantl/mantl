@@ -10,8 +10,6 @@ consul_disable_remote_exec: yes
 consul_ca_file: ca.cert
 consul_cert_file: consul.cert
 consul_key_file: consul.key
-consul_nginx_image: ciscocloud/nginx-consul
-consul_nginx_image_tag: latest
 consul_acl_master_token: "89ff9d38-534a-41aa-a3a6-e4985bcd11c0"
 consul_acl_datacenter: "{{ consul_dc }}"
 consul_acl_default_policy: "deny"

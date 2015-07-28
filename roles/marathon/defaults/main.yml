@@ -22,12 +22,6 @@ marathon_proxy_port: 8080
 marathon_principal: marathon
 marathon_secret: ""
 
-# register service with consul
-consul_bin: /bin/consul
-consul_dir: /etc/consul
-consul_nginx_image: ciscocloud/nginx-consul
-consul_nginx_image_tag: latest
-
 # jobs
 mesos_consul_image: ciscocloud/mesos-consul
 mesos_consul_image_tag: v0.2
