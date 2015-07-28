@@ -9,11 +9,23 @@
     - docker
     - bootstrap
 
-- name: install docker
+- name: install docker repo
+  sudo: yes
+  copy:
+    src: docker.repo
+    dest: /etc/yum.repos.d/docker.repo
+  tags:
+    - docker
+    - bootstrap
+
+- name: install docker packages
   sudo: yes
   yum:
-    name: docker
+    name: "{{ item }}"
     state: present
+  with_items:
+    - docker-engine-1.7.0
+    - docker-selinux
   tags:
     - docker
     - bootstrap
@@ -21,12 +33,35 @@
 - name: configure docker consul dns
   sudo: yes
   lineinfile:
-    dest: /etc/sysconfig/docker-network
-    regexp: ^DOCKER_NETWORK_OPTIONS
-    line: DOCKER_NETWORK_OPTIONS='--dns {{ ansible_default_ipv4.address }} --dns-search service.{{ consul_dns_domain }}'
+    dest: /etc/sysconfig/docker
+    regexp: ^other_arg=
+    line: other_arg='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }}'
     state: present
+    create: yes
   notify:
     - restart docker
+  tags:
+    - docker
+
+- name: create docker.system.d
+  sudo: yes
+  file:
+    dest: /etc/systemd/system/docker.service.d
+    state: directory
+  tags:
+    - docker
+
+- name: create local docker service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/docker.service.d/local.conf
+    content: |
+      [Service]
+      EnvironmentFile=-/etc/sysconfig/docker
+      ExecStart=
+      ExecStart=/usr/bin/docker -d -H fd:// $other_arg
+  notify:
+    - reload docker
   tags:
     - docker
 

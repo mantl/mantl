@@ -45,6 +45,7 @@
     - nc
     - openssh
     - jq
+    - policycoreutils-python
   tags:
     - bootstrap
 

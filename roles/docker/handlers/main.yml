@@ -10,3 +10,9 @@
   service:
     name: collectd
     state: restarted
+
+- name: reload docker
+  sudo: yes
+  command: systemctl daemon-reload
+  notify:
+    - restart docker
