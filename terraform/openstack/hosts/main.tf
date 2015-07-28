@@ -1,5 +1,7 @@
 variable auth_url { }
 variable datacenter { default = "openstack" }
+variable glusterfs_volume_size { default = "100" } # size is in gigabytes
+variable device_name { default = "/dev/vdb" }
 variable tenant_id { }
 variable tenant_name { }
 variable control_flavor_name { }
@@ -27,6 +29,10 @@ resource "openstack_compute_instance_v2" "control" {
   flavor_name = "${ var.control_flavor_name }"
   security_groups = [ "${ var.security_groups }" ]
   network = { uuid  = "${ var.net_id }" }
+  volume {
+        volume_id = "${ element(openstack_blockstorage_volume_v1.mi-control-glusterfs.*.id, count.index) }"
+        device = "${ var.device_name }"
+  }
   metadata = {
      dc = "${var.datacenter}"
      role = "control"
@@ -50,3 +56,12 @@ resource "openstack_compute_instance_v2" "resource" {
   count = "${ var.resource_count }"
 }
 
+resource "openstack_blockstorage_volume_v1" "mi-control-glusterfs" {
+  name = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
+  size = "${ var.glusterfs_volume_size }"
+  metadata = {
+     usage = "container-volumes"
+   }
+  count = "${ var.control_count }"
+}

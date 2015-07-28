@@ -21,4 +21,6 @@ module "dc2-hosts" {
 	control_count = 2
 	resource_count = 3
 	security_groups = ""
+    glusterfs_volume_size = 100
+    device_name = "/dev/vdb"
 }
