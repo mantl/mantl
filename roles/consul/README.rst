@@ -40,7 +40,7 @@ commonly used to least.
 .. data:: consul_advertise
 
    IP address Consul will advertise as available for other nodes to connect to.
-   Defaults to the value of ``ansible_default_ipv4.address``.
+   Defaults to the value of ``private_ipv4`` (from terraform inventory).
 
 .. data:: consul_is_server
 
