@@ -1,20 +1,19 @@
 variable auth_url { }
+variable control_count {}
+variable control_flavor_name { }
 variable datacenter { default = "openstack" }
 variable glusterfs_volume_size { default = "100" } # size is in gigabytes
-variable device_name { default = "/dev/vdb" }
-variable tenant_id { }
-variable tenant_name { }
-variable control_flavor_name { }
-variable resource_flavor_name { }
-variable net_id { }
-variable keypair_name { }
 variable image_name { }
-variable control_count {}
+variable keypair_name { }
+variable long_name { default = "microservices-infrastructure" }
+variable net_id { }
 variable resource_count {}
+variable resource_flavor_name { }
 variable security_groups { default = "default" }
 variable short_name { default = "mi" }
-variable long_name { default = "microservices-infrastructure" }
 variable ssh_user { default = "centos" }
+variable tenant_id { }
+variable tenant_name { }
 
 provider "openstack" {
   auth_url = "${ var.auth_url }"
@@ -30,14 +29,14 @@ resource "openstack_compute_instance_v2" "control" {
   security_groups = [ "${ var.security_groups }" ]
   network = { uuid  = "${ var.net_id }" }
   volume {
-        volume_id = "${ element(openstack_blockstorage_volume_v1.mi-control-glusterfs.*.id, count.index) }"
-        device = "${ var.device_name }"
+    volume_id = "${ element(openstack_blockstorage_volume_v1.mi-control-glusterfs.*.id, count.index) }"
+    device = "/dev/vdb"
   }
   metadata = {
-     dc = "${var.datacenter}"
-     role = "control"
-     ssh_user = "${ var.ssh_user }"
-   }
+    dc = "${var.datacenter}"
+    role = "control"
+    ssh_user = "${ var.ssh_user }"
+  }
   count = "${ var.control_count }"
 }
 
@@ -52,7 +51,7 @@ resource "openstack_compute_instance_v2" "resource" {
     dc = "${var.datacenter}"
     role = "worker"
     ssh_user = "${ var.ssh_user }"
-   }
+  }
   count = "${ var.resource_count }"
 }
 
@@ -61,7 +60,7 @@ resource "openstack_blockstorage_volume_v1" "mi-control-glusterfs" {
   description = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
   size = "${ var.glusterfs_volume_size }"
   metadata = {
-     usage = "container-volumes"
-   }
+    usage = "container-volumes"
+  }
   count = "${ var.control_count }"
 }
