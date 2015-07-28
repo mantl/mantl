@@ -1,4 +1,5 @@
 ---
+glusterfs_mode: client
 glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"
 glusterfs_server_group: role=control
 

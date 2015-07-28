@@ -29,6 +29,13 @@ XFS volume and mounted on the control nodes.
 Variables
 ---------
 
+.. data:: glusterfs_mode
+
+   The mode that GlusterFS will be configured in. Valid values: "server" and
+   "client".
+
+   default: ``client``
+
 .. data:: glusterfs_replication
 
    The amount of replication to use for new volumes. Should be a factor of the
