@@ -20,11 +20,11 @@ mounted properly at ``/data``::
 Cloud Configuration
 -------------------
 
-On Google Compute Engine and Amazon Web Services, the
+On Google Compute Engine, Amazon Web Services, and OpenStack the
 microservices-infrastructure Terraform modules will create an external volume.
-By default, this volume will be 500gb, but you can change this with the
-``glusterfs_volume_size`` variable. The attached disk will be formatted as an
-XFS volume and mounted on the control nodes.
+By default, this volume will be 100gb, but you can change this with the
+Terraform ``glusterfs_volume_size`` variable. The attached disk will be
+formatted as an XFS volume and mounted on the control nodes.
 
 Variables
 ---------
