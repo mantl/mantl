@@ -91,6 +91,7 @@
       dest: /usr/local/bin
   tags:
     - consul
+    - cscripts
 
 - name: install check scripts
   sudo: yes
@@ -116,17 +117,23 @@
   tags:
     - consul
 
+# The secure token is required for restarts. Create it before
+# flushing handlers
+#
+- name: create secure acl
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="MI Secure Token" --rule='key:secure:write' {{ consul_acl_secure_token }}
+  tags:
+    - consul
+
 - meta: flush_handlers
 
 - include: acl.yml
-  when: do_consul_acl
-
-- include: noacl.yml
-  when: not do_consul_acl
 
 - meta: flush_handlers
 
 - include: nginx_proxy.yml
-
+#
 # symlink to distributive checklist, register check with Consul
 - include: distributive.yml
