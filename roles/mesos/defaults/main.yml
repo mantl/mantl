@@ -34,5 +34,5 @@ mesos_follower_secret: ""
 consul_bin: /bin/consul
 consul_dir: /etc/consul
 consul_nginx_image: ciscocloud/nginx-consul
-consul_nginx_image_tag: 1.1
+consul_nginx_image_tag: latest
 
