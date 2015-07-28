@@ -29,6 +29,12 @@
     - '^127\.0\.0\.1(\s+){{ inventory_hostname }}.*'
     - '^::1(\s+){{ inventory_hostname }}.*'
 
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
 - name: install system utilities
   sudo: yes
   yum:
@@ -38,6 +44,7 @@
     - httpd-tools
     - nc
     - openssh
+    - jq
   tags:
     - bootstrap
 
@@ -49,12 +56,6 @@
     state: stopped
   register: command_result
   failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"  
-
-- name: enable EPEL repo
-  sudo: yes
-  yum:
-    name: epel-release
-    state: latest
 
 - name: install pip
   sudo: yes
