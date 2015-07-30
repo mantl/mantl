@@ -10,32 +10,27 @@
   tags:
     - consul
     - distributive
+    - dnsmasq
 
-- name: create symlink to distributive consul checklist
+- name: create symlink to distributive dnsmasq checklist
   sudo: yes
   file:
     state: link
-    src: /usr/share/distributive/consul.json
-    dest: /etc/distributive.d/consul.json
+    src: /usr/share/distributive/dnsmasq.json
+    dest: /etc/distributive.d/dnsmasq.json
   tags:
     - consul
     - distributive
+    - dnsmasq
 
 - name: register distributive tests with consul
   sudo: yes
   copy:
-    src: distributive-consul-check.json
+    src: distributive-dnsmasq-check.json
     dest: /etc/consul/
-  when: "'{{ consul_servers_group}}' in group_names"
   notify:
     - reload consul
   tags:
     - consul
     - distributive
-
-- name: run distributive consul test
-  sudo: yes
-  command: /usr/bin/distributive -f /etc/distributive.d/consul.json -d "" --verbosity="info"
-  tags:
-    - consul
-    - distributive
+    - dnsmasq

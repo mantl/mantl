@@ -1,0 +1,10 @@
+{
+    "check": {
+        "id": "distributive-dnsmasq-checks",
+        "name": "Distributive dnsmasq Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/dnsmasq.json -d '' --verbosity=info",
+        "status": "passing",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

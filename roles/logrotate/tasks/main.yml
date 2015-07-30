@@ -71,4 +71,3 @@
   when: "'role=control' in group_names"
   tags:
     - logrotate
-

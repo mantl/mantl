@@ -1,0 +1,10 @@
+{
+    "check": {
+        "id": "distributive-logstash-checks",
+        "name": "Distributive logstash Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/logstash.json -d '' --verbosity=info",
+        "status": "passing",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

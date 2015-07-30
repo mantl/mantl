@@ -1,0 +1,11 @@
+{
+    "check": {
+        "id": "distributive-consul-checks",
+        "name": "Distributive Consul Health Checks",
+        "service_id": "consul",
+        "script": "/bin/distributive -f /etc/distributive.d/consul.json -d '' --verbosity=info",
+        "status": "passing",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

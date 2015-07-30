@@ -31,7 +31,7 @@
   template:
     src: zk.j2
     dest: /etc/mesos/zk
-  tags: 
+  tags:
     - mesos
 
 - name: configure /etc/mesos/hostname
