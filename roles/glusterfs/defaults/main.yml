@@ -1,0 +1,14 @@
+---
+glusterfs_mode: client
+glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"
+glusterfs_server_group: role=control
+
+# brick storage
+glusterfs_brick_mount: /mnt/glusterfs
+glusterfs_brick_device: "{% if provider == 'gce' %}/dev/disk/by-id/google-glusterfs{% elif provider == 'aws' %}/dev/xvdh{% elif provider == 'openstack' %}/dev/vdb{% endif %}"
+glusterfs_volume_force: "{% if glusterfs_brick_device %}no{% else %}yes{% endif %}"
+glusterfs_brick_location: "{% if glusterfs_brick_device %}{{ glusterfs_brick_mount }}{% else %}/etc/glusterfs/data{% endif %}"
+
+# docker volume
+glusterfs_container_data_name: container-volumes
+glusterfs_container_data_mount: /mnt/{{ glusterfs_container_data_name }}

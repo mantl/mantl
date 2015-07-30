@@ -81,3 +81,20 @@
     - mesos
     - marathon
     - chronos
+
+# GlusterFS has to be provisioned in reverse order from Mesos: servers then
+# clients.
+- hosts: role=control
+  gather_facts: no
+  vars:
+    consul_dns_domain: consul
+    glusterfs_mode: server
+  roles:
+    - glusterfs
+
+- hosts: role=worker
+  vars:
+    consul_dns_domain: consul
+    glusterfs_mode: client
+  roles:
+    - glusterfs
