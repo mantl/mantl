@@ -25,9 +25,9 @@
 
 - name: register distributive tests with consul
   sudo: yes
-  copy:
-    src: distributive-zookeeper-check.json
-    dest: /etc/consul/
+  template:
+    src: distributive-zookeeper-check.json.j2
+    dest: /etc/consul/distributive-zookeeper-check.json
   notify:
     - reload consul
   tags:
