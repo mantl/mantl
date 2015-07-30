@@ -1,11 +1,22 @@
 #!/bin/bash -eux
 
-# Remove ansible
+# YUM cleanup
 yum remove -y ansible
+yum clean all
 
-# Zero out the rest of the free space using dd, then delete the written file.
-dd if=/dev/zero of=/EMPTY bs=1M
-rm -f /EMPTY
+# Network cleanup
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+sed -i '/UUID/d' /etc/sysconfig/network-scripts/ifcfg-e*
+sed -i '/HWADDR/d' /etc/sysconfig/network-scripts/ifcfg-e*
+
+# Filesystem cleanup
+rm -rf /tmp/*
+find "$HOME" -type f -delete
+find /var/log -type f -delete
+
+# Zero out empty disk space to reduce final image size.
+dd if=/dev/zero of=/null bs=1M
+rm -rf /null
 
 # sync so Packer doesn't quit before the large file is deleted
 sync
