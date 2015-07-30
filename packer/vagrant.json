@@ -85,7 +85,7 @@
             {
                 "type": "atlas",
                 "token": "{{user `atlas_token`}}",
-                "artifact": "brianhicks/mi",
+                "artifact": "CiscoCloud/microservices-infrastructure",
                 "artifact_type": "vagrant.box",
                 "metadata": {
                     "created_at": "{{timestamp}}",
@@ -95,7 +95,7 @@
         ]
     ],
     "push": {
-        "name": "brianhicks/mi",
+        "name": "CiscoCloud/microservices-infrastructure",
         "base_dir": "..",
         "vcs": true,
         "exclude": ["docs"]
