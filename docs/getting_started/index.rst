@@ -29,6 +29,7 @@ platforms:
    aws.rst
    digitalocean.rst
    vsphere.rst
+   softlayer.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
