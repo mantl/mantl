@@ -1,4 +1,8 @@
 {
+    "variables": {
+        "atlas_username": "{{env `ATLAS_USERNAME`}}",
+        "atlas_name": "{{env `ATLAS_NAME`}}"
+    },
     "provisioners": [
         {
             "type": "shell",
@@ -85,7 +89,7 @@
             {
                 "type": "atlas",
                 "token": "{{user `atlas_token`}}",
-                "artifact": "CiscoCloud/microservices-infrastructure",
+                "artifact": "{{user `atlas_username`}}/{{user `atlas_name`}}",
                 "artifact_type": "vagrant.box",
                 "metadata": {
                     "created_at": "{{timestamp}}",
@@ -95,7 +99,6 @@
         ]
     ],
     "push": {
-        "name": "CiscoCloud/microservices-infrastructure",
         "base_dir": "..",
         "vcs": true,
         "exclude": ["docs"]
