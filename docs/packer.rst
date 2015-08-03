@@ -1,0 +1,1 @@
+.. include:: ../packer/README.rst

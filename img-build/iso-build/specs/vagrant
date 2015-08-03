@@ -1,3 +1,0 @@
-BASE_DIR="$(dirname "$(readlink -f "${0}")")"
-source "${BASE_DIR}/specs/controller"
-source "${BASE_DIR}/specs/resource"

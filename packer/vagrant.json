@@ -1,0 +1,106 @@
+{
+    "variables": {
+        "atlas_username": "{{env `ATLAS_USERNAME`}}",
+        "atlas_name": "{{env `ATLAS_NAME`}}"
+    },
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "scripts": [
+                "{{pwd}}/packer/scripts/ansible.sh",
+                "{{pwd}}/packer/scripts/vagrant.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": ["virtualbox-iso"],
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "script": "{{pwd}}/packer/scripts/vbox.sh"
+        },
+        {
+            "type": "ansible-local",
+            "playbook_file": "{{pwd}}/vagrant.yml",
+            "role_paths": [
+                "{{pwd}}/roles/chronos",
+                "{{pwd}}/roles/collectd",
+                "{{pwd}}/roles/common",
+                "{{pwd}}/roles/consul",
+                "{{pwd}}/roles/consul-template",
+                "{{pwd}}/roles/dnsmasq",
+                "{{pwd}}/roles/docker",
+                "{{pwd}}/roles/handlers",
+                "{{pwd}}/roles/haproxy",
+                "{{pwd}}/roles/logrotate",
+                "{{pwd}}/roles/logstash",
+                "{{pwd}}/roles/marathon",
+                "{{pwd}}/roles/mesos",
+                "{{pwd}}/roles/nginx",
+                "{{pwd}}/roles/vault",
+                "{{pwd}}/roles/zookeeper"
+            ],
+            "extra_arguments": ["--tags", "bootstrap"]
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "script": "{{pwd}}/packer/scripts/cleanup.sh"
+        }
+    ],
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "boot_command": [
+                "<tab> text ks=http://{{.HTTPIP}}:{{.HTTPPort}}/vagrant.cfg<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": 20480,
+            "guest_os_type": "RedHat_64",
+            "headless": false,
+            "http_directory": "{{pwd}}/packer/kickstarts",
+            "iso_urls": [
+                "iso/CentOS-7-x86_64-Minimal-1503-01.iso",
+                "http://centos.mirrors.hoobly.com/7.1.1503/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso"
+            ],
+            "iso_checksum_type": "sha256",
+            "iso_checksum": "7cf1ac8da13f54d6be41e3ccf228dc5bb35792f515642755ff4780d5714d4278",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version",
+            "vm_name": "microservices-infrastructure-0.3.2-x86_64",
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--memory", "512"],
+                ["modifyvm", "{{.Name}}", "--cpus", "2"]
+            ]
+        }
+    ],
+    "post-processors": [
+        [
+            {
+                "type": "vagrant",
+                "compression_level": 9,
+                "output": "builds/VirtualBox-microservices-infrastructure-0.3.2.box",
+                "keep_input_artifact": false
+            },
+            {
+                "type": "atlas",
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/{{user `atlas_name`}}",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "created_at": "{{timestamp}}",
+                    "provider": "virtualbox"
+                }
+            }
+        ]
+    ],
+    "push": {
+        "base_dir": "..",
+        "vcs": true,
+        "exclude": ["docs"]
+    }
+}
