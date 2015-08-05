@@ -111,18 +111,12 @@ def _parse_prefix(source, prefix, sep='.'):
 
 
 def parse_attr_list(source, prefix, sep='.'):
-    size_key = '%s%s#' % (prefix, sep)
-    try:
-        size = int(source[size_key])
-    except KeyError:
-        return []
-
-    attrs = [{} for _ in range(size)]
+    attrs = defaultdict(dict)
     for compkey, value in _parse_prefix(source, prefix, sep):
-        nth, key = compkey.split(sep, 1)
-        attrs[int(nth)][key] = value
+        idx, key = compkey.split(sep, 1)
+        attrs[idx][key] = value
 
-    return attrs
+    return attrs.values()
 
 
 def parse_dict(source, prefix, sep='.'):
