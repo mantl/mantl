@@ -45,10 +45,17 @@ func Pwd() (wd string) {
 // Basename returns whatever comes after the trailing slash in a filepath.
 func Basename(path string) (name string) {
 	log.Debugf("sh.Basename -> %s", path)
+	// basename ignores trailing slashes and never includes them in output
+	path = strings.TrimSuffix(path, "/")
+	// handle cases made explicit by the manpage
+	// http://man7.org/linux/man-pages/man3/basename.3.html
 	idex := strings.LastIndex(path, "/")
-	if idex == -1 {
+	if path == "/" {
+		return "/"
+	} else if idex == -1 { // path has no slashes
 		return path
 	}
+	// if it's not a special case, return the path from last slash onwards
 	return path[idex+1:]
 }
 
