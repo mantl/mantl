@@ -17,8 +17,8 @@ module "dc2-hosts-floating" {
         resource_flavor_name  = ""
         image_name = ""
         keypair_name = "${ module.dc2-keypair.keypair_name }"
-        control_count = 1
-        resource_count = 2
+        control_count = 3
+        resource_count = 3
 	floating_pool = ""
 	external_net_id = ""
 }
