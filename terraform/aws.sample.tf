@@ -11,6 +11,6 @@ module "aws-dc" {
   worker_type = "t2.small"
   ssh_username = "centos"
   source_ami = "ami-96a818fe"
-  control_count = 2
+  control_count = 3
   worker_count = 3
 }
