@@ -33,7 +33,9 @@
 
 - name: set event hooks
   run_once: true
-  command: 'curl -X POST http://localhost:18080/v2/eventSubscriptions?callbackUrl={{ item }}'
+  command: 'curl -s -X POST -H "Content-Type: application/json" http://localhost:18080/v2/eventSubscriptions?callbackUrl={{ item }}'
+  register: event_hook
   changed_when: false
+  failed_when: "item not in event_hook.stdout"
   with_items:
     - http://marathon-consul.service.consul:4000/events
