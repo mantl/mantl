@@ -3,7 +3,7 @@ backend "consul" {
 	path = "vault"
 	scheme = "http"
 	token = "{{ consul_acl_master_token }}"
-	advertise_addr = "{{ ansible_default_ipv4.address }}"
+	advertise_addr = "{{ private_ipv4 }}"
 }
 
 listener "tcp" {
