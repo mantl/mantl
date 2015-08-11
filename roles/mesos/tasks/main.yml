@@ -11,7 +11,7 @@
 - name: install mesos package
   sudo: yes
   yum:
-    name: mesos
+    name: "{{ mesos_package }}"
     state: present
   tags:
     - mesos

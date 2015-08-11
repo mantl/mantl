@@ -1,4 +1,7 @@
 ---
+mesos_version: 0.22.1
+mesos_package: "mesos-{{ mesos_version }}"
+
 mesos_mode: follower 
 mesos_log_dir: /var/log/mesos
 mesos_work_dir: /var/run/mesos

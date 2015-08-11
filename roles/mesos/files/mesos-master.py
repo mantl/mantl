@@ -20,17 +20,18 @@ import socket
 import collections
 
 PREFIX = "mesos-master"
+MESOS_INSTANCE = ""
 MESOS_HOST = "localhost"
 MESOS_PORT = 5050
-MESOS_VERSION = "0.21.0"
+MESOS_VERSION = "0.22.0"
 MESOS_URL = ""
 VERBOSE_LOGGING = False
 
+CONFIGS = []
+
 Stat = collections.namedtuple('Stat', ('type', 'path'))
 
-STATS_CUR = {}
-
-# DICT: Common Metrics in 0.19.0, 0.20.0 and 0.21.0
+# DICT: Common Metrics in 0.19.0, 0.20.0, 0.21.0 and 0.22.0
 STATS_MESOS = {
     # Master
     'master/cpus_percent': Stat("percent", "master/cpus_percent"),
@@ -133,9 +134,41 @@ STATS_MESOS_021 = {
     'master/slaves_disconnected': Stat("gauge", "master/slaves_disconnected")
 }
 
+# DICT: Mesos 0.22.0, 0.22.1
+STATS_MESOS_022 = {
+    'master/event_queue_dispatches': Stat("gauge", "master/event_queue_dispatches"),
+    'master/event_queue_http_requests': Stat("gauge", "master/event_queue_http_requests"),
+    'master/event_queue_messages': Stat("gauge", "master/event_queue_messages"),
+    'master/frameworks_connected': Stat("gauge", "master/frameworks_connected"),
+    'master/frameworks_disconnected': Stat("gauge", "master/frameworks_disconnected"),
+    'master/messages_decline_offers': Stat("counter", "master/messages_decline_offers"),
+    'master/messages_resource_request': Stat("counter", "master/messages_resource_request"),
+    'master/slaves_connected': Stat("gauge", "master/slaves_connected"),
+    'master/slaves_disconnected': Stat("gauge", "master/slaves_disconnected"),
+    'master/slave_shutdowns_canceled': Stat("counter", "master/slave_shutdowns_canceled"),
+    'master/slave_shutdowns_scheduled': Stat("counter", "master/slave_shutdowns_scheduled"),
+    'master/task_lost/source_master/reason_slave_removed': Stat("counter", "task_lost/source_master/reason_slave_removed"),
+    'master/tasks_error': Stat("counter", "master/tasks_error")
+}
+
+# FUNCTION: gets the list of stats based on the version of mesos
+def get_stats_string(version):
+    if version == "0.19.0" or version == "0.19.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_019.items())
+    elif version == "0.20.0" or version == "0.20.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_020.items())
+    elif version == "0.21.0" or version == "0.21.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_021.items())
+    elif version == "0.22.0" or version == "0.22.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_022.items())
+    else:
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_022.items())
+
+    return stats_cur
+
 # FUNCTION: Collect stats from JSON result
-def lookup_stat(stat, json):
-    val = dig_it_up(json, STATS_CUR[stat].path)
+def lookup_stat(stat, json, conf):
+    val = dig_it_up(json, get_stats_string(conf['version'])[stat].path)
 
     # Check to make sure we have a valid result
     # dig_it_up returns False if no match found
@@ -147,73 +180,79 @@ def lookup_stat(stat, json):
 
 def configure_callback(conf):
     """Received configuration information"""
-    global MESOS_HOST, MESOS_PORT, MESOS_URL, VERBOSE_LOGGING, STATS_CUR
+    host = MESOS_HOST
+    port = MESOS_PORT
+    verboseLogging = VERBOSE_LOGGING
+    version = MESOS_VERSION
+    instance = MESOS_INSTANCE
     for node in conf.children:
         if node.key == 'Host':
-            MESOS_HOST = node.values[0]
+            host = node.values[0]
         elif node.key == 'Port':
-            MESOS_PORT = int(node.values[0])
+            port = int(node.values[0])
         elif node.key == 'Verbose':
-            VERBOSE_LOGGING = bool(node.values[0])
+            verboseLogging = bool(node.values[0])
         elif node.key == 'Version':
-            MESOS_VERSION = node.values[0]
+            version = node.values[0]
+        elif node.key == 'Instance':
+            instance = node.values[0]
         else:
             collectd.warning('mesos-master plugin: Unknown config key: %s.' % node.key)
-
-    if MESOS_VERSION == "0.19.0" or MESOS_VERSION == "0.19.1":
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_019.items())
-    elif MESOS_VERSION == "0.20.0" or MESOS_VERSION == "0.20.1":
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_020.items())
-    elif MESOS_VERSION == "0.21.0" or MESOS_VERSION == "0.21.1":
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_021.items())
-    else:
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_021.items())
-
-    MESOS_URL = "http://" + MESOS_HOST + ":" + str(MESOS_PORT) + "/metrics/snapshot"
-
-    log_verbose('mesos-master plugin configured with version=%s, host=%s, port=%s, url=%s' % (MESOS_VERSION, MESOS_HOST, MESOS_PORT, MESOS_URL))
-
+            continue
+ 
+    log_verbose('true','mesos-master plugin configured with host = %s, port = %s, verbose logging = %s, version = %s, instance = %s' % (host,port,verboseLogging,version,instance))
+    CONFIGS.append({
+        'host': host,
+        'port': port,
+        'mesos_url': "http://" + host + ":" + str(port) + "/metrics/snapshot",
+        'verboseLogging': verboseLogging,
+        'version': version,
+        'instance': instance,
+    }) 
 
 def fetch_stats():
-    try:
-        result = json.load(urllib2.urlopen(MESOS_URL, timeout=10))
-    except urllib2.URLError, e:
-        collectd.error('mesos-master plugin: Error connecting to %s - %r' % (MESOS_URL, e))
-        return None
-    return parse_stats(result)
+    for conf in CONFIGS:
+      try:
+          result = json.load(urllib2.urlopen(conf['mesos_url'], timeout=10))
+      except urllib2.URLError, e:
+          collectd.error('mesos-master plugin: Error connecting to %s - %r' % (conf['mesos_url'], e))
+          return None
+      parse_stats(conf, result)
 
 
-def parse_stats(json):
+def parse_stats(conf, json):
     """Parse stats response from Mesos"""
     """Ignore stats if coming from non-leading mesos master"""
-    elected_result = lookup_stat('master/elected', json)
+    elected_result = lookup_stat('master/elected', json, conf)
     if elected_result == 1:
-        for name, key in STATS_CUR.iteritems():
-            result = lookup_stat(name, json)
-            dispatch_stat(result, name, key)
+        for name, key in get_stats_string(conf['version']).iteritems():
+            result = lookup_stat(name, json, conf)
+            dispatch_stat(result, name, key, conf)
     else:
-        log_verbose('This mesos master node is not elected leader so not writing data.')
+        log_verbose(conf['verboseLogging'], 'This mesos master node is not elected leader so not writing data.')
         return None
 
 
-def dispatch_stat(result, name, key):
+def dispatch_stat(result, name, key, conf):
     """Read a key from info response data and dispatch a value"""
     if result is None:
         collectd.warning('mesos-master plugin: Value not found for %s' % name)
         return
     estype = key.type
     value = result
-    log_verbose('Sending value[%s]: %s=%s' % (estype, name, value))
+    log_verbose(conf['verboseLogging'], 'Sending value[%s]: %s=%s for instance:%s' % (estype, name, value, conf['instance']))
 
     val = collectd.Values(plugin='mesos-master')
     val.type = estype
     val.type_instance = name
     val.values = [value]
+    val.plugin_instance = conf['instance']
+    # https://github.com/collectd/collectd/issues/716
+    val.meta = {'0': True}
     val.dispatch()
 
 
 def read_callback():
-    log_verbose('Read callback called')
     stats = fetch_stats()
 
 
@@ -226,8 +265,8 @@ def dig_it_up(obj, path):
         return False
 
 
-def log_verbose(msg):
-    if not VERBOSE_LOGGING:
+def log_verbose(enabled, msg):
+    if not enabled:
         return
     collectd.info('mesos-master plugin [verbose]: %s' % msg)
 
