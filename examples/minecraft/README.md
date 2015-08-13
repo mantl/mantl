@@ -5,7 +5,7 @@ microservices-infrastructure pretty easily. Just run the following command from
 the root of the project:
 
 ```
-curl -k -X PUT -d @examples/minecraft/minecraft.json https://youruser:yourpass@your-mi-domain.com:8080/v2/apps/minecraft
+curl -X PUT -H "Content-Type: application/json" -d @examples/minecraft/minecraft.json http://youruser:yourpass@your-mi-domain.com:8080/v2/apps/minecraft
 ```
 
 Be aware that the Minecraft server needs at least 2GB of RAM to function
