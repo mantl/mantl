@@ -20,6 +20,7 @@
     - glusterfs
 
 - include: server.yml
-  when: glusterfs_mode == "server"
+  when: glusterfs_mode == "server" and glusterfs_brick_device != ""
 
 - include: client.yml
+  when: glusterfs_brick_device != ""
