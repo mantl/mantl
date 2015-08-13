@@ -10,7 +10,7 @@
 - name: install chronos package
   sudo: yes
   yum:
-    name: chronos
+    name: "{{ chronos_package }}"
     state: present
   tags:
     - chronos

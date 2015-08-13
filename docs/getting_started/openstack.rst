@@ -9,7 +9,7 @@ This project provides a number of playbooks designed for doing host maintenance
 tasks on OpenStack hosts. You can find them in ``playbooks/`` in the main
 project directory.
 
-Configuring OpenStack authentication 
+Configuring OpenStack authentication
 ------------------------------------
 
 Before we can build any servers using Terraform and Ansible, we need to
@@ -22,7 +22,8 @@ the template located at ``terraform/openstack.sample.tf``. It looks like this:
    :language: javascript
 
 Copy that file in it's entirety to the root of the project to start
-customization. In the next sections, we'll explain how to obtain these settings.
+customization. NOTE: All configuration entries needs to be completed.
+In the next sections, we'll explain how to obtain these settings.
 
 There is another sample called ``openstack-floating.sample.tf`` in the
 ``terraform`` directory. The default sample assumes you are booting VMs directly
@@ -39,7 +40,23 @@ can get these variables from the OpenStack command line tools. For example:
 - ``keystone tenant-list`` for ``tenant_id`` and ``tenant_name``
 - ``nova flavor-list`` for ``control_flavor_name`` and ``resource_flavor_name``
 
-Or use the appropriate OpenStack commands such as ``openstack project list``.
+Or use the appropriate OpenStack commands such as ``openstack project list`` or
+the commands below.
+
+- ``openstack image list`` for ``image_name``
+- ``openstack network list`` for ``net_id``
+- ``openstack flavor list`` for ``control_flavor_name / resource_flavor_name``
+
+Generate SSH keys
+^^^^^^^^^^^^^^^^^
+
+If you do not have ssh keys already, generate a new pair for use with the
+project. You need to add the path to this key (public_key) to the openstack.tf
+file.
+
+.. code-block:: shell
+
+  ssh-keygen -t rsa -f /path/to/project/sshkey -C "sshkey"
 
 Getting OpenStack tenant settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,6 +87,21 @@ Update your Terraform file with these values for the appropriate fields, and
 save the downloaded file for using the maintenance playbooks (you'll just need
 to source the environment variables into your shell.)
 
+OpenStack Security Group
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+In order for terraform to apply correctly, you need to create a security group
+in openstack for microservices-infrastructure.
+
+You can either login to the Web UI to perform this task or use the openstack
+commmand line interface as below.
+
+.. code-block:: shell
+
+  openstack security group create <group_name>
+
+Once your group is created, ensure you update the openstack.tf file accordingly.
+
 OpenStack Username/Password
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -83,9 +115,9 @@ The playbooks get Username/Password information via environment variables:
 
    Your OpenStack password
 
-Before running any playbooks, run the following command to to pull in your
-username and password for Ansible to use, changing the file name and location to
-the location of your OpenStack RC file:
+Before running terraform or any playbooks, run the following command to to pull
+in your username and password for Ansible to use, changing the file name and
+location to the location of your OpenStack RC file:
 
 .. code-block:: shell
 

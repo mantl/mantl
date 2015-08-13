@@ -8,9 +8,12 @@
     consul_bootstrap_expect: 1
     mesos_cluster: vagrant
     mesos_mode: mixed
-    private_ipv4: "{{ ansible_default_ipv4.address }}"
-    public_ipv4: "{{ ansible_default_ipv4.address }}"
     provider: vagrant
+  pre_tasks:
+    - name: set vagrant ip addresses in inventory
+      set_fact:
+        private_ipv4: "{{ vagrant_private_ipv4 }}"
+        public_ipv4: "{{ vagrant_private_ipv4 }}"
   roles:
     - common
     - collectd

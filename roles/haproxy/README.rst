@@ -3,7 +3,7 @@ Haproxy
 
 .. versionadded:: 0.2
 
-`Haproxy <haproxy https://github.com/CiscoCloud/haproxy-consul>`_ connects to
+`Haproxy <https://github.com/CiscoCloud/haproxy-consul>`_ connects to
 :doc:`consul`, and proxies all registered services. At the current time all
 containers are mapped to port 80. Future versions will allow each container to
 control the haproxy port and url mapping.

@@ -13,10 +13,10 @@
   sudo: yes
   lineinfile:
     dest: /etc/hosts
-    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain }}{% endif %}$"
-    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain}}{% endif %}"
+    regexp: "^{{ hostvars[item].private_ipv4 }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain }}{% endif %}$"
+    line: "{{ hostvars[item].private_ipv4 }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain}}{% endif %}"
     state: present
-  when: hostvars[item].ansible_default_ipv4.address is defined
+  when: hostvars[item].private_ipv4 is defined
   with_items: groups['all']
 
 - name: clean hosts file

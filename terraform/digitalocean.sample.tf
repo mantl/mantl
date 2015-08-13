@@ -12,6 +12,6 @@ module "do-hosts" {
   ssh_key = "${module.do-keypair.keypair_id}"
 
   region_name = "nyc3" # this must be a region with metadata support
-  control_count = 1
+  control_count = 3
   worker_count = 3
 }

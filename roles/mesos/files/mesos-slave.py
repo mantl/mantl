@@ -20,17 +20,18 @@ import socket
 import collections
 
 PREFIX = "mesos-slave"
+MESOS_INSTANCE = ""
 MESOS_HOST = "localhost"
 MESOS_PORT = 5051
-MESOS_VERSION = "0.21.0"
+MESOS_VERSION = "0.22.0"
 MESOS_URL = ""
 VERBOSE_LOGGING = False
 
+CONFIGS = []
+
 Stat = collections.namedtuple('Stat', ('type', 'path'))
 
-STATS_CUR = {}
-
-# DICT: Common Metrics in 0.19.0, 0.20.0 and 0.21.0
+# DICT: Common Metrics in 0.19.0, 0.20.0, 0.21.0 and 0.22.0
 STATS_MESOS = {
     # Slave
     'slave/frameworks_active': Stat("gauge", "slave/frameworks_active"),
@@ -87,9 +88,27 @@ STATS_MESOS_021 = {
     'slave/executors_terminated': Stat("counter", "slave/executors_terminated")
 }
 
+# DICT: Mesos 0.22.0, 0.22.1
+STATS_MESOS_022 = STATS_MESOS_021.copy()
+
+# FUNCTION: gets the list of stats based on the version of mesos
+def get_stats_string(version):
+    if version == "0.19.0" or version == "0.19.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_019.items())
+    elif version == "0.20.0" or version == "0.20.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_020.items())
+    elif version == "0.21.0" or version == "0.21.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_021.items())
+    elif version == "0.22.0" or version == "0.22.1":
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_022.items())
+    else:
+       stats_cur = dict(STATS_MESOS.items() + STATS_MESOS_022.items())
+
+    return stats_cur
+
 # FUNCTION: Collect stats from JSON result
-def lookup_stat(stat, json):
-    val = dig_it_up(json, STATS_CUR[stat].path)
+def lookup_stat(stat, json, conf):
+    val = dig_it_up(json, get_stats_string(conf['version'])[stat].path)
 
     # Check to make sure we have a valid result
     # dig_it_up returns False if no match found
@@ -101,67 +120,74 @@ def lookup_stat(stat, json):
 
 def configure_callback(conf):
     """Received configuration information"""
-    global MESOS_HOST, MESOS_PORT, MESOS_URL, VERBOSE_LOGGING, STATS_CUR
+    host = MESOS_HOST
+    port = MESOS_PORT
+    verboseLogging = VERBOSE_LOGGING
+    version = MESOS_VERSION
+    instance = MESOS_INSTANCE
     for node in conf.children:
         if node.key == 'Host':
-            MESOS_HOST = node.values[0]
+            host = node.values[0]
         elif node.key == 'Port':
-            MESOS_PORT = int(node.values[0])
+            port = int(node.values[0])
         elif node.key == 'Verbose':
-            VERBOSE_LOGGING = bool(node.values[0])
+            verboseLogging = bool(node.values[0])
         elif node.key == 'Version':
-            MESOS_VERSION = node.values[0]
+            version = node.values[0]
+        elif node.key == 'Instance':
+            instance = node.values[0]
         else:
             collectd.warning('mesos-slave plugin: Unknown config key: %s.' % node.key)
+            continue
 
-    if MESOS_VERSION == "0.19.0" or MESOS_VERSION == "0.19.1":
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_019.items())
-    elif MESOS_VERSION == "0.20.0" or MESOS_VERSION == "0.20.1":
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_020.items())
-    elif MESOS_VERSION == "0.21.0" or MESOS_VERSION == "0.21.1":
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_021.items())
-    else:
-        STATS_CUR = dict(STATS_MESOS.items() + STATS_MESOS_021.items())
-
-    MESOS_URL = "http://" + MESOS_HOST + ":" + str(MESOS_PORT) + "/metrics/snapshot"
-
-    log_verbose('mesos-slave plugin configured with version=%s, host=%s, port=%s, url=%s' % (MESOS_VERSION, MESOS_HOST, MESOS_PORT, MESOS_URL))
-
+    log_verbose('true','mesos-slave plugin configured with host = %s, port = %s, verbose logging = %s, version = %s, instance = %s' % (host,port,verboseLogging,version,instance))
+    CONFIGS.append({
+        'host': host,
+        'port': port,
+        'mesos_url': "http://" + host + ":" + str(port) + "/metrics/snapshot",
+        'verboseLogging': verboseLogging,
+        'version': version,
+        'instance': instance,
+    })
 
 def fetch_stats():
-    try:
-        result = json.load(urllib2.urlopen(MESOS_URL, timeout=10))
-    except urllib2.URLError, e:
-        collectd.error('mesos-slave plugin: Error connecting to %s - %r' % (MESOS_URL, e))
+    for conf in CONFIGS:
+      try:
+        result = json.load(urllib2.urlopen(conf['mesos_url'], timeout=10))
+      except urllib2.URLError, e:
+        collectd.error('mesos-slave plugin: Error connecting to %s - %r' % (onf['mesos_url'], e))
         return None
-    return parse_stats(result)
+      parse_stats(conf, result)
 
 
-def parse_stats(json):
+def parse_stats(conf, json):
     """Parse stats response from Mesos slave"""
-    for name, key in STATS_CUR.iteritems():
-        result = lookup_stat(name, json)
-        dispatch_stat(result, name, key)
+    for name, key in get_stats_string(conf['version']).iteritems():
+        result = lookup_stat(name, json, conf)
+        dispatch_stat(result, name, key, conf)
 
 
-def dispatch_stat(result, name, key):
+def dispatch_stat(result, name, key, conf):
     """Read a key from info response data and dispatch a value"""
     if result is None:
         collectd.warning('mesos-slave plugin: Value not found for %s' % name)
         return
     estype = key.type
     value = result
-    log_verbose('Sending value[%s]: %s=%s' % (estype, name, value))
+    log_verbose(conf['verboseLogging'], 'Sending value[%s]: %s=%s for instance:%s' % (estype, name, value, conf['instance']))
 
     val = collectd.Values(plugin='mesos-slave')
     val.type = estype
     val.type_instance = name
     val.values = [value]
+    val.plugin_instance = conf['instance']
+    # https://github.com/collectd/collectd/issues/716
+    val.meta = {'0': True}
     val.dispatch()
 
 
 def read_callback():
-    log_verbose('Read callback called')
+    log_verbose('true', 'Read callback called')
     stats = fetch_stats()
 
 
@@ -174,8 +200,8 @@ def dig_it_up(obj, path):
         return False
 
 
-def log_verbose(msg):
-    if not VERBOSE_LOGGING:
+def log_verbose(enabled, msg):
+    if not enabled:
         return
     collectd.info('mesos-slave plugin [verbose]: %s' % msg)
 
