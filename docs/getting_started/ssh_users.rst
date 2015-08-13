@@ -12,12 +12,12 @@ file will need to be passed to ``ansible-playbook`` with ``-e @users.yml``.
   ---
   users:
    - name: user1
-     enable: 1
+     enabled: 1
      pubkeys:
        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABA.....
 
   - name: user2
-      enable: 1
+      enabled: 1
       pubkeys: 
         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAABA......
 
