@@ -1,0 +1,13 @@
+{
+    "auths": {
+        {% for registry in docker_registries %}
+        "{{ registry.docker_hub_url }}": {
+            "auth": "{{ registry.docker_hub_creds }}",
+            "email": "{{ registry.docker_hub_email }}"
+        }
+        {% if not loop.last %}
+            ,
+        {% endif %}
+        {% endfor %}
+    }
+}

@@ -245,6 +245,17 @@ chronos_opts.add_argument(
     dest='do_chronos_iptables', default=True
 )
 
+# Docker hub security
+docker_hub_opts = parser.add_argument_group(
+    "Docker Hub options",
+    "optional; setup credentials for Docker Hub"
+)
+docker_hub_opts.add_argument(
+    '--use-private-docker-hub', type=ImplicitBool.parse_opt,
+    help='add credentials for a private Docker Hub',
+    dest='do_private_docker_hub', default=False
+)
+
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
 
@@ -345,6 +356,24 @@ class Component(object):
             PASSWORDS[purpose] = password
 
         return re.escape(password)
+
+    def ask_string(self, prompt):
+        """
+        Ask the user for some string.
+        """
+        return raw_input(prompt)
+
+    def ask_boolean(self, prompt, default_value):
+        """
+        Ask the user for a boolean (Y/N)
+        """
+        result = raw_input(prompt).upper()
+        if result == 'Y':
+            return True
+        elif result == 'N':
+            return False
+        else:
+            return default_value
 
     def zk_digest(self, user, credential):
         """creates a zookeeper-compatible digest.
@@ -637,6 +666,45 @@ class Chronos(Component):
             else:
                 print('chronos http credentials already set')
 
+class DockerHub(Component):
+    def check(self):
+        return [self.docker_hub_auth]
+
+    def docker_hub_auth(self):
+        do_private_docker_hub = self.args.do_private_docker_hub
+        self.toggle_boolean('do_private_docker_hub', self.component_enabled(do_private_docker_hub), True)
+        "docker hub authentication"
+        if do_private_docker_hub:
+            with self.modify_security() as config:
+                if 'docker_registries' not in config:
+                    more_registries = True
+                    registries = []
+                    while more_registries:
+                        registry_config = {}
+                        creds = '{}:{}'.format(self.ask_string(
+                            prompt='Docker Hub username: '
+                        ), self.ask_pass(
+                            prompt='Docker Hub password: '
+                        ))
+
+                        registry_config['docker_hub_creds'] = base64.b64encode(creds)
+
+                        registry_config['docker_hub_email'] = self.ask_string(
+                            prompt='Docker Hub e-mail: ')
+
+                        default_url = 'https://index.docker.io/v1/'
+                        registry_config['docker_hub_url'] = self.ask_string(
+                            prompt='Docker Hub URL (default is {}): '.format(default_url))
+                        if registry_config['docker_hub_url'] == '':
+                            registry_config['docker_hub_url'] = default_url
+
+                        registries.append(registry_config)
+
+                        more_registries = self.ask_boolean("Are there more Docker registries? (y/N) ", False)
+                    config['docker_registries'] = registries
+                    print('set docker hub credentials')
+                else:
+                    print('docker hub credentials already set')
 
 class Zookeeper(Component):
     def check(self):
