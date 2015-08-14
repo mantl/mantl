@@ -24,7 +24,7 @@
 
 - name: encrypt admin password
   sudo: yes
-  shell: htpasswd -Bnb admin {{ nginx_admin_password }} | cut -f 2 -d ':'
+  shell: htpasswd -Bnb admin {{ nginx_admin_password | escape }} | cut -f 2 -d ':'
   register: nginx_admin_password_encrypted
   changed_when: no
 
