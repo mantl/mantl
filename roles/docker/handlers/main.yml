@@ -11,6 +11,12 @@
     name: collectd
     state: restarted
 
+- name: restart rsyslog
+  sudo: yes
+  service:
+    name: rsyslog
+    state: restarted
+
 - name: reload docker
   sudo: yes
   command: systemctl daemon-reload
