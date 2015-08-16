@@ -7,6 +7,7 @@ of platforms, currently including
  - [x] GCE
  - [x] Openstack
  - [x] Vagrant
+ - [x] SoftLayer
 
 It does this by creating a fresh, barebones clone of the repo from the selected
 branch, copying in necessary authentication and terraform data, and running
@@ -40,6 +41,7 @@ $ tree .
     ├── account.json
     ├── aws.tf
     ├── digitalocean.tf
+    ├── softlayer.tf
     ├── gce.tf
     ├── openstack.tf
     ├── security.yml
