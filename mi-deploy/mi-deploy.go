@@ -454,6 +454,7 @@ func getApp() (app *cli.App) {
 	app.Usage = "Deploy MI to various public clouds"
 	app.Version = "0.0.1-dev"
 	app.Author = "Langston Barrett"
+	app.Email = "langston@aster.is"
 	lvls := []string{"debug", "info", "warn", "fatal", "panic"}
 	lvlsStr := strings.Join(lvls, " | ")
 	platforms := []string{"aws", "digitalocean", "gce", "openstack", "vagrant"}
