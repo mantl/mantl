@@ -402,7 +402,7 @@ func destroyDeployment(toRemove string) {
 	sh.Cd(toRemoveRepo)
 
 	log.Debugf("Actually destroying resources now")
-	cloudRe := regexp.MustCompile(`(gce|aws|digitalocean|openstack)`)
+	cloudRe := regexp.MustCompile(`(gce|aws|digitalocean|openstack|softlayer)`)
 	if cloudRe.MatchString(toRemove) {
 		log.Debug("Destroying terraformed resources in %s", toRemoveRepo)
 		terraformDestroy(toRemoveRepo)
@@ -456,7 +456,7 @@ func getApp() (app *cli.App) {
 	app.Author = "Langston Barrett"
 	lvls := []string{"debug", "info", "warn", "fatal", "panic"}
 	lvlsStr := strings.Join(lvls, " | ")
-	platforms := []string{"aws", "digitalocean", "gce", "openstack", "vagrant"}
+	platforms := []string{"aws", "digitalocean", "gce", "openstack", "softlayer", "vagrant"}
 	platformsStr := strings.Join(platforms, " | ")
 
 	// these are command line subcommands like $(git status). They have their
@@ -505,7 +505,7 @@ func getApp() (app *cli.App) {
 
 				// deploy
 				platforms := []string{
-					"aws", "digitalocean", "gce", "openstack", "vagrant",
+					"aws", "digitalocean", "gce", "openstack", "softlayer", "vagrant",
 				}
 				if platform == "vagrant" {
 					deployToVagrant(branch)
