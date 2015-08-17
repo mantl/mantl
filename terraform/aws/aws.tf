@@ -97,6 +97,7 @@ resource "aws_volume_attachment" "mi-control-nodes-glusterfs-attachment" {
   device_name = "xvdh"
   instance_id = "${element(aws_instance.mi-control-nodes.*.id, count.index)}"
   volume_id = "${element(aws_ebs_volume.mi-control-glusterfs.*.id, count.index)}"
+  force_detach = true
 }
 
 resource "aws_instance" "mi-worker-nodes" {
