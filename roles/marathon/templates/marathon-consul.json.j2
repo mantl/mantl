@@ -2,8 +2,7 @@
   "id": "marathon-consul",
   "args": [
     "--verbose",
-    "--registry={% if do_consul_ssl %}https{% else %}http{% endif %}://consul.service.{{ consul_dns_domain }}:8500"{% if do_consul_auth %},
-    "--registry-auth=admin:{{ nginx_admin_password }}"{% endif %},
+    "--registry={% if do_consul_ssl %}https{% else %}http{% endif %}://consul.service.{{ consul_dns_domain }}:8500",
     "--registry-token={{ consul_acl_master_token }}"
   ],
   "container": {
