@@ -91,3 +91,11 @@ resource "openstack_networking_router_interface_v2" "ms-router-interface" {
   router_id = "${ openstack_networking_router_v2.ms-router.id }"
   subnet_id = "${ openstack_networking_subnet_v2.ms-subnet.id }"
 }
+
+output "control_ips" {
+  value = "${join(\",\", openstack_compute_instance_v2.control.*.access_ip_v4)}"
+}
+
+output "worker_ips" {
+  value = "${join(\",\", openstack_compute_instance_v2.resource.*.access_ip_v4)}"
+}

@@ -29,3 +29,11 @@ resource "digitalocean_droplet" "worker" {
   ssh_keys = ["${var.ssh_key}"]
   user_data = "{\"role\":\"worker\",\"dc\":\"${var.datacenter}\"}"
 }
+
+output "control_ips" {
+  value = "${join(\",\", digitalocean_droplet.control.*.ipv4_address)}"
+}
+
+output "worker_ips" {
+  value = "${join(\",\", digitalocean_droplet.worker.*.ipv4_address)}"
+}

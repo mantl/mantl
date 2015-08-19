@@ -130,3 +130,11 @@ resource "google_compute_instance" "mi-worker-nodes" {
 
   count = "${var.worker_count}"
 }
+
+output "control_ips" {
+  value = "${join(\",\", google_compute_instance.mi-control-nodes.*.access_config.nat_ip)}"
+}
+
+output "worker_ips" {
+  value = "${join(\",\", google_compute_instance.mi-worker-nodes.*.access_config.nat_ip)}"
+}

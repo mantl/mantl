@@ -64,3 +64,11 @@ resource "openstack_compute_instance_v2" "resource" {
   }
   count = "${ var.resource_count }"
 }
+
+output "control_ips" {
+  value = "${join(\",\", openstack_compute_instance_v2.control.*.access_ip_v4)}"
+}
+
+output "worker_ips" {
+  value = "${join(\",\", openstack_compute_instance_v2.resource.*.access_ip_v4)}"
+}

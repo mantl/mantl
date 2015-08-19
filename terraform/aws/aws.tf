@@ -237,3 +237,11 @@ resource "aws_key_pair" "deployer" {
   key_name = "key-${var.short_name}"
   public_key = "${file(var.ssh_key)}"
 }
+
+output "control_ips" {
+  value = "${join(\",\", aws_instance.mi-control-nodes.*.public_ip)}"
+}
+
+output "worker_ips" {
+  value = "${join(\",\", aws_instance.mi-worker-nodes.*.public_ip)}"
+}

@@ -15,3 +15,14 @@ module "do-hosts" {
   control_count = 3
   worker_count = 3
 }
+
+# Example setup for DNS with dnsimple;
+# module "dnsimple-dns" {
+#   source = "./terraform/dnsimple/dns"
+#   short_name = "mi"
+#   control_count = 3
+#   worker_count = 3
+#   domain = "example.com"
+#   control_ips = "${module.do-hosts.control_ips}"
+#   worker_ips = "${module.do-hosts.worker_ips}"
+# }
