@@ -10,7 +10,6 @@ import hashlib
 import os
 import posixpath
 import random
-import re
 import shlex
 import stat
 import string
@@ -344,7 +343,7 @@ class Component(object):
         if purpose is not None and purpose not in PASSWORDS:
             PASSWORDS[purpose] = password
 
-        return re.escape(password)
+        return password
 
     def zk_digest(self, user, credential):
         """creates a zookeeper-compatible digest.
