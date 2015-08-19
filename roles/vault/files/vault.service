@@ -1,7 +1,7 @@
 [Unit]
 Description=vault
 After=consul.service
-Requires=consul.service
+Wants=consul.service
 
 [Service]
 Restart=on-failure

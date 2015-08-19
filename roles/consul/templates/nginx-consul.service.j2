@@ -3,7 +3,7 @@ Description=nginx-consul
 After=docker.service
 After=consul.service
 Requires=docker.service
-Requires=consul.service
+Wants=consul.service
 
 [Service]
 Restart=on-failure
