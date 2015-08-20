@@ -257,6 +257,9 @@ def openstack_host(resource, module_name):
         'provider': 'openstack',
     }
 
+    if 'floating_ip' in raw_attrs:
+        attrs['private_ipv4'] = raw_attrs['network.0.fixed_ip_v4']
+
     try:
         attrs.update({
             'ansible_ssh_host': raw_attrs['access_ip_v4'],

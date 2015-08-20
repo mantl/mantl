@@ -1,0 +1,20 @@
+{
+  "service": {
+    "name": "etcd",
+    "tags": [ "etcd" ],
+    "checks": [
+      {
+        "name": "service-active",
+        "script": "/usr/local/bin/check-service-active etcd",
+        "interval": "15s",
+        "timeout": "2s"
+      },
+      {
+        "name": "member-active",
+        "script": "/usr/local/bin/consul-check-etcd-member",
+        "interval": "15s",
+        "timeout": "5s"
+      }
+    ]
+  }
+}

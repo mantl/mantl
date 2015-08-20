@@ -39,6 +39,7 @@
     - logstash
     - nginx
     - consul
+    - etcd
     - dnsmasq
 
 # ROLES - after provisioning the software that's common to all hosts, we do
@@ -59,6 +60,7 @@
     consul_dns_domain: consul
     mesos_mode: follower
   roles:
+    - calico
     - mesos
     - haproxy
 

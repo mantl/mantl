@@ -40,6 +40,8 @@ Mantl is a modern, batteries included platform for rapidly deploying globally di
 
 ## Features
 * [Terraform](https://terraform.io) deployment to multiple cloud providers
+* [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
+* [Calico](http://www.projectcalico.org) a new kind of virtual network
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery
@@ -137,6 +139,7 @@ make html
 
 ### Core Components and Features
 
+- [x] Calico
 - [x] Mesos
 - [x] Consul
 - [x] Multi-datacenter

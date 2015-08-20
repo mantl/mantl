@@ -4,6 +4,7 @@ Roadmap
 Core Components and Features
 ----------------------------
 
+| |x| Calico
 | |x| Mesos
 | |x| Consul
 | |x| Multi-datacenter

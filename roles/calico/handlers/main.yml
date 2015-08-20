@@ -1,0 +1,6 @@
+---
+- name: restart calico
+  sudo: yes
+  service:
+    name: calico
+    state: restarted

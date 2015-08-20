@@ -1,0 +1,20 @@
+{
+  "service": {
+    "name": "calico",
+    "tags": [ "calico" ],
+    "checks": [
+      {
+        "name": "service-active",
+        "script": "/usr/local/bin/check-service-active calico",
+        "interval": "15s",
+        "timeout": "2s"
+      },
+      {
+        "name": "node-running",
+        "script": "/usr/local/bin/consul-check-calico-node",
+        "interval": "15s",
+        "timeout": "5s"
+      }
+    ]
+  }
+}
