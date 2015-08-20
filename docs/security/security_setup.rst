@@ -77,6 +77,12 @@ Options
 
    Default: ``True``
 
+.. option:: --use-private-docker-hub
+
+   Provide (or skip, if False) credentials for a private Docker Hub account.
+
+   Default: ``False``
+
 .. option:: --consul
 
    Enable Consul security. This overrides all other Consul options.

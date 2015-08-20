@@ -65,6 +65,23 @@
   tags:
     - docker
 
+- name: Assure docker config dir exists
+  sudo: yes
+  file:
+    path: /root/.docker
+    state: directory
+  tags:
+    - docker
+
+- name: setup private docker hub credentials
+  sudo: yes
+  when: do_private_docker_hub
+  template:
+    src: config.json.j2
+    dest: /root/.docker/config.json
+  tags:
+    - docker
+
 - name: enable docker
   sudo: yes
   service:
