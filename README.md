@@ -5,13 +5,15 @@
 
 See [http://mantl.io](mantl.io) for more details.
 
+Existing Developer? For information on how the rename affects you, [see our handy FAQ](./mantl-rename-faq.md) 
+
 # Overview
 
 [![Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/microservices-infrastructure?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Stories in Ready](https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready)](https://waffle.io/CiscoCloud/microservices-infrastructure)
 
 
-Microservices infrastructure is a modern platform for rapidly deploying globally distributed services
+Mantl is a modern, batteries included platform for rapidly deploying globally distributed services
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
 **Table of Contents**
