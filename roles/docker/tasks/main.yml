@@ -65,6 +65,23 @@
   tags:
     - docker
 
+- name: ensure docker config dir exists
+  sudo: yes
+  file:
+    path: /root/.docker
+    state: directory
+  tags:
+    - docker
+
+- name: setup private docker registry credentials
+  sudo: yes
+  when: do_private_docker_registry
+  template:
+    src: config.json.j2
+    dest: /root/.docker/config.json
+  tags:
+    - docker
+
 - name: enable docker
   sudo: yes
   service:

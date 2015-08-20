@@ -77,6 +77,12 @@ Options
 
    Default: ``True``
 
+.. option:: --use-private-docker-registry
+
+   Provide (or skip, if False) credentials for a private Docker registry.
+
+   Default: ``False``
+
 .. option:: --consul
 
    Enable Consul security. This overrides all other Consul options.

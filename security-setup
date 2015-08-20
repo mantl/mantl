@@ -244,6 +244,17 @@ chronos_opts.add_argument(
     dest='do_chronos_iptables', default=True
 )
 
+# Docker registry security
+docker_registry_opts = parser.add_argument_group(
+    "Docker registry options",
+    "optional; setup credentials for private Docker registries"
+)
+docker_registry_opts.add_argument(
+    '--use-private-docker-registry', type=ImplicitBool.parse_opt,
+    help='add credentials for a private Docker registry',
+    dest='do_private_docker_registry', default=False
+)
+
 BASE = posixpath.abspath(posixpath.dirname(__file__)).replace("\\","/")
 SECURITY_FILE = posixpath.join(BASE, 'security.yml')
 
@@ -344,6 +355,24 @@ class Component(object):
             PASSWORDS[purpose] = password
 
         return password
+
+    def ask_string(self, prompt):
+        """
+        Ask the user for some string.
+        """
+        return raw_input(prompt)
+
+    def ask_boolean(self, prompt, default_value):
+        """
+        Ask the user for a boolean (Y/N)
+        """
+        result = raw_input(prompt).upper()
+        if result == 'Y':
+            return True
+        elif result == 'N':
+            return False
+        else:
+            return default_value
 
     def zk_digest(self, user, credential):
         """creates a zookeeper-compatible digest.
@@ -636,6 +665,45 @@ class Chronos(Component):
             else:
                 print('chronos http credentials already set')
 
+class DockerRegistry(Component):
+    def check(self):
+        return [self.docker_registry_auth]
+
+    def docker_registry_auth(self):
+        do_private_docker_registry = self.args.do_private_docker_registry
+        self.toggle_boolean('do_private_docker_registry', self.component_enabled(do_private_docker_registry), True)
+        "docker registry authentication"
+        if do_private_docker_registry:
+            with self.modify_security() as config:
+                if 'docker_registries' not in config:
+                    more_registries = True
+                    registries = []
+                    while more_registries:
+                        registry_config = {}
+                        creds = '{}:{}'.format(self.ask_string(
+                            prompt='Docker registry username: '
+                        ), self.ask_pass(
+                            prompt='Docker registry password: '
+                        ))
+
+                        registry_config['docker_registry_creds'] = base64.b64encode(creds)
+
+                        registry_config['docker_registry_email'] = self.ask_string(
+                            prompt='Docker registry e-mail: ')
+
+                        default_url = 'https://index.docker.io/v1/'
+                        registry_config['docker_registry_url'] = self.ask_string(
+                            prompt='Docker registry URL (default is {}): '.format(default_url))
+                        if registry_config['docker_registry_url'] == '':
+                            registry_config['docker_registry_url'] = default_url
+
+                        registries.append(registry_config)
+
+                        more_registries = self.ask_boolean("Are there more Docker registries? (y/N) ", False)
+                    config['docker_registries'] = registries
+                    print('set docker registry credentials')
+                else:
+                    print('docker registry credentials already set')
 
 class Zookeeper(Component):
     def check(self):

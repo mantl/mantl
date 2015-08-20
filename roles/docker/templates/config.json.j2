@@ -1,0 +1,13 @@
+{
+    "auths": {
+        {% for registry in docker_registries %}
+        "{{ registry.docker_registry_url }}": {
+            "auth": "{{ registry.docker_registry_creds }}",
+            "email": "{{ registry.docker_registry_email }}"
+        }
+        {% if not loop.last %}
+            ,
+        {% endif %}
+        {% endfor %}
+    }
+}
