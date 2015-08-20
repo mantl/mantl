@@ -77,9 +77,9 @@ Options
 
    Default: ``True``
 
-.. option:: --use-private-docker-hub
+.. option:: --use-private-docker-registry
 
-   Provide (or skip, if False) credentials for a private Docker Hub account.
+   Provide (or skip, if False) credentials for a private Docker registry.
 
    Default: ``False``
 

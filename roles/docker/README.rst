@@ -18,7 +18,8 @@ one can use a private in-house docker registry for storing and pulling images.
 Docker Hub also supports storing private images.
 
 One must configure credentials in order to use private repositories. This is
-done with the security-setup script, run it with the flag ``--use-private-docker-hub=true``.
-It will then ask you for username, password and e-mail address for the registry
-user. You can also specify a custom URL for an in-house Docker registry, or omit
-it, in which case it will default to the official registry, https://index.docker.io/v1/.
+done with the security-setup script, run it with the flag
+``--use-private-docker-registry=true``. It will then ask you for username,
+password and e-mail address for the registry user. You can also specify a custom
+URL for an in-house Docker registry, or omit it, in which case it will default
+to the official registry, https://index.docker.io/v1/.
