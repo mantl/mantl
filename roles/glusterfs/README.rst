@@ -6,6 +6,8 @@ GlusterFS
 `Gluster <http://www.gluster.org/>`_ implements a distributed filesystem. It is
 used for container volume management and syncing around the cluster.
 
+Current Version: 3.7.3
+
 Use with Docker
 ---------------
 
