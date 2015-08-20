@@ -16,6 +16,7 @@ Features
 --------
 
 * `Terraform <https://terraform.io/>`_ deployment to multiple cloud providers
+* `etcd <https://github.com/coreos/etcd>`_ distributed key-value store for Calico
 * `Mesos <https://mesos.apache.org/>`_ cluster manager for efficient resource
   isolation and sharing across distributed services
 * `Marathon <https://mesosphere.github.io/marathon/>`_ for cluster management of

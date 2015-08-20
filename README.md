@@ -30,6 +30,7 @@ Microservices infrastructure is a modern platform for rapidly deploying globally
 
 ## Features
 * [Terraform](https://terraform.io) deployment to multiple cloud providers
+* [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
 * [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
 * [Consul](http://consul.io) for service discovery

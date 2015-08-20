@@ -1,0 +1,5 @@
+---
+etcd_image: quay.io/coreos/etcd
+etcd_image_tag: v2.1.1
+etcd_client_port: 2379
+etcd_peer_port: 2380

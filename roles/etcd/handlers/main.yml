@@ -1,0 +1,6 @@
+---
+- name: restart etcd
+  sudo: yes
+  service:
+    name: etcd
+    state: restarted
