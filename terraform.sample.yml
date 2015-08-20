@@ -60,6 +60,7 @@
     consul_dns_domain: consul
     mesos_mode: follower
   roles:
+    - calico
     - mesos
     - haproxy
 

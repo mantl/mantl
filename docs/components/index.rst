@@ -7,6 +7,7 @@ which can be customized, generally using Ansible variables.
 .. toctree::
    :maxdepth: 1
 
+   calico.rst
    collectd.rst
    consul.rst
    dnsmasq.rst

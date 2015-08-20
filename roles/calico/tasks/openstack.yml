@@ -1,0 +1,29 @@
+---
+- name: copy the neutron port update script
+  sudo: yes
+  copy:
+    src: neutron_port_update.py
+    dest: /usr/local/bin
+    mode: 0755
+  tags:
+    - calico
+
+- name: unlock neutron ports to allow calico traffic
+  sudo: yes
+  shell: >
+    /usr/local/bin/neutron_port_update.py
+    "{{ calico_network }}"
+    "{{ hostvars[item].ansible_default_ipv4.macaddress }}"
+  environment:
+    OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
+    OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
+    OS_TENANT_NAME: "{{ lookup('env','OS_TENANT_NAME') }}"
+    OS_AUTH_URL: "{{ lookup('env','OS_AUTH_URL') }}"
+  register: exit_code
+  changed_when: exit_code.rc == 2
+  failed_when: exit_code.rc == 1
+  run_once: True
+  when: hostvars[item].ansible_default_ipv4.address is defined
+  with_items: groups['all']
+  tags:
+    - calico
