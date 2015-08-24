@@ -8,8 +8,8 @@ package main
 import (
 	"./prompt" // validated, typed command line input
 	"./sh"     // sh-like functions
-	//"bufio"  // filtering Ansible output, currently unused
-	"bytes" // fileContains
+	"bufio"    // filtering Ansible output, currently unused
+	"bytes"    // fileContains
 	"fmt"
 	log "github.com/Sirupsen/logrus" // structured logging
 	"github.com/codegangsta/cli"     // opt parsing
@@ -82,6 +82,45 @@ func FileContains(path string, subslice []byte) bool {
 		sh.CouldntReadError(path, err)
 	}
 	return bytes.Contains(data, subslice)
+}
+
+// ExecuteWithOutput executes a command. If logrus's verbosity level is set to
+// debug, it will continuously output the command's output while it waits.
+func ExecuteWithOutput(cmd *exec.Cmd) (outStr string, err error) {
+	if log.GetLevel() == log.DebugLevel {
+		// connect to stdout and stderr for filtering purposes
+		errPipe, err := cmd.StderrPipe()
+		if err != nil {
+			log.WithFields(log.Fields{
+				"cmd": cmd.Args,
+			}).Fatal("Couldn't connect to command's stderr")
+		}
+		outPipe, err := cmd.StdoutPipe()
+		if err != nil {
+			log.WithFields(log.Fields{
+				"cmd": cmd.Args,
+			}).Fatal("Couldn't connect to command's stdout")
+		}
+		_ = bufio.NewReader(errPipe)
+		outReader := bufio.NewReader(outPipe)
+
+		// start the command and filter the output
+		if err = cmd.Start(); err != nil {
+			return "", err
+		}
+		outScanner := bufio.NewScanner(outReader)
+		for outScanner.Scan() {
+			outStr += outScanner.Text()
+			fmt.Println(outScanner.Text())
+		}
+		err = cmd.Wait()
+	} else {
+		out, outputErr := cmd.CombinedOutput()
+		// store results to be used in prompting step
+		err = outputErr
+		outStr = string(out)
+	}
+	return outStr, err
 }
 
 /********************** SPECIFIC FUNCTIONS */
@@ -162,7 +201,14 @@ func terraformDestroy(path string) {
 			"pwd": sh.Pwd(),
 		}).Warn("No terraform.tfstate file to use in destruction!")
 	}
-	sh.SetE(exec.Command("terraform", "destroy", "-force"))
+	cmd := exec.Command("terraform", "destroy", "-force")
+	outStr, err := ExecuteWithOutput(cmd)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"output":  outStr,
+			"command": cmd.Args,
+		}).Warn("Terraform destroy may have failed")
+	}
 	sh.Cd(oldPwd)
 	log.Debug("Done destroying terraformed resources.")
 }
@@ -181,7 +227,8 @@ func runTerraform(path string) {
 	}
 	log.Info("Terraforming...")
 	for _, cmd := range cmds {
-		out, err := cmd.CombinedOutput()
+		// if this isn't nil at the end of the condition, ansible failed
+		outStr, err := ExecuteWithOutput(cmd)
 		if err != nil {
 			log.Warnf("Terraform failed during %s", cmd.Args)
 			done := false
@@ -196,7 +243,7 @@ func runTerraform(path string) {
 				}
 				switch prompt.PromptChoice(msg, options) {
 				case "Show output and prompt again":
-					fmt.Println(string(out))
+					fmt.Println(outStr)
 					done = false
 				case "Retry (get, plan, apply)":
 					runTerraform(path)
@@ -231,45 +278,7 @@ func runAnsible(path string, opts []string) {
 		"./terraform.yml",
 	}
 	cmd := exec.Command("ansible-playbook", append(ansibleCommand, opts...)...)
-	log.Info("Running Ansible...")
-	/*
-		// connect to stdout and stderr for filtering purposes
-		errPipe, err := cmd.StderrPipe()
-		if err != nil {
-			log.WithFields(log.Fields{
-				"cmd": cmd.Args,
-			}).Fatal("Couldn't connect to command's stderr")
-		}
-		outPipe, err := cmd.StdoutPipe()
-		if err != nil {
-			log.WithFields(log.Fields{
-				"cmd": cmd.Args,
-			}).Fatal("Couldn't connect to command's stdout")
-		}
-		_ = bufio.NewReader(errPipe)
-		outReader := bufio.NewReader(outPipe)
-
-		// start the command and filter the output
-		if err = cmd.Start(); err != nil {
-			sh.ExecError(cmd, "no output, command didn't complete", err)
-		}
-		scanner := bufio.NewScanner(outReader)
-		failRe := regexp.MustCompile(`[fF][aA][iI][lL]`)
-		for scanner.Scan() {
-			text := scanner.Text()
-			if strings.Contains(text, "TASK: ") {
-				log.WithFields(log.Fields{
-					"task": strings.Trim(text, " *TASK:"),
-				}).Info("Ansible is running...")
-			} else if failRe.MatchString(text) {
-				log.WithFields(log.Fields{
-					"line": text,
-				}).Warn("Something failed!")
-			}
-		}
-		_ = cmd.Wait()
-	*/
-	out, err := cmd.CombinedOutput()
+	outStr, err := ExecuteWithOutput(cmd)
 	if err != nil {
 		log.Warnf("Ansible command failed: %s", cmd.Args)
 		done := false
@@ -287,7 +296,7 @@ func runAnsible(path string, opts []string) {
 			// woo self documenting code!
 			switch prompt.PromptChoice(msg, options) {
 			case "Show output and prompt again":
-				fmt.Println(string(out))
+				fmt.Println(outStr)
 				done = false
 			case "Retry":
 				runAnsible(path, []string{})
@@ -380,6 +389,14 @@ func promptDestroy(filter string) {
 		}
 	} else {
 		toList = deployments
+	}
+	if len(toList) < 1 {
+		if filter == "" {
+			log.Info("No deployments found!")
+		} else {
+			log.Info("No deployments found that matched that filter.")
+		}
+		os.Exit(0)
 	}
 
 	// prompt the user and ask which one they would like to destroy
