@@ -82,6 +82,15 @@
   tags:
     - docker
 
+- name: add docker registry credentials to /etc/
+  sudo: yes
+  when: do_private_docker_registry
+  command: tar cvzf /etc/docker.tar.gz .docker
+  args:
+    chdir: /root
+  tags:
+    - docker
+
 - name: enable docker
   sudo: yes
   service:
