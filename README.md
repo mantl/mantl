@@ -3,7 +3,7 @@
 
 # Microservices-Infrastructure is now MANTL.
 
-See [http://mantl.io](mantl.io) for more details.
+See [http://mantl.io](http://mantl.io) for more details.
 
 Existing Developer? For information on how the rename affects you, [see our handy FAQ](./mantl-rename-faq.md) 
 
