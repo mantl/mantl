@@ -10,4 +10,4 @@
   service:
     name: mesos-slave
     state: restarted
-  when: mesos-agent-active.rc == 0 and mesos-agent-active.stdout == "active"
+  when: "mesos-agent-active.rc == 0 and mesos-agent-active.stdout == 'active'"
