@@ -23,3 +23,21 @@ done with the security-setup script, run it with the flag
 password and e-mail address for the registry user. You can also specify a custom
 URL for an in-house Docker registry, or omit it, in which case it will default
 to the official registry, https://index.docker.io/v1/.
+
+In addition to configuring access to the specified private docker registries,
+this will also create an archive that can be used to supply credentials to
+Marathon tasks that require access to those registries. You can specify the path
+to the generated credentials archive in the ``uris`` key of your Marathon app
+definition:
+
+.. code-block:: json
+
+    ...
+    "uris": [
+      "file:///etc/docker.tar.gz"
+    ],
+    ...
+
+See the `Marathon documentation
+<https://mesosphere.github.io/marathon/docs/native-docker-private-registry.html>`_
+for more information.
