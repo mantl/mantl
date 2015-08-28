@@ -38,4 +38,4 @@
   changed_when: false
   failed_when: "item not in event_hook.stdout"
   with_items:
-    - http://marathon-consul.service.consul:4000/events
+    - http://marathon-consul.service.{{ consul_dns_domain }}:4000/events
