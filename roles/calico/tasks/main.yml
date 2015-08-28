@@ -129,7 +129,7 @@
 - name: check if mesos agent is running
   sudo: yes
   command: systemctl is-active mesos-slave
-  register: mesos-agent-active
+  register: mesos_agent_active
   failed_when: false
   changed_when: false
 

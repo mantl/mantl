@@ -10,4 +10,5 @@
   service:
     name: mesos-slave
     state: restarted
-  when: "mesos-agent-active.rc == 0 and mesos-agent-active.stdout == 'active'"
+  when: "mesos_agent_active.rc == 0 and mesos_agent_active.stdout == 'active'"
+  # use must_exist=no instead in ansible 2+
