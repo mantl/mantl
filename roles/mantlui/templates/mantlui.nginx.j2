@@ -11,23 +11,20 @@ http {
     sendfile		on;
     keepalive_timeout	65;
 
-    upstream mesos {
-        {% raw %}{{range service "leader.mesos"}}
+    {% raw %}{{$mesos := service "leader.mesos"}}{{with $mesos}}
+    upstream mesos { {{range $mesos}}
         server {{.Address}}:{{.Port}};{{end}}
-        {% endraw %}
-    }
+    } {{end}}{% endraw %}
 
-    upstream marathon {
-        {% raw %}{{range service "marathon"}}
+    {% raw %}{{$marathon := service "marathon"}}{{with $marathon}}
+    upstream marathon { {{range $marathon}}
         server {{.Address}}:{{.Port}};{{end}}
-        {% endraw %}
-    }
+    } {{end}}{% endraw %}
 
-    upstream chronos {
-        {% raw %}{{range service "chronos"}}
+    {% raw %}{{$chronos := service "chronos"}}{{with $chronos}}
+    upstream chronos { {{range $chronos}}
         server {{.Address}}:{{.Port}};{{end}}
-        {% endraw %}
-    }
+    } {{end}}{% endraw %}
 
     upstream consul {
         server consul.service.{{ consul_dns_domain }}:8500;
