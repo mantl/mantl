@@ -47,7 +47,7 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
 }
 
 resource "vsphere_virtual_machine" "mi-worker-nodes" {
-  name = "${var.short_name}-worker-${format("%02d", count.index+1)}"
+  name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
   image = "${var.template}"
 
   datacenter = "${var.datacenter}"
