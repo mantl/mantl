@@ -5,16 +5,16 @@ mantlui
 
 Mantlui consolidates the web UIs of various components in Mantl, including Mesos, Marathon, Chronos, and Consul.
 
-- [x] Mesos UI
+- [x] Mesos UI (/mesos)
 - [x] Fix mesos leader redirection (don't have to go to the ui on the leader now)
 - [x] Stream mesos log
 - [x] View mesos task sandbox (without opening 5051 and tweaking hosts files)
 - [x] Stream mesos task stderr/stdout (and other artifacts)
 - [x] View/download mesos task artifacts
-- [x] Marathon UI
-- [x] Chronos UI
-- [x] Consul UI
-- [x] Consul Api
+- [x] Marathon UI (/marathon)
+- [x] Chronos UI (/chronos)
+- [x] Consul UI (/consul)
+- [x] Consul Api (/consul/v1)
 - [x] Basic index page
 - [ ] Different name?
 - [ ] Improve design
