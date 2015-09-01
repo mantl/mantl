@@ -28,6 +28,7 @@ Mantlui consolidates the web UIs of various components in Mantl, including Mesos
 - [ ] Remove nginx-marathon
 - [ ] Remove nginx-chronos
 - [ ] Remove nginx-consul? (this might be a more significant change since other components -- including nginx-consul -- use the proxy)
+- [ ] Update distributive checks
 - [ ] Update all documentation and update URLs
 
 In the future, the static home page could become an application with a dashboard, health status, links to optional components and other mesos framework UIs, etc.
