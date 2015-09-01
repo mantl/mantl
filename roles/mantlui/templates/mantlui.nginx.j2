@@ -26,9 +26,10 @@ http {
         server {{.Address}}:{{.Port}};{{end}}
     } {{end}}{% endraw %}
 
-    upstream consul {
-        server consul.service.{{ consul_dns_domain }}:8500;
-    }
+    {% raw %}{{$consul := service "consul"}}{{with $consul}}
+    upstream consul { {{range $consul}}
+        server {{.Address}}:8500;{{end}}
+    } {{end}}{% endraw %}
 
     server {
         listen 80;{% if do_mantlui_ssl|bool %}
@@ -63,10 +64,11 @@ http {
             try_files $uri $uri/ =404;
         }
 
+        {% raw %}{{with $mesos}}
         location /mesos {
             rewrite ^([^.]*[^/])$ $1/ permanent;
             proxy_pass http://mesos/;
-        }
+        } {{end}}{% endraw %}
 
         {% raw %}{{range service "follower.mesos"}}
         location /mesos/slave/{{index (.ID | split ":") 1}} {
@@ -77,21 +79,23 @@ http {
             proxy_pass http://{{.Address}}:{{.Port}}/;
         }{{end}}{% endraw %}
 
+        {% raw %}{{with $marathon}}
         location /marathon/ {
             proxy_set_header        host $host;
             proxy_set_header        x-real-ip $remote_addr;
             proxy_set_header        x-forwarded-for $proxy_add_x_forwarded_for;
             proxy_set_header        x-forwarded-proto $scheme;
             proxy_pass http://marathon/;
-        }
+        } {{end}}{% endraw %}
 
+        {% raw %}{{with $chronos}}
         location /chronos/ {
             proxy_set_header        host $host;
             proxy_set_header        x-real-ip $remote_addr;
             proxy_set_header        x-forwarded-for $proxy_add_x_forwarded_for;
             proxy_set_header        x-forwarded-proto $scheme;
             proxy_pass http://chronos/;
-        }
+        } {{end}}{% endraw %}
 
         location /consul {
             root /usr/share/nginx/html;
@@ -99,6 +103,7 @@ http {
             try_files $uri $uri/ =404;
         }
 
+        {% raw %}{{with $consul}}
         location /consul/v1 {
             rewrite /consul/(.*) /$1 break;
 
@@ -107,6 +112,6 @@ http {
             proxy_set_header        x-forwarded-for $proxy_add_x_forwarded_for;
             proxy_set_header        x-forwarded-proto $scheme;
             proxy_pass http://consul/;
-        }
+        } {{end}}{% endraw %}
     }
 }
