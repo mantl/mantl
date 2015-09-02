@@ -89,6 +89,7 @@
     - mesos
     - marathon
     - chronos
+    - mantlui
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.
