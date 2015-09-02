@@ -1,10 +1,5 @@
 input {
   file {
-    path => "/logs/docker/*/*-json.log"
-    type => docker
-    codec => json
-  }
-  file {
     path => "/logs/mesos/*"
     type => mesos
   }
@@ -35,21 +30,6 @@ input {
 }
 
 filter {
-  if [type] == "docker" {
-    json {
-      source => "message"
-    }
-    mutate {
-      rename => [ "log", "message" ]
-    }
-    date {
-      match => [ "time", "ISO8601" ]
-    }
-    grok {
-      match => { "path" => "%{GREEDYDATA}/%{GREEDYDATA:container_id}-json.log" }
-    }
-  }
-
   if [type] == "syslog" {
     mutate {
       replace => { "host" => "{{ inventory_hostname }}" }
