@@ -15,6 +15,9 @@
   tags:
     - chronos
 
+- name: wait for zookeeper to listen
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+
 - name: create zookeeper acl
   sudo: yes
   command: "{{ chronos_zk_acl_cmd }}"
