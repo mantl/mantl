@@ -23,7 +23,7 @@
     # consul_acl_datacenter should be set to the datacenter you want to control
     # Consul ACLs. If you only have one datacenter, set it to that or remove
     # this variable.
-    consul_acl_datacenter: your_primary_datacenter
+    # consul_acl_datacenter: your_primary_datacenter
 
     # consul_dns_domain is repeated across these plays so that all the
     # components know what information to use for this values to help with
