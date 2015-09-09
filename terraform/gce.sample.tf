@@ -1,5 +1,5 @@
 provider "google" {
-  account_file = "account.json"
+  account_file = "${file("account.json")}"
   project = ""
   region = ""
 }
