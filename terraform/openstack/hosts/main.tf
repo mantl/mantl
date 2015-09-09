@@ -51,7 +51,7 @@ resource "openstack_compute_instance_v2" "control" {
 }
 
 resource "openstack_compute_instance_v2" "resource" {
-  name = "${ var.short_name}-worker-${format("%02d", count.index+1) }"
+  name = "${ var.short_name}-worker-${format("%03d", count.index+1) }"
   key_pair = "${ var.keypair_name }"
   image_name = "${ var.image_name }"
   flavor_name = "${ var.resource_flavor_name }"
