@@ -114,14 +114,3 @@
   tags:
     - mesos
     - collectd
-
-- name: configure mesos-slave for networking integration
-  sudo: yes
-  copy:
-    src: executor_environment_variables
-    dest: /etc/mesos-slave/executor_environment_variables
-    mode: 0644
-  notify:
-    - restart mesos follower
-  tags:
-    - mesos

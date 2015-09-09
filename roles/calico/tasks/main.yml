@@ -117,6 +117,33 @@
   tags:
     - calico
 
+- name: ensure mesos-slave directory exists
+  sudo: yes
+  file:
+    path: /etc/mesos-slave/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: check if mesos agent is running
+  sudo: yes
+  command: systemctl is-active mesos-slave
+  register: mesos_agent_active
+  failed_when: false
+  changed_when: false
+
+- name: configure mesos-slave for networking integration
+  sudo: yes
+  copy:
+    src: executor_environment_variables
+    dest: /etc/mesos-slave/executor_environment_variables
+    mode: 0644
+  notify:
+    - restart mesos agent
+  tags:
+    - calico
+
 - meta: flush_handlers
 
 - include: calico-configure.yml
