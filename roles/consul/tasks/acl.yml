@@ -1,6 +1,7 @@
 ---
 - name: deploy acl bootstrap
   sudo: yes
+  when: consul_dc == consul_acl_datacenter
   copy:
     src: consul-acl-bootstrap.sh
     dest: /usr/local/bin
@@ -10,6 +11,7 @@
 
 - name: upsert agent acl
   sudo: yes
+  when: consul_dc == consul_acl_datacenter
   run_once: yes
   command: /usr/local/bin/consul-acl-bootstrap.sh {{ consul_acl_master_token }} {{ consul_acl_agent_token }}
   tags:
