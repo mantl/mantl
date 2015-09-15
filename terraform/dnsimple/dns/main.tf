@@ -26,7 +26,7 @@ resource "dnsimple_record" "dns-worker" {
 resource "dnsimple_record" "dns-worker-haproxy" {
   count = "${var.worker_count}"
   domain = "${var.domain}"
-  name = "*.service.${var.short_name}"
+  name = "*.${var.short_name}-lb"
   value = "${element(split(\",\", var.worker_ips), count.index)}"
   type = "A"
   ttl = 60

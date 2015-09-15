@@ -59,6 +59,12 @@
   vars:
     consul_dns_domain: consul
     mesos_mode: follower
+
+    # Set this to whatever domain you want to reach haproxy from; it should be
+    # in this format: [short-name]-lb.[domain], where [short-name] and [domain]
+    # are the same as configured in terraform.
+    # In this example, short-name is "mi" and domain is "example.com":
+    haproxy_domain: mi-lb.example.com
   roles:
     - calico
     - mesos
