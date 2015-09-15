@@ -132,9 +132,9 @@ resource "google_compute_instance" "mi-worker-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", google_compute_instance.mi-control-nodes.*.access_config.nat_ip)}"
+  value = "${join(\",\", google_compute_instance.mi-control-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", google_compute_instance.mi-worker-nodes.*.access_config.nat_ip)}"
+  value = "${join(\",\", google_compute_instance.mi-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
