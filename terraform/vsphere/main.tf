@@ -75,3 +75,11 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 
   count = "${var.worker_count}"
 }
+
+output "control_ips" {
+  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.ip_address)}"
+}
+
+output "worker_ips" {
+  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.ip_address)}"
+}

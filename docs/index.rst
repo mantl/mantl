@@ -15,7 +15,7 @@ distributed services.
 Features
 --------
 
-* `Terraform <https://terraform.io/>`_ deployment to multiple cloud providers
+* `Terraform <https://terraform.io/>`_ deployment to multiple cloud and DNS providers
 * `etcd <https://github.com/coreos/etcd>`_ distributed key-value store for Calico
 * `Calico <http://www.projectcalico.org>`_ a new kind of virtual network
 * `Mesos <https://mesos.apache.org/>`_ cluster manager for efficient resource

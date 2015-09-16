@@ -31,6 +31,20 @@ platforms:
    vsphere.rst
    softlayer.rst
 
+Setting up DNS
+--------------
+
+Terraform lets you configure DNS for your instances. The DNS provider is
+loosely coupled from the server provider, so you could for example use
+the dnsimple provider for either OpenStack or AWS hosts.
+
+These are the supported DNS providers:
+
+.. toctree::
+   :maxdepth: 1
+
+   dnsimple.rst
+
 Setting up Authentication and Authorization
 -------------------------------------------
 
