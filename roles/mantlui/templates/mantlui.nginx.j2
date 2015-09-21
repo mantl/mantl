@@ -71,7 +71,7 @@ http {
         } {{end}}{% endraw %}
 
         {% raw %}{{range service "follower.mesos"}}
-        location /mesos/slave/{{index (.ID | split ":") 1}} {
+        location /mesos/slave/{{index (.ID | split ":") 2}} {
             proxy_set_header        Host $host;
             proxy_set_header        X-Real-IP $remote_addr;
             proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
