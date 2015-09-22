@@ -71,7 +71,7 @@ done
 
 # construct marathon url
 [[ -n "$USER" && -n "$PASSWORD" ]] && MARATHON_URL="$USER:$PASSWORD@$MARATHON" || MARATHON_URL="$MARATHON"
-MARATHON_URL+="/marathon/v2/apps"
+MARATHON_URL+=":8080/v2/apps"
 
 launch
 
