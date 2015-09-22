@@ -31,9 +31,15 @@ http {
         server {{.Address}}:8500;{{end}}
     } {{end}}{% endraw %}
 
+{% if do_mantlui_ssl|bool %}
     server {
-        listen 80;{% if do_mantlui_ssl|bool %}
-        listen 443 default_server ssl;{% endif %}
+        listen 80;
+        return 301 https://$host$request_uri;
+    }
+{% endif %}
+
+    server {
+        listen {% if do_mantlui_ssl|bool %}443 ssl{% else %}80{% endif %};
 
         {% if do_mantlui_ssl|bool -%}
         ssl_certificate		/etc/nginx/ssl/nginx.cert;
