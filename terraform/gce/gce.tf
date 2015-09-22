@@ -4,7 +4,8 @@ variable "datacenter" {default = "gce"}
 variable "glusterfs_volume_size" {default = "100"} # size is in gigabytes
 variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
-variable "region" {default = "us-central1-a"}
+variable "region" {default = "us-central1"}
+variable "zone" {default = "us-central1-a"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
@@ -63,7 +64,7 @@ resource "google_compute_firewall" "mi-firewall-internal" {
 resource "google_compute_disk" "mi-control-glusterfs" {
   name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
   type = "pd-ssd"
-  zone = "${var.region}"
+  zone = "${var.zone}"
   size = "${var.glusterfs_volume_size}"
 
   count = "${var.control_count}"
@@ -73,7 +74,7 @@ resource "google_compute_instance" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
   description = "${var.long_name} control node #${format("%02d", count.index+1)}"
   machine_type = "${var.control_type}"
-  zone = "${var.region}"
+  zone = "${var.zone}"
   can_ip_forward = false
   tags = ["${var.short_name}", "control"]
 
@@ -107,7 +108,7 @@ resource "google_compute_instance" "mi-worker-nodes" {
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
   description = "${var.long_name} worker node #${format("%03d", count.index+1)}"
   machine_type = "${var.worker_type}"
-  zone = "${var.region}"
+  zone = "${var.zone}"
   can_ip_forward = false
   tags = ["${var.short_name}", "worker"]
 

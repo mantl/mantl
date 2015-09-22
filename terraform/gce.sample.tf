@@ -13,6 +13,7 @@ module "gce-dc" {
   long_name = "microservices-infrastructure"
   short_name = "mi"
   region = ""
+  zone = ""
   control_count = 3
   worker_count = 3
 }
