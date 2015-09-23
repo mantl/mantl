@@ -87,39 +87,34 @@ func FileContains(path string, subslice []byte) bool {
 // ExecuteWithOutput executes a command. If logrus's verbosity level is set to
 // debug, it will continuously output the command's output while it waits.
 func ExecuteWithOutput(cmd *exec.Cmd) (outStr string, err error) {
-	if log.GetLevel() == log.DebugLevel {
-		// connect to stdout and stderr for filtering purposes
-		errPipe, err := cmd.StderrPipe()
-		if err != nil {
-			log.WithFields(log.Fields{
-				"cmd": cmd.Args,
-			}).Fatal("Couldn't connect to command's stderr")
-		}
-		outPipe, err := cmd.StdoutPipe()
-		if err != nil {
-			log.WithFields(log.Fields{
-				"cmd": cmd.Args,
-			}).Fatal("Couldn't connect to command's stdout")
-		}
-		_ = bufio.NewReader(errPipe)
-		outReader := bufio.NewReader(outPipe)
+	// connect to stdout and stderr for filtering purposes
+	errPipe, err := cmd.StderrPipe()
+	if err != nil {
+		log.WithFields(log.Fields{
+			"cmd": cmd.Args,
+		}).Fatal("Couldn't connect to command's stderr")
+	}
+	outPipe, err := cmd.StdoutPipe()
+	if err != nil {
+		log.WithFields(log.Fields{
+			"cmd": cmd.Args,
+		}).Fatal("Couldn't connect to command's stdout")
+	}
+	_ = bufio.NewReader(errPipe)
+	outReader := bufio.NewReader(outPipe)
 
-		// start the command and filter the output
-		if err = cmd.Start(); err != nil {
-			return "", err
-		}
-		outScanner := bufio.NewScanner(outReader)
-		for outScanner.Scan() {
-			outStr += outScanner.Text()
+	// start the command and filter the output
+	if err = cmd.Start(); err != nil {
+		return "", err
+	}
+	outScanner := bufio.NewScanner(outReader)
+	for outScanner.Scan() {
+		outStr += outScanner.Text()
+		if log.GetLevel() == log.DebugLevel {
 			fmt.Println(outScanner.Text())
 		}
-		err = cmd.Wait()
-	} else {
-		out, outputErr := cmd.CombinedOutput()
-		// store results to be used in prompting step
-		err = outputErr
-		outStr = string(out)
 	}
+	err = cmd.Wait()
 	return outStr, err
 }
 
@@ -264,12 +259,39 @@ func runTerraform(path string) {
 	log.Debug("Done terraforming")
 }
 
+// runWaitForHosts runs the ansible playbook `playbooks/wait-for-hosts.yml`,
+// which waits for the hosts to respond before moving on with the provisioning
+func runWaitForHosts(path string) {
+	oldPwd := sh.Pwd()
+	sh.Cd(path)
+	log.Debug("Ensuring ansible-playbook can be executed properly")
+	sh.SetE(exec.Command("ansible-playbook", "--version"))
+	pathToPlaybook := "./playbooks/wait-for-hosts.yml"
+	ansibleCommand := []string{
+		"-i", "plugins/inventory/terraform.py",
+		"-e", "ansible_python_interpreter=" + strings.TrimSpace(pythonBinary),
+		"-e", "@security.yml",
+		pathToPlaybook,
+	}
+	cmd := exec.Command("ansible-playbook", ansibleCommand...)
+	log.Info("Waiting for SSH access to hosts...")
+	outStr, err := ExecuteWithOutput(cmd)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"command": cmd.Args,
+			"output":  outStr,
+			"error":   err.Error(),
+		}).Fatalf("Couldn't execute playbook %s", pathToPlaybook)
+	}
+	sh.Cd(oldPwd)
+}
+
 // runAnsible runs the ansible playbook with a few extra options, and allows
 // for a bunch of different options upon failure.
 func runAnsible(path string, opts []string) {
 	oldPwd := sh.Pwd()
 	sh.Cd(path)
-	log.Debug("Checking to see if ansible-playbook can be executed properly")
+	log.Debug("Ensuring ansible-playbook can be executed properly")
 	sh.SetE(exec.Command("ansible-playbook", "--version"))
 	ansibleCommand := []string{
 		"-i", "plugins/inventory/terraform.py",
@@ -278,6 +300,7 @@ func runAnsible(path string, opts []string) {
 		"./terraform.yml",
 	}
 	cmd := exec.Command("ansible-playbook", append(ansibleCommand, opts...)...)
+	log.Info("Provisioning...")
 	outStr, err := ExecuteWithOutput(cmd)
 	if err != nil {
 		log.Warnf("Ansible command failed: %s", cmd.Args)
@@ -355,6 +378,7 @@ func deployToCloud(platform string, branch string) {
 		sh.Cp(record, repoDir)
 	}
 	runTerraform(repoDir)
+	runWaitForHosts(repoDir)
 	runAnsible(repoDir, []string{})
 	sh.Cd(oldPwd)
 	log.Debug("Done deploying!")
