@@ -109,7 +109,7 @@ func ExecuteWithOutput(cmd *exec.Cmd) (outStr string, err error) {
 	}
 	outScanner := bufio.NewScanner(outReader)
 	for outScanner.Scan() {
-		outStr += outScanner.Text()
+		outStr += outScanner.Text() + "\n"
 		if log.GetLevel() == log.DebugLevel {
 			fmt.Println(outScanner.Text())
 		}
