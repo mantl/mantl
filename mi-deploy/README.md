@@ -18,6 +18,9 @@ and easy, while catching errors and attempting fixes.
 
 #### Installation
 
+You can download premade binaries of mi-deploy from our [Bintray][bintray],
+under the "Versions" tab.
+
 This tool can be built with the `go` tool, with a simple
 ```bash
 go get . && go build .
@@ -123,3 +126,5 @@ TODO:
 
 This is considered to be a part of Microservices-Infrastructure, and is under
 the same licensing.
+
+[bintray]: https://bintray.com/asteris/mantl-deploy/mantl-deploy/view
