@@ -33,6 +33,9 @@ var timestamp = time.Now().Format("Mon-15:04:05")
 var wd = sh.Pwd()
 var terraformDir = path.Join(wd, "tf-files/")
 
+const Name = "mi-deploy"
+const Version = "v0.1.0"
+
 // these are configured in the App action/subcommand "deploy", as they are on
 // a per-deployment basis
 var deploymentDir string
