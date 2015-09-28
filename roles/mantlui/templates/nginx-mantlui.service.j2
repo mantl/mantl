@@ -1,0 +1,29 @@
+[Unit]
+Description=nginx-mantlui
+After=docker.service
+After=consul.service
+Requires=docker.service
+Requires=consul.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=0
+
+ExecStartPre=-/usr/bin/docker rm nginx-mantlui
+ExecStartPre=-/usr/bin/docker pull {{ mantlui_nginx_image }}:{{ mantlui_nginx_image_tag }}
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=nginx-mantlui \
+    --env-file=/etc/default/nginx-mantlui.env \
+    -p 80:80 \
+    -p 443:443 \
+    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
+    -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
+    {{ mantlui_nginx_image }}:{{ mantlui_nginx_image_tag }}
+
+ExecStop=/usr/bin/docker kill nginx-mantlui
+
+[Install]
+WantedBy=multi-user.target

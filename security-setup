@@ -155,6 +155,22 @@ cert_opts.add_argument(
     help='skip verifying certificates as part of setup process'
 )
 
+# mantlui
+mantlui_opts = parser.add_argument_group(
+    "mantlui options",
+    "enable and disable auth components of mantlui"
+)
+mantlui_opts.add_argument(
+    '--mantlui-ssl', type=ImplicitBool.parse_opt,
+    help='enable mantlui SSL',
+    dest='do_mantlui_ssl', default=True,
+)
+mantlui_opts.add_argument(
+    '--mantlui-auth', type=ImplicitBool.parse_opt,
+    help='enable mantlui authentication',
+    dest='do_mantlui_auth', default=True,
+)
+
 # Consul authentication
 consul_opts = parser.add_argument_group(
     "Consul Options",
@@ -763,6 +779,15 @@ class Zookeeper(Component):
             else:
                 print('zk chronos user secret already set')
 
+
+class MantlUI(Component):
+    def check(self):
+        return [self.check_security]
+
+    def check_security(self):
+        "check security"
+        self.toggle_boolean('do_mantlui_ssl', self.component_enabled(self.args.do_mantlui_ssl), True)
+        self.toggle_boolean('do_mantlui_auth', self.component_enabled(self.args.do_mantlui_auth), True)
 
 class Mesos(Component):  # Mesos should always come after any frameworks
     def check(self):
