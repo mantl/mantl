@@ -33,3 +33,14 @@ request.
    For this to work, you need to have a wildcard dns entry for
    ``*.example.com``, so when your browser goes to ``http://myapp.example.com``,
    your DNS settings forward that traffic to one of the nodes running haproxy.
+
+Making haproxy work with the DNS setup from Terraform
+-----------------------------------------------------
+
+The Terraform files in microservices-infrastructure are set up to create DNS
+records in the form of ``*.[short-name]-lb.[domain]``, e.g. `*.mi-lb.example.com`.
+In order to set up haproxy to work with these DNS records, set haproxy_domain
+to ``[short-name]-lb.[domain]``, replacing ``[short-name]`` and ``[domain]``
+with your values.
+Then, you can access ``myapp`` at ``myapp.[short-name]-lb.[domain]``
+(``myapp.mi-lb.example.com``)
