@@ -15,3 +15,5 @@ consul_acl_datacenter: "{{ consul_dc }}"
 consul_acl_default_policy: "allow"
 consul_acl_down_policy: "allow"
 consul_dns_domain: consul
+consul_verify_incoming: true
+consul_verify_outgoing: true
