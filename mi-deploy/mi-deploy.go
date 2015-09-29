@@ -87,6 +87,23 @@ func FileContains(path string, subslice []byte) bool {
 	return bytes.Contains(data, subslice)
 }
 
+// FileToBytes reads a file and fails if there is an error
+func FileToBytes(path string) []byte {
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"path": path,
+		}).Fatal(err.Error())
+	}
+	return data
+}
+
+// FileToLines reads in a file at a path, fails on errors, splits it into lines,
+// and returns those lines as byte slices
+func FileToLines(path string) [][]byte {
+	return bytes.Split(FileToBytes(path), []byte("\n"))
+}
+
 // ExecuteWithOutput executes a command. If logrus's verbosity level is set to
 // debug, it will continuously output the command's output while it waits.
 func ExecuteWithOutput(cmd *exec.Cmd) (outStr string, err error) {
@@ -122,31 +139,6 @@ func ExecuteWithOutput(cmd *exec.Cmd) (outStr string, err error) {
 }
 
 /********************** SPECIFIC FUNCTIONS */
-// confirmShortName will warn user if their .tf file doesn't have a short_name.
-// It will eventually give the option to add one of their choice. TODO
-func confirmShortName(path string) {
-	if !FileContains(path, []byte("short_name")) {
-		log.WithFields(log.Fields{
-			"path": path,
-		}).Warn("File does not have short_name variable")
-	}
-}
-
-// confirmSSL will confirm that the user has the ./tf-files/ssl dir, and prompt
-// them and ask if they want to create & copy it (using security-setup) if they
-// don't have it already. TODO this isn't detecting properly
-func confirmSSL() {
-	if !sh.DirExists(path.Join(terraformDir, "tf-files")) {
-		log.Warn("Couldn't find tf-files/ssl/ dir, run security-setup")
-	}
-}
-
-// backupTFStates will create a .tfstate file in each deployment's directory
-// TODO
-func backupTFStates() {
-
-}
-
 // getBranch fetches the git repo at urlstr to the folder dst and checks out
 // branch. It uses a specific set of options for minimal hassle and bandwidth,
 // and avoids cloning if the repo/dir is already present.
@@ -262,9 +254,28 @@ func runTerraform(path string) {
 	log.Debug("Done terraforming")
 }
 
-// runWaitForHosts runs the ansible playbook `playbooks/wait-for-hosts.yml`,
+func printAdminPassword() {
+	path := path.Join(repoDir, "security.yml")
+	if _, err := os.Stat(path); err != nil {
+		log.WithFields(log.Fields{
+			"path": path,
+		}).Fatal("Couldn't read security.yml when trying to print password")
+	}
+	for _, line := range FileToLines(path) {
+		if bytes.Contains(line, []byte("nginx_admin_password:")) {
+			words := bytes.Split(line, []byte(" "))
+			log.Info("Your admin password is " + string(words[len(words)-1]))
+			return
+		}
+	}
+	log.WithFields(log.Fields{
+		"path": path,
+	}).Fatal("Couldn't find your admin password in security.yml")
+}
+
+// waitForHosts runs the ansible playbook `playbooks/wait-for-hosts.yml`,
 // which waits for the hosts to respond before moving on with the provisioning
-func runWaitForHosts(path string) {
+func waitForHosts(path string) {
 	oldPwd := sh.Pwd()
 	sh.Cd(path)
 	log.Debug("Ensuring ansible-playbook can be executed properly")
@@ -362,16 +373,9 @@ func deployToCloud(platform string, branch string) {
 
 	// warn the user if they dont have a short_name
 	tfFile := path.Join(terraformDir, platform+".tf")
-	confirmShortName(tfFile)
-	//confirmSSL()
 
 	// these are all the necessary terraform and auth files/dirs to copy in
-	toCopy := []string{
-		tfFile,
-		path.Join(terraformDir, "terraform.yml"),
-		path.Join(terraformDir, "security.yml"),
-		path.Join(terraformDir, "ssl/"),
-	}
+	toCopy := []string{tfFile}
 	// gce needs another auth file
 	if platform == "gce" {
 		toCopy = append(toCopy, path.Join(terraformDir, "account.json"))
@@ -380,8 +384,16 @@ func deployToCloud(platform string, branch string) {
 	for _, record := range toCopy {
 		sh.Cp(record, repoDir)
 	}
+	// Copy sample terraform.yml
+	src := path.Join(repoDir, "terraform.sample.yml")
+	sh.Cp(src, path.Join(repoDir, "terraform.yml"))
+	// Generate security.yml, ssl/
+	log.Debug("Running security-setup")
+	sh.SetE(exec.Command("./security-setup"))
+	printAdminPassword()
+
 	runTerraform(repoDir)
-	runWaitForHosts(repoDir)
+	waitForHosts(repoDir)
 	runAnsible(repoDir, []string{})
 	sh.Cd(oldPwd)
 	log.Debug("Done deploying!")
