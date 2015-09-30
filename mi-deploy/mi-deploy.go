@@ -169,40 +169,6 @@ func getBranch(urlstr string, branch string, dst string) {
 	log.Debugf("Done getting branch %s", branch)
 }
 
-// deployToVagrant runs all the necessary steps to deploy an MI instance to
-// its Vagrant box.
-func deployToVagrant(branch string) {
-	getBranch(repoURL, branch, repoDir)
-	oldPwd := sh.Pwd()
-	sh.Cd(repoDir)
-	log.Info("Bringing Vagrant box up, please wait.")
-	sh.SetE(exec.Command("vagrant", "up"))
-	sh.Cd(oldPwd)
-}
-
-// terraformDestroy is a simple wrapper around $(terraform destroy) that makes
-// it require no input and logs some useful messages in some cases.
-func terraformDestroy(path string) {
-	oldPwd := sh.Pwd()
-	sh.Cd(path)
-	log.Info("Destroying terraformed resources...")
-	if !sh.FileExists("terraform.tfstate") {
-		log.WithFields(log.Fields{
-			"pwd": sh.Pwd(),
-		}).Warn("No terraform.tfstate file to use in destruction!")
-	}
-	cmd := exec.Command("terraform", "destroy", "-force")
-	outStr, err := ExecuteWithOutput(cmd)
-	if err != nil {
-		log.WithFields(log.Fields{
-			"output":  outStr,
-			"command": cmd.Args,
-		}).Warn("Terraform destroy may have failed")
-	}
-	sh.Cd(oldPwd)
-	log.Debug("Done destroying terraformed resources.")
-}
-
 // runTerraform gets, plans, and applies, and prompts the user for input if
 // something doesn't work.
 func runTerraform(path string) {
@@ -364,17 +330,9 @@ func runAnsible(path string, opts []string) {
 	log.Debug("Done running Ansible")
 }
 
-// deployToCloud runs all the necessary steps for getting MI up and running on
-// one of the supported clouds
-func deployToCloud(platform string, branch string) {
-	getBranch(repoURL, branch, repoDir)
-	oldPwd := sh.Pwd()
-	sh.Cd(repoDir)
-
-	// warn the user if they dont have a short_name
+func copyNecessaryFiles(platform string) {
+	// copy in terraform and auth files
 	tfFile := path.Join(terraformDir, platform+".tf")
-
-	// these are all the necessary terraform and auth files/dirs to copy in
 	toCopy := []string{tfFile}
 	// gce needs another auth file
 	if platform == "gce" {
@@ -384,19 +342,53 @@ func deployToCloud(platform string, branch string) {
 	for _, record := range toCopy {
 		sh.Cp(record, repoDir)
 	}
-	// Copy sample terraform.yml
-	src := path.Join(repoDir, "terraform.sample.yml")
-	sh.Cp(src, path.Join(repoDir, "terraform.yml"))
-	// Generate security.yml, ssl/
-	log.Debug("Running security-setup")
-	sh.SetE(exec.Command("./security-setup"))
-	printAdminPassword()
+	// Copy terrafom.yml in, or generate a new one from sample
+	if sh.FileExists(path.Join(terraformDir, "terraform.yml")) {
+		log.Debug("Copying terraform.yml from " + terraformDir)
+		src := path.Join(terraformDir, "terraform.yml")
+		sh.Cp(src, path.Join(repoDir, "terraform.yml"))
+	} else {
+		log.Debug("Generating terraform.yml from sample")
+		src := path.Join(repoDir, "terraform.sample.yml")
+		sh.Cp(src, path.Join(repoDir, "terraform.yml"))
+	}
+	// Copy ssl/, security.yml in or generate new ones
+	if sh.FileExists(path.Join(terraformDir, "security.yml")) {
+		log.Debug("Copying security.yml, ssl/ from " + terraformDir)
+		src := path.Join(terraformDir, "security.yml")
+		sh.Cp(src, path.Join(repoDir, "security.yml"))
+		src = path.Join(terraformDir, "ssl/")
+		sh.Cp(src, path.Join(repoDir, "ssl/"))
+	} else {
+		log.Debug("Running security-setup")
+		sh.SetE(exec.Command("./security-setup"))
+		printAdminPassword()
+	}
+}
 
+// deployToCloud runs all the necessary steps for getting MI up and running on
+// one of the supported clouds
+func deployToCloud(platform string, branch string) {
+	getBranch(repoURL, branch, repoDir)
+	oldPwd := sh.Pwd()
+	sh.Cd(repoDir)
+	copyNecessaryFiles(platform)
 	runTerraform(repoDir)
 	waitForHosts(repoDir)
 	runAnsible(repoDir, []string{})
 	sh.Cd(oldPwd)
 	log.Debug("Done deploying!")
+}
+
+// deployToVagrant runs all the necessary steps to deploy an MI instance to
+// its Vagrant box.
+func deployToVagrant(branch string) {
+	getBranch(repoURL, branch, repoDir)
+	oldPwd := sh.Pwd()
+	sh.Cd(repoDir)
+	log.Info("Bringing Vagrant box up, please wait.")
+	sh.SetE(exec.Command("vagrant", "up"))
+	sh.Cd(oldPwd)
 }
 
 // promptDestroy prompts the user asking which deployment they want to get rid
@@ -447,6 +439,29 @@ func promptDestroy(filter string) {
 	// kill it!
 	destroyDeployment(toRemove)
 	sh.Cd(oldPwd)
+}
+
+// terraformDestroy is a simple wrapper around $(terraform destroy) that makes
+// it require no input and logs some useful messages in some cases.
+func terraformDestroy(path string) {
+	oldPwd := sh.Pwd()
+	sh.Cd(path)
+	log.Info("Destroying terraformed resources...")
+	if !sh.FileExists("terraform.tfstate") {
+		log.WithFields(log.Fields{
+			"pwd": sh.Pwd(),
+		}).Warn("No terraform.tfstate file to use in destruction!")
+	}
+	cmd := exec.Command("terraform", "destroy", "-force")
+	outStr, err := ExecuteWithOutput(cmd)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"output":  outStr,
+			"command": cmd.Args,
+		}).Warn("Terraform destroy may have failed")
+	}
+	sh.Cd(oldPwd)
+	log.Debug("Done destroying terraformed resources.")
 }
 
 // destroyDeployment shuts down a deployments instances, and removes all its
