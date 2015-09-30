@@ -30,6 +30,8 @@ $ tree .
 ├── README.md
 ├── ...
 └── tf-files
+    ├── terraform.yml   # optional, will be generated if not present
+    ├── security.yml    # optional, will be generated if not present
     ├── account.json
     ├── aws.tf
     ├── digitalocean.tf
