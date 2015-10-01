@@ -2,9 +2,9 @@
 
 This tool automates the deployment of Mantl to all of its supported platforms.
 It does so by creating a fresh, barebones clone of the repo from the specified
-branch, generating necessary authentication and terraform data, and running
-Anisble and Terraform. It attempts to make this whole process more user friendly
-and easy, while interactively catching errors and attempting fixes.
+branch, generating or copying necessary authentication and terraform data, and
+running Anisble and Terraform. It attempts to make this whole process more user
+friendly and easy, while interactively catching errors and attempting fixes.
 
 ### Installation and Usage
 
@@ -39,6 +39,10 @@ $ tree .
     ├── gce.tf
     └── openstack.tf
 ```
+
+You only need a .tf file for whichever platform(s) you deploy to, and
+security.yml, the ssl/ directory, and terraform.yml are optional. mi-deploy will
+generate them if not present.
 
 #### Usage
 
