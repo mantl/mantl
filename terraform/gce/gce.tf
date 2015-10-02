@@ -11,6 +11,8 @@ variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 1}
 variable "worker_type" {default = "n1-highcpu-2"}
+variable "control_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_volume_size" {default = "20"} # size is in gigabytes
 
 # Network
 resource "google_compute_network" "mi-network" {
@@ -80,6 +82,7 @@ resource "google_compute_instance" "mi-control-nodes" {
 
   disk {
     image = "centos-7-v20150526"
+    size = "${var.control_volume_size}"
     auto_delete = true
   }
 
@@ -114,6 +117,7 @@ resource "google_compute_instance" "mi-worker-nodes" {
 
   disk {
     image = "centos-7-v20150526"
+    size = "${var.worker_volume_size}"
     auto_delete = true
   }
 
