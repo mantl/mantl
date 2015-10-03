@@ -105,6 +105,15 @@ resource "google_compute_instance" "mi-control-nodes" {
   }
 
   count = "${var.control_count}"
+
+  provisioner "remote-exec" {
+    script = "./terraform/gce/disk.sh"
+
+    connection {
+      type = "ssh"
+      user = "${var.ssh_user}"
+    }
+  }
 }
 
 resource "google_compute_instance" "mi-worker-nodes" {
@@ -134,6 +143,15 @@ resource "google_compute_instance" "mi-worker-nodes" {
   }
 
   count = "${var.worker_count}"
+
+  provisioner "remote-exec" {
+    script = "./terraform/gce/disk.sh"
+
+    connection {
+      type = "ssh"
+      user = "${var.ssh_user}"
+    }
+  }
 }
 
 output "control_ips" {
