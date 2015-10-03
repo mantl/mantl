@@ -12,6 +12,8 @@ variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_username"  {default = "centos"}
 variable "worker_count" {default = "1"}
 variable "worker_type" {default = "m1.small"}
+variable "control_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_volume_size" {default = "20"} # size is in gigabytes
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
@@ -82,6 +84,7 @@ resource "aws_instance" "mi-control-nodes" {
 
   root_block_device {
     delete_on_termination = true
+    volume_size = "${var.control_volume_size}"
   }
 
   tags {
@@ -118,6 +121,7 @@ resource "aws_instance" "mi-worker-nodes" {
 
   root_block_device {
     delete_on_termination = true
+    volume_size = "${var.worker_volume_size}"
   }
 
   tags {
