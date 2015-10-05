@@ -74,6 +74,7 @@ resource "aws_instance" "mi-control-nodes" {
   instance_type = "${var.control_type}"
   count = "${var.control_count}"
   vpc_security_group_ids = ["${aws_security_group.control.id}",
+    "${aws_security_group.ui.id}",
     "${aws_vpc.main.default_security_group_id}"]
 
   key_name = "${aws_key_pair.deployer.key_name}"
@@ -140,20 +141,6 @@ resource "aws_security_group" "control" {
   ingress { # SSH
     from_port = 22
     to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress { # HTTP
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress { # HTTPS
-    from_port = 443
-    to_port = 443
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -248,12 +235,62 @@ resource "aws_security_group" "worker" {
     protocol = "icmp"
     cidr_blocks=["0.0.0.0/0"]
   }
+}
 
+resource "aws_security_group" "ui" {
+  name = "${var.short_name}-ui"
+  description = "Allow inbound traffic for Mantl UI"
+  vpc_id="${aws_vpc.main.id}"
+
+  ingress { # HTTP
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # HTTPS
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # Consul
+    from_port = 8500
+    to_port = 8500
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_key_pair" "deployer" {
   key_name = "key-${var.short_name}"
   public_key = "${file(var.ssh_key)}"
+}
+
+output "vpc_subnet" {
+  value = "${aws_subnet.main.id}"
+}
+
+output "control_security_group" {
+  value = "${aws_security_group.control.id}"
+}
+
+output "worker_security_group" {
+  value = "${aws_security_group.worker.id}"
+}
+
+output "ui_security_group" {
+  value = "${aws_security_group.ui.id}"
+}
+
+output "default_security_group" {
+  value = "${aws_vpc.main.default_security_group_id}"
+}
+
+output "control_ids" {
+  value = "${join(\",\", aws_instance.mi-control-nodes.*.id)}"
 }
 
 output "control_ips" {

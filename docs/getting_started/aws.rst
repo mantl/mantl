@@ -159,3 +159,41 @@ permissions needed to provision an AWS cluster with Terraform.
 
 .. literalinclude:: /_static/aws_custom_iam_policy.json
    :language: javascript
+
+Adding an Elastic Load Balancer (ELB)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Optionally, you can configure your environment to include an Elastic Load
+Balancer (ELB) in front of Mantl UI.
+
+You will need to ensure that your IAM user has the following permissions:
+
+* elasticloadbalancing:AddTags
+* elasticloadbalancing:ApplySecurityGroupsToLoadBalancer
+* elasticloadbalancing:ConfigureHealthCheck
+* elasticloadbalancing:CreateLoadBalancer
+* elasticloadbalancing:CreateLoadBalancerListeners
+* elasticloadbalancing:DeleteLoadBalance
+* elasticloadbalancing:DescribeLoadBalancerAttributes
+* elasticloadbalancing:DescribeLoadBalancers
+* elasticloadbalancing:ModifyLoadBalancerAttributes
+* elasticloadbalancing:RegisterInstancesWithLoadBalancer
+* iam:DeleteServerCertificate
+* iam:GetServerCertificate
+* iam:UploadServerCertificate
+
+In your ``terraform.yml``, you will want to include the aws-elb module:
+
+.. code-block::
+
+  # Example setup for an AWS ELB
+  module "aws-elb" {
+    source = "./terraform/aws-elb"
+    short_name = "mi"
+    instances = "${module.aws-dc.control_ids}"
+    subnets = "${module.aws-dc.vpc_subnet}"
+    security_groups = "${module.aws-dc.ui_security_group},${module.aws-dc.default_security_group}"
+  }
+
+The only variable you will want to change is ``short_name`` and you will likely
+want it to match the ``short_name`` specified in the ``aws-dc`` module.
