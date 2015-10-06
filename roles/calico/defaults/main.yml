@@ -1,6 +1,6 @@
 ---
 calico_image: ciscocloud/calico-node
-calico_image_tag: v0.4.9-mi
+calico_image_tag: v0.4.10-mi
 
 bintray_baseurl: "https://bintray.com/artifact/download/ciscocloud/generic"
 calico_binary: "{{ bintray_baseurl }}/calico/calicoctl"

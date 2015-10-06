@@ -45,7 +45,9 @@ environment variables to your JSON file: ``CALICO_IP`` and ``CALICO_PROFILE``.
 You can assign an IP address to ``CALICO_IP`` explicitly or set ``auto`` and it
 will be allocated automatically. If the profile set with ``CALICO_PROFILE``
 doesn't exist, it will be created automatically. If you don't provide the two
-variables, the Docker default network settings will be applied.
+variables, the Docker default network settings will be applied. The variable
+``SERVICE_PORT`` is optional, it registers a service port in Consul for your
+application. You can make an SRV query to return this port.
 
 Example:
 
@@ -62,7 +64,8 @@ Example:
      "instances": 1,
      "env": {
        "CALICO_IP": "auto",
-       "CALICO_PROFILE": "dev"
+       "CALICO_PROFILE": "dev",
+       "SERVICE_PORT": "3000"
      },
      "cpus": 0.1,
      "mem": 32,
@@ -81,6 +84,7 @@ The registered name is constructed in this way: ``MARATHON_APP_ID`` plus
 ``testapp``, then the ``testapp-direct`` service will be registered in Consul.
 
 Thus, you have the option to query Consul in two ways:
+
 1. In order to obtain Docker host IP addresses where your workload is running:
 
 .. code-block:: shell
