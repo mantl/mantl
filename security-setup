@@ -260,6 +260,17 @@ chronos_opts.add_argument(
     dest='do_chronos_iptables', default=True
 )
 
+# Mantl API mesos credentials
+mantl_api_opts = parser.add_argument_group(
+    "Mantl API Options",
+    "enable and disable auth components of Mantl API"
+)
+mantl_api_opts.add_argument(
+    '--mantl-api-auth', type=ImplicitBool.parse_opt,
+    help='enable Mantl API authentication',
+    dest='do_mantl_api_auth', default=True
+)
+
 # Docker registry security
 docker_registry_opts = parser.add_argument_group(
     "Docker registry options",
@@ -681,6 +692,24 @@ class Chronos(Component):
             else:
                 print('chronos http credentials already set')
 
+class MantlApi(Component):
+    def check(self):
+        return [self.check_security, self.mesos_auth]
+
+    def check_security(self):
+        "check security"
+        self.toggle_boolean('do_mantl_api_auth', self.component_enabled(self.args.do_mantl_api_auth), True)
+
+    def mesos_auth(self):
+        "Mesos authentication for frameworks installed via Mantl API"
+        with self.modify_security() as config:
+            config.setdefault('mantl_api_principal', 'mantl-api')
+            if 'mantl_api_secret' not in config:
+                config['mantl_api_secret'] = self.random()
+                print('set Mantl API framework secret')
+            else:
+                print('Mantl API secret already set')
+
 class DockerRegistry(Component):
     def check(self):
         return [self.docker_registry_auth]
@@ -826,6 +855,14 @@ class Mesos(Component):  # Mesos should always come after any frameworks
                 if credential not in config['mesos_credentials']:
                     config['mesos_credentials'].append(credential)
                     print('set auth for Chronos')
+            if 'mantl_api_principal' in config and 'mantl_api_secret' in config:
+                credential = {
+                    'principal': config['mantl_api_principal'],
+                    'secret': config['mantl_api_secret'],
+                }
+                if credential not in config['mesos_credentials']:
+                    config['mesos_credentials'].append(credential)
+                    print('set auth for Mantl API')
 
     def follower_auth(self):
         "follower auth"
