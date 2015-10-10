@@ -39,6 +39,7 @@
     - nc
     - openssh
     - policycoreutils-python
+    - unzip
   tags:
     - bootstrap
 
