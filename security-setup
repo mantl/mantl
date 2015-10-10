@@ -267,7 +267,7 @@ mantl_api_opts = parser.add_argument_group(
 )
 mantl_api_opts.add_argument(
     '--mantl-api-auth', type=ImplicitBool.parse_opt,
-    help='enable Mantl API authentication',
+    help='enable Mantl API Meso credentials',
     dest='do_mantl_api_auth', default=True
 )
 
