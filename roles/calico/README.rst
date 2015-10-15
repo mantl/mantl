@@ -11,6 +11,28 @@ network interfaces associated with workloads. Calico is deployed in the Docker
 container on each worker node and managed by systemd. Any workload managed by
 Calico is registered as a service in Consul.
 
+Calico is not enabled by default. In order to run Calico, you should make a
+couple of changes to your ``terraform.yml``. You will need to add the ``etcd``
+role into the ``roles`` section for ``all`` hosts:
+
+.. code-block:: json
+
+   - hosts: all
+     ...
+     roles:
+       - common
+       ...
+       - etcd
+
+And you need to add the ``calico`` role to the ``role=worker`` hosts:
+
+.. code-block:: json
+
+   - hosts: role=worker
+     roles:
+       ...
+       - calico
+
 Modes
 ^^^^^
 
