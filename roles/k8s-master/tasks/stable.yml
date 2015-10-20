@@ -1,0 +1,9 @@
+- name: install kubernetes master
+  sudo: yes
+  yum:
+    pkg="kubernetes-{{ kube_version }}"
+    state=present
+  notify:
+    - restart daemons
+  tags:
+    - master
