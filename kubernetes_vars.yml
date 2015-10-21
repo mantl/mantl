@@ -2,9 +2,9 @@
 # ansible_ssh_user: centos
 
 # ansible groups for service configuration
-etcd_group_name: role=master
-master_group_name: role=master
-minion_group_name: role=node
+etcd_group_name: role=control
+master_group_name: role=control
+minion_group_name: role=worker
 
 # Kubernetes build to use, stable is used by default. 
 # Place "testing" here to use latest build avialable.
