@@ -25,3 +25,15 @@ module "aws-dc" {
 #   control_ips = "${module.aws-dc.control_ips}"
 #   worker_ips = "${module.aws-dc.worker_ips}"
 # }
+
+# Example setup for DNS with route53;
+# module "route53-dns" {
+#   source = "./terraform/route53/dns"
+#   short_name = "mi"
+#   control_count = 3
+#   worker_count = 3
+#   domain = "example.com"
+#   hosted_zone_id = "XXXXXXXXX"
+#   control_ips = "${module.aws-dc.control_ips}"
+#   worker_ips = "${module.aws-dc.worker_ips}"
+# }
