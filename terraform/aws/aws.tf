@@ -14,6 +14,8 @@ variable "worker_count" {default = "1"}
 variable "worker_type" {default = "m1.small"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
 variable "worker_volume_size" {default = "20"} # size is in gigabytes
+variable "control_iam_profile" {default = "" }
+variable "worker_iam_profile" {default = "" }
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
@@ -82,6 +84,8 @@ resource "aws_instance" "mi-control-nodes" {
 
   subnet_id = "${aws_subnet.main.id}"
 
+  iam_instance_profile = "${var.control_iam_profile}"
+
   root_block_device {
     delete_on_termination = true
     volume_size = "${var.control_volume_size}"
@@ -118,6 +122,8 @@ resource "aws_instance" "mi-worker-nodes" {
   associate_public_ip_address=true
 
   subnet_id = "${aws_subnet.main.id}"
+
+  iam_instance_profile = "${var.worker_iam_profile}"
 
   root_block_device {
     delete_on_termination = true
