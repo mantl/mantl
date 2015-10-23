@@ -25,10 +25,9 @@ resource "aws_route53_record" "dns-worker" {
 }
 
 resource "aws_route53_record" "dns-worker-haproxy" {
-  count = "${var.worker_count}"
   zone_id = "${var.hosted_zone_id}"
   name = "*.${var.short_name}-lb.${var.domain}"
-  records = ["${element(split(\",\", var.worker_ips), count.index)}"]
+  records = ["${split(\",\", var.worker_ips)}"]
   type = "A"
   ttl = 60
 }
