@@ -24,8 +24,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - docker-engine-1.7.0
-    - docker-selinux
+    - docker-1.7.1
   tags:
     - docker
     - bootstrap
@@ -83,7 +82,7 @@
       [Service]
       EnvironmentFile=-/etc/sysconfig/docker
       ExecStart=
-      ExecStart=/usr/bin/docker -d -H fd:// $other_arg
+      ExecStart=/usr/bin/docker -d $other_arg
   notify:
     - reload docker
   tags:
