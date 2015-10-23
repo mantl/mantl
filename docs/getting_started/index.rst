@@ -44,6 +44,7 @@ These are the supported DNS providers:
    :maxdepth: 1
 
    dnsimple.rst
+   route53.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------
