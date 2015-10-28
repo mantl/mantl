@@ -1,0 +1,4 @@
+{
+  "DOCKER_HOST": "localhost:2377",
+  "PATH": "{{ ansible_env.PATH }}"
+}
