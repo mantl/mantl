@@ -57,7 +57,7 @@
 - name: configure docker consul dns
   sudo: yes
   lineinfile:
-    dest: /etc/sysconfig/docker
+    dest: /etc/sysconfig/docker-local
     regexp: ^other_arg=
     line: other_arg='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} --log-driver=syslog'
     state: present
@@ -81,7 +81,7 @@
     dest: /etc/systemd/system/docker.service.d/local.conf
     content: |
       [Service]
-      EnvironmentFile=-/etc/sysconfig/docker
+      EnvironmentFile=-/etc/sysconfig/docker-local
       ExecStart=
       ExecStart=/usr/bin/docker -d -H fd:// $other_arg
   notify:
