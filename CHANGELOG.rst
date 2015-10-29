@@ -1,6 +1,24 @@
 Changelog
 =========
 
+0.4.0 (October 29, 2015)
+-------------------------
+
+Features
+^^^^^^^^
+
+* Add MantlUI proxy for Mesos/Marathon/Chronos/Consul
+* Add `Mantl API <http://aster.is/blog/2015/10/29/announcing-mantl-api/>`_ support
+* Add GlusterFS shared filesystem support
+* Add Calico IP per container networking (tech preview)
+* Add support for DNSimple DNS registration
+
+Fixes
+^^^^^
+
+* mesos-consul and marathon-consul updates to improve service discovery consistency
+* terraform.py improvements with support for SoftLayer and Microsoft Azure
+
 0.3.2 (June 30, 2015)
 ---------------------
 
