@@ -23,13 +23,14 @@ module "dc2-hosts-floating" {
 	external_net_id = ""
 }
 
-# Example setup for DNS with dnsimple;
-# module "dnsimple-dns" {
-#   source = "./terraform/dnsimple/dns"
+# Example setup for DNS:
+# module "dnsimple-dns" { # This could also be "google-cloud-dns"
+#   source = "./terraform/dnsimple/dns" # This could also be "./terraform/gce/dns"
 #   short_name = "mi"
 #   control_count = 3
 #   worker_count = 3
 #   domain = "example.com"
-#   control_ips = "${module.dc2-hosts.control_ips}"
-#   worker_ips = "${module.dc2-hosts.worker_ips}"
+#   control_ips = "${module.softlayer-hosts.control_ips}"
+#   worker_ips = "${module.softlayer-hosts.worker_ips}"
+#   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
 # }
