@@ -1,0 +1,31 @@
+---
+# Workaround for https://github.com/CiscoCloud/microservices-infrastructure/issues/161
+- name: install latest device-mapper-libs
+  sudo: yes
+  yum:
+    name: device-mapper-libs
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+
+- name: install LVM tools
+  sudo: yes
+  yum:
+    name: lvm2
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+
+- name: Create volume group
+  sudo: yes
+  lvg:
+    vg: "{{ lvm_volume_group_name }}"
+    pvs: "{{ lvm_physical_device }}"  
+  tags:
+    - docker
+    - bootstrap
+
+- name: save volume group name as fact
+  set_fact:  volume_group_name="{{ lvm_volume_group_name }}"

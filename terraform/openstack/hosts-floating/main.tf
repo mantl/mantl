@@ -34,6 +34,16 @@ resource "openstack_blockstorage_volume_v1" "mi-control-glusterfs" {
   count = "${ var.control_count }"
 }
 
+resource "openstack_blockstorage_volume_v1" "mi-resource-glusterfs" {
+  name = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
+  size = "${ var.glusterfs_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.resource_count }"
+}
+
 resource "openstack_compute_instance_v2" "control" {
   floating_ip = "${ element(openstack_compute_floatingip_v2.ms-control-floatip.*.address, count.index) }"
   name                  = "${ var.short_name}-control-${format("%02d", count.index+1) }"
@@ -62,6 +72,10 @@ resource "openstack_compute_instance_v2" "resource" {
   flavor_name           = "${ var.resource_flavor_name }"
   security_groups       = [ "${ var.security_groups }" ]
   network               = { uuid = "${ openstack_networking_network_v2.ms-network.id }" }
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-resource-glusterfs.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
   metadata              = {
                             dc = "${var.datacenter}"
                             role = "worker"

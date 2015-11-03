@@ -1,5 +1,15 @@
 ---
-- name: format brick disk
+- name: create volume for brick
+  sudo: yes
+  lvol:
+    vg: "{{ volume_group_name }}"
+    lv: "{{ glusterfs_brick_volume_name }}"
+    size:  100%FREE
+  tags:
+    - glusterfs
+    - disk
+
+- name: format brick volume
   sudo: yes
   filesystem:
     dev: "{{ glusterfs_brick_device }}"
@@ -9,7 +19,7 @@
     - glusterfs
     - disk
 
-- name: create mount point for brick disk
+- name: create mount point for brick volume
   sudo: yes
   file:
     state: directory
