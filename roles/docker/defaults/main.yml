@@ -1,1 +1,2 @@
 do_private_docker_registry: false
+docker_lvm_backed_devicemapper: true
