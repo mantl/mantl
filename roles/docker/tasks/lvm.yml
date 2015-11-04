@@ -1,0 +1,33 @@
+- name: install docker-storage-setup package
+  sudo: yes
+  yum:
+    name: "http://cbs.centos.org/kojifiles/packages/docker-storage-setup/0.5/3.el7.centos/noarch/docker-storage-setup-0.5-3.el7.centos.noarch.rpm"
+    state: present
+  tags:
+    - docker
+    - bootstrap
+
+- name: install docker-storage-setup config
+  sudo: yes
+  template:
+    src: docker-storage-setup.conf.j2
+    dest: /etc/sysconfig/docker-storage-setup
+  tags:
+    - docker
+
+- name: setup docker storage
+  sudo: yes
+  command:  /usr/bin/docker-storage-setup
+
+# /etc/sysconfig/docker-storage created by /usr/bin/docker-storage-setup call above
+- name: create local docker service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/docker.service.d/storage.conf
+    content: |
+      [Service]
+      EnvironmentFile=-/etc/sysconfig/docker-storage
+  notify:
+    - restart docker
+  tags:
+    - docker

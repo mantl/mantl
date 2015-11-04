@@ -30,6 +30,17 @@
     - docker
     - bootstrap
 
+# NOTE: this section should be before lvm.yml inclusion, because we put other configs there
+- name: create docker.system.d
+  sudo: yes
+  file:
+    dest: /etc/systemd/system/docker.service.d
+    state: directory
+  tags:
+    - docker
+
+- include: lvm.yml
+
 - name: create rsyslog.d
   sudo: yes
   file:
@@ -67,14 +78,6 @@
   tags:
     - docker
 
-- name: create docker.system.d
-  sudo: yes
-  file:
-    dest: /etc/systemd/system/docker.service.d
-    state: directory
-  tags:
-    - docker
-
 - name: create local docker service override
   sudo: yes
   copy:
@@ -83,7 +86,8 @@
       [Service]
       EnvironmentFile=-/etc/sysconfig/docker-local
       ExecStart=
-      ExecStart=/usr/bin/docker -d -H fd:// $other_arg
+      # DOCKER_STORAGE_OPTIONS defined in /etc/sysconfig/docker-storage, if it exists
+      ExecStart=/usr/bin/docker -d -H fd:// $other_arg $DOCKER_STORAGE_OPTIONS
   notify:
     - reload docker
   tags:
