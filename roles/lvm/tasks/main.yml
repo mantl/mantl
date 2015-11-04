@@ -27,5 +27,15 @@
     - docker
     - bootstrap
 
+- name: enable lvmetad service
+  sudo: yes
+  service:
+    name: lvm2-lvmetad
+    enabled: yes
+    state: started
+  tags:
+    - docker
+    - bootstrap
+
 - name: save volume group name as fact
   set_fact:  volume_group_name="{{ lvm_volume_group_name }}"
