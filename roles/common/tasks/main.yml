@@ -86,7 +86,7 @@
   replace:
     dest: /etc/security/limits.conf
     regexp: '# End of file\n.*'
-    line: '# End of file\nroot hard nofile 65000\nroot soft nofile 65000'
+    replace: '# End of file\nroot hard nofile 65000\nroot soft nofile 65000'
 
 - name: sysctl max file limit
   sudo: yes
