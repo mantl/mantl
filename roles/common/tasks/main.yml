@@ -83,10 +83,10 @@
 
 - name: increase ulimit for root
   sudo: yes
-  sysctl:
-    name: fs.file-max
-    value: 65000
-    sysctl_set: yes
+  lineinfile:
+    dest: /etc/security/limits.conf
+    line: 'root hard nofile 65000\nroot soft nofile 65000'
+
 
 
 - include: users.yml
