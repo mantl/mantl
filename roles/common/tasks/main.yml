@@ -87,7 +87,13 @@
     dest: /etc/security/limits.conf
     line: 'root hard nofile 65000\nroot soft nofile 65000'
 
-
+- name: sysctl max file limit
+  sudo: yes
+  sysctl:
+    name: fs.file-max
+    value: 65000
+    sysctl_set: true
+    reload: yes
 
 - include: users.yml
 - include: ssl.yml
