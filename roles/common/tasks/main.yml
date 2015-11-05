@@ -83,7 +83,7 @@
 
 - name: increase ulimit for root
   sudo: yes
-  file:
+  copy:
     dest: /etc/security/limits.d/10-root-nofiles.conf
     src: 10-root-nofiles.conf
 
