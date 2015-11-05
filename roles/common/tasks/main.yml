@@ -83,10 +83,9 @@
 
 - name: increase ulimit for root
   sudo: yes
-  replace:
-    dest: /etc/security/limits.conf
-    regexp: '(# End of file$)(.*\n)*'
-    replace: '# \1\nroot hard nofile 65000\nroot soft nofile 65000'
+  file:
+    dest: /etc/security/limits.d/10-root-nofiles.conf
+    src: 10-root-nofiles.conf
 
 - name: sysctl max file limit
   sudo: yes
