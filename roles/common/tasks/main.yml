@@ -81,5 +81,13 @@
   tags:
     - distributive
 
+- name: increase ulimit for root
+  sudo: yes
+  sysctl:
+    name: fs.file-max
+    value: 65000
+    sysctl_set: yes
+
+
 - include: users.yml
 - include: ssl.yml
