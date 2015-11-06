@@ -4,7 +4,7 @@
   lvol:
     vg: "{{ volume_group_name }}"
     lv: "{{ glusterfs_brick_volume_name }}"
-    size:  100%FREE
+    size: "{{ glusterfs_brick_volume_size }}"
   tags:
     - glusterfs
     - disk
