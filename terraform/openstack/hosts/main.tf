@@ -2,7 +2,7 @@ variable auth_url { }
 variable control_count {}
 variable control_flavor_name { }
 variable datacenter { default = "openstack" }
-variable glusterfs_volume_size { default = "100" } # size is in gigabytes
+variable data_volume_size { default = "100" } # size is in gigabytes
 variable image_name { }
 variable keypair_name { }
 variable long_name { default = "microservices-infrastructure" }
@@ -24,7 +24,7 @@ provider "openstack" {
 resource "openstack_blockstorage_volume_v1" "mi-control-glusterfs" {
   name = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
   description = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
-  size = "${ var.glusterfs_volume_size }"
+  size = "${ var.data_volume_size }"
   metadata = {
     usage = "container-volumes"
   }

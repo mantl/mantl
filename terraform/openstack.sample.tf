@@ -21,7 +21,7 @@ module "dc2-hosts" {
   control_count = 3
   resource_count = 3
   security_groups = ""
-  glusterfs_volume_size = 100
+  data_volume_size = 100
 }
 
 # Example setup for DNS with dnsimple;
