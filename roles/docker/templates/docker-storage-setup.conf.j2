@@ -16,7 +16,7 @@ STORAGE_DRIVER=devicemapper
 # be nonempty, since we don't currently support putting a second partition on
 # the root disk).
 #
-VG={{ volume_group_name }}
+VG="{{ volume_group_name }}"
 
 # The size to which the root filesystem should be grown.
 # Value should be acceptable to -L option of lvextend.
@@ -32,7 +32,7 @@ VG={{ volume_group_name }}
 # in syntax are acceptable.  If value does not contain "%" it is assumed
 # value is suitable for "lvcreate -L".
 #
-DATA_SIZE=40%FREE
+DATA_SIZE="{{ docker_lvm_data_volume_size }}"
 
 # MIN_DATA_SIZE specifies the minimum size of data volume otherwise pool
 # creation fails.
@@ -46,7 +46,7 @@ DATA_SIZE=40%FREE
 # mebibytes (1024 kibibytes), G for gibibytes, T for tebibytes, P for
 # pebibytes and E for exbibytes.
 #
-MIN_DATA_SIZE=2G
+MIN_DATA_SIZE="{{ docker_lvm_data_volume_size_min }}"
 
 # Controls the chunk size/block size of thin pool. Value of CHUNK_SIZE
 # be suitable to be passed to --chunk-size option of lvconvert.
@@ -59,7 +59,7 @@ CHUNK_SIZE=512K
 GROWPART=false
 
 # Enable/disable automatic pool extension using lvm
-AUTO_EXTEND_POOL=yes
+AUTO_EXTEND_POOL="{{ docker_lvm_auto_extend_pool }}"
 
 # Auto pool extension threshold (in % of pool size)
 POOL_AUTOEXTEND_THRESHOLD=60
