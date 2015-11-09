@@ -46,6 +46,7 @@ These are the supported DNS providers:
 
    dnsimple.rst
    gce.rst
+   route53.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------

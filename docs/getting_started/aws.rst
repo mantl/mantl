@@ -92,6 +92,12 @@ your cluster with Terraform.
           provision a cluster, you can see the custom policy included at the
           bottom of this document.
 
+.. note:: If you want to manage your domain with route53, you need attach route53
+          policy as well.
+
+.. image:: /_static/aws_iam_attach_route53_policy.png
+   :alt: IAM User attach route 53 policy
+
 Provider Settings
 ^^^^^^^^^^^^^^^^^^
 
@@ -158,4 +164,9 @@ At the time of this writing, the following IAM policy grants the minimal
 permissions needed to provision an AWS cluster with Terraform.
 
 .. literalinclude:: /_static/aws_custom_iam_policy.json
+   :language: javascript
+
+For managing domain dns with route53 (Replace HOSTED_ZONE_ID with yours).
+
+.. literalinclude:: /_static/aws_custom_route53_iam_policy.json
    :language: javascript
