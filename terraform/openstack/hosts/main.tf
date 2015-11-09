@@ -21,9 +21,19 @@ provider "openstack" {
   tenant_name	= "${ var.tenant_name }"
 }
 
-resource "openstack_blockstorage_volume_v1" "mi-control-glusterfs" {
-  name = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
-  description = "${ var.short_name }-control-glusterfs-${format("%02d", count.index+1) }"
+resource "openstack_blockstorage_volume_v1" "mi-control-lvm" {
+  name = "${ var.short_name }-control-lvm-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-control-lvm-${format("%02d", count.index+1) }"
+  size = "${ var.data_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.control_count }"
+}
+
+resource "openstack_blockstorage_volume_v1" "mi-resource-lvm" {
+  name = "${ var.short_name }-resource-lvm-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-resource-lvm-${format("%02d", count.index+1) }"
   size = "${ var.data_volume_size }"
   metadata = {
     usage = "container-volumes"
@@ -39,7 +49,7 @@ resource "openstack_compute_instance_v2" "control" {
   security_groups = [ "${ var.security_groups }" ]
   network = { uuid  = "${ var.net_id }" }
   volume = {
-    volume_id = "${element(openstack_blockstorage_volume_v1.mi-control-glusterfs.*.id, count.index)}"
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-control-lvm.*.id, count.index)}"
     device = "/dev/vdb"
   }
   metadata = {
@@ -57,6 +67,10 @@ resource "openstack_compute_instance_v2" "resource" {
   flavor_name = "${ var.resource_flavor_name }"
   security_groups = [ "${ var.security_groups }" ]
   network = { uuid = "${ var.net_id }" }
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-resource-lvm.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
   metadata = {
     dc = "${var.datacenter}"
     role = "worker"
