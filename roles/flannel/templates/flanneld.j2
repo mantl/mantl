@@ -1,0 +1,13 @@
+# Flanneld configuration options  
+
+# etcd url location. Point this to the server where etcd runs
+FLANNEL_ETCD="{{ etcd_url_scheme }}://{{ groups[master_group_name][0] }}:{{ etcd_client_port }}"
+
+# etcd configuration key which is queried by flanneld
+# For address range assignment
+FLANNEL_ETCD_KEY="/{{ cluster_name }}/network"
+
+# Any additional options that you want to pass
+# Set this to your management network which your hosts are networked together
+FLANNEL_OPTIONS="-iface={{ ansible_default_ipv4.interface }}"
+
