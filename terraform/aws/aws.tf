@@ -57,14 +57,14 @@ resource "aws_main_route_table_association" "main" {
   route_table_id = "${aws_route_table.main.id}"
 }
 
-resource "aws_ebs_volume" "mi-control-glusterfs" {
+resource "aws_ebs_volume" "mi-control-lvm" {
   availability_zone = "${var.availability_zone}"
   count = "${var.control_count}"
   size = "${var.data_volume_size}"
   type = "gp2"
 
   tags {
-    Name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
   }
 }
 
@@ -95,12 +95,23 @@ resource "aws_instance" "mi-control-nodes" {
   }
 }
 
-resource "aws_volume_attachment" "mi-control-nodes-glusterfs-attachment" {
+resource "aws_volume_attachment" "mi-control-nodes-lvm-attachment" {
   count = "${var.control_count}"
   device_name = "xvdh"
   instance_id = "${element(aws_instance.mi-control-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mi-control-glusterfs.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-control-lvm.*.id, count.index)}"
   force_detach = true
+}
+
+resource "aws_ebs_volume" "mi-worker-lvm" {
+  availability_zone = "${var.availability_zone}"
+  count = "${var.control_count}"
+  size = "${var.data_volume_size}"
+  type = "gp2"
+
+  tags {
+    Name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
+  }
 }
 
 resource "aws_instance" "mi-worker-nodes" {
@@ -130,6 +141,14 @@ resource "aws_instance" "mi-worker-nodes" {
     role = "worker"
     dc = "${var.datacenter}"
   }
+}
+
+resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
+  count = "${var.control_count}"
+  device_name = "xvdh"
+  instance_id = "${element(aws_instance.mi-worker-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-worker-lvm.*.id, count.index)}"
+  force_detach = true
 }
 
 resource "aws_security_group" "control" {
