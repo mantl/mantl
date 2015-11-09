@@ -61,8 +61,17 @@ resource "google_compute_firewall" "mi-firewall-internal" {
 }
 
 # Instances
-resource "google_compute_disk" "mi-control-glusterfs" {
+resource "google_compute_disk" "mi-control-lvm" {
   name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
+  type = "pd-ssd"
+  zone = "${var.zone}"
+  size = "${var.data_volume_size}"
+
+  count = "${var.control_count}"
+}
+
+resource "google_compute_disk" "mi-worker-lvm" {
+  name = "${var.short_name}-worker-glusterfs-${format("%02d", count.index+1)}"
   type = "pd-ssd"
   zone = "${var.zone}"
   size = "${var.data_volume_size}"
@@ -84,9 +93,12 @@ resource "google_compute_instance" "mi-control-nodes" {
   }
 
   disk {
-    disk = "${element(google_compute_disk.mi-control-glusterfs.*.name, count.index)}"
+    disk = "${element(google_compute_disk.mi-control-lvm.*.name, count.index)}"
     auto_delete = false
-    device_name = "glusterfs"
+
+    # make disk available as "/dev/disk/by-id/google-lvm"
+    # NOTE: "google-" prefix is auto added
+    device_name = "lvm"
   }
 
   network_interface {
@@ -115,6 +127,15 @@ resource "google_compute_instance" "mi-worker-nodes" {
   disk {
     image = "centos-7-v20150526"
     auto_delete = true
+  }
+
+  disk {
+    disk = "${element(google_compute_disk.mi-worker-lvm.*.name, count.index)}"
+    auto_delete = false
+
+    # make disk available as "/dev/disk/by-id/google-lvm"
+    # NOTE: "google-" prefix is auto added
+    device_name = "lvm"
   }
 
   network_interface {
