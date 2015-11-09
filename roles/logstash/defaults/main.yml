@@ -1,6 +1,6 @@
 ---
 # Docker logstash container image
-logstash_image: tpolekhin/docker-logstash
+logstash_image: ciscocloud/logstash
 logstash_image_tag: 1.5.3
 
 # Stdout
