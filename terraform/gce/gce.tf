@@ -62,7 +62,7 @@ resource "google_compute_firewall" "mi-firewall-internal" {
 
 # Instances
 resource "google_compute_disk" "mi-control-lvm" {
-  name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
+  name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
   zone = "${var.zone}"
   size = "${var.data_volume_size}"
@@ -71,7 +71,7 @@ resource "google_compute_disk" "mi-control-lvm" {
 }
 
 resource "google_compute_disk" "mi-worker-lvm" {
-  name = "${var.short_name}-worker-glusterfs-${format("%02d", count.index+1)}"
+  name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
   zone = "${var.zone}"
   size = "${var.data_volume_size}"
