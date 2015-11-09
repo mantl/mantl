@@ -34,13 +34,23 @@
     - common
     - collectd
     - logrotate
-    - consul-template
     - docker
-    - logstash
-    - nginx
-    - consul
     - etcd
-    - dnsmasq
+    - {role: dnsmasq, tags: dnsmasq}
+
+# the control nodes are necessarily more complex than the worker nodes, and have
+# ZooKeeper, Mesos, and Marathon leaders. In addition, they control Vault to
+# manage secrets in the cluster. These servers do not run applications by
+# themselves, they only schedule work. That said, there should be at least 3 of
+# them (and always an odd number) so that ZooKeeper can get and keep a quorum.
+- hosts: role=control
+  gather_facts: yes
+  vars:
+    # ansible groups for service configuration
+  roles:
+    - {role: flannel, tags: flannel}
+    - {role: k8s-master, tags: k8s}
+    - {role: k8s-addons, tags: k8s}
 
 # ROLES - after provisioning the software that's common to all hosts, we do
 # specialized hosts. This configuration has two major groups: control nodes and
@@ -57,49 +67,14 @@
   # all servers, we can skip it here to speed up the deployment.
   gather_facts: no
   vars:
-    consul_dns_domain: consul
-    mesos_mode: follower
-
     # Set this to whatever domain you want to reach haproxy from; it should be
     # in this format: [short-name]-lb.[domain], where [short-name] and [domain]
     # are the same as configured in terraform.
     # In this example, short-name is "mi" and domain is "example.com":
     haproxy_domain: mi-lb.example.com
   roles:
-    - calico
-    - mesos
-    - haproxy
-
-# the control nodes are necessarily more complex than the worker nodes, and have
-# ZooKeeper, Mesos, and Marathon leaders. In addition, they control Vault to
-# manage secrets in the cluster. These servers do not run applications by
-# themselves, they only schedule work. That said, there should be at least 3 of
-# them (and always an odd number) so that ZooKeeper can get and keep a quorum.
-- hosts: role=control
-  gather_facts: no
-  vars:
-    consul_dns_domain: consul
-    consul_servers_group: role=control
-    mesos_leaders_group: role=control
-    mesos_mode: leader
-    zookeeper_server_group: role=control
-    # ansible groups for service configuration
-    etcd_group_name: role=control
-    master_group_name: role=control
-    minion_group_name: role=worker
-
-    etcd_url_scheme: http
-
-    cluster_name: cluster.local
-    kube_service_addresses: 10.254.0.0/16
-  roles:
-    - vault
-    - zookeeper
-    - mesos
-    - marathon
-    - chronos
-    - mantlui
-    - {role: k8s-master, tags: k8s}
+    - {role: flannel, tags: flannel}
+    - {role: k8s-minion, tags: k8s} 
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.

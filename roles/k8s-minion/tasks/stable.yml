@@ -1,0 +1,9 @@
+- name: install kubernetes node
+  sudo: yes
+  yum:
+    pkg="kubernetes-node-{{ kube_version }}"
+    state=present
+  notify:
+    - restart daemons
+  tags:
+    - minion

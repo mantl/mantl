@@ -11,7 +11,12 @@
 #   kube-proxy.service
 
 # Comma separated list of nodes in the etcd cluster
+# TODO: when using kubernetes use dns_domain istead of consul_dns_domain
+{% if dns_setup is defined %}
+KUBE_ETCD_SERVERS="--etcd_servers={% for node in groups[etcd_group_name] %}{{ etcd_url_scheme }}://{{ node }}:{{ etcd_client_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+{% else %}
 KUBE_ETCD_SERVERS="--etcd_servers={{ etcd_url_scheme }}://etcd.service.{{ consul_dns_domain }}:{{ etcd_client_port }}"
+{% endif %}
 
 # logging to stderr means we get it in the systemd journal
 KUBE_LOGTOSTDERR="--logtostderr=true"

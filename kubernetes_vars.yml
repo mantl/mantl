@@ -6,6 +6,9 @@ etcd_group_name: role=control
 master_group_name: role=control
 minion_group_name: role=worker
 
+etcd_url_scheme: http
+
+
 # Kubernetes build to use, stable is used by default. 
 # Place "testing" here to use latest build avialable.
 kube_build: stable
@@ -19,11 +22,19 @@ kube_users:
     pass: changeme
     role: admin
 
+
+# Select which network manager to use. After choosing, edit kubernetes.yml file and include aproriate roles.
+# network: calico
+network: flannel
+
 # Kubernetes cluster name, also will be used as DNS domain
 cluster_name: cluster.local
 
 # Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
+
+# Kubernetes api port
+kube_master_port: 6443
 
 # internal network (optional). When used, it will assign IP
 # addresses from this range to individual pods.
@@ -50,6 +61,7 @@ overlay_network_host_prefix: 24
 
 # Turn this varable to 'false' to disable whole DNS configuration.
 dns_setup: true
+skydns_port: 153
 
 # Number of replicas of DNS instances started on kubernetes
 dns_replicas: 1

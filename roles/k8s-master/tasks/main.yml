@@ -118,6 +118,7 @@
     name: kube-apiserver
     enabled: yes
     state: started
+  delegate_to: "{{ groups[master_group_name][0] }}"
   tags:
     - master
 
@@ -127,6 +128,7 @@
     name: kube-controller-manager
     enabled: yes
     state: started
+  delegate_to: "{{ groups[master_group_name][0] }}"
   tags:
     - master
 
@@ -136,6 +138,7 @@
     name: kube-scheduler
     enabled: yes
     state: started
+  delegate_to: "{{ groups[master_group_name][0] }}"
   tags:
     - master
 
@@ -145,5 +148,6 @@
     name: kube-proxy
     enabled: yes
     state: started
+  delegate_to: "{{ groups[master_group_name][0] }}"
   tags:
     - master

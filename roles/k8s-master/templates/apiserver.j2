@@ -8,7 +8,7 @@
 KUBE_API_ADDRESS="--insecure-bind-address=127.0.0.1"
 
 # The port on the local server to listen on.
-KUBE_API_PORT="--secure-port={{ kube_master_port }}"
+KUBE_API_PORT="--secure-port={{ kube_master_port }} --insecure-port={{ kube_insecure_port }}"
 
 # Port minions listen on
 # KUBELET_PORT="--kubelet_port=10250"
@@ -17,8 +17,7 @@ KUBE_API_PORT="--secure-port={{ kube_master_port }}"
 KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range={{ kube_service_addresses }}"
 
 # Location of the etcd cluster
-KUBE_ETCD_SERVERS="--etcd_servers={{ etcd_url_scheme }}://etcd.service.{{ consul_dns_domain }}:{{ etcd_client_port }}"
-
+KUBE_ETCD_SERVERS="--etcd_servers={% for node in groups[etcd_group_name] %}{{ etcd_url_scheme }}://{{ node }}:{{ etcd_client_port }}{% if not loop.last %},{% endif %}{% endfor %}"
 # default admission control policies
 KUBE_ADMISSION_CONTROL="--admission_control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota"
 

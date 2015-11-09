@@ -1,6 +1,6 @@
 # The version of software to install for Kubernetes.
 # When testing repo is used, state is "latest", so this has no effect.
-kube_version: 1.0.0
+kube_version: 1.0.3
 
 # Kubernetes services logging level, integer from 0 to 4, where 4 is highest
 # Applys to all services globally. Be carefull with highest log level,
@@ -21,7 +21,8 @@ kube_script_dir: /usr/libexec/kubernetes
 kube_config_dir: /etc/kubernetes
 
 # The port the API Server will be listening on.
-kube_master_port: 443
+kube_master_port: 6443
+kube_insecure_port: 8085
 
 # This is where all the cert scripts and certs will be located
 kube_cert_dir: "{{ kube_config_dir }}/certs"
@@ -47,4 +48,5 @@ dns_domain: "{{ cluster_name }}"
 # server and expose it under this IP address. The IP address must be from
 # the range specified as kube_service_addresses. This magic will actually
 # pick the 10th ip address in the kube_service_addresses range and use that.
-dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
+#dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
+dns_server: "{{ private_ipv4  }}"
