@@ -39,14 +39,14 @@
     - calico
     - bootstrap
 
-- name: download calicoctl bash completion script
-  sudo: yes
-  get_url:
-    url: "{{ bintray_baseurl }}/calico/calicoctl.sh"
-    dest: /etc/bash_completion.d/calicoctl.sh
-    mode: 0644
-  tags:
-    - calico
+#- name: download calicoctl bash completion script
+#  sudo: yes
+#  get_url:
+#    url: "{{ bintray_baseurl }}/calico/calicoctl.sh"
+#    dest: /etc/bash_completion.d/calicoctl.sh
+#    mode: 0644
+#  tags:
+#    - calico
 
 # We can't use the Ansible standard docker module as it always starts
 # containers after image was pulled
@@ -61,8 +61,8 @@
 
 - name: set calico environment
   sudo: yes
-  copy:
-    content: "ETCD_AUTHORITY={{ calico_etcdaddr }}"
+  template:
+    src: calico.env.j2 
     dest: /etc/default/calico
     owner: root
     group: root
@@ -92,6 +92,7 @@
     src: consul-check-calico-node
     dest: /usr/local/bin
     mode: 0755
+  when: consul_dc_group is defined
   tags:
     - calico
 
@@ -100,6 +101,7 @@
   copy:
     src: calico-service.json
     dest: /etc/consul
+  when: consul_dc_group is defined
   notify:
     - reload consul
   tags:
@@ -107,6 +109,15 @@
 
 - include: openstack.yml
   when: provider == 'openstack'
+
+- include: kubernetes.yml
+  when: kube_build is defined
+
+- name: reload calico systemd file
+  sudo: yes
+  command: "systemctl daemon-reload"
+  tags:
+    - calico
 
 - name: enable and start calico
   sudo: yes

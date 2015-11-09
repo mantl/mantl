@@ -25,7 +25,7 @@
   environment:
     TOKEN_DIR: "{{ kube_token_dir }}"
   with_nested:
-    - [ 'system:kubelet', 'system:proxy' ]
+    - [ 'system:kubelet', 'system:proxy', 'system:calico' ]
     - "{{ groups[minion_group_name] }}"
   register: gentoken
   changed_when: "'Added' in gentoken.stdout"
