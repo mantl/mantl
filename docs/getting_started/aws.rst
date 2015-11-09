@@ -92,6 +92,12 @@ your cluster with Terraform.
           provision a cluster, you can see the custom policy included at the
           bottom of this document.
 
+.. note:: If you want to manage DNS with Route 53, you will need to attach a
+          Route 53 policy as well.
+
+.. image:: /_static/aws_iam_attach_route53_policy.png
+   :alt: IAM User attach route 53 policy
+
 Provider Settings
 ^^^^^^^^^^^^^^^^^^
 
@@ -159,3 +165,49 @@ permissions needed to provision an AWS cluster with Terraform.
 
 .. literalinclude:: /_static/aws_custom_iam_policy.json
    :language: javascript
+
+For managing DNS with Route 53, you can use a policy like the following:
+
+.. literalinclude:: /_static/aws_custom_route53_iam_policy.json
+   :language: javascript
+
+You would replace HOSTED_ZONE_ID with the hosted zone ID of your domain in
+Route 53.
+
+Adding an Elastic Load Balancer (ELB)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Optionally, you can configure your environment to include an Elastic Load
+Balancer (ELB) in front of Mantl UI.
+
+You will need to ensure that your IAM user has the following permissions:
+
+* elasticloadbalancing:AddTags
+* elasticloadbalancing:ApplySecurityGroupsToLoadBalancer
+* elasticloadbalancing:ConfigureHealthCheck
+* elasticloadbalancing:CreateLoadBalancer
+* elasticloadbalancing:CreateLoadBalancerListeners
+* elasticloadbalancing:DeleteLoadBalance
+* elasticloadbalancing:DescribeLoadBalancerAttributes
+* elasticloadbalancing:DescribeLoadBalancers
+* elasticloadbalancing:ModifyLoadBalancerAttributes
+* elasticloadbalancing:RegisterInstancesWithLoadBalancer
+* iam:DeleteServerCertificate
+* iam:GetServerCertificate
+* iam:UploadServerCertificate
+
+In your ``terraform.yml``, you will want to include the aws-elb module:
+
+.. code-block::
+
+  # Example setup for an AWS ELB
+  module "aws-elb" {
+    source = "./terraform/aws-elb"
+    short_name = "mi"
+    instances = "${module.aws-dc.control_ids}"
+    subnets = "${module.aws-dc.vpc_subnet}"
+    security_groups = "${module.aws-dc.ui_security_group},${module.aws-dc.default_security_group}"
+  }
+
+The only variable you will want to change is ``short_name`` and you will likely
+want it to match the ``short_name`` specified in the ``aws-dc`` module.
