@@ -52,6 +52,19 @@
     src: 10-consul
     dest: /etc/dnsmasq.d/10-consul
     mode: 755
+  when: consul_dc_group is defined
+  notify:
+    - restart dnsmasq
+  tags:
+    - dnsmasq
+
+- name: configure dnsmasq for Kubernetes
+  sudo: yes
+  template:
+    src: 20-kubernetes
+    dest: /etc/dnsmasq.d/20-kubernetes
+    mode: 755
+  when: cluster_name is defined
   notify:
     - restart dnsmasq
   tags:
