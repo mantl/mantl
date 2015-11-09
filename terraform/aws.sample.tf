@@ -38,3 +38,12 @@ module "aws-dc" {
 #   control_ips = "${module.aws-dc.control_ips}"
 #   worker_ips = "${module.aws-dc.worker_ips}"
 # }
+
+# Example setup for an AWS ELB
+# module "aws-elb" {
+#   source = "./terraform/aws-elb"
+#   short_name = "mi"
+#   instances = "${module.aws-dc.control_ids}"
+#   subnets = "${module.aws-dc.vpc_subnet}"
+#   security_groups = "${module.aws-dc.ui_security_group},${module.aws-dc.default_security_group}"
+# }
