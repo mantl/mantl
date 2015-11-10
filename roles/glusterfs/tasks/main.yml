@@ -2,7 +2,7 @@
 - name: enable community repo
   sudo: yes
   get_url:
-    url: https://download.gluster.org/pub/gluster/glusterfs/{{ glusterfs_minor_version }}/{{ glusterfs_version }}/CentOS/glusterfs-epel.repo
+    url: "{{ glusterfs_repo }}"
     dest: /etc/yum.repos.d/glusterfs-epel.repo
     sha256sum: "{{ glusterfs_repo_sha256sum }}"
   tags:
