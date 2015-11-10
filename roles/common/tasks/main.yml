@@ -11,23 +11,12 @@
 # add hosts to /etc/hosts
 - name: configure hosts file
   sudo: yes
-  lineinfile:
+  template:
+    src: hosts.j2
     dest: /etc/hosts
-    regexp: "^{{ hostvars[item].private_ipv4 }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain }}{% endif %}$"
-    line: "{{ hostvars[item].private_ipv4 }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain}}{% endif %}"
-    state: present
-  when: hostvars[item].private_ipv4 is defined
-  with_items: groups['all']
-
-- name: clean hosts file
-  sudo: yes
-  lineinfile:
-    dest: /etc/hosts
-    regexp: "{{ item }}"
-    state: absent
-  with_items:
-    - '^127\.0\.0\.1(\s+){{ inventory_hostname }}.*'
-    - '^::1(\s+){{ inventory_hostname }}.*'
+    mode: 644
+  tags:
+    - common
 
 - name: install system utilities
   sudo: yes
