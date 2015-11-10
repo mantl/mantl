@@ -1,9 +1,17 @@
 ---
-- name: generate systemd unit file
+- name: install etcd
+  sudo: yes
+  yum:
+    name: etcd-{{ etcd_version }}
+    state: present
+  tags:
+    - etcd
+
+- name: generate systemd environment file
   sudo: yes
   template:
-    src: etcd.service.j2
-    dest: /usr/lib/systemd/system/etcd.service
+    src: etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
     owner: root
     group: root
     mode: 0644
