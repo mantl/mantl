@@ -70,5 +70,19 @@
   tags:
     - distributive
 
+- name: increase ulimit for root
+  sudo: yes
+  copy:
+    dest: /etc/security/limits.d/10-root-nofiles.conf
+    src: 10-root-nofiles.conf
+
+- name: sysctl max file limit
+  sudo: yes
+  sysctl:
+    name: fs.file-max
+    value: 65000
+    sysctl_set: true
+    reload: yes
+
 - include: users.yml
 - include: ssl.yml
