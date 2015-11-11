@@ -1,5 +1,5 @@
 input {
-{% if mesos_mode == 'leader' %}
+{% if role == 'control' %}
   file {
     path => [ "/logs/mesos/*.INFO", "/logs/mesos/*.WARNING", "/logs/mesos/*.ERROR", "/logs/mesos/*.FATAL" ]
     type => "mesos-master-logs"
@@ -14,7 +14,7 @@ input {
     type => zookeeper
   }
 {% endif %}
-{% if mesos_mode == 'follower' %}
+{% if role == 'worker' %}
   file {
     path => [ "/logs/mesos/*.INFO", "/logs/mesos/*.WARNING", "/logs/mesos/*.ERROR", "/logs/mesos/*.FATAL" ]
     type => "mesos-slave-logs"
