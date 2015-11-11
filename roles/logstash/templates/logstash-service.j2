@@ -21,7 +21,7 @@ ExecStart=/usr/bin/docker run \
     --publish=1514:1514 \
     --publish=25826:25826/udp \
     --publish=8125:8125/udp \
-{% if mesos_mode == 'leader' %}
+{% if role == 'control' %}
     --publish=5678:5678/tcp \
 {% endif %}
 {% if logstash_input_log4j %}
@@ -30,10 +30,10 @@ ExecStart=/usr/bin/docker run \
     --volume=/etc/logstash.d:/config-dir \
     --volume=/var/lib/docker/containers:/logs/docker:ro \
     --volume=/var/log/mesos:/logs/mesos:ro \
-{% if mesos_mode == 'follower' %}
+{% if role == 'worker' %}
     --volume=/tmp/mesos/slaves:/logs/slaves:ro \
 {% endif %}
-{% if mesos_mode == 'leader' %}
+{% if role == 'control' %}
     --volume=/var/log/zookeeper:/logs/zookeeper:ro \
 {% endif %}
     --volume=/usr/share/collectd:/collectd:ro \
