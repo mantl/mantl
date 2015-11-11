@@ -17,8 +17,8 @@ glusterfs_brick_volume_name: glusterfs
 # 100%FREE mean all space remain from docker volumes
 glusterfs_brick_volume_size: "100%FREE"
 glusterfs_brick_device: "/dev/{{ volume_group_name }}/{{ glusterfs_brick_volume_name }}"
-glusterfs_volume_force: "{% if volume_group_name !="" %}no{% else %}yes{% endif %}"
-glusterfs_brick_location: "{% if volume_group_name != "" %}{{ glusterfs_brick_mount }}{% else %}/etc/glusterfs/data{% endif %}"
+glusterfs_volume_force: "{% if volume_group_name !='' %}no{% else %}yes{% endif %}"
+glusterfs_brick_location: "{% if volume_group_name != '' %}{{ glusterfs_brick_mount }}{% else %}/etc/glusterfs/data{% endif %}"
 
 # docker volume
 glusterfs_container_data_name: container-volumes
