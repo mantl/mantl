@@ -9,14 +9,6 @@
     - docker
     - bootstrap
 
-- name: install docker repo
-  sudo: yes
-  copy:
-    src: docker.repo
-    dest: /etc/yum.repos.d/docker.repo
-  tags:
-    - docker
-    - bootstrap
 
 - name: install docker packages
   sudo: yes
@@ -24,20 +16,11 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - docker-engine-1.7.0
+    - docker
     - docker-selinux
   tags:
     - docker
     - bootstrap
-
-# NOTE: this section should be before lvm.yml inclusion, because we put other configs there
-- name: create docker.system.d
-  sudo: yes
-  file:
-    dest: /etc/systemd/system/docker.service.d
-    state: directory
-  tags:
-    - docker
 
 - include: lvm.yml
   when: docker_lvm_backed_devicemapper
@@ -69,28 +52,13 @@
 - name: configure docker consul dns
   sudo: yes
   lineinfile:
-    dest: /etc/sysconfig/docker-local
-    regexp: ^other_arg=
-    line: other_arg='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} --log-driver=syslog'
+    dest: /etc/sysconfig/docker
+    regexp: ^OPTIONS=
+    line: OPTIONS='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} --log-driver=syslog'
     state: present
     create: yes
   notify:
     - restart docker
-  tags:
-    - docker
-
-- name: create local docker service override
-  sudo: yes
-  copy:
-    dest: /etc/systemd/system/docker.service.d/local.conf
-    content: |
-      [Service]
-      EnvironmentFile=-/etc/sysconfig/docker-local
-      ExecStart=
-      # DOCKER_STORAGE_OPTIONS defined in /etc/sysconfig/docker-storage, if it exists
-      ExecStart=/usr/bin/docker -d -H fd:// $other_arg $DOCKER_STORAGE_OPTIONS
-  notify:
-    - reload docker
   tags:
     - docker
 
