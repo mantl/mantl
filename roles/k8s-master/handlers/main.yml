@@ -13,21 +13,25 @@
   service:
     name: kube-apiserver
     state: restarted
+  when: inventory_hostname in groups[control_group_name][0]
 
 - name: restart controller-manager
   sudo: yes
   service:
     name: kube-controller-manager
     state: restarted
+  when: inventory_hostname in groups[control_group_name][0]
 
 - name: restart scheduler
   sudo: yes
   service:
     name: kube-scheduler
     state: restarted
+  when: inventory_hostname in groups[control_group_name][0]
 
 - name: restart proxy
   sudo: yes
   service:
     name: kube-proxy
     state: restarted
+  when: inventory_hostname in groups[control_group_name][0]

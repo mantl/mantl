@@ -53,6 +53,8 @@
     state: "{{ es_rc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_logging
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - logging
@@ -67,6 +69,8 @@
     state: "{{ es_svc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_logging
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - logging
@@ -81,6 +85,8 @@
     state: "{{ kibana_rc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_logging
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - logging
@@ -95,6 +101,8 @@
     state: "{{ kibana_svc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_logging
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - logging

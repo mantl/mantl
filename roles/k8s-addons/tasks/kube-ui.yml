@@ -31,6 +31,8 @@
     state: "{{ kube_ui_rc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_ui
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - kube-ui
@@ -45,6 +47,8 @@
     state: "{{ kube_ui_svc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_ui
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - kube-ui

@@ -64,6 +64,8 @@
     state: "{{ influxdb_rc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_monitoring
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -78,6 +80,8 @@
     state: "{{ influxdb_svc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_monitoring
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -92,6 +96,8 @@
     state: "{{ grafana_svc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_monitoring
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -106,6 +112,8 @@
     state: "{{ heapster_rc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_monitoring
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -120,6 +128,8 @@
     state: "{{ heapster_svc_def.changed | ternary('latest','present') }}"
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   when: enable_monitoring
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
   tags:
     - addons
     - monitoring
