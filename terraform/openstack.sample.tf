@@ -21,7 +21,8 @@ module "dc2-hosts" {
   control_count = 3
   resource_count = 3
   security_groups = ""
-  data_volume_size = 100
+  control_data_volume_size = 20
+  resource_data_volume_size = 100
 }
 
 # Example setup for DNS:

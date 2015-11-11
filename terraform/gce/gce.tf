@@ -12,7 +12,7 @@ variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 1}
 variable "worker_type" {default = "n1-highcpu-2"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
-variable "worker_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_volume_size" {default = "100"} # size is in gigabytes
 
 # Network
 resource "google_compute_network" "mi-network" {

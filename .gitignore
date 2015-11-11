@@ -9,3 +9,4 @@ ssl/serial*
 # terraform
 **/*.tfstate*
 **/.terraform
+.idea/
