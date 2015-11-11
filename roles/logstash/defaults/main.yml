@@ -19,5 +19,5 @@ logstash_log4j_port: 4560
 # Logstash output Kafka
 # If defined - logstash will send all the messages to configured kafka brokers
 # logstash_output_kafka:
-#   brokers_list: "broker1:port,broker2:port,..."
+#   broker_list: "broker1:port,broker2:port,..."
 #   topic_id: "logstash"
