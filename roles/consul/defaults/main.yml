@@ -17,3 +17,5 @@ consul_acl_down_policy: "allow"
 consul_dns_domain: consul
 consul_verify_incoming: true
 consul_verify_outgoing: true
+consul_allow_stale: true
+consul_max_stale: 5s
