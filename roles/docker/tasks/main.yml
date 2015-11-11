@@ -80,9 +80,10 @@
     dest: /etc/systemd/system/docker.service.d/local.conf
     content: |
       [Service]
+      EnvironmentFile=-/run/flannel/docker
       EnvironmentFile=-/etc/sysconfig/docker
       ExecStart=
-      ExecStart=/usr/bin/docker -d $other_arg
+      ExecStart=/usr/bin/docker -d $other_arg $DOCKER_NETWORK_OPTIONS
   notify:
     - reload docker
   tags:
