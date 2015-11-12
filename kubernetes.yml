@@ -18,9 +18,9 @@
     - common
     - collectd
     - logrotate
-    - {role: flannel, tags: flannel}
     - docker
     - etcd
+    - {role: flannel, tags: flannel}
     - {role: dnsmasq, tags: dnsmasq}
 
 - hosts: role=control
