@@ -14,6 +14,8 @@
     state: present
     config: "{{ kube_config_dir }}/kubectl.kubeconfig"
   ignore_errors: yes
+  run_once: yes
+  when: inventory_hostname == groups[master_group_name][0]
   tags:
     - addons
 
