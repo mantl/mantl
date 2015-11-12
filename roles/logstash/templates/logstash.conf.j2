@@ -1,12 +1,29 @@
 input {
+{% if role == 'control' %}
   file {
-    path => "/logs/mesos/*"
-    type => mesos
+    path => [ "/logs/mesos/*.INFO", "/logs/mesos/*.WARNING", "/logs/mesos/*.ERROR", "/logs/mesos/*.FATAL" ]
+    type => "mesos-master-logs"
+  }
+  http {
+    codec => json
+    port => 5678
+    type => "marathon-logs"
   }
   file {
     path => "/logs/zookeeper/*"
     type => zookeeper
   }
+{% endif %}
+{% if role == 'worker' %}
+  file {
+    path => [ "/logs/mesos/*.INFO", "/logs/mesos/*.WARNING", "/logs/mesos/*.ERROR", "/logs/mesos/*.FATAL" ]
+    type => "mesos-slave-logs"
+  }
+  file {
+    path => [ "/logs/slaves/*/frameworks/*/executors/*/runs/*/stdout", "/logs/slaves/*/frameworks/*/executors/*/runs/*/stderr" ]
+    type => "mesos-framework-logs"
+  }
+{% endif %}
   syslog {
     port => 1514
     type => syslog
@@ -43,6 +60,13 @@ output {
 {% if logstash_output_elasticsearch is defined %}
   elasticsearch {
   {% for key, val in logstash_output_elasticsearch.iteritems() %}
+    {{ key }} => {{ val | to_nice_json }}
+  {% endfor %}
+  }
+{% endif %}
+{% if logstash_output_kafka is defined %}
+  kafka {
+  {% for key, val in logstash_output_kafka.iteritems() %}
     {{ key }} => {{ val | to_nice_json }}
   {% endfor %}
   }

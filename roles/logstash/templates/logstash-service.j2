@@ -16,18 +16,29 @@ ExecStart=/usr/bin/docker run \
     --rm \
     --name=logstash \
     --hostname={{ inventory_hostname }} \
+    --log-driver=none \
     --privileged=true \
     --publish=1514:1514 \
     --publish=25826:25826/udp \
     --publish=8125:8125/udp \
+{% if role == 'control' %}
+    --publish=5678:5678/tcp \
+{% endif %}
 {% if logstash_input_log4j %}
     --publish={{ logstash_log4j_port }}:{{ logstash_log4j_port }}/tcp \
 {% endif %}
-    --volume=/etc/logstash.d:/opt/logstash/conf.d \
+    --volume=/etc/logstash.d:/config-dir \
+    --volume=/var/lib/docker/containers:/logs/docker:ro \
     --volume=/var/log/mesos:/logs/mesos:ro \
+{% if role == 'worker' %}
+    --volume=/tmp/mesos/slaves:/logs/slaves:ro \
+{% endif %}
+{% if role == 'control' %}
     --volume=/var/log/zookeeper:/logs/zookeeper:ro \
+{% endif %}
     --volume=/usr/share/collectd:/collectd:ro \
-    {{ logstash_image }}:{{ logstash_image_tag }}
+    {{ logstash_image }}:{{ logstash_image_tag }} \
+    logstash -f /config-dir/logstash.conf
 
 ExecStop=/bin/bash -c " \
     /usr/bin/docker kill logstash && \
@@ -35,4 +46,3 @@ ExecStop=/bin/bash -c " \
 
 [Install]
 WantedBy=multi-user.target
-
