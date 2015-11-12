@@ -111,7 +111,7 @@ resource "aws_volume_attachment" "mi-control-nodes-lvm-attachment" {
 
 resource "aws_ebs_volume" "mi-worker-lvm" {
   availability_zone = "${var.availability_zone}"
-  count = "${var.control_count}"
+  count = "${var.worker_count}"
   size = "${var.resource_data_volume_size}"
   type = "gp2"
 

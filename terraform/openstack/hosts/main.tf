@@ -39,7 +39,7 @@ resource "openstack_blockstorage_volume_v1" "mi-resource-lvm" {
   metadata = {
     usage = "container-volumes"
   }
-  count = "${ var.control_count }"
+  count = "${ var.resource_count }"
 }
 
 resource "openstack_compute_instance_v2" "control" {
