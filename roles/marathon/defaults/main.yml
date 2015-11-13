@@ -31,4 +31,5 @@ mesos_consul_image_tag: v0.3
 mesos_consul_refresh: "7s"
 marathon_consul_image: ciscocloud/marathon-consul
 marathon_consul_image_tag: 0.2
-
+mantl_api_image: ciscocloud/mantl-api
+mantl_api_image_tag: 0.1.0

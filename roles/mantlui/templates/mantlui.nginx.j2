@@ -36,6 +36,11 @@ http {
     {% raw -%}{{$consulproto := "http"}}{%- endraw %}
     {%- endif %}
 
+    {% raw %}{{$mantlapi := service "mantl-api"}}{{with $mantlapi}}
+    upstream mantlapi { {{range $mantlapi}}
+        server {{.Address}}:{{.Port}};{{end}}
+    } {{end}}{% endraw %}
+
 {% if do_mantlui_ssl|bool %}
     server {
         listen 80;
@@ -122,5 +127,14 @@ http {
             index index.html index.htm;
             try_files $uri $uri/ =404;
         }
+
+        {% raw %}{{with $mantlapi}}
+        location /api/ {
+            proxy_set_header        host $host;
+            proxy_set_header        x-real-ip $remote_addr;
+            proxy_set_header        x-forwarded-for $proxy_add_x_forwarded_for;
+            proxy_set_header        x-forwarded-proto $scheme;
+            proxy_pass http://mantlapi/;
+        } {{end}}{% endraw %}
     }
 }
