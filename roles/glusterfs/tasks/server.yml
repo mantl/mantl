@@ -5,6 +5,7 @@
     vg: "{{ volume_group_name }}"
     lv: "{{ glusterfs_brick_volume_name }}"
     size: "{{ glusterfs_brick_volume_size }}"
+  when: volume_group_name != ""
   tags:
     - glusterfs
     - disk
@@ -15,6 +16,7 @@
     dev: "{{ glusterfs_brick_device }}"
     fstype: xfs
     opts: "-i size=512"
+  when: volume_group_name != ""
   tags:
     - glusterfs
     - disk
@@ -26,6 +28,7 @@
     name: "{{ glusterfs_brick_mount }}"
     recurse: yes
     mode: 0755
+  when: volume_group_name != ""
   tags:
     - glusterfs
     - disk
@@ -39,6 +42,7 @@
     src: "{{ glusterfs_brick_device }}"
     dump: 1
     passno: 2
+  when: volume_group_name != ""
   tags:
     - glusterfs
     - disk
