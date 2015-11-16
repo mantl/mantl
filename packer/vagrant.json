@@ -84,7 +84,7 @@
         [
             {
                 "type": "vagrant",
-                "compression_level": 9,
+                "compression_level": 9
             },
             {
                 "type": "atlas",
@@ -94,7 +94,7 @@
                 "metadata": {
                     "created_at": "{{timestamp}}",
                     "provider": "virtualbox"
-                }
+                },
                 "output": "builds/VirtualBox-microservices-infrastructure-0.5.0.box",
                 "keep_input_artifact": false
             }
