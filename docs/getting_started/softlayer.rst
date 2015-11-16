@@ -3,8 +3,8 @@ SoftLayer
 
 .. versionadded:: 0.3.3
 
-As of microservices-infrastructure 0.3.3 you can bring up SoftLayer
-servers using Terraform. microservices-infrastructure uses Terraform to
+As of Mantl 0.3.3 you can bring up SoftLayer
+servers using Terraform. Mantl uses Terraform to
 provision hosts.
 
 As of now, the released version of Terraform doesn't have SoftLayer support,
