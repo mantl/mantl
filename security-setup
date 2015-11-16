@@ -630,11 +630,15 @@ class Consul(Component):
 
 class Traefik(Component):
     def check(self):
-        return [self.cert]
+        return [self.cert, self.admin_cert]
 
     def cert(self):
         "SSL certificate"
         self.generate_certificate("traefik")
+
+    def admin_cert(self):
+        "admin SSL certificate"
+        self.generate_certificate("traefik-admin")
 
 
 class Marathon(Component):
