@@ -25,6 +25,9 @@
     "MANTL_API_MESOS_PRINCIPAL": "{{ mantl_api_principal }}",
     "MANTL_API_MESOS_SECRET": "{{ mantl_api_secret }}"{% endif %}
   },
+  "labels": {
+      "traefik.enable": "false"
+  },
   "healthChecks": [
     {
       "protocol": "HTTP",
