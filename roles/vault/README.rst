@@ -6,7 +6,7 @@ Vault
 `Vault <https://vaultproject.io/>`_ "secures, stores, and tightly controls
 access to tokens, passwords, certificates, API keys, and other secrets in modern
 computing." It is currently included as a technology demo in
-microservices-infrastructure.
+Mantl.
 
 Variables
 ---------
