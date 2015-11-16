@@ -81,7 +81,7 @@ resource "aws_instance" "mi-control-nodes" {
 
   key_name = "${aws_key_pair.deployer.key_name}"
 
-  associate_public_ip_address=true
+  associate_public_ip_address = true
 
   subnet_id = "${aws_subnet.main.id}"
 
@@ -131,7 +131,7 @@ resource "aws_instance" "mi-worker-nodes" {
 
   key_name = "${aws_key_pair.deployer.key_name}"
 
-  associate_public_ip_address=true
+  associate_public_ip_address = true
 
   subnet_id = "${aws_subnet.main.id}"
 
@@ -161,7 +161,7 @@ resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
 resource "aws_security_group" "control" {
   name = "${var.short_name}-control"
   description = "Allow inbound traffic for control nodes"
-  vpc_id="${aws_vpc.main.id}"
+  vpc_id = "${aws_vpc.main.id}"
 
   ingress { # SSH
     from_port = 22
@@ -199,10 +199,10 @@ resource "aws_security_group" "control" {
   }
 
   ingress { # ICMP
-    from_port=-1
-    to_port=-1
+    from_port = -1
+    to_port = -1
     protocol = "icmp"
-    cidr_blocks=["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
 }
@@ -210,7 +210,7 @@ resource "aws_security_group" "control" {
 resource "aws_security_group" "worker" {
   name = "${var.short_name}-worker"
   description = "Allow inbound traffic for worker nodes"
-  vpc_id="${aws_vpc.main.id}"
+  vpc_id = "${aws_vpc.main.id}"
 
   ingress { # SSH
     from_port = 22
@@ -255,17 +255,17 @@ resource "aws_security_group" "worker" {
   }
 
   ingress { # ICMP
-    from_port=-1
-    to_port=-1
+    from_port = -1
+    to_port = -1
     protocol = "icmp"
-    cidr_blocks=["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
 resource "aws_security_group" "ui" {
   name = "${var.short_name}-ui"
   description = "Allow inbound traffic for Mantl UI"
-  vpc_id="${aws_vpc.main.id}"
+  vpc_id = "${aws_vpc.main.id}"
 
   ingress { # HTTP
     from_port = 80
