@@ -18,11 +18,22 @@
     - docker
     - bootstrap
 
+- name: check if the physical device exists
+  sudo: yes
+  shell: ls {{ lvm_physical_device }}
+  register: lvm_device_exists
+  failed_when: no
+  changed_when: no
+  tags:
+    - docker
+    - bootstrap
+
 - name: Create volume group
   sudo: yes
   lvg:
     vg: "{{ lvm_volume_group_name }}"
     pvs: "{{ lvm_physical_device }}"  
+  when: lvm_device_exists.rc == 0
   tags:
     - docker
     - bootstrap
