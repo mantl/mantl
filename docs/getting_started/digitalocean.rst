@@ -32,7 +32,7 @@ at the API page of DigitalOcean UI.
    :alt: The DigitalOcean API UI
 
 To create a token, click "Generate New Token" in the "Personal Access Tokens"
-list. Name your token (``Mantl`` could be a good name)
+list. Name your token (``microservices-infrastructure`` could be a good name)
 and make sure that write access is granted.
 
 .. image:: /_static/digitalocean_new_token.png
