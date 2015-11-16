@@ -33,7 +33,9 @@
                 "{{pwd}}/roles/haproxy",
                 "{{pwd}}/roles/logrotate",
                 "{{pwd}}/roles/logstash",
+                "{{pwd}}/roles/lvm",
                 "{{pwd}}/roles/marathon",
+                "{{pwd}}/roles/mantlui",
                 "{{pwd}}/roles/mesos",
                 "{{pwd}}/roles/nginx",
                 "{{pwd}}/roles/vault",
@@ -71,7 +73,7 @@
             "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": ".vbox_version",
-            "vm_name": "microservices-infrastructure-0.3.2-x86_64",
+            "vm_name": "microservices-infrastructure-0.5.0-x86_64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "512"],
                 ["modifyvm", "{{.Name}}", "--cpus", "2"]
@@ -83,8 +85,6 @@
             {
                 "type": "vagrant",
                 "compression_level": 9,
-                "output": "builds/VirtualBox-microservices-infrastructure-0.3.2.box",
-                "keep_input_artifact": false
             },
             {
                 "type": "atlas",
@@ -95,6 +95,8 @@
                     "created_at": "{{timestamp}}",
                     "provider": "virtualbox"
                 }
+                "output": "builds/VirtualBox-microservices-infrastructure-0.5.0.box",
+                "keep_input_artifact": false
             }
         ]
     ],
