@@ -33,18 +33,12 @@ resource "google_compute_firewall" "mi-firewall-external" {
     protocol = "icmp"
   }
 
-  # RDP
   allow {
     protocol = "tcp"
     ports = [
-      "22",   # SSH
-      "3389", # RDP
-      "80",   # HTTP
-      "443",  # HTTPs
-      "4400", # Chronos
-      "5050", # Mesos
-      "8080", # Marathon
-      "8500"  # Consul UI
+      "22", # SSH
+      "80", # HTTP
+      "443" # HTTPS
     ]
   }
 }
