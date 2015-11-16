@@ -1,0 +1,4 @@
+---
+- name: reload consul
+  sudo: yes
+  command: systemctl reload consul

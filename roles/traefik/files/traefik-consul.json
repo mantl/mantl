@@ -1,0 +1,32 @@
+{
+    "services": [
+        {
+            "name": "traefik",
+            "id": "traefik-https",
+            "tags": [ "http" ],
+            "port": 80,
+            "check": {
+                "script": "curl --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 http://localhost:80/"
+            }
+        },
+        {
+            "name": "traefik",
+            "id": "traefik-http",
+            "tags": [ "https" ],
+            "port": 443,
+            "check": {
+                "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:443/"
+            }
+        },
+        {
+            "name": "traefik-admin",
+            "port": 8080,
+            "check": {
+                "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8080/health",
+                "interval": "10s",
+                "timeout": "2s"
+            }
+        }
+    ]
+}
+

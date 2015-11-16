@@ -1,0 +1,60 @@
+---
+- name: download traefik package
+  sudo: yes
+  get_url:
+    url: '{{ traefik_download }}'
+    sha256sum: '{{ traefik_sha256_checksum }}'
+    dest: /root/{{ traefik_filename }}
+  tags:
+    - traefik
+    - bootstrap
+
+- name: install traefik
+  sudo: yes
+  yum:
+    name: /root/{{ traefik_filename }}
+    state: present
+  tags:
+    - traefik
+    - bootstrap
+
+- name: make certificate directory
+  sudo: yes
+  file:
+    dest: /etc/traefik/certs
+    state: directory
+  tags:
+    - traefik
+
+- name: deploy certs
+  sudo: yes
+  copy:
+    src: '{{ item }}'
+    dest: /etc/traefik/certs/
+  with_items:
+    - ssl/certs/traefik.cert.pem
+    - ssl/private/traefik.key.pem
+    - ssl/certs/traefik-admin.cert.pem
+    - ssl/private/traefik-admin.key.pem
+  tags:
+    - traefik
+
+- name: configure traefik
+  sudo: yes
+  command: '{{ item }}'
+  with_items:
+    - traefik-global --cert-file=/etc/traefik/certs/traefik.cert.pem --key-file=/etc/traefik/certs/traefik.key.pem
+    - traefik-marathon --endpoint={{ traefik_marathon_endpoint }} --domain={{ traefik_marathon_domain }} --watch
+    - traefik-web --address=:8080 --cert-file=/etc/traefik/certs/traefik-admin.cert.pem --key-file=/etc/traefik/certs/traefik-admin.key.pem
+  tags:
+    - traefik
+
+- name: generate traefik consul service
+  sudo: yes
+  copy:
+    src: 'traefik-consul.json'
+    dest: '/etc/consul/traefik.json'
+  notify:
+    - reload consul
+  tags:
+    - traefik
