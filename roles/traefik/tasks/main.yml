@@ -42,7 +42,7 @@
   command: '{{ item }}'
   with_items:
     - traefik-marathon --endpoint={{ traefik_marathon_endpoint }} --domain={{ traefik_marathon_domain }} --watch
-    - traefik-web --address=:8080 --cert-file=/etc/traefik/certs/traefik-admin.cert.pem --key-file=/etc/traefik/certs/traefik-admin.key.pem
+    - traefik-web --address=:8081 --cert-file=/etc/traefik/certs/traefik-admin.cert.pem --key-file=/etc/traefik/certs/traefik-admin.key.pem
   tags:
     - traefik
 
