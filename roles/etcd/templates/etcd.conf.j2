@@ -1,8 +1,6 @@
 {% macro initial_cluster() -%}
 {% for host in groups['all'] -%}
-{% if loop.last -%}
-{{ hostvars[host]['inventory_hostname'] }}={{ etcd_peer_url_scheme }}://{{ hostvars[host]['inventory_hostname'] }}:{{ etcd_peer_port }}
-{%- else -%}
+{% if hostvars[host]['inventory_hostname'] != 'localhost' -%}
 {{ hostvars[host]['inventory_hostname'] }}={{ etcd_peer_url_scheme }}://{{ hostvars[host]['inventory_hostname'] }}:{{ etcd_peer_port }},
 {%- endif -%}
 {% endfor -%}
@@ -27,7 +25,6 @@ ETCD_LISTEN_CLIENT_URLS={{ etcd_listen_client_urls }}
 #[cluster]
 ETCD_INITIAL_ADVERTISE_PEER_URLS={{ etcd_initial_advertise_peer_urls }}
 ETCD_INITIAL_CLUSTER={{ initial_cluster() }}
-ETCD_INITIAL_CLUSTER_STATE={{ etcd_initial_cluster_state }}
 ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_initial_cluster_token }}
 #ETCD_DISCOVERY=""
 #ETCD_DISCOVERY_SRV=""
