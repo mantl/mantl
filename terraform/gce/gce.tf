@@ -37,9 +37,13 @@ resource "google_compute_firewall" "mi-firewall-external" {
   allow {
     protocol = "tcp"
     ports = [
-      "22", # SSH
-      "80", # HTTP
-      "443" # HTTPS
+      "22",   # SSH
+      "80",   # HTTP
+      "443",  # HTTPS
+      "4400", # Chronos
+      "5050", # Mesos
+      "8080", # Marathon
+      "8500"  # Consul API
     ]
   }
 }
