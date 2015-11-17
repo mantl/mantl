@@ -3,6 +3,10 @@ Haproxy
 
 .. versionadded:: 0.2
 
+.. warning::
+   Haproxy is deprecated as of Mantl 0.5. Please migrate to :doc:`traefik.rst`
+   at your earliest convenience.
+
 `Haproxy <https://github.com/CiscoCloud/haproxy-consul>`_ connects to
 :doc:`consul`, and proxies all registered services. At the current time all
 containers are mapped to port 80. Future versions will allow each container to

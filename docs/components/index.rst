@@ -14,6 +14,7 @@ which can be customized, generally using Ansible variables.
    docker.rst
    etcd.rst
    glusterfs.rst
+   haproxy.rst
    logstash.rst
    marathon.rst
    mesos.rst
