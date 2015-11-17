@@ -1,0 +1,26 @@
+[Unit]
+Description=haproxy
+After=docker.service
+After=consul.service
+Requires=docker.service
+Requires=consul.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=0
+
+ExecStartPre=-/usr/bin/docker rm haproxy
+ExecStartPre=-/usr/bin/docker pull {{ haproxy_image }}:{{ haproxy_image_tag }} 
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=haproxy \
+    --net=host \
+    --env-file={{ haproxy_env }}  \
+    {{ haproxy_image }}:{{ haproxy_image_tag }} {{ haproxy_args | default("") }}
+
+ExecStop=/usr/bin/docker kill haproxy
+
+[Install]
+WantedBy=multi-user.target
