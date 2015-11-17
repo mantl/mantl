@@ -67,6 +67,14 @@
 # world.
 - hosts: role=edge
   gather_facts: no
+  vars:
+    # this is the domain that traefik will match on to do host-based HTTP
+    # routing. Set it to a domain you control and add a star domain to route
+    # traffic. (EG *.marathon.localhost)
+    #
+    # For those migrating from haproxy, this variable serves the same purpose
+    # and format as `haproxy_domain`.
+    traefik_marathon_domain: marathon.localhost
   roles:
     - traefik
 
