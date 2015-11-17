@@ -163,6 +163,17 @@ resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
   force_detach = true
 }
 
+resource "aws_ebs_volume" "mi-edge-lvm" {
+  availability_zone = "${var.availability_zone}"
+  count = "${var.control_count}"
+  size = "${var.data_volume_size}"
+  type = "gp2"
+
+  tags {
+    Name = "${var.short_name}-edge-lvm-${format("%02d", count.index+1)}"
+  }
+}
+
 resource "aws_instance" "mi-edge-nodes" {
   ami = "${var.source_ami}"
   availability_zone = "${var.availability_zone}"
@@ -191,6 +202,14 @@ resource "aws_instance" "mi-edge-nodes" {
     role = "edge"
     dc = "${var.datacenter}"
   }
+}
+
+resource "aws_volume_attachment" "mi-edge-nodes-lvm-attachment" {
+  count = "${var.edge_count}"
+  device_name = "xvdh"
+  instance_id = "${element(aws_instance.mi-edge-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-edge-lvm.*.id, count.index)}"
+  force_detach = true
 }
 
 resource "aws_security_group" "control" {
