@@ -79,6 +79,15 @@ resource "google_compute_disk" "mi-worker-lvm" {
   count = "${var.worker_count}"
 }
 
+resource "google_compute_disk" "mi-edge-lvm" {
+  name = "${var.short_name}-edge-lvm-${format("%02d", count.index+1)}"
+  type = "pd-ssd"
+  zone = "${var.zone}"
+  size = "${var.data_volume_size}"
+
+  count = "${var.control_count}"
+}
+
 resource "google_compute_instance" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
   description = "${var.long_name} control node #${format("%02d", count.index+1)}"
@@ -185,6 +194,15 @@ resource "google_compute_instance" "mi-edge-nodes" {
     image = "centos-7-v20150526"
     size = "${var.edge_volume_size}"
     auto_delete = true
+  }
+
+  disk {
+    disk = "${element(google_compute_disk.mi-edge-lvm.*.name, count.index)}"
+    auto_delete = false
+
+    # make disk available as "/dev/disk/by-id/google-lvm"
+    # NOTE: "google-" prefix is auto added
+    device_name = "lvm"
   }
 
   network_interface {
