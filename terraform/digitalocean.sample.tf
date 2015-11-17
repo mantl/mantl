@@ -10,10 +10,11 @@ module "do-keypair" {
 module "do-hosts" {
   source = "./terraform/digitalocean/hosts"
   ssh_key = "${module.do-keypair.keypair_id}"
-
   region_name = "nyc3" # this must be a region with metadata support
+
   control_count = 3
   worker_count = 3
+  edge_count = 2
 }
 
 # Example setup for DNS:
@@ -23,7 +24,7 @@ module "do-hosts" {
 #   control_count = 3
 #   worker_count = 3
 #   domain = "example.com"
-#   control_ips = "${module.softlayer-hosts.control_ips}"
-#   worker_ips = "${module.softlayer-hosts.worker_ips}"
+#   control_ips = "${module.do-hosts.control_ips}"
+#   worker_ips = "${module.do-hosts.worker_ips}"
 #   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
 # }

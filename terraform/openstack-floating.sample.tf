@@ -8,17 +8,18 @@ module "dc2-keypair" {
 }
 
 module "dc2-hosts-floating" {
-        source = "./terraform/openstack/hosts-floating"
-        auth_url = ""
-        datacenter = "dc2"
-        tenant_id = ""
-        tenant_name = ""
-        control_flavor_name = ""
-        resource_flavor_name  = ""
-        image_name = ""
-        keypair_name = "${ module.dc2-keypair.keypair_name }"
-        control_count = 3
-        resource_count = 3
+  source = "./terraform/openstack/hosts-floating"
+  auth_url = ""
+  datacenter = "dc2"
+  tenant_id = ""
+  tenant_name = ""
+  control_flavor_name = ""
+  resource_flavor_name  = ""
+  image_name = ""
+  keypair_name = "${ module.dc2-keypair.keypair_name }"
+  control_count = 3
+  resource_count = 3
+  edge_count = 2
 	floating_pool = ""
 	external_net_id = ""
 }
@@ -30,7 +31,7 @@ module "dc2-hosts-floating" {
 #   control_count = 3
 #   worker_count = 3
 #   domain = "example.com"
-#   control_ips = "${module.softlayer-hosts.control_ips}"
-#   worker_ips = "${module.softlayer-hosts.worker_ips}"
+#   control_ips = "${module.dc2-hosts-floating.control_ips}"
+#   worker_ips = "${module.dc2-hosts-floating.worker_ips}"
 #   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
 # }

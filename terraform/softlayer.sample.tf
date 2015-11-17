@@ -14,6 +14,7 @@ module "softlayer-hosts" {
   domain = "example.com"
   control_count = 3
   worker_count = 3
+  edge_count = 2
 }
 
 # Example setup for DNS:
