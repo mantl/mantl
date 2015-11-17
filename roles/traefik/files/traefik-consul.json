@@ -2,7 +2,7 @@
     "services": [
         {
             "name": "traefik",
-            "id": "traefik-https",
+            "id": "traefik-http",
             "tags": [ "http" ],
             "port": 80,
             "check": {
@@ -11,7 +11,7 @@
         },
         {
             "name": "traefik",
-            "id": "traefik-http",
+            "id": "traefik-https",
             "tags": [ "https" ],
             "port": 443,
             "check": {
@@ -22,7 +22,7 @@
             "name": "traefik-admin",
             "port": 8080,
             "check": {
-                "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8080/health",
+                "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8081/health",
                 "interval": "10s",
                 "timeout": "2s"
             }
