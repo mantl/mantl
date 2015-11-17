@@ -18,10 +18,12 @@ module "dc2-hosts-floating" {
   image_name = ""
   keypair_name = "${ module.dc2-keypair.keypair_name }"
   control_count = 3
-  resource_count = 3
+  worker_count = 3
   edge_count = 2
 	floating_pool = ""
 	external_net_id = ""
+  control_data_volume_size = 20
+  worker_data_volume_size = 100
 }
 
 # Example setup for DNS:

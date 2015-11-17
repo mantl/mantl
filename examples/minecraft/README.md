@@ -1,7 +1,7 @@
 # Minecraft
 
 You can run a simple (not persisted) Minecraft server on
-microservices-infrastructure pretty easily. Just run the following command from
+Mantl pretty easily. Just run the following command from
 the root of the project:
 
 ```

@@ -3,7 +3,7 @@ DigitalOcean
 
 .. versionadded:: 0.3
 
-As of microservices-infrastructure 0.3 you can bring up DigitalOcean
+As of Mantl 0.3 you can bring up DigitalOcean
 environments using Terraform.
 
 Configuring Terraform for DigitalOcean

@@ -19,7 +19,7 @@ RUN yum install -y epel-release
 RUN yum install -y python-pip python-crypto openssl openssh-clients && \
     pip install -U -r /mi/requirements.txt
 
-# load microservices-infrastructure and default setup
+# load Mantl and default setup
 COPY . /mi/
 
 # load user custom setup

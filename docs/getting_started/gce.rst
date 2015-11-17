@@ -3,7 +3,7 @@ Google Compute Engine
 
 .. versionadded:: 0.3
 
-As of microservices-infrastructure 0.3 you can bring up Google Compute Engine
+As of Mantl 0.3 you can bring up Google Compute Engine
 environments using Terraform. microservices-infrastructure uses Terraform to
 provision hosts in OpenStack. You can `download Terraform from terraform.io
 <http://www.terraform.io/downloads.html>`_.
@@ -96,6 +96,7 @@ PS: If you haven't set up a managed zone for the domain you're using, you can
 do that with Terraform as well, just add this extra snippet in your .tf file:
 
 .. code-block:: javascript
+
    resource "google_dns_managed_zone" "managed-zone" {
      name = "my-managed-zone"
      dns_name = "example.com."

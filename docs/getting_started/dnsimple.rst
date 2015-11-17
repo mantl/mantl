@@ -64,6 +64,7 @@ Alternatively, you can set up the DNSimple provider credentials in your .tf
 file:
 
 .. code-block:: shell
+
   provider "dnsimple" {
     token = "your dnsimple token"
     email = "your e-mail address for the dnsimple account"

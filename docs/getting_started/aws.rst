@@ -198,7 +198,7 @@ You will need to ensure that your IAM user has the following permissions:
 
 In your ``terraform.yml``, you will want to include the aws-elb module:
 
-.. code-block::
+.. code-block:: json
 
   # Example setup for an AWS ELB
   module "aws-elb" {
