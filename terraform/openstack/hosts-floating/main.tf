@@ -2,6 +2,7 @@ variable auth_url { }
 variable control_count {}
 variable control_flavor_name { }
 variable control_data_volume_size { default = "20" } # size is in gigabytes
+variable edge_data_volume_size { default = "20" } # size is in gigabytes
 variable worker_data_volume_size { default = "100" } # size is in gigabytes
 variable datacenter { default = "openstack" }
 variable edge_count {}
@@ -45,6 +46,16 @@ resource "openstack_blockstorage_volume_v1" "mi-worker-lvm" {
     usage = "container-volumes"
   }
   count = "${ var.worker_count }"
+}
+
+resource "openstack_blockstorage_volume_v1" "mi-edge-lvm" {
+  name = "${ var.short_name }-edge-lvm-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-edge-lvm-${format("%02d", count.index+1) }"
+  size = "${ var.edge_data_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.edge_count }"
 }
 
 resource "openstack_compute_instance_v2" "control" {
@@ -95,6 +106,11 @@ resource "openstack_compute_instance_v2" "edge" {
   flavor_name     = "${var.edge_flavor_name}"
   security_groups = [ "${var.security_groups}" ]
   network         = { uuid = "${openstack_networking_network_v2.ms-network.id}" }
+
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-edge-lvm.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
 
   metadata = {
     dc = "${var.datacenter}"
