@@ -21,6 +21,38 @@
   tags:
     - etcd
 
+- name: install etcd launch script
+  sudo: yes
+  copy:
+    src: etcd-service-start.sh
+    dest: /usr/local/bin
+    mode: 0755
+  notify:
+    - restart etcd
+  tags:
+    - etcd
+
+- name: create etcd.service.d
+  sudo: yes
+  file:
+    dest: /etc/systemd/system/etcd.service.d
+    state: directory
+  tags:
+    - etcd
+
+- name: create local etcd service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/etcd.service.d/local.conf
+    content: |
+      [Service]
+      ExecStart=
+      ExecStart=/usr/local/bin/etcd-service-start.sh
+  notify:
+    - restart etcd
+  tags:
+    - etcd
+
 - name: install consul check script
   sudo: yes
   template:
