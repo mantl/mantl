@@ -2,7 +2,7 @@ Custom Playbook
 ===============
 
 Your customized ``terraform.yml`` `playbook`_ should be used to deploy
-microservices-infrastructure to your servers.
+Mantl to your servers.
 
 Below is an annotated playbook explaining the values:
 
