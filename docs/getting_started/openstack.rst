@@ -38,14 +38,14 @@ can get these variables from the OpenStack command line tools. For example:
 
 - ``glance image-list`` for ``image_name``
 - ``keystone tenant-list`` for ``tenant_id`` and ``tenant_name``
-- ``nova flavor-list`` for ``control_flavor_name`` and ``resource_flavor_name``
+- ``nova flavor-list`` for ``control_flavor_name`` and ``worker_flavor_name``
 
 Or use the appropriate OpenStack commands such as ``openstack project list`` or
 the commands below.
 
 - ``openstack image list`` for ``image_name``
 - ``openstack network list`` for ``net_id``
-- ``openstack flavor list`` for ``control_flavor_name / resource_flavor_name``
+- ``openstack flavor list`` for ``control_flavor_name / worker_flavor_name``
 
 Generate SSH keys
 ^^^^^^^^^^^^^^^^^

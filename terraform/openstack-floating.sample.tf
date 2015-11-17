@@ -14,13 +14,13 @@ module "dc2-hosts-floating" {
         tenant_id = ""
         tenant_name = ""
         control_flavor_name = ""
-        resource_flavor_name  = ""
+        worker_flavor_name  = ""
         image_name = ""
         keypair_name = "${ module.dc2-keypair.keypair_name }"
         control_count = 3
-        resource_count = 3
+        worker_count = 3
         control_data_volume_size = 20
-        resource_data_volume_size = 100
+        worker_data_volume_size = 100
 	    floating_pool = ""
 	    external_net_id = ""
 }

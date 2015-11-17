@@ -79,7 +79,7 @@ resource "google_compute_disk" "mi-worker-lvm" {
   zone = "${var.zone}"
   size = "${var.worker_data_volume_size}"
 
-  count = "${var.control_count}"
+  count = "${var.worker_count}"
 }
 
 resource "google_compute_instance" "mi-control-nodes" {
