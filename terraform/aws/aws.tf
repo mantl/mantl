@@ -2,7 +2,8 @@ variable "availability_zone" {}
 variable "control_count" {default = "3"}
 variable "control_type" {default = "m1.small"}
 variable "datacenter" {default = "aws"}
-variable "data_volume_size" {default = "100"} # size is in gigabytes
+variable "control_data_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_data_volume_size" {default = "100"} # size is in gigabytes
 variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "network_subnet_ip4" {default = "10.0.0.0/16"}
@@ -62,7 +63,7 @@ resource "aws_main_route_table_association" "main" {
 resource "aws_ebs_volume" "mi-control-lvm" {
   availability_zone = "${var.availability_zone}"
   count = "${var.control_count}"
-  size = "${var.data_volume_size}"
+  size = "${var.control_data_volume_size}"
   type = "gp2"
 
   tags {
@@ -110,8 +111,8 @@ resource "aws_volume_attachment" "mi-control-nodes-lvm-attachment" {
 
 resource "aws_ebs_volume" "mi-worker-lvm" {
   availability_zone = "${var.availability_zone}"
-  count = "${var.control_count}"
-  size = "${var.data_volume_size}"
+  count = "${var.worker_count}"
+  size = "${var.worker_data_volume_size}"
   type = "gp2"
 
   tags {
@@ -151,7 +152,7 @@ resource "aws_instance" "mi-worker-nodes" {
 }
 
 resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
-  count = "${var.control_count}"
+  count = "${var.worker_count}"
   device_name = "xvdh"
   instance_id = "${element(aws_instance.mi-worker-nodes.*.id, count.index)}"
   volume_id = "${element(aws_ebs_volume.mi-worker-lvm.*.id, count.index)}"
