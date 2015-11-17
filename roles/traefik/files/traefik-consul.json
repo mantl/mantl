@@ -20,7 +20,7 @@
         },
         {
             "name": "traefik-admin",
-            "port": 8080,
+            "port": 8081,
             "check": {
                 "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8081/health",
                 "interval": "10s",
