@@ -27,7 +27,7 @@ customization. In the next sections, we'll describe the settings that you need
 to configure.
 
 Username and API Key
-^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 You need to generate an API key for your SoftLayer account. This can be done
 in the control panel at `http://softlayer.com<http://softlayer.com>`.
