@@ -1,13 +1,13 @@
 variable "availability_zone" {}
 variable "control_count" {default = "3"}
 variable "control_iam_profile" {default = "" }
-variable "control_type" {default = "m1.small"}
+variable "control_type" {default = "m3.medium"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
 variable "data_volume_size" {default = "100"} # size is in gigabytes
 variable "datacenter" {default = "aws"}
 variable "edge_count" {default = 2}
 variable "edge_iam_profile" {default = ""}
-variable "edge_type" {default = "m1.small"}
+variable "edge_type" {default = "m3.medium"}
 variable "edge_volume_size" {default = "10"} # size is in gigabytes
 variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
@@ -18,7 +18,7 @@ variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_username"  {default = "centos"}
 variable "worker_count" {default = "1"}
 variable "worker_iam_profile" {default = "" }
-variable "worker_type" {default = "m1.small"}
+variable "worker_type" {default = "m3.medium"}
 variable "worker_volume_size" {default = "20"} # size is in gigabytes
 
 resource "aws_vpc" "main" {
