@@ -62,22 +62,6 @@
   roles:
     - mesos
 
-# The edge role exists solely for routing traffic into the cluster. Firewall
-# settings should be such that web traffic (ports 80 and 443) is exposed to the
-# world.
-- hosts: role=edge
-  gather_facts: no
-  vars:
-    # this is the domain that traefik will match on to do host-based HTTP
-    # routing. Set it to a domain you control and add a star domain to route
-    # traffic. (EG *.marathon.localhost)
-    #
-    # For those migrating from haproxy, this variable serves the same purpose
-    # and format as `haproxy_domain`.
-    traefik_marathon_domain: marathon.localhost
-  roles:
-    - traefik
-
 # the control nodes are necessarily more complex than the worker nodes, and have
 # ZooKeeper, Mesos, and Marathon leaders. In addition, they control Vault to
 # manage secrets in the cluster. These servers do not run applications by
@@ -98,6 +82,22 @@
     - marathon
     - chronos
     - mantlui
+
+# The edge role exists solely for routing traffic into the cluster. Firewall
+# settings should be such that web traffic (ports 80 and 443) is exposed to the
+# world.
+- hosts: role=edge
+  gather_facts: no
+  vars:
+    # this is the domain that traefik will match on to do host-based HTTP
+    # routing. Set it to a domain you control and add a star domain to route
+    # traffic. (EG *.marathon.localhost)
+    #
+    # For those migrating from haproxy, this variable serves the same purpose
+    # and format as `haproxy_domain`.
+    traefik_marathon_domain: marathon.localhost
+  roles:
+    - traefik
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.
