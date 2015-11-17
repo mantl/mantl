@@ -1,8 +1,10 @@
 variable auth_url { }
 variable control_count {}
 variable control_flavor_name { }
-variable datacenter { default = "openstack" }
 variable data_volume_size { default = "100" } # size is in gigabytes
+variable datacenter { default = "openstack" }
+variable edge_count { }
+variable edge_flavor_name { }
 variable image_name { }
 variable keypair_name { }
 variable long_name { default = "microservices-infrastructure" }
@@ -79,10 +81,29 @@ resource "openstack_compute_instance_v2" "resource" {
   count = "${ var.resource_count }"
 }
 
+resource "openstack_compute_instance_v2" "edge" {
+  name = "${ var.short_name}-edge-${format("%02d", count.index+1) }"
+  key_pair = "${ var.keypair_name }"
+  image_name = "${ var.image_name }"
+  flavor_name = "${ var.edge_flavor_name }"
+  security_groups = [ "${ var.security_groups }" ]
+  network = { uuid = "${ var.net_id }" }
+  metadata = {
+    dc = "${var.datacenter}"
+    role = "edge"
+    ssh_user = "${ var.ssh_user }"
+  }
+  count = "${ var.edge_count }"
+}
+
 output "control_ips" {
   value = "${join(\",\", openstack_compute_instance_v2.control.*.access_ip_v4)}"
 }
 
 output "worker_ips" {
   value = "${join(\",\", openstack_compute_instance_v2.resource.*.access_ip_v4)}"
+}
+
+output "edge_ips" {
+  value = "${join(\",\", openstack_compute_instance_v2.edge.*.access_ip_v4)}"
 }
