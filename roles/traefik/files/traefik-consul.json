@@ -21,11 +21,22 @@
         {
             "name": "traefik-admin",
             "port": 8081,
-            "check": {
-                "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8081/health",
-                "interval": "10s",
-                "timeout": "2s"
-            }
+            "checks": [
+                {
+                    "id": "web-ui",
+                    "name": "web ui availability",
+                    "script": "curl --insecure --silent --show-error --fail --dump-header /dev/stderr --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8081/health",
+                    "interval": "10s",
+                    "timeout": "2s"
+                },
+                {
+                    "id": "api",
+                    "name": "api contains information",
+                    "script": "if [[ \"$(curl --silent --insecure --retry 2 --connect-timeout 5 --max-time 5 https://localhost:8081/api)\" == \"{}\" ]]; then echo API contains no information. If this is not expected, try restarting traefik.; exit 1; fi;",
+                    "interval": "10s",
+                    "timeout": "2s"
+                }
+            ]
         }
     ]
 }
