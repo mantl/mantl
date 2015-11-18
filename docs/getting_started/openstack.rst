@@ -14,11 +14,12 @@ Configuring OpenStack authentication
 
 Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
-the template located at ``terraform/openstack-floating.sample.tf``. Use the 
-floating sample instead if you'd like to provision your virtual machines on a 
-private network with floating IPs. It looks like this:
+the template located at ``terraform/openstack-floating.sample.tf``. It looks
+like this:
+
 .. this is highlighted as javascript for convenience, but obviously that's not
    the *real* language.
+
 .. literalinclude:: ../../terraform/openstack-floating.sample.tf
    :language: javascript
 
