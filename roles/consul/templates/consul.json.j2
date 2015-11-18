@@ -25,5 +25,9 @@
   "disable_remote_exec": {{ consul_disable_remote_exec|to_nice_json }},
   "http_api_response_headers": {
     "Access-Control-Allow-Origin": "*"
+  },
+  "dns_config": {
+    "allow_stale": {{ consul_allow_stale|to_nice_json }},
+    "max_stale": "{{ consul_max_stale }}"
   }
 }

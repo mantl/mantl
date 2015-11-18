@@ -36,7 +36,8 @@ Setting up DNS
 
 Terraform lets you configure DNS for your instances. The DNS provider is
 loosely coupled from the server provider, so you could for example use
-the dnsimple provider for either OpenStack or AWS hosts.
+the dnsimple provider for either OpenStack or AWS hosts, or use the
+Google Cloud DNS provider for DigitalOcean hosts.
 
 These are the supported DNS providers:
 
@@ -44,6 +45,8 @@ These are the supported DNS providers:
    :maxdepth: 1
 
    dnsimple.rst
+   gce.rst
+   route53.rst
 
 Setting up Authentication and Authorization
 -------------------------------------------

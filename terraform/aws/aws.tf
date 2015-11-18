@@ -2,7 +2,8 @@ variable "availability_zone" {}
 variable "control_count" {default = "3"}
 variable "control_type" {default = "m1.small"}
 variable "datacenter" {default = "aws"}
-variable "glusterfs_volume_size" {default = "100"} # size is in gigabytes
+variable "control_data_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_data_volume_size" {default = "100"} # size is in gigabytes
 variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "network_subnet_ip4" {default = "10.0.0.0/16"}
@@ -14,6 +15,8 @@ variable "worker_count" {default = "1"}
 variable "worker_type" {default = "m1.small"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
 variable "worker_volume_size" {default = "20"} # size is in gigabytes
+variable "control_iam_profile" {default = "" }
+variable "worker_iam_profile" {default = "" }
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
@@ -57,14 +60,14 @@ resource "aws_main_route_table_association" "main" {
   route_table_id = "${aws_route_table.main.id}"
 }
 
-resource "aws_ebs_volume" "mi-control-glusterfs" {
+resource "aws_ebs_volume" "mi-control-lvm" {
   availability_zone = "${var.availability_zone}"
   count = "${var.control_count}"
-  size = "${var.glusterfs_volume_size}"
+  size = "${var.control_data_volume_size}"
   type = "gp2"
 
   tags {
-    Name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
   }
 }
 
@@ -74,6 +77,7 @@ resource "aws_instance" "mi-control-nodes" {
   instance_type = "${var.control_type}"
   count = "${var.control_count}"
   vpc_security_group_ids = ["${aws_security_group.control.id}",
+    "${aws_security_group.ui.id}",
     "${aws_vpc.main.default_security_group_id}"]
 
   key_name = "${aws_key_pair.deployer.key_name}"
@@ -81,6 +85,8 @@ resource "aws_instance" "mi-control-nodes" {
   associate_public_ip_address=true
 
   subnet_id = "${aws_subnet.main.id}"
+
+  iam_instance_profile = "${var.control_iam_profile}"
 
   root_block_device {
     delete_on_termination = true
@@ -95,12 +101,23 @@ resource "aws_instance" "mi-control-nodes" {
   }
 }
 
-resource "aws_volume_attachment" "mi-control-nodes-glusterfs-attachment" {
+resource "aws_volume_attachment" "mi-control-nodes-lvm-attachment" {
   count = "${var.control_count}"
   device_name = "xvdh"
   instance_id = "${element(aws_instance.mi-control-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mi-control-glusterfs.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-control-lvm.*.id, count.index)}"
   force_detach = true
+}
+
+resource "aws_ebs_volume" "mi-worker-lvm" {
+  availability_zone = "${var.availability_zone}"
+  count = "${var.worker_count}"
+  size = "${var.worker_data_volume_size}"
+  type = "gp2"
+
+  tags {
+    Name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
+  }
 }
 
 resource "aws_instance" "mi-worker-nodes" {
@@ -119,6 +136,8 @@ resource "aws_instance" "mi-worker-nodes" {
 
   subnet_id = "${aws_subnet.main.id}"
 
+  iam_instance_profile = "${var.worker_iam_profile}"
+
   root_block_device {
     delete_on_termination = true
     volume_size = "${var.worker_volume_size}"
@@ -132,6 +151,14 @@ resource "aws_instance" "mi-worker-nodes" {
   }
 }
 
+resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
+  count = "${var.worker_count}"
+  device_name = "xvdh"
+  instance_id = "${element(aws_instance.mi-worker-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-worker-lvm.*.id, count.index)}"
+  force_detach = true
+}
+
 resource "aws_security_group" "control" {
   name = "${var.short_name}-control"
   description = "Allow inbound traffic for control nodes"
@@ -140,20 +167,6 @@ resource "aws_security_group" "control" {
   ingress { # SSH
     from_port = 22
     to_port = 22
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress { # HTTP
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress { # HTTPS
-    from_port = 443
-    to_port = 443
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -248,12 +261,62 @@ resource "aws_security_group" "worker" {
     protocol = "icmp"
     cidr_blocks=["0.0.0.0/0"]
   }
+}
 
+resource "aws_security_group" "ui" {
+  name = "${var.short_name}-ui"
+  description = "Allow inbound traffic for Mantl UI"
+  vpc_id="${aws_vpc.main.id}"
+
+  ingress { # HTTP
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # HTTPS
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # Consul
+    from_port = 8500
+    to_port = 8500
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_key_pair" "deployer" {
   key_name = "key-${var.short_name}"
   public_key = "${file(var.ssh_key)}"
+}
+
+output "vpc_subnet" {
+  value = "${aws_subnet.main.id}"
+}
+
+output "control_security_group" {
+  value = "${aws_security_group.control.id}"
+}
+
+output "worker_security_group" {
+  value = "${aws_security_group.worker.id}"
+}
+
+output "ui_security_group" {
+  value = "${aws_security_group.ui.id}"
+}
+
+output "default_security_group" {
+  value = "${aws_vpc.main.default_security_group_id}"
+}
+
+output "control_ids" {
+  value = "${join(\",\", aws_instance.mi-control-nodes.*.id)}"
 }
 
 output "control_ips" {

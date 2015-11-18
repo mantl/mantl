@@ -222,3 +222,9 @@ Options
    enable Marathon iptables rules to restrict access
 
    default: ``True``
+
+.. option:: --mantl-api-auth
+
+   enable Mantl API Mesos credentials
+
+   default: ``True``

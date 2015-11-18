@@ -389,7 +389,7 @@
             [{label: 'Continue'}]
           ).open();
         } else {
-          pailer(host, '/mesos/slave/log', 'Mesos Slave');
+          pailer(host, '/slave/log', 'Mesos Slave');
         }
       };
 

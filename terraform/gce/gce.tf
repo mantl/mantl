@@ -1,7 +1,8 @@
 variable "control_count" {default = 3}
 variable "control_type" {default = "n1-standard-1"}
 variable "datacenter" {default = "gce"}
-variable "glusterfs_volume_size" {default = "100"} # size is in gigabytes
+variable "control_data_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_data_volume_size" {default = "100"} # size is in gigabytes
 variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "region" {default = "us-central1"}
@@ -11,6 +12,8 @@ variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 1}
 variable "worker_type" {default = "n1-highcpu-2"}
+variable "control_volume_size" {default = "20"} # size is in gigabytes
+variable "worker_volume_size" {default = "100"} # size is in gigabytes
 
 # Network
 resource "google_compute_network" "mi-network" {
@@ -61,13 +64,22 @@ resource "google_compute_firewall" "mi-firewall-internal" {
 }
 
 # Instances
-resource "google_compute_disk" "mi-control-glusterfs" {
-  name = "${var.short_name}-control-glusterfs-${format("%02d", count.index+1)}"
+resource "google_compute_disk" "mi-control-lvm" {
+  name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
   zone = "${var.zone}"
-  size = "${var.glusterfs_volume_size}"
+  size = "${var.control_data_volume_size}"
 
   count = "${var.control_count}"
+}
+
+resource "google_compute_disk" "mi-worker-lvm" {
+  name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
+  type = "pd-ssd"
+  zone = "${var.zone}"
+  size = "${var.worker_data_volume_size}"
+
+  count = "${var.worker_count}"
 }
 
 resource "google_compute_instance" "mi-control-nodes" {
@@ -80,13 +92,17 @@ resource "google_compute_instance" "mi-control-nodes" {
 
   disk {
     image = "centos-7-v20150526"
+    size = "${var.control_volume_size}"
     auto_delete = true
   }
 
   disk {
-    disk = "${element(google_compute_disk.mi-control-glusterfs.*.name, count.index)}"
+    disk = "${element(google_compute_disk.mi-control-lvm.*.name, count.index)}"
     auto_delete = false
-    device_name = "glusterfs"
+
+    # make disk available as "/dev/disk/by-id/google-lvm"
+    # NOTE: "google-" prefix is auto added
+    device_name = "lvm"
   }
 
   network_interface {
@@ -102,6 +118,15 @@ resource "google_compute_instance" "mi-control-nodes" {
   }
 
   count = "${var.control_count}"
+
+  provisioner "remote-exec" {
+    script = "./terraform/gce/disk.sh"
+
+    connection {
+      type = "ssh"
+      user = "${var.ssh_user}"
+    }
+  }
 }
 
 resource "google_compute_instance" "mi-worker-nodes" {
@@ -114,7 +139,17 @@ resource "google_compute_instance" "mi-worker-nodes" {
 
   disk {
     image = "centos-7-v20150526"
+    size = "${var.worker_volume_size}"
     auto_delete = true
+  }
+
+  disk {
+    disk = "${element(google_compute_disk.mi-worker-lvm.*.name, count.index)}"
+    auto_delete = false
+
+    # make disk available as "/dev/disk/by-id/google-lvm"
+    # NOTE: "google-" prefix is auto added
+    device_name = "lvm"
   }
 
   network_interface {
@@ -130,6 +165,15 @@ resource "google_compute_instance" "mi-worker-nodes" {
   }
 
   count = "${var.worker_count}"
+
+  provisioner "remote-exec" {
+    script = "./terraform/gce/disk.sh"
+
+    connection {
+      type = "ssh"
+      user = "${var.ssh_user}"
+    }
+  }
 }
 
 output "control_ips" {

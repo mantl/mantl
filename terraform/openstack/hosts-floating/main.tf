@@ -3,11 +3,13 @@ variable datacenter { default = "openstack" }
 variable tenant_id { }
 variable tenant_name { }
 variable control_flavor_name { }
-variable resource_flavor_name { }
+variable control_data_volume_size { default = "20" } # size is in gigabytes
+variable worker_data_volume_size { default = "100" } # size is in gigabytes
+variable worker_flavor_name { }
 variable keypair_name { }
 variable image_name { }
 variable control_count {}
-variable resource_count {}
+variable worker_count {}
 variable security_groups { default = "default" }
 variable floating_pool {}
 variable external_net_id { }
@@ -23,6 +25,26 @@ provider "openstack" {
   tenant_name	= "${ var.tenant_name }"
 }
 
+resource "openstack_blockstorage_volume_v1" "mi-control-lvm" {
+  name = "${ var.short_name }-control-lvm-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-control-lvm-${format("%02d", count.index+1) }"
+  size = "${ var.control_data_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.control_count }"
+}
+
+resource "openstack_blockstorage_volume_v1" "mi-worker-lvm" {
+  name = "${ var.short_name }-worker-lvm-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-worker-lvm-${format("%02d", count.index+1) }"
+  size = "${ var.worker_data_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.worker_count }"
+}
+
 resource "openstack_compute_instance_v2" "control" {
   floating_ip = "${ element(openstack_compute_floatingip_v2.ms-control-floatip.*.address, count.index) }"
   name                  = "${ var.short_name}-control-${format("%02d", count.index+1) }"
@@ -31,6 +53,10 @@ resource "openstack_compute_instance_v2" "control" {
   flavor_name           = "${ var.control_flavor_name }"
   security_groups       = [ "${ var.security_groups }" ]
   network               = { uuid = "${ openstack_networking_network_v2.ms-network.id }" }
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-control-lvm.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
   metadata              = {
                             dc = "${var.datacenter}"
                             role = "control"
@@ -39,20 +65,24 @@ resource "openstack_compute_instance_v2" "control" {
   count                 = "${ var.control_count }"
 }
 
-resource "openstack_compute_instance_v2" "resource" {
-  floating_ip = "${ element(openstack_compute_floatingip_v2.ms-resource-floatip.*.address, count.index) }"
+resource "openstack_compute_instance_v2" "worker" {
+  floating_ip = "${ element(openstack_compute_floatingip_v2.ms-worker-floatip.*.address, count.index) }"
   name                  = "${ var.short_name}-worker-${format("%03d", count.index+1) }"
   key_pair              = "${ var.keypair_name }"
   image_name            = "${ var.image_name }"
-  flavor_name           = "${ var.resource_flavor_name }"
+  flavor_name           = "${ var.worker_flavor_name }"
   security_groups       = [ "${ var.security_groups }" ]
   network               = { uuid = "${ openstack_networking_network_v2.ms-network.id }" }
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-worker-lvm.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
   metadata              = {
                             dc = "${var.datacenter}"
                             role = "worker"
                             ssh_user = "${ var.ssh_user }"
                           }
-  count                 = "${ var.resource_count }"
+  count                 = "${ var.worker_count }"
 }
 
 resource "openstack_compute_floatingip_v2" "ms-control-floatip" {
@@ -63,9 +93,9 @@ resource "openstack_compute_floatingip_v2" "ms-control-floatip" {
                  "openstack_networking_router_interface_v2.ms-router-interface" ]
 }
 
-resource "openstack_compute_floatingip_v2" "ms-resource-floatip" {
+resource "openstack_compute_floatingip_v2" "ms-worker-floatip" {
   pool       = "${ var.floating_pool }"
-  count      = "${ var.resource_count }"
+  count      = "${ var.worker_count }"
   depends_on = [ "openstack_networking_router_v2.ms-router",
                  "openstack_networking_network_v2.ms-network",
                  "openstack_networking_router_interface_v2.ms-router-interface" ]
@@ -97,5 +127,5 @@ output "control_ips" {
 }
 
 output "worker_ips" {
-  value = "${join(\",\", openstack_compute_instance_v2.resource.*.access_ip_v4)}"
+  value = "${join(\",\", openstack_compute_instance_v2.worker.*.access_ip_v4)}"
 }

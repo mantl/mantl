@@ -1,4 +1,4 @@
-microservices-infrastructure documentation
+Mantl documentation
 ==========================================
 
 .. image:: /_static/gitter.svg
@@ -9,7 +9,7 @@ microservices-infrastructure documentation
    :alt: Stories in Ready
    :target: https://waffle.io/CiscoCloud/microservices-infrastructure
 
-microservices-infrastructure is a modern platform for rapidly deploying globally
+Mantl is a modern platform for rapidly deploying globally
 distributed services.
 
 Features

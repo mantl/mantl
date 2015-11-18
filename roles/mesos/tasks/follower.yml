@@ -67,6 +67,25 @@
   tags:
     - mesos
 
+- name: write mantl-api credential
+  when: do_mesos_framework_auth|bool
+  sudo: yes
+  template:
+    src: mantl-api-credential.j2
+    dest: /etc/mesos/mantl-api
+    mode: 0600
+  tags:
+    - mesos
+
+- name: delete mantl-api credential
+  when: not do_mesos_framework_auth|bool
+  sudo: yes
+  file:
+    dest: /etc/mesos/mantl-api
+    state: absent
+  tags:
+    - mesos
+
 - name: set executor registration timeout
   sudo: yes
   copy:

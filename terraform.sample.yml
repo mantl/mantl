@@ -32,6 +32,7 @@
     consul_servers_group: role=control
   roles:
     - common
+    - lvm
     - collectd
     - logrotate
     - consul-template
@@ -39,7 +40,6 @@
     - logstash
     - nginx
     - consul
-    - etcd
     - dnsmasq
 
 # ROLES - after provisioning the software that's common to all hosts, we do
@@ -66,7 +66,6 @@
     # In this example, short-name is "mi" and domain is "example.com":
     haproxy_domain: mi-lb.example.com
   roles:
-    - calico
     - mesos
     - haproxy
 
