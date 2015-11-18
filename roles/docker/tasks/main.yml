@@ -58,7 +58,7 @@
   lineinfile:
     dest: /etc/sysconfig/docker
     regexp: ^other_arg=
-    line: other_arg='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} --log-driver=syslog'
+    line: other_arg='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} {% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %} --log-driver=syslog'
     state: present
     create: yes
   notify:
