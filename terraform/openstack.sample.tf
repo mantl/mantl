@@ -15,6 +15,7 @@ module "dc2-hosts" {
   tenant_name = ""
   control_flavor_name = ""
   worker_flavor_name  = ""
+  edge_flavor_name = ""
   net_id = ""
   image_name = ""
   keypair_name = "${ module.dc2-keypair.keypair_name }"
