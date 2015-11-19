@@ -90,7 +90,7 @@ resource "google_compute_disk" "mi-edge-lvm" {
   zone = "${var.zone}"
   size = "${var.edge_data_volume_size}"
 
-  count = "${var.control_count}"
+  count = "${var.edge_count}"
 }
 
 resource "google_compute_instance" "mi-control-nodes" {
