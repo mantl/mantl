@@ -3,6 +3,8 @@ etcd_version: 2.1.1
 etcd_client_port: 2379
 etcd_peer_port: 2380
 
+etcd_group_name: role=control
+
 etcd_url_scheme: http
 etcd_peer_url_scheme: http
 etcd_conf_dir: /etc/etcd
