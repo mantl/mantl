@@ -47,7 +47,7 @@ these DNS records:
 - ``mantl-edge-02.node.example.com``
 - ``control.example.com`` (pointing to control 1)
 - ``control.example.com`` (pointing to control 2)
-- ``control.example.com`` (pointing to control 2)
+- ``control.example.com`` (pointing to control 3)
 - ``*.example.com`` (pointing to edge 1)
 - ``*.example.com`` (pointing to edge 2)
 
