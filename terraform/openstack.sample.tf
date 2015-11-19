@@ -15,11 +15,13 @@ module "dc2-hosts" {
   tenant_name = ""
   control_flavor_name = ""
   worker_flavor_name  = ""
+  edge_flavor_name = ""
   net_id = ""
   image_name = ""
   keypair_name = "${ module.dc2-keypair.keypair_name }"
   control_count = 3
   worker_count = 3
+  edge_count = 2
   security_groups = ""
   control_data_volume_size = 20
   worker_data_volume_size = 100
@@ -32,7 +34,7 @@ module "dc2-hosts" {
 #   control_count = 3
 #   worker_count = 3
 #   domain = "example.com"
-#   control_ips = "${module.softlayer-hosts.control_ips}"
-#   worker_ips = "${module.softlayer-hosts.worker_ips}"
+#   control_ips = "${module.dc2-hosts.control_ips}"
+#   worker_ips = "${module.dc2-hosts.worker_ips}"
 #   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
 # }

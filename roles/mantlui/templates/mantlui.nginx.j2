@@ -41,6 +41,11 @@ http {
         server {{.Address}}:{{.Port}};{{end}}
     } {{end}}{% endraw %}
 
+    {% raw %}{{$traefik := service "traefik-admin"}}{{with $traefik}}
+    upstream traefik { {{range $traefik}}
+        server {{.Address}}:{{.Port}};{{end}}
+    } {{end}}{% endraw %}
+
 {% if do_mantlui_ssl|bool %}
     server {
         listen 80;
@@ -136,5 +141,15 @@ http {
             proxy_set_header        x-forwarded-proto $scheme;
             proxy_pass http://mantlapi/;
         } {{end}}{% endraw %}
+
+        {% raw %}{{with $traefik}}
+        location /traefik/ {
+            proxy_set_header        host $host;
+            proxy_set_header        x-real-ip $remote_addr;
+            proxy_set_header        x-forwarded-for $proxy_add_x_forwarded_for;
+            proxy_set_header        x-forwarded-proto $scheme;
+            proxy_pass https://traefik/;
+        }
+        {{end}}{% endraw %}
     }
 }

@@ -15,6 +15,7 @@ module "vsphere-dc" {
   template = ""
   control_count = 3
   worker_count = 3
+  edge_count = 2
   ssh_user = ""
   ssh_key = ""
   consul_dc = ""
@@ -27,7 +28,7 @@ module "vsphere-dc" {
 #   control_count = 3
 #   worker_count = 3
 #   domain = "example.com"
-#   control_ips = "${module.softlayer-hosts.control_ips}"
-#   worker_ips = "${module.softlayer-hosts.worker_ips}"
+#   control_ips = "${module.vsphere-dc.control_ips}"
+#   worker_ips = "${module.vsphere-dc.worker_ips}"
 #   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
 # }

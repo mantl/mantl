@@ -11,6 +11,8 @@ iptables -N MARATHON
 
 {% raw %}{{ range service "marathon" "any" }}{% endraw %}
 iptables -A MARATHON -p tcp --dport {{ marathon_port }} -s {% raw %}{{ .Address }}{% endraw %} -j ACCEPT
+{% raw %}{{ end }}{{ range service "traefik" "any" }}{% endraw %}
+iptables -A MARATHON -p tcp --dport {{ marathon_port }} -s {% raw %}{{ .Address}}{% endraw %} -j ACCEPT
 {% raw %}{{ end }}{% endraw %}
 iptables -A MARATHON -p tcp --dport {{ marathon_port }} -d 127.0.0.1 -j ACCEPT
 iptables -A MARATHON -p tcp --dport {{ marathon_port }} -i docker0 -j ACCEPT

@@ -1,28 +1,30 @@
 module "dc2-keypair" {
-	source = "./terraform/openstack/keypair"
-	auth_url = ""
-	tenant_id = ""
-	tenant_name = ""
-	public_key = ""
-	keypair_name = ""
+  source = "./terraform/openstack/keypair"
+  auth_url = ""
+  tenant_id = ""
+  tenant_name = ""
+  public_key = ""
+  keypair_name = ""
 }
 
 module "dc2-hosts-floating" {
-        source = "./terraform/openstack/hosts-floating"
-        auth_url = ""
-        datacenter = "dc2"
-        tenant_id = ""
-        tenant_name = ""
-        control_flavor_name = ""
-        worker_flavor_name  = ""
-        image_name = ""
-        keypair_name = "${ module.dc2-keypair.keypair_name }"
-        control_count = 3
-        worker_count = 3
-        control_data_volume_size = 20
-        worker_data_volume_size = 100
-	    floating_pool = ""
-	    external_net_id = ""
+  source = "./terraform/openstack/hosts-floating"
+  auth_url = ""
+  datacenter = "dc2"
+  tenant_id = ""
+  tenant_name = ""
+  control_flavor_name = ""
+  worker_flavor_name  = ""
+  edge_flavor_name  = ""
+  image_name = ""
+  keypair_name = "${ module.dc2-keypair.keypair_name }"
+  control_count = 3
+  worker_count = 3
+  edge_count = 2
+  floating_pool = ""
+  external_net_id = ""
+  control_data_volume_size = 20
+  worker_data_volume_size = 100
 }
 
 # Example setup for DNS:
@@ -32,7 +34,7 @@ module "dc2-hosts-floating" {
 #   control_count = 3
 #   worker_count = 3
 #   domain = "example.com"
-#   control_ips = "${module.softlayer-hosts.control_ips}"
-#   worker_ips = "${module.softlayer-hosts.worker_ips}"
+#   control_ips = "${module.dc2-hosts-floating.control_ips}"
+#   worker_ips = "${module.dc2-hosts-floating.worker_ips}"
 #   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
 # }
