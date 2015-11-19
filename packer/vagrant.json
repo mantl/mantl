@@ -62,7 +62,7 @@
             "boot_wait": "10s",
             "disk_size": 20480,
             "guest_os_type": "RedHat_64",
-            "headless": true,
+            "headless": false,
             "http_directory": "{{pwd}}/packer/kickstarts",
             "iso_urls": [
                 "iso/CentOS-7-x86_64-Minimal-1503-01.iso",
@@ -77,7 +77,7 @@
             "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": ".vbox_version",
-            "vm_name": "microservices-infrastructure-0.3.2-x86_64",
+            "vm_name": "microservices-infrastructure-0.5.0-x86_64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "512"],
                 ["modifyvm", "{{.Name}}", "--cpus", "2"]
