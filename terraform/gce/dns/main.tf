@@ -46,7 +46,7 @@ resource "google_dns_record_set" "dns-control-group" {
   name = "${var.control_subdomain}${var.subdomain}.${var.domain}."
   type = "A"
   ttl = 60
-  rrdatas = ["${element(split(",", var.control_ips), count.index)}"]
+  rrdatas = ["${split(",", var.control_ips)}"]
 }
 
 resource "google_dns_record_set" "dns-wildcard" {
@@ -55,5 +55,5 @@ resource "google_dns_record_set" "dns-wildcard" {
   name = "*${var.subdomain}.${var.domain}."
   type = "A"
   ttl = 60
-  rrdatas = ["${element(split(",", var.edge_ips), count.index)}"]
+  rrdatas = ["${split(",", var.edge_ips)}"]
 }
