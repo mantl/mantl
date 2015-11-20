@@ -44,7 +44,7 @@ resource "aws_route53_record" "dns-control-group" {
   count = "${var.control_count}"
   zone_id = "${var.hosted_zone_id}"
   name = "${var.control_subdomain}${var.subdomain}.${var.domain}"
-  records = ["${elements(split(",", var.control_ips), count.index)}"]
+  records = ["${split(",", var.control_ips)}"]
   type = "A"
   ttl = 60
 }
@@ -53,7 +53,7 @@ resource "aws_route53_record" "dns-wildcard" {
   count = "${var.edge_count}"
   zone_id = "${var.hosted_zone_id}"
   name = "*${var.subdomain}.${var.domain}"
-  records = ["${elements(split(",", var.edge_ips), count.index)}"]
+  records = ["${split(",", var.edge_ips)}"]
   type = "A"
   ttl = 60
 }
