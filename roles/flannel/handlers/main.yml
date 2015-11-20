@@ -1,0 +1,31 @@
+---
+- name: reconfig docker
+  sudo: yes
+  command: /bin/true
+  notify:
+    - stop docker
+    - delete docker0
+    - start docker
+
+- name: restart flannel
+  sudo: yes
+  service:
+    name: flanneld
+    state: restarted
+
+- name: stop docker
+  sudo: yes
+  service:
+    name: docker
+    state: stopped
+
+- name: delete docker0
+  sudo: yes
+  command: ip link delete docker0
+  ignore_errors: yes
+
+- name: start docker
+  sudo: yes
+  service:
+    name: docker
+    state: started

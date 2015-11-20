@@ -1,0 +1,56 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: check for security
+      when: security_enabled is not defined or not security_enabled
+      fail:
+        msg: |
+          Security is not enabled. Please run `security-setup` in the root
+          directory and re-run this playbook with the `--extra-vars`/`-e` option
+          pointing to your `security.yml` (e.g., `-e @security.yml`)
+
+- hosts: all
+  vars:
+    consul_dns_domain: consul
+    consul_servers_group: role=control
+  roles:
+    - common
+    - collectd
+    - logrotate
+    - docker
+    - etcd
+    - {role: flannel, tags: flannel}
+    - {role: dnsmasq, tags: dnsmasq}
+
+- hosts: role=control
+  gather_facts: yes
+  vars:
+    # ansible groups for service configuration
+  roles:
+    - {role: k8s-master, tags: k8s}
+    - {role: k8s-addons, tags: k8s}
+
+- hosts: role=worker
+  gather_facts: yes
+  vars:
+    haproxy_domain: mi-lb.example.com
+  roles:
+    - {role: k8s-minion, tags: k8s} 
+
+# GlusterFS has to be provisioned in reverse order from Mesos: servers then
+# clients.
+#- hosts: role=control
+#  gather_facts: no
+#  vars:
+#    consul_dns_domain: consul
+#    glusterfs_mode: server
+#  roles:
+#    - glusterfs
+#
+#- hosts: role=worker
+#  vars:
+#    consul_dns_domain: consul
+#    glusterfs_mode: client
+#  roles:
+#    - glusterfs

@@ -1,0 +1,37 @@
+---
+- name: restart daemons
+  sudo: yes
+  command: /bin/true
+  notify:
+    - restart apiserver
+    - restart controller-manager
+    - restart scheduler
+    - restart proxy
+
+- name: restart apiserver
+  sudo: yes
+  service:
+    name: kube-apiserver
+    state: restarted
+  when: inventory_hostname in groups[master_group_name][0]
+
+- name: restart controller-manager
+  sudo: yes
+  service:
+    name: kube-controller-manager
+    state: restarted
+  when: inventory_hostname in groups[master_group_name][0]
+
+- name: restart scheduler
+  sudo: yes
+  service:
+    name: kube-scheduler
+    state: restarted
+  when: inventory_hostname in groups[master_group_name][0]
+
+- name: restart proxy
+  sudo: yes
+  service:
+    name: kube-proxy
+    state: restarted
+  when: inventory_hostname in groups[master_group_name][0]

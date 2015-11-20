@@ -1,0 +1,38 @@
+---
+- name: configure flannel in etcd
+  run_once: true
+  sudo: yes
+  command: 'etcdctl --no-sync --peers={{ etcd_url_scheme }}://{{ groups[etcd_group_name][0] }}:{{ etcd_client_port }} set /{{ cluster_name }}/network/config ''{ "Network": "{{ overlay_network_subnet }}/{{ overlay_network_prefix }}", "SubnetLen": {{ overlay_network_host_prefix }}, "Backend": { "Type": "{{ flannel_backend_type }}" } }'''
+  changed_when: false
+  delegate_to: "{{ groups[etcd_group_name][0] }}"
+  tags:
+    - flannel
+
+- include: stable.yml
+  when: kube_build == "stable"
+
+- include: testing.yml
+  when: kube_build == "testing"
+
+- name: install flannel sysconfig file
+  sudo: yes
+  template:
+    src: flanneld.j2
+    dest: /etc/sysconfig/flanneld
+  notify:
+    - restart flannel
+  tags:
+    - flannel
+
+- name: launch flannel
+  sudo: yes
+  service:
+    name: flanneld
+    state: started
+    enabled: yes
+  notify:
+    - reconfig docker
+  tags:
+    - flannel
+
+- include: iptables.yml

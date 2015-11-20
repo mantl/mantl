@@ -1,14 +1,14 @@
 ---
-calico_image: ciscocloud/calico-node
-calico_image_tag: v0.4.10-mi
+calico_image: calico/node
+calico_image_tag: v0.9.0
 
-bintray_baseurl: "https://bintray.com/artifact/download/ciscocloud/generic"
-calico_binary: "{{ bintray_baseurl }}/calico/calicoctl"
+bintray_baseurl: "https://bintray.com/artifact/download/asteris"
+calico_binary: "{{ bintray_baseurl }}/calico/calicoctl/calicoctl"
 
 etcd_service_name: etcd.service.{{ consul_dns_domain }}
 etcd_client_port: 2379
 
-calico_etcdaddr: "{{ etcd_service_name }}:{{ etcd_client_port }}"
+calico_etcdaddr: "{{ private_ipv4 }}:{{ etcd_client_port }}"
 
 calico_network: 192.168.0.0/16
 

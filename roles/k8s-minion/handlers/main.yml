@@ -1,0 +1,19 @@
+---
+- name: restart daemons
+  sudo: yes
+  command: /bin/true
+  notify:
+    - restart kubelet
+    - restart proxy
+
+- name: restart kubelet
+  sudo: yes
+  service:
+    name: kubelet
+    state: restarted
+
+- name: restart proxy
+  sudo: yes
+  service:
+    name: kube-proxy
+    state: restarted

@@ -1,0 +1,24 @@
+---
+- name: SkyDNS | generate systemd unit file
+  sudo: yes
+  template:
+    src: skydns.service.j2
+    dest: /usr/lib/systemd/system/skydns.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart skydns
+  tags:
+    - skydns
+
+- name: SkyDNS | put env file
+  sudo: yes
+  template:
+    src: skydns.env.j2
+    dest: /etc/default/skydns.env
+    owner: root
+    group: root
+  tags:
+    - skydns

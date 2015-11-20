@@ -54,7 +54,7 @@
   lineinfile:
     dest: /etc/sysconfig/docker
     regexp: ^OPTIONS=
-    line: OPTIONS='--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} --log-driver=syslog'
+    line: OPTIONS='--selinux-enabled --dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} {% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %} --log-driver=syslog'
     state: present
     create: yes
   notify:

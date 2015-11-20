@@ -1,0 +1,26 @@
+---
+- name: get iptables rules
+  sudo: yes
+  command: iptables -L -t nat
+  register: iptablesrules
+  always_run: yes
+  changed_when: false
+  tags:
+    - flannel
+
+- name: enable kernel packet forwarding
+  sudo: yes
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    reload: yes
+  tags:
+    - flannel
+
+- name: enable flannel network masquarading
+  sudo: yes
+  command: /sbin/iptables -t nat -A POSTROUTING -s "{{ overlay_network_subnet }}/{{ overlay_network_prefix }}" -j MASQUERADE -m comment --comment "flannel_nat"
+  when: iptablesrules.stdout.find("flannel_nat") == -1
+  tags:
+    - flannel

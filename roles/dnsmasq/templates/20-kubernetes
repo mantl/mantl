@@ -1,0 +1,14 @@
+#Listen on all interfaces
+interface=*
+
+addn-hosts=/etc/hosts
+
+bogus-priv
+
+#Set upstream dns servers
+server=8.8.8.8
+server=8.8.4.4
+
+# Forward k8s domain to kube-dns
+server=/{{ cluster_name }}/127.0.0.1#{{ skydns_port }}
+
