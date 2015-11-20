@@ -3,9 +3,9 @@ Google Compute Engine
 
 .. versionadded:: 0.3
 
-As of Mantl 0.3 you can bring up Google Compute Engine
-environments using Terraform. microservices-infrastructure uses Terraform to
-provision hosts in OpenStack. You can `download Terraform from terraform.io
+As of Mantl 0.3 you can bring up Google Compute Engine environments using
+Terraform. microservices-infrastructure uses Terraform to provision hosts. You
+can `download Terraform from terraform.io
 <http://www.terraform.io/downloads.html>`_.
 
 Configuring Google Compute Engine for Terraform
@@ -90,10 +90,10 @@ microservices-infrastructure on your new cluster.
 Configuring DNS with Google Cloud DNS
 -------------------------------------
 
-Look at the ``gce.sample.tf`` file (or any of the other sample .tf files) for
-examples on how to configure DNS records for your cluster.
-PS: If you haven't set up a managed zone for the domain you're using, you can
-do that with Terraform as well, just add this extra snippet in your .tf file:
+In addition to the :doc:`normal provider variables <dns>`, you will need to
+specify the ``managed_zone`` parameter. If you haven't set up a managed zone for
+the domain you're using, you can do that with Terraform as well, just add this
+extra snippet in your .tf file:
 
 .. code-block:: javascript
 
@@ -102,6 +102,3 @@ do that with Terraform as well, just add this extra snippet in your .tf file:
      dns_name = "example.com."
      description "Managed zone for example.com."
    }
-
-It should also be possible to create the managed zone manually, in the
-admin panel for Google Cloud.

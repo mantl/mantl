@@ -20,15 +20,3 @@ module "vsphere-dc" {
   ssh_key = ""
   consul_dc = ""
 }
-
-# Example setup for DNS:
-# module "dnsimple-dns" { # This could also be "google-cloud-dns"
-#   source = "./terraform/dnsimple/dns" # This could also be "./terraform/gce/dns"
-#   short_name = "mi"
-#   control_count = 3
-#   worker_count = 3
-#   domain = "example.com"
-#   control_ips = "${module.vsphere-dc.control_ips}"
-#   worker_ips = "${module.vsphere-dc.worker_ips}"
-#   # managed_zone = "my-managed-zone" # would be required for Google cloud DNS
-# }
