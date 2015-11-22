@@ -5,7 +5,7 @@
 
 See [http://mantl.io](http://mantl.io) for more details.
 
-Existing Developer? For information on how the rename affects you, [see our handy FAQ](./mantl-rename-faq.md) 
+Existing Developer? For information on how the rename affects you, [see our handy FAQ](./mantl-rename-faq.md)
 
 # Overview
 
@@ -51,6 +51,9 @@ Mantl is a modern, batteries included platform for rapidly deploying globally di
 * [Logstash](https://github.com/elastic/logstash) for log forwarding
 * [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul service discovery with Mesos tasks
 * [marathon-consul](https://github.com/CiscoCloud/marathon-consul) update consul k/v with Marathon tasks
+* [GlusterFS](http://www.gluster.org/) for container volume storage
+* [Mantl API](https://github.com/CiscoCloud/mantl-api) easily install supported Mesos frameworks on Mantl
+* [Mantl UI](https://github.com/CiscoCloud/nginx-mantlui) a beautiful administrative interface to Mantl
 * Multi-datacenter support
 * High availability
 * Security
@@ -95,9 +98,9 @@ git tag
 0.1.0
 0.2.0
 ...
-0.3.0
+0.4.0
 
-git checkout 0.3.0
+git checkout 0.4.0
 ```
 
 A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your system has 4GB of RAM free, then:
@@ -150,14 +153,18 @@ make html
 
 - [x] Marathon
 - [ ] Kubernetes
-- [ ] Kafka
+- [x] Kafka
 - [ ] Riak
-- [ ] Cassandra
-- [ ] Elasticsearch
-- [ ] HDFS
+- [x] Cassandra
+- [x] Elasticsearch
+- [x] HDFS
 - [ ] Spark
 - [ ] Storm
 - [ ] Chronos
+- [x] MemSQL
+
+Note: The most up-to-date list of Mesos frameworks that are known to work with
+Mantl is always in the [mantl-universe repo](https://github.com/CiscoCloud/mantl-universe).
 
 ### Security
 
