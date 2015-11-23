@@ -87,6 +87,8 @@ Resource nodes launch containers and other Mesos-based workloads.
 
 Edge nodes are responsible for proxying external traffic into services running in the cluster.
 
+![Edge Node](docs/_static/edge_node.png)
+
 ## Getting Started
 
 All development is done on the `master` branch. Tested, stable versions are identified via git tags.
