@@ -1,6 +1,36 @@
 Changelog
 =========
 
+0.5.0 (November 23, 2015)
+-------------------------
+
+Features
+^^^^^^^^
+
+* All-new MantlUI interface #826
+* Mantl-API Integration #812
+* Edge role with Traefik load balancer #821
+* LVM Support #797
+* Improved DNS support for DNSimple, AWS Route 53, Google Cloud DNS, and CloudFlare #748, #725, #834
+* Mesos-consul support for Mesos DiscoveryPorts #796
+* Kafka Logstash Output #782
+* AWS support for ELB and Instance Profiles #726, #749
+* Kubernetes Tech Preview #794
+* Optional Docker cleanup add-on
+
+Fixes
+^^^^^
+
+* Use Centos-provided Docker package #803
+* Configurable root volume size on AWS and GCE #724, #725
+* Configurable stale reads in Consul #807
+* Improved hosts file generation #690
+* Fix for open file limits with Consul #802
+* Collectd Docker plugin fixes #782
+* Better timeouts for some Consul health checks #786
+* Improved Ansible change detection for Docker private registries #804
+* Consistent role names across cloud providers (control, worker, edge roles)
+
 0.4.0 (October 29, 2015)
 -------------------------
 
