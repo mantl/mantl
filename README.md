@@ -52,6 +52,7 @@ Mantl is a modern, batteries included platform for rapidly deploying globally di
 * [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul service discovery with Mesos tasks
 * [marathon-consul](https://github.com/CiscoCloud/marathon-consul) update consul k/v with Marathon tasks
 * [GlusterFS](http://www.gluster.org/) for container volume storage
+* [Traefik](https://traefik.github.io/) for proxying external traffic
 * [Mantl API](https://github.com/CiscoCloud/mantl-api) easily install supported Mesos frameworks on Mantl
 * [Mantl UI](https://github.com/CiscoCloud/nginx-mantlui) a beautiful administrative interface to Mantl
 * Multi-datacenter support
@@ -82,6 +83,10 @@ Resource nodes launch containers and other Mesos-based workloads.
 
 ![Resource Node](docs/_static/resource_node.png)
 
+### Edge Nodes
+
+Edge nodes are responsible for proxying external traffic into services running in the cluster.
+
 ## Getting Started
 
 All development is done on the `master` branch. Tested, stable versions are identified via git tags.
@@ -98,9 +103,9 @@ git tag
 0.1.0
 0.2.0
 ...
-0.4.0
+0.5.0
 
-git checkout 0.4.0
+git checkout 0.5.0
 ```
 
 A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your system has 4GB of RAM free, then:
@@ -115,7 +120,6 @@ Note:
 * There is no support for Windows at this time, however support is planned.
 * Vagrant 1.7.3+ is required for best results.
 * There is no support for the VMware Fusion Vagrant provider; hence your provider is set to Virtualbox in your Vagrantfile. In order to start running just issue the `vagrant up` command.
-
 
 ### Software Requirements
 
