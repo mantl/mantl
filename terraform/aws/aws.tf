@@ -1,14 +1,14 @@
 variable "amis" {
 	default = {
-		us-east-1      = "ami-96a818fe"
-		us-west-2      = "ami-c7d092f7"
-		us-west-1      = "ami-6bcfc42e"
-		eu-central-1   = "ami-7cc4f661"
-		eu-west-1      = "ami-e4ff5c93"
-		ap-southeast-1 = "ami-aea582fc"
-		ap-southeast-2 = "ami-bd523087"
-		ap-northeast-1 = "ami-89634988"
-		sa-east-1      = "ami-bf9520a2"
+		us-east-1      = "ami-61bbf104"
+		us-west-2      = "ami-d440a6e7"
+		us-west-1      = "ami-f77fbeb3"
+		eu-central-1   = "ami-e68f82fb"
+		eu-west-1      = "ami-33734044"
+		ap-southeast-1 = "ami-2a7b6b78"
+		ap-southeast-2 = "ami-d38dc6e9"
+		ap-northeast-1 = "ami-b80b6db8"
+		sa-east-1      = "ami-fd0197e0"
 	}
 }
 variable "availability_zone" {}
