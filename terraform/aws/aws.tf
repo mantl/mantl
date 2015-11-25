@@ -1,16 +1,3 @@
-variable "amis" {
-	default = {
-		us-east-1      = "ami-61bbf104"
-		us-west-2      = "ami-d440a6e7"
-		us-west-1      = "ami-f77fbeb3"
-		eu-central-1   = "ami-e68f82fb"
-		eu-west-1      = "ami-33734044"
-		ap-southeast-1 = "ami-2a7b6b78"
-		ap-southeast-2 = "ami-d38dc6e9"
-		ap-northeast-1 = "ami-b80b6db8"
-		sa-east-1      = "ami-fd0197e0"
-	}
-}
 variable "availability_zone" {}
 variable "control_count" {default = "3"}
 variable "control_iam_profile" {default = "" }
@@ -28,7 +15,7 @@ variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "network_subnet_ip4" {default = "10.0.0.0/16"}
 variable "short_name" {default = "mi"}
-variable "source_ami" { }
+variable "source_ami" {}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_username"  {default = "centos"}
 variable "worker_count" {default = "1"}
