@@ -1,0 +1,34 @@
+{
+    "id": "/kong",
+    "dependencies": [],
+    "instances": 1,
+    "cpus": 1,
+    "mem": 1024,
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "network": "BRIDGE",
+            "image": "mashape/kong",
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8001,
+                    "protocol": "tcp"
+                }
+            ]
+        },
+        "volumes": [{
+            "containerPath": "/etc/kong",
+            "hostPath": "/etc/kong",
+            "mode": "RO"
+        }]
+    },
+    "healthChecks": [ {
+        "path": "/",
+        "protocol": "HTTP",
+        "portIndex": 1
+    }]
+}
