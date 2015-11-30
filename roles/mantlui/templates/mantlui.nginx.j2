@@ -143,6 +143,10 @@ http {
         } {{end}}{% endraw %}
 
         {% raw %}{{with $traefik}}
+        location = /traefik/ {
+            return 301 /traefik/dashboard/;
+        }
+
         location /traefik/ {
             proxy_set_header        host $host;
             proxy_set_header        x-real-ip $remote_addr;
