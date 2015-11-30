@@ -1,9 +1,17 @@
 License Documentation for Mantl
 
+mi-deploy
 http://www.apache.org/licenses/LICENSE-2.0
+
+Ansible
+http://www.gnu.org/licenses/gpl-3.0.en.html
+https://github.com/TanyaCouture/microservices-infrastructure/tree/master/library
 
 https://github.com/hashicorp/terraform/blob/master/LICENSE
     https://github.com/CiscoCloud/microservices-infrastructure/tree/master/playbooks
+ 
+ 
+ 
     
 https://www.python.org/download/releases/2.7/license/
     https://github.com/CiscoCloud/microservices-infrastructure/tree/master/library
