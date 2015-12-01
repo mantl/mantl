@@ -164,3 +164,11 @@
     - glusterfs
 
 - meta: flush_handlers
+
+- name: wait for gluster service
+  wait_for:
+    host: glusterfs.service.consul
+    port: 24007
+    state: present
+  tags:
+    - glusterfs
