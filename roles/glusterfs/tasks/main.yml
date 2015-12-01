@@ -19,6 +19,14 @@
   tags:
     - glusterfs
 
+- name: set selinux to permissive mode
+  sudo: yes
+  selinux:
+    policy: targeted
+    state: permissive
+  tags:
+    - glusterfs
+
 - include: server.yml
   when: glusterfs_mode == "server" and glusterfs_brick_device != ""
 
