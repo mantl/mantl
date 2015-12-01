@@ -198,8 +198,10 @@ resource "google_compute_instance" "mi-worker-nodes" {
   }
 }
 
+
 resource "google_compute_instance" "mi-kubeworker-nodes" {
   name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}"
+
   description = "${var.long_name} kube worker node #${format("%03d", count.index+1)}"
   machine_type = "${var.worker_type}"
   zone = "${var.zone}"
