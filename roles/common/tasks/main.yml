@@ -70,5 +70,15 @@
   tags:
     - distributive
 
+- name: disable requiretty in sudoers
+  sudo: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: ^.+requiretty$
+    line: "# Defaults	requiretty"
+  tags:
+    - bootstrap
+
 - include: users.yml
 - include: ssl.yml
