@@ -41,8 +41,8 @@ http {
         server {{.Address}}:{{.Port}};{{end}}
     } {{end}}{% endraw %}
 
-    {% raw %}{{$traefik := service "traefik-admin"}}{{with $traefik}}
-    upstream traefik { {{range $traefik}}
+    {% raw %}{{$traefikAdmin := service "traefik-admin"}}{{with $traefikAdmin}}
+    upstream traefik-admin { {{range $traefikAdmin}}
         server {{.Address}}:{{.Port}};{{end}}
     } {{end}}{% endraw %}
 
@@ -142,13 +142,24 @@ http {
             proxy_pass http://mantlapi/;
         } {{end}}{% endraw %}
 
-        {% raw %}{{with $traefik}}
-        location /traefik/ {
-            proxy_set_header        host $host;
-            proxy_set_header        x-real-ip $remote_addr;
-            proxy_set_header        x-forwarded-for $proxy_add_x_forwarded_for;
-            proxy_set_header        x-forwarded-proto $scheme;
-            proxy_pass https://traefik/;
+        {% raw %}{{with $traefikAdmin}}
+        location = /traefik {
+            return 301 /traefik/dashboard/;
+        }
+
+        location /traefik {
+            try_files $uri @traefik-upstream;
+            root /usr/share/nginx/html;
+        }
+
+        location @traefik-upstream {
+            proxy_set_header host              $host;
+            proxy_set_header x-real-ip         $remote_addr;
+            proxy_set_header x-forwarded-for   $proxy_add_x_forwarded_for;
+            proxy_set_header x-forwarded-proto $scheme;
+
+            rewrite    /traefik/(.+)$ /$1 break;
+            proxy_pass https://traefik-admin;
         }
         {{end}}{% endraw %}
     }
