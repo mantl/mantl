@@ -8,19 +8,7 @@
   tags:
     - glusterfs
 
-- name: install packages
-  sudo: yes
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - glusterfs
-    - glusterfs-fuse
-  tags:
-    - glusterfs
-
 - include: server.yml
-  when: glusterfs_mode == "server" and glusterfs_brick_device != ""
+  when: glusterfs_mode == "server"
 
 - include: client.yml
-  when: glusterfs_brick_device != ""
