@@ -23,6 +23,7 @@
   mount:
     state: mounted
     name: "{{ item.mount }}"
+    opts: "defaults,_netdev"
     fstype: glusterfs
     src: "glusterfs.service.{{ consul_dns_domain }}:/{{ item.name }}"
   with_items: glusterfs_volumes
