@@ -8,6 +8,7 @@
   tags:
     - docker
     - bootstrap
+    - lvm
 
 - name: install LVM tools
   sudo: yes
@@ -17,6 +18,7 @@
   tags:
     - docker
     - bootstrap
+    - lvm
 
 - name: Create volume group
   sudo: yes
@@ -26,6 +28,7 @@
   tags:
     - docker
     - bootstrap
+    - lvm
 
 - name: enable lvmetad service
   sudo: yes
@@ -36,6 +39,9 @@
   tags:
     - docker
     - bootstrap
+    - lvm
 
 - name: save volume group name as fact
   set_fact:  volume_group_name="{{ lvm_volume_group_name }}"
+  tags:
+    - lvm
