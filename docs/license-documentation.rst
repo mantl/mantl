@@ -18,7 +18,8 @@ https://opensource.org/licenses/MIT
 plugins/inventory/terraform.py(Apache)
 http://www.apache.org/licenses/LICENSE-2.0
 
-roles
+roles/consul
+https://github.com/hashicorp/consul/blob/master/LICENSE
 
 ssl
 
