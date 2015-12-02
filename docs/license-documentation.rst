@@ -28,6 +28,17 @@ https://github.com/hashicorp/terraform/blob/master/LICENSE
 vagrant(MIT)
 https://opensource.org/licenses/MIT
 
+Dockerfile(Apache)
+http://www.apache.org/licenses/LICENSE-2.0
+
+Vagrantfile
+https://opensource.org/licenses/MIT
+
+ansible.cfg(Ansible)
+http://www.gnu.org/licenses/gpl-3.0.en.html
+
+
+
 
 
 
