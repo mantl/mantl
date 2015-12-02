@@ -23,26 +23,60 @@ https://github.com/projectcalico/calico/blob/master/LICENSE
 
 roles/collectd: 
 
-
 roles/common: 
-
-
 
 roles/chronos: 
 http://www.apache.org/licenses/LICENSE-2.0
 
-
-
-
 roles/consul: 
 https://github.com/hashicorp/consul/blob/master/LICENSE
+
+roles/dnsmasq: 
+http://www.gnu.org/licenses/gpl-3.0.en.html
+
+roles/docker: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/etcd: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/flannel:
+http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+roles/haproxy: 
+http://www.gnu.org/licenses/gpl-3.0.en.html
+
+roles/kubernetes: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/logrotate: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/logstash: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/lvm: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/mantlui: 
+mesos, marathon, chronos, consul
+
+roles/marathon: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/mesos: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+roles/nginx: 
+http://www.apache.org/licenses/LICENSE-2.0
 
 roles/vault
 https://github.com/hashicorp/vault/blob/master/LICENSE
 
-
-
-ssl: 
+roles/zookeeper
+http://www.apache.org/licenses/LICENSE-2.0
 
 terraform: 
 https://github.com/hashicorp/terraform/blob/master/LICENSE
