@@ -22,17 +22,24 @@ roles
 
 ssl
 
-
-
-
-
-
-
-
-
-
-
+terraform
 https://github.com/hashicorp/terraform/blob/master/LICENSE
+
+vagrant(MIT)
+https://opensource.org/licenses/MIT
+
+
+
+
+
+
+
+
+
+
+
+
+
     https://github.com/CiscoCloud/microservices-infrastructure/tree/master/playbooks
  
  
