@@ -122,7 +122,7 @@
   tags:
     - glusterfs
 
-- name: create container volume
+- name: create volumes
   run_once: true
   sudo: yes
   command: /etc/glusterfs/gluster_volume.sh {{ item.name }}
@@ -130,7 +130,7 @@
   tags:
     - glusterfs
 
-- name: start container volume
+- name: start volumes
   sudo: yes
   run_once: true
   gluster_volume:
