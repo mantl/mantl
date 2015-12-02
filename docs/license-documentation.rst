@@ -106,6 +106,9 @@ http://www.apache.org/licenses/LICENSE-2.0
     https://opensource.org/licenses/MIT
 
     SoftLayer
+    
+    mesos-consul: 
+    http://www.apache.org/licenses/LICENSE-2.0
 
 
 
