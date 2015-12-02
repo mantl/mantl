@@ -43,8 +43,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 roles/flannel:
 http://www.apache.org/licenses/LICENSE-2.0
 
-
-
 roles/haproxy: 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -81,9 +79,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 terraform: 
 https://github.com/hashicorp/terraform/blob/master/LICENSE
 
-vagrant(MIT)
-https://opensource.org/licenses/MIT
-
 Dockerfile(Apache)
 http://www.apache.org/licenses/LICENSE-2.0
 
@@ -92,6 +87,27 @@ https://opensource.org/licenses/MIT
 
 ansible.cfg(Ansible)
 http://www.gnu.org/licenses/gpl-3.0.en.html
+
+Mi-Deploy: 
+http://www.apache.org/licenses/LICENSE-2.0
+    AWS: 
+    https://aws.amazon.com/asl/
+
+    DigitalOcean: 
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    GCE: 
+    https://code.google.com/p/go/source/browse/LICENSE
+
+    Openstack: 
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Vagrant(MIT)
+    https://opensource.org/licenses/MIT
+
+    SoftLayer
+
+
 
 
 
