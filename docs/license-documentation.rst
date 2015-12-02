@@ -21,10 +21,12 @@ license: ASL 2.0
 license_url: http://www.apache.org/licenses/LICENSE-2.0
 
 roles/calico:
-https://github.com/projectcalico/calico/blob/master/LICENSE
+license: ASL 2.0
+license_url: https://github.com/projectcalico/calico/blob/master/LICENSE
 
 roles/collectd:
-https://github.com/appliedsec/collectd/blob/master/LICENSE.txt
+license: Eli Courtwrite and other individual contributers
+license_url: https://github.com/appliedsec/collectd/blob/master/LICENSE.txt
 
 roles/chronos: 
 license: ASL 2.0
@@ -105,30 +107,35 @@ license: ASL 2.0
 license_url: http://www.apache.org/licenses/LICENSE-2.0
 
 Vagrantfile
-https://opensource.org/licenses/MIT
+license: MIT
+license_url: https://opensource.org/licenses/MIT
 
 Mi-Deploy:
 license: ASL 2.0
 license_url: http://www.apache.org/licenses/LICENSE-2.0
     AWS: 
-    https://aws.amazon.com/asl/
+    license: Amazon Software License
+    license_url: https://aws.amazon.com/asl/
 
     DigitalOcean:
     license: ASL 2.0
     license_url: http://www.apache.org/licenses/LICENSE-2.0
 
     GCE: 
-    https://code.google.com/p/go/source/browse/LICENSE
+    license: go
+    license_url: https://code.google.com/p/go/source/browse/LICENSE
 
     Openstack:
     license: ASL 2.0
     license_url: http://www.apache.org/licenses/LICENSE-2.0
 
-    Vagrant(MIT)
-    https://opensource.org/licenses/MIT
+    Vagrant
+    license: MIT
+    license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE
 
     SoftLayer: 
-    https://github.com/softlayer/softlayer-python/blob/master/LICENSE
+    license: SoftLayer 2014
+    license_url: https://github.com/softlayer/softlayer-python/blob/master/LICENSE
     
 mesos-consul: 
 license: ASL 2.0
@@ -139,7 +146,8 @@ license: ASL 2.0
 license_url: http://www.apache.org/licenses/LICENSE-2.0
 
 mesos-ui:
-https://github.com/Capgemini/mesos-ui/blob/master/LICENSE
+license: MIT
+license_url: https://github.com/Capgemini/mesos-ui/blob/master/LICENSE
 
 mantl-api: 
 license: ASL 2.0
