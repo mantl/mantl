@@ -1,29 +1,29 @@
 License Documentation for Mantl
 
-library(Ansible)
+library(Ansible): 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
-mi-deploy(Apache)
+mi-deploy(Apache): 
 http://www.apache.org/licenses/LICENSE-2.0
 
-Packer(Ansible)
+Packer(Ansible): 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
-playbooks(Ansible)
+playbooks(Ansible): 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
-plugins/callbacks/profile_tasks.py(MIT License)
+plugins/callbacks/profile_tasks.py(MIT License): 
 https://opensource.org/licenses/MIT
 
-plugins/inventory/terraform.py(Apache)
+plugins/inventory/terraform.py(Apache): 
 http://www.apache.org/licenses/LICENSE-2.0
 
-roles/consul
+roles/consul: 
 https://github.com/hashicorp/consul/blob/master/LICENSE
 
-ssl
+ssl: 
 
-terraform
+terraform: 
 https://github.com/hashicorp/terraform/blob/master/LICENSE
 
 vagrant(MIT)
