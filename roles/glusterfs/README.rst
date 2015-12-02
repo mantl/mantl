@@ -6,7 +6,14 @@ GlusterFS
 `Gluster <http://www.gluster.org/>`_ implements a distributed filesystem. It is
 used for container volume management and syncing around the cluster.
 
-Current Version: 3.7.3
+Current Version: 3.7.6
+
+Installation
+------------
+
+As of 0.6, GlusterFS is distributed as an addon for Mantl. After a successful
+initial run (from your customized ``terraform.sample.yml``), install it with
+``ansible-playbook -e @security.yml addons/glusterfs.yml``.
 
 Use with Docker
 ---------------
@@ -30,6 +37,12 @@ formatted as an XFS volume and mounted on the control nodes.
 
 Variables
 ---------
+
+.. data:: glusterfs_version
+
+   The version of GlusterFS to download
+
+   default: ``3.7.6``
 
 .. data:: glusterfs_mode
 
@@ -81,16 +94,14 @@ Variables
 
    default: automatically generated
 
-.. data:: glusterfs_container_data_name
+.. data:: gluserfs_volumes
 
-   The name of the Gluster container in which you plan to store container
-   volumes.
+   A list of names and mounts for volumes. The default looks like this::
 
-   default: ``container-volumes``
+       glusterfs_volumes:
+         - name: container-volumes
+           mount: /mnt/container-volumes
 
-.. data:: glusterfs_container_data_mount
-
-   Where to mount the container data volume. Defaults to the name of the volume
-   under ``/mnt/``
-
-   default: automatically generated
+   If you need to add any more volumes, be sure to include the
+   ``container-volumes`` mount in the list, or that volume will not work on new
+   servers.
