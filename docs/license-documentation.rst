@@ -58,7 +58,8 @@ roles/lvm:
 http://www.apache.org/licenses/LICENSE-2.0
 
 roles/mantlui: 
-mesos, marathon, chronos, consul
+http://www.apache.org/licenses/LICENSE-2.0
+https://github.com/hashicorp/consul/blob/master/LICENSE
 
 roles/marathon: 
 http://www.apache.org/licenses/LICENSE-2.0
@@ -78,14 +79,11 @@ http://www.apache.org/licenses/LICENSE-2.0
 terraform: 
 https://github.com/hashicorp/terraform/blob/master/LICENSE
 
-Dockerfile(Apache)
+Dockerfile
 http://www.apache.org/licenses/LICENSE-2.0
 
 Vagrantfile
 https://opensource.org/licenses/MIT
-
-ansible.cfg(Ansible)
-http://www.gnu.org/licenses/gpl-3.0.en.html
 
 Mi-Deploy: 
 http://www.apache.org/licenses/LICENSE-2.0
@@ -104,7 +102,8 @@ http://www.apache.org/licenses/LICENSE-2.0
     Vagrant(MIT)
     https://opensource.org/licenses/MIT
 
-    SoftLayer
+    SoftLayer: 
+    https://github.com/softlayer/softlayer-python/blob/master/LICENSE
     
 mesos-consul: 
 http://www.apache.org/licenses/LICENSE-2.0
