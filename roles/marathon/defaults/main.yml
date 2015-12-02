@@ -8,11 +8,10 @@ marathon_zk_port: 2181
 marathon_zk_chroot: marathon
 marathon_zk_connect: "zk://{{ marathon_zk_auth}}{{ marathon_zk_dns }}:{{ marathon_zk_port }}/{{ marathon_zk_chroot }}"
 
-zk_docker_image: "ciscocloud/zookeeper:0.3"
 marathon_zk_acl_world: "world:anyone:cdrwa"
 marathon_zk_acl: "{% if zk_marathon_user_secret is defined %}digest:{{ zk_marathon_user }}:{{ zk_marathon_user_secret_digest}}:cdraw{% endif  %}"
 
-marathon_zk_acl_cmd: "docker run --rm --entrypoint zookeepercli {{ zk_docker_image }} -servers {{ marathon_zk_dns }}:{{ marathon_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ marathon_zk_chroot }} '{{ marathon_zk_acl_world }},{{ marathon_zk_acl }}'"
+marathon_zk_acl_cmd: "zookeepercli -servers {{ marathon_zk_dns }}:{{ marathon_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ marathon_zk_chroot }} '{{ marathon_zk_acl_world }},{{ marathon_zk_acl }}'"
 
 marathon_http_credentials: ""
 marathon_keystore_path: ""

@@ -8,39 +8,70 @@
     - zookeeper
     - bootstrap
 
-- name: install wait script
+- name: add mesosphere repository
+  sudo: yes
+  yum:
+    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+    state: present
+  tags:
+    - zookeeper
+
+- name: install zookeeper package
+  sudo: yes
+  yum:
+    name: mesosphere-zookeeper
+    state: present
+  tags:
+    - zookeeper
+
+- name: create missing 'conf' symlink
+  sudo: yes
+  file:
+    state: link
+    src: /etc/zookeeper/conf
+    dest: /opt/mesosphere/zookeeper/conf
+  tags:
+    - zookeeper    
+
+- name: install zookeeper scripts
   sudo: yes
   copy:
-    src: zookeeper-wait-for-listen.sh
+    src: "{{ item }}"
     dest: /usr/local/bin
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
+  with_items:
+    - zookeeper_check.sh
+    - zookeeper-wait-for-listen.sh
+    - zookeeper_digest.sh
   tags:
     - zookeeper
 
-- name: generate default env file
+- name: create zookeeper user
   sudo: yes
-  template:
-    src: zookeeper-env.j2
-    dest: "/etc/default/{{ zookeeper_service }}"
+  user:
+    name: "{{ zookeeper_os_user }}"
+    state: present
+  tags:
+    - zookeeper
+
+- name: create zookeeper auth digest
+  sudo: yes
+  shell: "/usr/local/bin/zookeeper_digest.sh  {{ zk_super_user }}:{{ zk_super_user_secret }}"
+  register: zookeeper_auth_digest
+  changed_when: no
+  when: zk_super_user is defined and zk_super_user_secret is defined
+  tags:
+    - zookeeper
+
+- name: create auth digest file
+  sudo: yes
+  copy:
+    dest: /etc/zookeeper/conf/zookeeper-env.sh
+    content: |
+      JVMFLAGS="-Dzookeeper.DigestAuthenticationProvider.superDigest={{ zookeeper_auth_digest.stdout }} $JVMFLAGS"
+  when: zk_super_user is defined and zk_super_user_secret is defined
   notify:
     - restart zookeeper
-  tags:
-    - zookeeper
-
-- name: generate systemd service file
-  sudo: yes
-  template:
-    src: zookeeper-service.j2
-    dest: "/usr/lib/systemd/system/{{ zookeeper_service }}.service"
-  notify:
-    - register zookeeper service
-    - reload systemd daemon
-  tags:
-    - zookeeper
-
-- name: ensure zookeeper docker image is present
-  sudo: yes
-  command: docker pull {{ zookeeper_image }}:{{ zookeeper_image_tag }}
   tags:
     - zookeeper
 
@@ -50,19 +81,38 @@
     path: /var/log/zookeeper
     state: directory
     mode: 0755
+    owner: "{{ zookeeper_os_user }}"
     setype: svirt_sandbox_file_t
   tags:
     - zookeeper
 
-- name: install zookeeper scripts
+- name: create zookeeper data directory
+  sudo: yes
+  file:
+    path: /var/lib/zookeeper/version-2
+    state: directory
+    mode: 0700
+    owner: "{{ zookeeper_os_user }}"
+  tags:
+    - zookeeper
+
+- name: create zookeeper service override directory
+  sudo: yes
+  file:
+    path: /etc/systemd/system/zookeeper.service.d
+    state: directory
+  tags:
+    - zookeeper
+
+- name: create local docker service override
   sudo: yes
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: 0755
-  with_items:
-    - src: zookeeper_check.sh
-      dest: /usr/local/bin
+    dest: /etc/systemd/system/zookeeper.service.d/user.conf
+    content: |
+      [Service]
+      User={{ zookeeper_os_user }}
+  notify:
+    - restart zookeeper
   tags:
     - zookeeper
 
@@ -76,6 +126,39 @@
       dest: /etc/consul/zk-consul.json
   notify:
     - reload consul
+  tags:
+    - zookeeper
+
+- name: generate zookeeper id
+  sudo: yes
+  template:
+    src: myid.j2
+    dest: /var/lib/zookeeper/myid
+  tags:
+    - zookeeper
+
+- name: generate zookeeper config
+  sudo: yes
+  template:
+    src: zoo.cfg.j2
+    dest: /etc/zookeeper/conf/zoo.cfg
+  notify:
+    - restart zookeeper
+
+- name: register zookeeper service
+  sudo: yes
+  service:
+    enabled: yes
+    name: "{{ zookeeper_service }}"
+    state: started
+  tags:
+    - zookeeper
+
+- name: install zookeepercli package
+  sudo: yes
+  yum:
+    name: https://github.com/outbrain/zookeepercli/releases/download/v1.0.10/zookeepercli-1.0.10-1.x86_64.rpm
+    state: present
   tags:
     - zookeeper
 
