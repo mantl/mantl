@@ -18,8 +18,29 @@ https://opensource.org/licenses/MIT
 plugins/inventory/terraform.py(Apache): 
 http://www.apache.org/licenses/LICENSE-2.0
 
+roles/calico: 
+https://github.com/projectcalico/calico/blob/master/LICENSE
+
+roles/collectd: 
+
+
+roles/common: 
+
+
+
+roles/chronos: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+
 roles/consul: 
 https://github.com/hashicorp/consul/blob/master/LICENSE
+
+roles/vault
+https://github.com/hashicorp/vault/blob/master/LICENSE
+
+
 
 ssl: 
 
