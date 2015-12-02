@@ -1,8 +1,6 @@
 License Documentation for Mantl
 
-mi-deploy:    
-license: ASL 2.0
-license_url: http://www.apache.org/licenses/LICENSE-2.0
+mi-deploy: `ASL 2.0<http://www.apache.org/licenses/LICENSE-2.0>`_
 
 Packer: 
 license: GNU GPL 3.0
