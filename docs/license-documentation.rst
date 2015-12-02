@@ -1,29 +1,28 @@
 License Documentation for Mantl
 
-library(Ansible): 
+library: 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
-mi-deploy(Apache): 
+mi-deploy: 
 http://www.apache.org/licenses/LICENSE-2.0
 
-Packer(Ansible): 
+Packer: 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
-playbooks(Ansible): 
+playbooks: 
 http://www.gnu.org/licenses/gpl-3.0.en.html
 
-plugins/callbacks/profile_tasks.py(MIT License): 
+plugins/callbacks/profile_tasks.py: 
 https://opensource.org/licenses/MIT
 
-plugins/inventory/terraform.py(Apache): 
+plugins/inventory/terraform.py: 
 http://www.apache.org/licenses/LICENSE-2.0
 
 roles/calico: 
 https://github.com/projectcalico/calico/blob/master/LICENSE
 
-roles/collectd: 
-
-roles/common: 
+roles/collectd:
+https://github.com/appliedsec/collectd/blob/master/LICENSE.txt
 
 roles/chronos: 
 http://www.apache.org/licenses/LICENSE-2.0
@@ -107,31 +106,14 @@ http://www.apache.org/licenses/LICENSE-2.0
 
     SoftLayer
     
-    mesos-consul: 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    https://github.com/CiscoCloud/microservices-infrastructure/tree/master/playbooks
- 
- 
- 
+mesos-consul: 
+http://www.apache.org/licenses/LICENSE-2.0
     
-https://www.python.org/download/releases/2.7/license/
-    https://github.com/CiscoCloud/microservices-infrastructure/tree/master/library
-    
-https://golang.org/LICENSE
+consul-cli: 
+http://www.apache.org/licenses/LICENSE-2.0
+
+mesos-ui:
+https://github.com/Capgemini/mesos-ui/blob/master/LICENSE
+
+mantl-api: 
+http://www.apache.org/licenses/LICENSE-2.0
