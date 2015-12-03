@@ -1,38 +1,38 @@
 **License Documentation for Mantl**
 
->| mi-deploy:  
+<p>| mi-deploy:  
 | license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
+| license_url: http://www.apache.org/licenses/LICENSE-2.0</p>  
 
->| Packer:  
+| Packer:  
 | license: GNU GPL 3.0  
 | license_url: http://www.gnu.org/licenses/gpl-3.0.en.html  
 
->| playbooks:  
+| playbooks:  
 | license: GNU GPL 3.0  
 | license_url: http://www.gnu.org/licenses/gpl-3.0.en.html  
 
->| plugins/callbacks/profile_tasks.py:  
+| plugins/callbacks/profile_tasks.py:  
 | license: MIT  
 | license_url: https://opensource.org/licenses/MIT  
 
->| plugins/inventory/terraform.py:  
+| plugins/inventory/terraform.py:  
 | license: ASL 2.0  
 | license_url: http://www.apache.org/licenses/LICENSE-2.0  
 
->| roles/calico:  
+| roles/calico:  
 | license: ASL 2.0  
 | license_url: https://github.com/projectcalico/calico/blob/master/LICENSE  
 
->| roles/collectd:  
+| roles/collectd:  
 | license: Eli Courtwrite and other individual contributers  
 | license_url: https://github.com/appliedsec/collectd/blob/master/LICENSE.txt  
 
->| roles/chronos:  
+| roles/chronos:  
 | license: ASL 2.0  
 | license_url: http://www.apache.org/licenses/LICENSE-2.0  
 
->| roles/consul:  
+| roles/consul:  
 | license: MLP 2.0  
 | license_url: https://github.com/hashicorp/consul/blob/master/LICENSE  
 
