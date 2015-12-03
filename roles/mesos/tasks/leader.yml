@@ -40,8 +40,12 @@
   tags:
     - marathon
 
+- name: wait for zookeeper to listen
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+
 - name: create zookeeper acl
   sudo: yes
+  run_once: yes
   command: "{{ mesos_zk_acl_cmd }}"
   notify:
     - restart mesos leader
