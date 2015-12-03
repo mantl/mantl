@@ -7,6 +7,23 @@
   tags:
     - glusterfs
 
+- name: create glusterd drop-in location
+  sudo: yes
+  file:
+    state: directory
+    dest: /etc/systemd/system/glusterd.service.d
+
+- name: install glusterd drop-in
+  sudo: yes
+  copy:
+    src: glusterd.conf
+    dest: /etc/systemd/system/glusterd.service.d/glusterd.conf
+  notify:
+    - reload systemd units
+    - restart glusterd
+  tags:
+    - glusterfs
+
 - name: enable services
   sudo: yes
   service:
