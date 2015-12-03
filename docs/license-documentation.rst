@@ -1,5 +1,4 @@
 **License Documentation for Mantl**
-|   
 
 | mi-deploy:  
 | license: ASL 2.0  
