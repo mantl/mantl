@@ -143,7 +143,7 @@
 | license_url: http://www.apache.org/licenses/LICENSE-2.0  
 |   
 
-| &nbsp:&nbsp;&nbsp;AWS:  
+|     AWS:  
 |     license: Amazon Software License  
 |     license_url: https://aws.amazon.com/asl/  
 |   
