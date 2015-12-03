@@ -141,7 +141,9 @@
 | Mi-Deploy:  
 | license: ASL 2.0  
 | license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|     AWS:  
+|   
+
+| &nbsp:&nbsp;&nbsp;AWS:  
 |     license: Amazon Software License  
 |     license_url: https://aws.amazon.com/asl/  
 |   
