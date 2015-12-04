@@ -15,6 +15,19 @@ As of 0.6, GlusterFS is distributed as an addon for Mantl. After a successful
 initial run (from your customized ``terraform.sample.yml``), install it with
 ``ansible-playbook -e @security.yml addons/glusterfs.yml``.
 
+Restarting
+----------
+
+There is a bug with the current implementation where the glusterd servers will
+not come up after a restart, but they'll be fine to start once the restart is
+complete. To do this after a restart, run::
+
+    ansible -m command -a 'sudo systemctl start glusterd' role=control
+
+You will also need to mount the disks after this operation::
+
+    ansible -m command -a 'sudo mount -a' role=control
+
 Use with Docker
 ---------------
 
