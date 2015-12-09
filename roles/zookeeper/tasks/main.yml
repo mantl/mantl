@@ -121,6 +121,7 @@
       [Service]
       User={{ zookeeper_os_user }}
   notify:
+    - reload systemd daemon
     - restart zookeeper
   tags:
     - zookeeper
