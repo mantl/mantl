@@ -45,6 +45,29 @@
   tags:
     - zookeeper
 
+- name: create zookeeper service override directory
+  sudo: yes
+  file:
+    path: /etc/systemd/system/zookeeper.service.d
+    state: directory
+  tags:
+    - zookeeper
+
+# Override should be created before any other action trigger start/restart of zk
+# otherwise we get some files in zookeeper's dir with wrong permissions
+- name: create local docker service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/zookeeper.service.d/user.conf
+    content: |
+      [Service]
+      User={{ zookeeper_os_user }}
+  notify:
+    - reload systemd daemon
+    - restart zookeeper
+  tags:
+    - zookeeper
+
 - name: install zookeeper package
   sudo: yes
   yum:
@@ -102,27 +125,6 @@
     state: directory
     mode: 0700
     owner: "{{ zookeeper_os_user }}"
-  tags:
-    - zookeeper
-
-- name: create zookeeper service override directory
-  sudo: yes
-  file:
-    path: /etc/systemd/system/zookeeper.service.d
-    state: directory
-  tags:
-    - zookeeper
-
-- name: create local docker service override
-  sudo: yes
-  copy:
-    dest: /etc/systemd/system/zookeeper.service.d/user.conf
-    content: |
-      [Service]
-      User={{ zookeeper_os_user }}
-  notify:
-    - reload systemd daemon
-    - restart zookeeper
   tags:
     - zookeeper
 
