@@ -9,3 +9,6 @@ ssl/serial*
 # terraform
 **/*.tfstate*
 **/.terraform
+
+# downloaded by playbook
+library/lvg.py

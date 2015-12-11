@@ -9,6 +9,15 @@
     - docker
     - bootstrap
 
+- name: update lvg ansible module
+  connection: local
+  run_once: yes
+  get_url:
+    url: https://raw.githubusercontent.com/ansible/ansible-modules-extras/02b68be09dca9760a761d4147f76cfc940c41cba/system/lvg.py
+    dest: "{{ playbook_dir }}/library/lvg.py"
+  tags:
+    - docker
+
 - name: install LVM tools
   sudo: yes
   yum:
