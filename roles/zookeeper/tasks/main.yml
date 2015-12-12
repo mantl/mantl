@@ -16,6 +16,58 @@
   tags:
     - zookeeper
 
+- name: install zookeeper scripts
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/bin
+    mode: 0755
+  with_items:
+    - zookeeper_check.sh
+    - zookeeper-wait-for-listen.sh
+    - zookeeper_digest.sh
+    - zookeeper-update-mantl-0.5-0.6.sh
+  tags:
+    - zookeeper
+
+- name: create zookeeper user
+  sudo: yes
+  user:
+    name: "{{ zookeeper_os_user }}"
+    state: present
+  tags:
+    - zookeeper
+
+# Upgrade script MUST run between user creation and rpm installation
+- name: run zookeeper upgrade procedure, if it applicable
+  sudo: yes
+  shell: "/usr/local/bin/zookeeper-update-mantl-0.5-0.6.sh {{ zookeeper_os_user }}"
+  tags:
+    - zookeeper
+
+- name: create zookeeper service override directory
+  sudo: yes
+  file:
+    path: /etc/systemd/system/zookeeper.service.d
+    state: directory
+  tags:
+    - zookeeper
+
+# Override should be created before any other action trigger start/restart of zk
+# otherwise we get some files in zookeeper's dir with wrong permissions
+- name: create local docker service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/zookeeper.service.d/user.conf
+    content: |
+      [Service]
+      User={{ zookeeper_os_user }}
+  notify:
+    - reload systemd daemon
+    - restart zookeeper
+  tags:
+    - zookeeper
+
 - name: install zookeeper package
   sudo: yes
   yum:
@@ -32,27 +84,6 @@
     dest: /opt/mesosphere/zookeeper/conf
   tags:
     - zookeeper    
-
-- name: install zookeeper scripts
-  sudo: yes
-  copy:
-    src: "{{ item }}"
-    dest: /usr/local/bin
-    mode: 0755
-  with_items:
-    - zookeeper_check.sh
-    - zookeeper-wait-for-listen.sh
-    - zookeeper_digest.sh
-  tags:
-    - zookeeper
-
-- name: create zookeeper user
-  sudo: yes
-  user:
-    name: "{{ zookeeper_os_user }}"
-    state: present
-  tags:
-    - zookeeper
 
 - name: create zookeeper auth digest
   sudo: yes
@@ -80,8 +111,9 @@
   file:
     path: /var/log/zookeeper
     state: directory
-    mode: 0755
+    mode: u=rw,g-rwx,o-rwx
     owner: "{{ zookeeper_os_user }}"
+    recurse: true
     setype: svirt_sandbox_file_t
   tags:
     - zookeeper
@@ -93,26 +125,6 @@
     state: directory
     mode: 0700
     owner: "{{ zookeeper_os_user }}"
-  tags:
-    - zookeeper
-
-- name: create zookeeper service override directory
-  sudo: yes
-  file:
-    path: /etc/systemd/system/zookeeper.service.d
-    state: directory
-  tags:
-    - zookeeper
-
-- name: create local docker service override
-  sudo: yes
-  copy:
-    dest: /etc/systemd/system/zookeeper.service.d/user.conf
-    content: |
-      [Service]
-      User={{ zookeeper_os_user }}
-  notify:
-    - restart zookeeper
   tags:
     - zookeeper
 
