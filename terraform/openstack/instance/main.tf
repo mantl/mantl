@@ -55,9 +55,9 @@ resource "openstack_compute_instance_v2" "instance" {
 }
 
 output hostname_list {
-  value = "${join(",", openstack_compute_instance_v2.instance.*.name)}"  
+  value = "${join(",", openstack_compute_instance_v2.instance.*.name)}"
 }
 
 output ip_v4_list {
-  value = "${join(",", openstack_compute_instance_v2.instance.*.ip_v4)}"  
+  value = "${join(",", openstack_compute_instance_v2.instance.*.access_ip_v4)}"
 }
