@@ -7,6 +7,7 @@ variable worker_count { default = "5"}  # worker nodes
 variable edge_count { default = "2"}    # load balancer nodes
 
 # Run 'nova network-list' to get these names and values
+# Floating ips are optional
 variable external_network_uuid { default = "uuid-of-your-external-network" }
 variable floating_ip_pool { default = "name-of-your-floating-ip-pool" }
 
@@ -34,6 +35,8 @@ module "network" {
 }
 
 # Create floating IPs for each of the roles
+# These are not required if your network is exposed to the internet
+# or you don't want floating ips for the instances.
 module "floating-ips-control" {
   source = "./terraform/openstack/floating-ip"
   count = "${var.control_count}"
