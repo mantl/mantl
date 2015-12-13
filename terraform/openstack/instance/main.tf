@@ -30,7 +30,7 @@ resource "openstack_blockstorage_volume_v1" "blockstorage" {
 
 resource "openstack_compute_instance_v2" "instance" {
   floating_ip = "${ element(split(",", var.floating_ips), count.index) }"
-  name = "${var.name}-control-${format(var.count_format, var.count_offset+count.index+1)}"
+  name = "${var.name}-${var.role}-${format(var.count_format, var.count_offset+count.index+1)}"
   key_pair = "${var.keypair_name}"
   image_name = "${var.image_name}"
   flavor_name = "${var.flavor_name}"
