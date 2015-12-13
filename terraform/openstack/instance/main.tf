@@ -1,5 +1,5 @@
 variable datacenter { default = "openstack" }
-variable floating_ips {}
+variable floating_ips { default = "" }
 variable blockstorage_metadata_attached_mode { default = "rw" }
 variable blockstorage_metadata_readonly { default = "False" }
 variable count  {}
