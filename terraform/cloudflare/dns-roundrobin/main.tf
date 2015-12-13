@@ -7,7 +7,7 @@ variable ips { default = ""}
 variable hostnames { default = ""}
 variable count {}
 
-#Alias all ips to group.subdomain.domain
+#Alias all ips to address.subdomain.domain
 resource "cloudflare_record" "instance" {
   count = "${var.count}" 
   domain = "${var.domain}"
