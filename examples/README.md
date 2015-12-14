@@ -152,16 +152,16 @@ bad.
 
 In a browser, go to the IP of your vagrant cluster. This will be the value in your Vagrantfile as described earlier.
 
-![mantlui 192.168.242.55/ui](./mantlui.png)
+![mantlui 192.168.242.55/ui](./images/mantlui.png)
 
 Choose the Marathon "web UI" button and you should see:
 
-![marathonui](./marathonui.png)
+![marathonui](./images/marathonui.png)
 
 Click on your application, hello-world (Note: if its not there. you probably deleted it working through the steps above.
 Just start it again. ) and you should see:
 
-![marathonui at application](./marathonapp.png)
+![marathonui at application](./images/marathonapp.png)
 
 You'll notice that there are two instances.  Each one has a line under it in gray `default:<####>` where <####> is some
 port number. In the picture above, ports 9061 and 25312.
@@ -174,7 +174,7 @@ This is because I don't have default mapped to 192.168.242.55 in my hosts file. 
 take the port information and add it to the IP of where we know the vagrant "cluster" is located.   Open the browser to
  192.168.242.55:9061 (in this example) and we see:
 
- ![hello world application](./helloworld.png)
+ ![hello world application](./images/helloworld.png)
 
 
 Note that it has the container # in it.  If you go back and look at marathon and get the other Port. This will take you
@@ -222,14 +222,14 @@ Once its up and happy..
 If you didn't add the memory.  The above would submit and you would get the json back. You could then go look at the marathon web
 interface and you would see it Deploying but never getting anywhere.
 
-![marathon stuck](marathonstuck.png)
+![marathon stuck](images/marathonstuck.png)
 
 Notice the /minecraft app has a Memory(MB) column value of 2048.  This app is requesting 2GB of RAM.  This value is from
 the [json file you submitted](minecraft/minecraft.json) .
 
 To investigate, go back to the mantlui (https://192.168.242.55) and then go to the Mesos "Web UI" button.
 
-![mesos stuck](mesosstuck.png)
+![mesos stuck](images/mesosstuck.png)
 
 you see that no minecraft is running.  Then looking down the side you see that the total offered is 0 and there are
 238 MB idle.   The request on the Marathon page above is for 2048 MB, there isn't enough and so the system just waits
