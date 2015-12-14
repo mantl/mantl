@@ -12,9 +12,3 @@ ssl/serial*
 
 # downloaded by playbook
 library/lvg.py
-
-#mac
-.DS_Store
-
-#intellij
-.idea
