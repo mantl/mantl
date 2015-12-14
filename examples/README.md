@@ -22,7 +22,7 @@ To run these examples you will need to know:
 1. The url for marathon:
 Marathon runs on port 8080 and if you look in the Vagrantfile in the root of this project there is a line:
 
-       VAGRANT_PRIVATE_IP = "192.168.242.55"
+        VAGRANT_PRIVATE_IP = "192.168.242.55"
 
 2. User name and password for marathon:
 After you have run`./security-setup` in the root of this project, there will be a file `security.yml`.
@@ -145,7 +145,7 @@ you could check the status again, per the previous section. It should give you `
 
 ## Where is my Application
 
-In version 0.5.0 the vagrant build does not have traefik in it and so service discovery is a bit convoluted but not to
+In version 0.5.0 the vagrant build does not have traefik in it and so service discovery is a bit convoluted but not too
 bad.
 
 Got to the IP of your vagrant cluster. This will be the value in your Vagrantfile as described earlier.
@@ -173,6 +173,120 @@ take the port information and add it to the IP of where we know the vagrant "clu
  192.168.242.55:9061 (in this example) and we see:
 
  ![hello world application](./helloworld.png)
+
+
+## Destory the Vagrant Cluster and Build on for MineCraft
+
+If you want to use the vagrant cluster for the Minecraft example you have to make it a bigger VM.  Minecraft requires
+2 Gigs free for itself.
+
+Easy enough!
+
+1. Destroy your vagrant server. Go to the project root and type:
+
+        vagrant destroy
+
+2. Edit the vagrant file.
+
+Change `Vagrantfile` lines near the bottom from
+
+          config.vm.provider :virtualbox do |vb|
+            vb.customize ['modifyvm', :id, '--cpus', 1]
+            vb.customize ['modifyvm', :id, '--memory', 1536]
+          end
+
+to
+
+          config.vm.provider :virtualbox do |vb|
+            vb.customize ['modifyvm', :id, '--cpus', 2]
+            vb.customize ['modifyvm', :id, '--memory', 3536]
+          end
+
+
+and then do:
+
+        vagrant up
+
+
+Once its up and happy..
+
+    curl -k -X POST -H "Content-Type: application/json" "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"minecraft/minecraft.json"
+
+If you didn't add the memory.  The above would submit and you would get the json back. You could then go look at the marathon web
+interface and you would see it Deploying but never getting anywhere.
+
+![marathon stuck](marathonstuck.png)
+
+To investigate, go back to the mantlui and then go to the Mesos "Web UI" button.
+
+![mesos stuck](mesosstuck.png)
+
+you see that no minecraft is running.  Then looking down the side you see that the total offered is 0 and there are
+238 MB idle.   The request on the Marathon page above is for 2048 MB, there isn't enough and so the system just waits
+for resources.
+
+That is why we said to increase the Ram for minecraft and definitely something to keep in mind when you
+see things getting stuck like that.
+
+
+go back to the examples directory  `cd exmaples`  and then
+
+    curl -k -X POST -H "Content-Type: application/json" "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"minecraft/minecraft.json"
+
+and then you can go back and look at the ports on the marathon page as described above but you can also check the status:
+
+    curl -k  "https://admin:hardpass@192.168.242.55:8080/v2/apps/minecraft" | python -m json.tool
+
+Near the bottom of the listing there is a item for tasks. And there you will find:
+
+    "tasks": [
+                {
+                    "appId": "/minecraft",
+                    "healthCheckResults": [
+                        {
+                            "alive": true,
+                            "consecutiveFailures": 0,
+                            "firstSuccess": "2015-12-14T08:25:32.032Z",
+                            "lastFailure": null,
+                            "lastSuccess": "2015-12-14T08:25:32.032Z",
+                            "taskId": "minecraft.1c820b04-a23c-11e5-bc5d-5e55552100a7"
+                        }
+                    ],
+                    "host": "default",
+                    "id": "minecraft.1c820b04-a23c-11e5-bc5d-5e55552100a7",
+                    "ports": [
+                        9199
+                    ],
+                    "stagedAt": "2015-12-14T08:24:36.469Z",
+                    "startedAt": "2015-12-14T08:25:22.424Z",
+                    "version": "2015-12-14T08:24:31.818Z"
+                }
+            ],
+
+The task with appId "/minecraft"  on host "default" is listening on port 9199.
+
+With that you can open your minecraft client, create a new server.  Set the "Server Address" to 192/168.242.55:9199.
+
+You are now.. talking to an App, in a Docker Container submitted to Mesos by Marathon and all running on a VM in
+Virtualbox.  Progress!  Happy mining.
+
+One more way to get the the port would be to ssh to the vm, and look at docker ps.  So cd to the root of the project.
+
+    vagrant ssh
+    sudo docker ps
+
+and in the list you will see.
+
+    CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS              PORTS                                                                                              NAMES
+    c0c6347a7ed4        kitematic/minecraft              "/bin/sh -c 'echo eul"   11 minutes ago      Up 11 minutes       0.0.0.0:9199->25565/tcp                                                                            mesos-20151214-082111-938649792-15050-7100-S0.5554ed92-e22c-4d26-94c9-2556dab6621b
+
+this container has expose 25565 (the standard minecraft port) as 9199.
+
+
+
+
+
+
 
 
 
