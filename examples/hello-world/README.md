@@ -9,7 +9,7 @@ For the examples below use the credentials from the *marathon\_http\_credentials
 
 After Vagrant has had time to spin up the instance. Based on the Vagrantfile this will come up with IP 192.168.242.55
 
-1. Open a browser window to the [Marathon UI](https://192.168.242.55:8080/) (<vagrant vm ip>:8080).
+1. Open a browser window to the [Marathon UI](https://192.168.242.55:8080/) (vagrant-vm-ip:8080).
 2. Run `examples/hello-world/launch.sh -c examples/hello-world/hello-world.json -m 192.168.242.55 -u <user> -p <pass>` to start the _hello-world_ example. You will see the Marathon UI update with the new application as two instances are deployed.
 3. To get information about an app click on the row in the UI. Or, from the command line run `curl -k -s "https://<user>:<pass>@192.168.242.55:8080/v2/apps/hello-world" | python -m json.tool`.
 4. To See the app running look at the output of the curl above and near the bottom, under tasks you see a host, id, and port.
