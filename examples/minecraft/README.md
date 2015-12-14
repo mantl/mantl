@@ -10,7 +10,8 @@ curl -k -X POST -H "Content-Type: application/json" "https://youruser:yourpass@1
 
 Be aware that the Minecraft server needs at least 2GB of RAM to function
 effectively. The DigitalOcean Terraform configuration is good to try this out
-on, as it uses 4GB instances.  Or use up the memory allocated to vagrant.
+on, as it uses 4GB instances.  Or increase the memory allocated to vagrant by changing the vm memory value in the
+Vagrantfile to at least 3.5G.
 
 A [video demo](https://asteris.wistia.com/medias/nd77k59sk6) of this
 configuration is available.
