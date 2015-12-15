@@ -33,7 +33,6 @@
     - httpd-tools
     - nc
     - openssh
-    - jq
     - policycoreutils-python
     - unzip
     - jq
