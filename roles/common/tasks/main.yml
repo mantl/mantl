@@ -70,5 +70,14 @@
   tags:
     - distributive
 
+- name: configure selinux
+  sudo: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags:
+    - security
+    - bootstrap
+
 - include: users.yml
 - include: ssl.yml
