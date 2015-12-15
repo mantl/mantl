@@ -24,6 +24,12 @@
     name: epel-release
     state: latest
 
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
 - name: install system utilities
   sudo: yes
   yum:
@@ -33,6 +39,7 @@
     - httpd-tools
     - nc
     - openssh
+    - jq
     - policycoreutils-python
     - unzip
     - jq

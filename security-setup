@@ -623,6 +623,9 @@ class Consul(Component):
             else:
                 print('acl secure token already set')
 
+    def cert(self):
+        "SSL certificate"
+        self.generate_certificate("consul")
 
 class Traefik(Component):
     def check(self):
