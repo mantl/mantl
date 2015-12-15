@@ -91,7 +91,6 @@
       dest: /usr/local/bin
   tags:
     - consul
-    - cscripts
 
 - name: install check scripts
   sudo: yes
