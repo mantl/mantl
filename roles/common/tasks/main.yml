@@ -78,6 +78,14 @@
     regexp: ^.+requiretty$
     line: "# Defaults	requiretty"
   tags:
+
+- name: configure selinux
+  sudo: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags:
+    - security
     - bootstrap
 
 - include: users.yml

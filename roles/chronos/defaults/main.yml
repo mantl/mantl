@@ -12,11 +12,10 @@ chronos_zk_connect: "zk://{{chronos_zk_auth}}{{ chronos_zk_dns }}:{{ chronos_zk_
 chronos_zk_mesos_master: "zk://{{ chronos_zk_dns }}:{{ chronos_zk_port }}/mesos"
 
 # zookeeper
-zk_docker_image: "ciscocloud/zookeeper:0.3"
 chronos_zk_acl_world: "world:anyone:cdrwa"
 chronos_zk_acl: "{% if zk_chronos_user_secret is defined %}digest:{{ zk_chronos_user }}:{{ zk_chronos_user_secret_digest}}:cdraw{% endif  %}"
 
-chronos_zk_acl_cmd: "docker run --rm --entrypoint zookeepercli {{ zk_docker_image }} -servers {{ chronos_zk_dns }}:{{ chronos_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ chronos_zk_chroot }} '{{ chronos_zk_acl_world }},{{ chronos_zk_acl }}'"
+chronos_zk_acl_cmd: "zookeepercli -servers {{ chronos_zk_dns }}:{{ chronos_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ chronos_zk_chroot }} '{{ chronos_zk_acl_world }},{{ chronos_zk_acl }}'"
 
 chronos_port: 14400
 chronos_proxy_port: 4400

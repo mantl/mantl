@@ -1,6 +1,13 @@
 ---
-- name: wait for zookeeper to listen
-  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+- name: wait for zookeeper service to be registered
+  wait_for:
+    host: "{{ marathon_zk_dns }}"
+    port: "{{ marathon_zk_port }}"
+    delay: 10
+    timeout: 300
+    state: present
+  tags:
+    - marathon
 
 - name: create zookeeper acl
   sudo: yes

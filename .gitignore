@@ -12,3 +12,4 @@ ssl/serial*
 
 # downloaded by playbook
 addons/library/
+library/lvg.py
