@@ -11,4 +11,5 @@ ssl/serial*
 **/.terraform
 
 # downloaded by playbook
+addons/library/
 library/lvg.py
