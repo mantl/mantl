@@ -10,7 +10,7 @@
     - marathon
 
 - name: wait for zookeeper to listen
-  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh localhost"
 
 - name: create zookeeper acl
   sudo: yes
@@ -20,6 +20,10 @@
     - restart marathon
   when: zk_marathon_user_secret is defined
   run_once: true
+  register: zk_acl_marathon
+  until: zk_acl_marathon.rc == 0
+  retries: 5
+  delay: 10
   tags:
     - marathon
 
