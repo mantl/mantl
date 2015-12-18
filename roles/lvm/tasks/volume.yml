@@ -33,6 +33,8 @@
   sudo: yes
   command: vgscan
   register: volume_groups
+  tags:
+    - bootstrap
 
 - name: Create volume group
   sudo: yes
