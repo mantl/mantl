@@ -19,7 +19,7 @@
             "script": "{{pwd}}/packer/scripts/vbox.sh"
         },
 	{
-	    "type:" "ansible-local",
+	    "type": "ansible-local",
 	    "playbook_file": "{{pwd}}/playbooks/upgrade-packages.yml"
 	},
         {
