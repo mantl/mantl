@@ -5,17 +5,17 @@ variable "worker_volume_size" {default = "20"} # size is in gigabytes
 variable "worker_data_volume_size" {default = "100"} # size is in gigabytes
 
 variable "short_name" {default = "mantl"}
-variable "availability_zone" {}
+variable "availability_zones" {}
 variable "ssh_key_pair" {}
 variable "datacenter" {}
 variable "source_ami" {}
 variable "vpc_id" {}
 variable "default_security_group_id" {}
-variable "vpc_subnet_id" {}
+variable "vpc_subnet_ids" {}
 variable "ssh_username" {default = "centos"}
 
 resource "aws_ebs_volume" "mantl-worker-lvm" {
-  availability_zone = "${var.availability_zone}"
+  availability_zone = "${element(split(",", var.availability_zones), count.index)}"
   count = "${var.worker_count}"
   size = "${var.worker_data_volume_size}"
   type = "gp2"
@@ -27,14 +27,13 @@ resource "aws_ebs_volume" "mantl-worker-lvm" {
 
 resource "aws_instance" "mantl-worker-nodes" {
   ami = "${var.source_ami}"
-  availability_zone = "${var.availability_zone}"
   instance_type = "${var.worker_type}"
   count = "${var.worker_count}"
   vpc_security_group_ids = ["${aws_security_group.worker.id}",
     "${var.default_security_group_id}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
-  subnet_id = "${var.vpc_subnet_id}"
+  subnet_id = "${element(split(",", var.vpc_subnet_ids), count.index)}" 
   iam_instance_profile = "${var.worker_iam_profile}"
   root_block_device {
     delete_on_termination = true

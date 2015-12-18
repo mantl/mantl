@@ -63,11 +63,11 @@ resource "aws_route_table_association" "main" {
   route_table_id = "${aws_route_table.main.id}"
 }
 
-output "vpc_azs" {
+output "availability_zones" {
   value = "${join(",",aws_subnet.main.*.availability_zone)}"
 }
 
-output "vpc_subnets_id" {
+output "subnet_ids" {
    value = "${join(",",aws_subnet.main.*.id)}"
 }
 

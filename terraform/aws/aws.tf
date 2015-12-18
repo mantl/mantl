@@ -1,7 +1,9 @@
-variable "short_name" {default = "mantl-testing"}
 variable "datacenter" {default = "aws-us-west-2"}
-variable "ssh_username" {default = "centos"}
 variable "region" {default = "us-west-2"}
+variable "short_name" {default = "mantl-testing"}
+variable "source_ami" {default ="ami-d440a6e7"}
+variable "ssh_username" {default = "centos"}
+
 
 provider "aws" {
   region = "${var.region}"
@@ -44,23 +46,23 @@ module "control-nodes" {
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
-  availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
   vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+  vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}" 
+  availability_zones = "${terraform_remote_state.vpc.output.availability_zones}" 
 }
 
 module "edge-nodes" {
-  source = "./nodes/edge"
+ source = "./nodes/edge"
   datacenter = "${var.datacenter}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
-  availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
+  availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+  vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}" 
 }
 
 module "worker-nodes" {
@@ -70,9 +72,9 @@ module "worker-nodes" {
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
-  availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
+  availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+  vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"  
 }
 
