@@ -18,9 +18,13 @@
             "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "script": "{{pwd}}/packer/scripts/vbox.sh"
         },
+	{
+	    "type:" "ansible-local",
+	    "playbook_file": "{{pwd}}/playbooks/upgrade-packages.yml"
+	},
         {
             "type": "ansible-local",
-            "playbook_file": "{{pwd}}/vagrant.yml",
+            "playbook_file": "{{pwd}}/terraform.sample.yml",
             "role_paths": [
                 "{{pwd}}/roles/calico",
                 "{{pwd}}/roles/chronos",
