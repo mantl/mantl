@@ -1,5 +1,7 @@
-variable "short_name" {default = "mantl-dev"}
+variable "short_name" {default = "mantl-YADDA"}
 variable "datacenter" {default = "aws-us-west-2"}
+variable "ssh_username" {default = "centos"}
+variable "source_ami" {default = "ami-d440a6e7"}
 
 provider "aws" {
   region = "us-west-2"
@@ -24,16 +26,47 @@ resource "terraform_remote_state" "vpc" {
 #  }
 #}
 
-module "aws-instances" {
-  source = "./instances"
-  availability_zone = "us-east-1e"
-  datacenter = "${var.datacenter}"
-  ssh_username = "centos"
-  source_ami = "ami-d440a6e7"
+module "ssh-key" {
+  source ="./ssh"
   short_name = "${var.short_name}"
-  ssh_key_pair = "key-mantl-dev"
+}
+
+module "control-nodes" {
+  source = "./nodes/control"
+  datacenter = "${var.datacenter}"
+  ssh_username = "${var.ssh_username}"
+  source_ami = "${var.source_ami}"
+  short_name = "${var.short_name}"
+  ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
   aws_vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   aws_default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
   aws_vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
 }
+
+module "edge-nodes" {
+  source = "./nodes/edge"
+  datacenter = "${var.datacenter}"
+  ssh_username = "${var.ssh_username}"
+  source_ami = "${var.source_ami}"
+  short_name = "${var.short_name}"
+  ssh_key_pair = "${module.ssh-key.ssh_key_name}"
+  availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
+  aws_vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
+  aws_default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  aws_vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+}
+
+module "worker-nodes" {
+  source = "./nodes/worker"
+  datacenter = "${var.datacenter}"
+  ssh_username = "${var.ssh_username}"
+  source_ami = "${var.source_ami}"
+  short_name = "${var.short_name}"
+  ssh_key_pair = "${module.ssh-key.ssh_key_name}"
+  availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
+  aws_vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
+  aws_default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  aws_vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+}
+

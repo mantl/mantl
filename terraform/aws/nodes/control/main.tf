@@ -32,6 +32,7 @@ resource "aws_instance" "mi-control-nodes" {
   instance_type = "${var.control_type}"
   count = "${var.control_count}"
   vpc_security_group_ids = ["${aws_security_group.control.id}",
+    "${aws_security_group.ui.id}",
     "${var.aws_default_security_group_id}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
@@ -107,9 +108,41 @@ resource "aws_security_group" "control" {
 
 }
 
+resource "aws_security_group" "ui" {
+  name = "${var.short_name}-ui"
+  description = "Allow inbound traffic for Mantl UI"
+  vpc_id = "${var.aws_vpc_id}"
+
+  ingress { # HTTP
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # HTTPS
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress { # Consul
+    from_port = 8500
+    to_port = 8500
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 output "control_security_group" {
   value = "${aws_security_group.control.id}"
 }
+
+output "ui_security_group" {
+  value = "${aws_security_group.ui.id}"
+}
+
 
 output "control_ids" {
   value = "${join(\",\", aws_instance.mi-control-nodes.*.id)}"
