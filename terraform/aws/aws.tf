@@ -1,10 +1,10 @@
 variable "short_name" {default = "mantl-testing"}
 variable "datacenter" {default = "aws-us-west-2"}
 variable "ssh_username" {default = "centos"}
-variable "source_ami" {default = "ami-d440a6e7"}
+variable "region" {default = "us-west-2"}
 
 provider "aws" {
-  region = "us-west-2"
+  region = "${var.region}"
 }
 
 # _local is for development only s3 or something else should be used
@@ -24,6 +24,12 @@ resource "terraform_remote_state" "vpc" {
 #    bucket = "mybucketname"
 #   key = "name_of_state_file"
 #  }
+#}
+
+#module "vpc" {
+#  source ="./vpc"
+#  short_name = "${var.short_name}"
+#  region = "${var.region}"
 #}
 
 module "ssh-key" {
