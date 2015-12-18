@@ -9,12 +9,12 @@ variable "availability_zone" {}
 variable "ssh_key_pair" {}
 variable "datacenter" {}
 variable "source_ami" {}
-variable "aws_vpc_id" {}
-variable "aws_default_security_group_id" {}
-variable "aws_vpc_subnet_id" {}
+variable "vpc_id" {}
+variable "default_security_group_id" {}
+variable "vpc_subnet_id" {}
 variable "ssh_username" {default = "centos"}
 
-resource "aws_ebs_volume" "mi-worker-lvm" {
+resource "aws_ebs_volume" "mantl-worker-lvm" {
   availability_zone = "${var.availability_zone}"
   count = "${var.worker_count}"
   size = "${var.worker_data_volume_size}"
@@ -25,16 +25,16 @@ resource "aws_ebs_volume" "mi-worker-lvm" {
   }
 }
 
-resource "aws_instance" "mi-worker-nodes" {
+resource "aws_instance" "mantl-worker-nodes" {
   ami = "${var.source_ami}"
   availability_zone = "${var.availability_zone}"
   instance_type = "${var.worker_type}"
   count = "${var.worker_count}"
   vpc_security_group_ids = ["${aws_security_group.worker.id}",
-    "${var.aws_default_security_group_id}"]
+    "${var.default_security_group_id}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
-  subnet_id = "${var.aws_vpc_subnet_id}"
+  subnet_id = "${var.vpc_subnet_id}"
   iam_instance_profile = "${var.worker_iam_profile}"
   root_block_device {
     delete_on_termination = true
@@ -48,18 +48,18 @@ resource "aws_instance" "mi-worker-nodes" {
   }
 }
 
-resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
+resource "aws_volume_attachment" "mantl-worker-nodes-lvm-attachment" {
   count = "${var.worker_count}"
   device_name = "xvdh"
-  instance_id = "${element(aws_instance.mi-worker-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mi-worker-lvm.*.id, count.index)}"
+  instance_id = "${element(aws_instance.mantl-worker-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mantl-worker-lvm.*.id, count.index)}"
   force_detach = true
 }
 
 resource "aws_security_group" "worker" {
   name = "${var.short_name}-worker"
   description = "Allow inbound traffic for worker nodes"
-  vpc_id = "${var.aws_vpc_id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress { # SSH
     from_port = 22
@@ -116,5 +116,5 @@ output "worker_security_group" {
 }
 
 output "worker_ips" {
-  value = "${join(\",\", aws_instance.mi-worker-nodes.*.public_ip)}"
+  value = "${join(\",\", aws_instance.mantl-worker-nodes.*.public_ip)}"
 }

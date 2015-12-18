@@ -9,13 +9,13 @@ variable "availability_zone" {}
 variable "ssh_key_pair" {}
 variable "datacenter" {}
 variable "source_ami" {}
-variable "aws_vpc_id" {}
-variable "aws_default_security_group_id" {}
-variable "aws_vpc_subnet_id" {}
+variable "vpc_id" {}
+variable "default_security_group_id" {}
+variable "vpc_subnet_id" {}
 variable "ssh_username" {default = "centos"}
 
 
-resource "aws_ebs_volume" "mi-edge-lvm" {
+resource "aws_ebs_volume" "mantl-edge-lvm" {
   availability_zone = "${var.availability_zone}"
   count = "${var.edge_count}"
   size = "${var.edge_data_volume_size}"
@@ -26,16 +26,16 @@ resource "aws_ebs_volume" "mi-edge-lvm" {
   }
 }
 
-resource "aws_instance" "mi-edge-nodes" {
+resource "aws_instance" "mantl-edge-nodes" {
   ami = "${var.source_ami}"
   #availability_zone = "${var.availability_zone}"
   instance_type = "${var.edge_type}"
   count = "${var.edge_count}"
   vpc_security_group_ids = ["${aws_security_group.edge.id}",
-    "${var.aws_default_security_group_id}"]
+    "${var.default_security_group_id}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
-  subnet_id = "${var.aws_vpc_subnet_id}"
+  subnet_id = "${var.vpc_subnet_id}"
   iam_instance_profile = "${var.edge_iam_profile}"
   root_block_device {
     delete_on_termination = true
@@ -49,18 +49,18 @@ resource "aws_instance" "mi-edge-nodes" {
   }
 }
 
-resource "aws_volume_attachment" "mi-edge-nodes-lvm-attachment" {
+resource "aws_volume_attachment" "mantl-edge-nodes-lvm-attachment" {
   count = "${var.edge_count}"
   device_name = "xvdh"
-  instance_id = "${element(aws_instance.mi-edge-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mi-edge-lvm.*.id, count.index)}"
+  instance_id = "${element(aws_instance.mantl-edge-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mantl-edge-lvm.*.id, count.index)}"
   force_detach = true
 }
 
 resource "aws_security_group" "edge" {
   name = "${var.short_name}-edge"
   description = "Allow inbound traffic for edge routing"
-  vpc_id = "${var.aws_vpc_id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress { # SSH
     from_port = 22
@@ -89,5 +89,5 @@ output "control_security_group" {
 }
 
 output "edge_ips" {
-  value = "${join(\",\", aws_instance.mi-edge-nodes.*.public_ip)}"
+  value = "${join(\",\", aws_instance.mantl-edge-nodes.*.public_ip)}"
 }

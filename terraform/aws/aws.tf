@@ -1,4 +1,4 @@
-variable "short_name" {default = "mantl-YADDA"}
+variable "short_name" {default = "mantl-testing"}
 variable "datacenter" {default = "aws-us-west-2"}
 variable "ssh_username" {default = "centos"}
 variable "source_ami" {default = "ami-d440a6e7"}
@@ -39,9 +39,9 @@ module "control-nodes" {
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
-  aws_vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
-  aws_default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  aws_vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+  vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
+  default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
 }
 
 module "edge-nodes" {
@@ -52,9 +52,9 @@ module "edge-nodes" {
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
-  aws_vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
-  aws_default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  aws_vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+  vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
+  default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
 }
 
 module "worker-nodes" {
@@ -65,8 +65,8 @@ module "worker-nodes" {
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zone = "${terraform_remote_state.vpc.output.availability_zone}"
-  aws_vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
-  aws_default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  aws_vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
+  vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
+  default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  vpc_subnet_id = "${terraform_remote_state.vpc.output.vpc_subnet}" 
 }
 

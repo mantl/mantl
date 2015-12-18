@@ -9,13 +9,13 @@ variable "availability_zone" {}
 variable "ssh_key_pair" {}
 variable "datacenter" {}
 variable "source_ami" {}
-variable "aws_vpc_id" {}
-variable "aws_default_security_group_id" {}
-variable "aws_vpc_subnet_id" {}
+variable "vpc_id" {}
+variable "default_security_group_id" {}
+variable "vpc_subnet_id" {}
 variable "ssh_username" {default = "centos"}
 
 
-resource "aws_ebs_volume" "mi-control-lvm" {
+resource "aws_ebs_volume" "mantl-control-lvm" {
   availability_zone = "${var.availability_zone}"
   count = "${var.control_count}"
   size = "${var.control_data_volume_size}"
@@ -26,17 +26,17 @@ resource "aws_ebs_volume" "mi-control-lvm" {
   }
 }
 
-resource "aws_instance" "mi-control-nodes" {
+resource "aws_instance" "mantl-control-nodes" {
   ami = "${var.source_ami}"
   #availability_zone = "${var.availability_zone}"
   instance_type = "${var.control_type}"
   count = "${var.control_count}"
   vpc_security_group_ids = ["${aws_security_group.control.id}",
     "${aws_security_group.ui.id}",
-    "${var.aws_default_security_group_id}"]
+    "${var.default_security_group_id}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
-  subnet_id = "${var.aws_vpc_subnet_id}"
+  subnet_id = "${var.vpc_subnet_id}"
   iam_instance_profile = "${var.control_iam_profile}"
   root_block_device {
     delete_on_termination = true
@@ -51,18 +51,18 @@ resource "aws_instance" "mi-control-nodes" {
   }
 }
 
-resource "aws_volume_attachment" "mi-control-nodes-lvm-attachment" {
+resource "aws_volume_attachment" "mantl-control-nodes-lvm-attachment" {
   count = "${var.control_count}"
   device_name = "xvdh"
-  instance_id = "${element(aws_instance.mi-control-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mi-control-lvm.*.id, count.index)}"
+  instance_id = "${element(aws_instance.mantl-control-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mantl-control-lvm.*.id, count.index)}"
   force_detach = true
 }
 
 resource "aws_security_group" "control" {
   name = "${var.short_name}-control"
   description = "Allow inbound traffic for control nodes"
-  vpc_id = "${var.aws_vpc_id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress { # SSH
     from_port = 22
@@ -111,7 +111,7 @@ resource "aws_security_group" "control" {
 resource "aws_security_group" "ui" {
   name = "${var.short_name}-ui"
   description = "Allow inbound traffic for Mantl UI"
-  vpc_id = "${var.aws_vpc_id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress { # HTTP
     from_port = 80
@@ -145,9 +145,9 @@ output "ui_security_group" {
 
 
 output "control_ids" {
-  value = "${join(\",\", aws_instance.mi-control-nodes.*.id)}"
+  value = "${join(\",\", aws_instance.mantl-control-nodes.*.id)}"
 }
 
 output "control_ips" {
-  value = "${join(\",\", aws_instance.mi-control-nodes.*.public_ip)}"
+  value = "${join(\",\", aws_instance.mantl-control-nodes.*.public_ip)}"
 }
