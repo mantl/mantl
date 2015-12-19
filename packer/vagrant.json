@@ -25,6 +25,9 @@
         {
             "type": "ansible-local",
             "playbook_file": "{{pwd}}/terraform.sample.yml",
+            "extra_arguments": [
+                "-e provider=vagrant"
+            ],
             "role_paths": [
                 "{{pwd}}/roles/calico",
                 "{{pwd}}/roles/chronos",
