@@ -12,3 +12,25 @@ AWS Route 53 console.
    :alt: AWS Route53 Hosted Zone Id example
 
 Route53 uses your normal :doc:`aws` provider credentials.
+
+In your ``aws.tf``, you will want to include the aws-route53 module:
+
+.. code-block:: json
+
+  # Example setup for an AWS Route53
+module "route53" {
+  source = "./aws/route53/dns"
+  control_count = "${var.control_count}"
+  control_ips = "${module.control-nodes.control_ips}"
+  domain = "my-test-cloud.com"
+  edge_count = "${var.edge_count}"
+  edge_ips = "${module.edge-nodes.edge_ips}"
+  elb_fqdn = "${module.aws-elb.fqdn}"
+  hosted_zone_id = "XXXXXXXXXXXX"
+  short_name = "${var.short_name}"
+  subdomain = ".dev"
+  worker_count = "${var.worker_count}"
+  worker_ips = "${module.worker-nodes.worker_ips}"
+}
+
+
