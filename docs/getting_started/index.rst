@@ -60,20 +60,32 @@ Deploying software via Ansible
 
 In the following examples, we're going to assume you deployed hosts using
 Terraform. This project ships with a dynamic inventory file to read Terraform
-``.tfstate`` files. To use it, just use the ``-i
-plugins/inventory/terraform.py`` argument of ``ansible`` or
-``ansible-playbook``.
+``.tfstate`` files. If you are running ansible from the root directory of the
+project, this inventory file will be used by default. If not, or to use a custom
+inventory file, you can use the ``-i`` argument of ``ansible`` or
+``ansible-playbook`` to specify the inventory file path. For example:
+
+.. code-block:: shell
+
+   ansible-playbook -i path/to/inventory -e @security.yml terraform.yml
 
 First, ping the servers to ensure they are reachable via ssh:
 
 .. code-block:: shell
 
-  ansible all -i plugins/inventory/terraform.py -m ping 
+  ansible all -m ping
 
 If any servers fail to connect, check your connection by adding ``-vvvv``
 for verbose SSH debugging and try again to view the errors in more detail.
 
-Next, deploy the software. First, you'll need to customize a playbook. A sample
+Next, it is important that we upgrade the operating system packages on all
+servers before we begin the deployment:
+
+.. code-block:: shell
+
+  ansible-playbook ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
+
+Finally, deploy the software. First, you'll need to customize a playbook. A sample
 can be found at ``terraform.sample.yml`` in the root directory, you can find
 more about customizing this at :doc:`playbook`. The main change you'll want
 to make is changing ``consul_acl_datacenter`` to your preferred ACL datacenter.
@@ -82,7 +94,7 @@ you've placed the filled-out template at ``terraform.yml``:
 
 .. code-block:: shell
 
-  ansible-playbook -i plugins/inventory/terraform.py -e @security.yml terraform.yml
+  ansible-playbook -e @security.yml terraform.yml
 
 The deployment will probably take a while as all tasks are completed.
 
