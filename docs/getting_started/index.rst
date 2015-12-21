@@ -88,6 +88,13 @@ for verbose SSH debugging and try again to view the errors in more detail.
 
       ansible-playbook ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
 
+   If you neglect to upgrade packages, you will likely experience multiple
+   failures, particularly around Consul. See issues `#907
+   <https://github.com/CiscoCloud/microservices-infrastructure/issues/907>`_ and
+   `#927
+   <https://github.com/CiscoCloud/microservices-infrastructure/issues/927>`_ for
+   more details.
+
 Next, deploy the software. First, you'll need to customize a playbook. A sample
 can be found at ``terraform.sample.yml`` in the root directory, you can find
 more about customizing this at :doc:`playbook`. The main change you'll want
