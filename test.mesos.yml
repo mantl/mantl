@@ -77,7 +77,7 @@
 # themselves, they only schedule work. That said, there should be at least 3 of
 # them (and always an odd number) so that ZooKeeper can get and keep a quorum.
 - hosts: role=control
-  gather_facts: no
+  gather_facts: yes
   vars:
     consul_dns_domain: consul
     consul_servers_group: role=control
@@ -91,13 +91,14 @@
     - marathon
     - chronos
     - mantlui
-    - k8s-master
-    - k8s-addons
+    - kubernetes
+    - kubernetes-master
+    - kubernetes-addons
 
 - hosts: role=kubeworker
   # role=worker hosts are a subset of "all". Since we already gathered facts on
   # all servers, we can skip it here to speed up the deployment.
-  gather_facts: no
+  gather_facts: yes
   vars:
     consul_dns_domain: consul
     mesos_mode: follower
@@ -108,8 +109,9 @@
     # In this example, short-name is "mi" and domain is "example.com":
     haproxy_domain: mi-lb.example.com
   roles:
-    - k8s-minion
     - flannel
+    - kubernetes
+    - kubernetes-node
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.
