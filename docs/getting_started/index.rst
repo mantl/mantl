@@ -78,14 +78,17 @@ First, ping the servers to ensure they are reachable via ssh:
 If any servers fail to connect, check your connection by adding ``-vvvv``
 for verbose SSH debugging and try again to view the errors in more detail.
 
-Next, it is important that we upgrade the operating system packages on all
-servers before we begin the deployment:
+.. warning::
 
-.. code-block:: shell
+   Due to updated packages in the recent CentOS-7 (1511) release, it is critical
+   that you upgrade operating system packages on all server before proceeding
+   with deployment:
 
-  ansible-playbook ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
+   .. code-block:: shell
 
-Finally, deploy the software. First, you'll need to customize a playbook. A sample
+      ansible-playbook ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
+
+Next, deploy the software. First, you'll need to customize a playbook. A sample
 can be found at ``terraform.sample.yml`` in the root directory, you can find
 more about customizing this at :doc:`playbook`. The main change you'll want
 to make is changing ``consul_acl_datacenter`` to your preferred ACL datacenter.
