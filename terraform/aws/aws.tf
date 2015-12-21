@@ -1,6 +1,9 @@
+variable "control_count" { default = 3 }
+variable "worker_count" { default = 2 }
+variable "edge_count" { default = 2 }
 variable "datacenter" {default = "aws-us-west-2"}
 variable "region" {default = "us-west-2"}
-variable "short_name" {default = "mantl-testing"}
+variable "short_name" {default = "mantl-ELBtesting"}
 variable "source_ami" {default ="ami-d440a6e7"}
 variable "ssh_username" {default = "centos"}
 
@@ -41,6 +44,7 @@ module "ssh-key" {
 
 module "control-nodes" {
   source = "./nodes/control"
+  control_count = "${var.control_count}"
   datacenter = "${var.datacenter}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${var.source_ami}"
@@ -55,6 +59,7 @@ module "control-nodes" {
 module "edge-nodes" {
  source = "./nodes/edge"
   datacenter = "${var.datacenter}"
+  edge_count = "${var.edge_count}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
@@ -75,6 +80,29 @@ module "worker-nodes" {
   availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
-  vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"  
+  vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  worker_count = "${var.worker_count}"  
 }
 
+module "aws-elb" {
+  source = "./elb"
+  short_name = "${var.short_name}"
+  instances = "${module.control-nodes.control_ids}"
+  subnets = "${terraform_remote_state.vpc.output.subnet_ids}" 
+  security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
+}
+
+module "route53" {
+  source = "./route53/dns"
+  control_count = "${var.control_count}"
+  control_ips = "${module.control-nodes.control_ips}"
+  domain = "my-test-cloud.com"
+  edge_count = "${var.edge_count}"
+  edge_ips = "${module.edge-nodes.edge_ips}"
+  elb_fqdn = "${module.aws-elb.fqdn}"
+  hosted_zone_id = "XXXXXXXXXXXX"
+  short_name = "${var.short_name}"
+  subdomain = ".dev"
+  worker_count = "${var.worker_count}"
+  worker_ips = "${module.worker-nodes.worker_ips}"
+}

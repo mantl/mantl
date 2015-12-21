@@ -5,11 +5,13 @@ variable control_subdomain { default = "control" }
 variable domain {}
 variable edge_count {}
 variable edge_ips {}
+variable elb_fqdn {}
 variable hosted_zone_id {}
 variable short_name {}
 variable subdomain { default = "" }
 variable worker_count {}
 variable worker_ips {}
+
 
 # individual records
 resource "aws_route53_record" "dns-control" {
@@ -39,7 +41,8 @@ resource "aws_route53_record" "dns-worker" {
   ttl = 60
 }
 
-# group records
+
+# group records 
 resource "aws_route53_record" "dns-control-group" {
   count = "${var.control_count}"
   zone_id = "${var.hosted_zone_id}"
@@ -56,4 +59,28 @@ resource "aws_route53_record" "dns-wildcard" {
   records = ["${split(",", var.edge_ips)}"]
   type = "A"
   ttl = 60
+}
+
+resource "aws_route53_record" "elb-cname" {
+  zone_id = "${var.hosted_zone_id}"
+  name = "${var.short_name}"  
+  type = "CNAME"
+  ttl = 5
+  records = ["${var.elb_fqdn}"]
+}
+
+output "elb_cname" {
+  value = "${aws_route53_record.elb-cname.fqdn}"
+}
+
+output "edge_fqdn" {
+  value = "${join(\",\", aws_route53_record.dns-edge.*.fqdn)}"
+}
+
+output "control_fqdn" {
+  value = "${join(\",\", aws_route53_record.dns-control.*.fqdn)}"
+}
+
+output "worker_fqdn" {
+  value = "${join(\",\", aws_route53_record.dns-worker.*.fqdn)}"
 }

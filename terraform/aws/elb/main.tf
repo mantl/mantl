@@ -11,7 +11,7 @@ resource "aws_iam_server_certificate" "elb_cert" {
   private_key = "${file(var.ssl_key_file)}"
 }
 
-resource "aws_elb" "mi-elb" {
+resource "aws_elb" "mantl-elb" {
   name = "${var.short_name}-elb"
   cross_zone_load_balancing = true
   idle_timeout = 400
@@ -57,6 +57,6 @@ resource "aws_elb" "mi-elb" {
   }
 }
 
-output "aws_elb_dns_name" {
-  value = "aws_elb.mi-elb.dns_name"
+output "fqdn" {
+  value = "${aws_elb.mantl-elb.dns_name}"
 }
