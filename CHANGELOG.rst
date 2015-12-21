@@ -1,6 +1,25 @@
 Changelog
 =========
 
+0.5.1 (December 22, 2015)
+-------------------------
+
+Features
+^^^^^^^^
+
+* Improved GlusterFS experience #849, #867, #868, #880, #898, #904
+* Improved Zookeeper setup, configuration, and upgrade path #873, #896, #917
+* Traefik UI integration #878
+
+Fixes
+^^^^^
+
+* Selinux is set to permissive mode by default #895
+* Tasks using the docker containerizer can write to the Mesos sandbox #613
+* Updated packaging to fix invalid Consul user shell setting #908
+* Logstash configuration is now correctly configured on Mesos master and agent nodes #920, #921
+* Documentation updates #839, #848, #885, #893, #936
+
 0.5.0 (November 23, 2015)
 -------------------------
 
