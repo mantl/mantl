@@ -13,24 +13,25 @@ AWS Route 53 console.
 
 Route53 uses your normal :doc:`aws` provider credentials.
 
-In your ``aws.tf``, you will want to include the aws-route53 module:
+In your ``aws.tf``, you will want to uncomment the aws-elb module:
 
 .. code-block:: json
 
   # Example setup for an AWS Route53
-module "route53" {
-  source = "./aws/route53/dns"
-  control_count = "${var.control_count}"
-  control_ips = "${module.control-nodes.control_ips}"
-  domain = "my-test-cloud.com"
-  edge_count = "${var.edge_count}"
-  edge_ips = "${module.edge-nodes.edge_ips}"
-  elb_fqdn = "${module.aws-elb.fqdn}"
-  hosted_zone_id = "XXXXXXXXXXXX"
-  short_name = "${var.short_name}"
-  subdomain = ".dev"
-  worker_count = "${var.worker_count}"
-  worker_ips = "${module.worker-nodes.worker_ips}"
-}
+  module "route53" {
+    source = "./terraform/aws/route53/dns"
+    control_count = "${var.control_count}"
+    control_ips = "${module.control-nodes.control_ips}"
+    domain = "my-test-cloud.com"
+    edge_count = "${var.edge_count}"
+    edge_ips = "${module.edge-nodes.edge_ips}"
+    elb_fqdn = "${module.aws-elb.fqdn}"
+    hosted_zone_id = "XXXXXXXXXXXX"
+    short_name = "${var.short_name}"
+    subdomain = ".dev"
+    worker_count = "${var.worker_count}"
+    worker_ips = "${module.worker-nodes.worker_ips}"
+  }
 
-
+This module assumes you set-up an ELB, if not you will need to comment out the ELB section 
+and references in the module. 
