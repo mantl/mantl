@@ -178,7 +178,7 @@ Mantl is always in the [mantl-universe repo](https://github.com/CiscoCloud/mantl
 - [x] Authentication and authorization for Consul
 - [x] Authentication and authorization for Mesos
 - [x] Authentication and authorization for Marathon
-- [x] Application load balancer (based on HAProxy and consul-template)
+- [x] Application load balancer (based on [Traefik](https://traefik.github.io/))
 - [x] Application dynamic firewalls (using consul template)
 
 ### Operations

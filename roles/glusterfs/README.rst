@@ -11,7 +11,7 @@ Current Version: 3.7.6
 Installation
 ------------
 
-As of 0.6, GlusterFS is distributed as an addon for Mantl. After a successful
+As of 0.5.1, GlusterFS is distributed as an addon for Mantl. After a successful
 initial run (from your customized ``terraform.sample.yml``), install it with
 ``ansible-playbook -e @security.yml addons/glusterfs.yml``.
 
