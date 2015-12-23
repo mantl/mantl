@@ -42,7 +42,6 @@
   when: volume_groups.stdout.find(lvm_volume_group_name) == -1
   tags:
     - docker
-    - bootstrap
     - lvm
 
 - name: enable lvmetad service
@@ -53,7 +52,6 @@
     state: started
   tags:
     - docker
-    - bootstrap
     - lvm
 
 - name: save volume group name as fact

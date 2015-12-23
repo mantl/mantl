@@ -32,7 +32,6 @@
     state: directory
   tags:
     - docker
-    - bootstrap
 
 - name: create docker entry for syslogd
   sudo: yes
@@ -46,7 +45,6 @@
     - restart rsyslog
   tags:
     - docker
-    - bootstrap
 
 
 - name: configure docker consul dns

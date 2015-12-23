@@ -18,9 +18,13 @@
             "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "script": "{{pwd}}/packer/scripts/vbox.sh"
         },
+	{
+	    "type": "ansible-local",
+	    "playbook_file": "{{pwd}}/playbooks/upgrade-packages.yml"
+	},
         {
             "type": "ansible-local",
-            "playbook_file": "{{pwd}}/vagrant.yml",
+            "playbook_file": "{{pwd}}/terraform.sample.yml",
             "role_paths": [
                 "{{pwd}}/roles/calico",
                 "{{pwd}}/roles/chronos",
@@ -45,7 +49,8 @@
                 "{{pwd}}/roles/vault",
                 "{{pwd}}/roles/zookeeper"
             ],
-            "extra_arguments": ["--tags", "bootstrap"]
+            "extra_arguments": [ "--tags", "bootstrap", "--extra-vars=\"provider=vagrant\"" ],
+            "inventory_groups": "role=control,role=worker"
         },
         {
             "type": "shell",
