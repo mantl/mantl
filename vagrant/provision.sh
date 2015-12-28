@@ -28,6 +28,7 @@ pip --version > /dev/null || easy_install pip
 pip install -r /vagrant/requirements.txt
 
 cd /vagrant
+chown -R vagrant:vagrant /vagrant
 
 # security.yml and ssl/ are stored in a directory that is preserved across
 # reboots/reloads/rsyncs
