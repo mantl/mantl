@@ -150,14 +150,6 @@ cert_opts.add_argument(
     default='operations@example.com',
     help='contact email for organizational unit')
 cert_opts.add_argument(
-    '--consul-location',
-    default='consul.service.consul',
-    help='internal name for Consul certificate, will be used as common name')
-cert_opts.add_argument(
-    '--nginx-location',
-    default='*.service.consul',
-    help='internal name for Nginx proxies, will be used as common name')
-cert_opts.add_argument(
     '--no-verify-certificates',
     action='store_true',
     help='skip verifying certificates as part of setup process')
@@ -193,6 +185,10 @@ consul_opts.add_argument(
     default=True,
     help='enable Consul auth',
     dest='do_consul_ssl', )
+consul_opts.add_argument(
+    '--consul-dns-domain',
+    default='consul',
+    help='consul domain suffix')
 
 # Mesos security
 mesos_opts = parser.add_argument_group(
@@ -420,12 +416,13 @@ class Component(object):
         yield
         os.chdir(original)
 
-    def call(self, command, stdin=None, visible_to_user=False):
+    def call(self, command, stdin=None, visible_to_user=False, env=None):
         capture = None if visible_to_user else PIPE
         proc = Popen(shlex.split(command),
                      stdin=capture,
                      stdout=capture,
-                     stderr=capture)
+                     stderr=capture,
+                     env=env)
         stdout, stderr = proc.communicate(stdin)
         return proc.returncode, stdout, stderr
 
@@ -465,16 +462,19 @@ class Component(object):
         key = posixpath.join(CERT_PATH, 'private', name + '.key.pem')
         csr = posixpath.join(CERT_PATH, 'certs', name + '.csr.pem')
         cert = posixpath.join(CERT_PATH, 'certs', name + '.cert.pem')
-        common = getattr(self.args, name + '_location',
-                         name + '.service.consul')
+        with self.modify_security() as config:
+	    consul_dns_domain = config['consul_dns_domain']
+
+	common = "%s.service.%s" % (name, consul_dns_domain)
+	san = dict(SAN='DNS:localhost,DNS:*.node.' + consul_dns_domain + ',DNS:*.service.' + consul_dns_domain + ',IP:0.0.0.0,IP:127.0.0.1')
 
         with self.chdir(CERT_PATH):
             if posixpath.exists(key):
                 print('{} key already exists'.format(name))
             else:
                 self.wrap_call(
-                    'openssl genrsa -out {} 2048 -config ./openssl.cnf'.format(
-                        key))
+                    'openssl genrsa -out {} 2048 -config ./openssl_req.cnf'.format(
+                        key), env=san)
                 os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
                 print('generated {} key'.format(name))
 
@@ -483,15 +483,15 @@ class Component(object):
             else:
                 # CSR
                 self.wrap_call(
-                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl.cnf'.format(
-                        self.openssl_subject(common), key, csr))
+                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl_req.cnf'.format(
+                        self.openssl_subject(common), key, csr), env=san)
                 print('generated {} CSR'.format(name))
 
                 # certificate
                 self.wrap_call(
                     'openssl ca -extensions usr_cert -notext -md sha256 '
-                    '-in {} -out {} -config ./openssl.cnf -batch'.format(
-                        csr, cert))
+                    '-in {} -out {} -config ./openssl_req.cnf -batch'.format(
+                        csr, cert), env=san)
                 os.chmod(
                     cert, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
                     | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
@@ -500,7 +500,7 @@ class Component(object):
             # verify
             if not self.args.no_verify_certificates:
                 status, out, err = self.wrap_call(
-                    'openssl verify -CAfile {} {}'.format(ROOT_CERT, cert))
+                    'openssl verify -CAfile {} {}'.format(ROOT_CERT, cert), env=san)
                 if out != '{}: OK\n'.format(cert):
                     self.print_call_failure(status, out, err)
                     sys.exit(1)
@@ -518,7 +518,15 @@ class Component(object):
 
 class Certificates(Component):
     def check(self):
-        return [self.ca]
+        return [self.domain, self.ca]
+
+    def domain(self):
+	with self.modify_security() as config:
+	    if 'consul_dns_domain' not in config:
+		config['consul_dns_domain'] = self.args.consul_dns_domain
+		print("set consul domain")
+	    else:
+		print('consul domain already set')
 
     def ca(self):
         "certificate authority"
