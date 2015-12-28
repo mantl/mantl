@@ -5,7 +5,7 @@
   copy:
     src: consul-acl-bootstrap.sh
     dest: /usr/local/bin
-    mode: u=rwx
+    mode: 0700
   tags:
     - consul
 

@@ -22,7 +22,7 @@
   template:
     src: marathon-wait-for-listen.sh.j2
     dest: /usr/local/bin/marathon-wait-for-listen.sh
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
   tags:
     - marathon
 

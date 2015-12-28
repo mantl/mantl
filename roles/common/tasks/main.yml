@@ -14,7 +14,7 @@
   template:
     src: hosts.j2
     dest: /etc/hosts
-    mode: 644
+    mode: 0644
   tags:
     - common
 

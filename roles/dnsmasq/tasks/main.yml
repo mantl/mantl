@@ -51,7 +51,7 @@
   template:
     src: 10-consul
     dest: /etc/dnsmasq.d/10-consul
-    mode: 755
+    mode: 0755
   when: consul_dc_group is defined
   notify:
     - restart dnsmasq
@@ -63,7 +63,7 @@
   template:
     src: 20-kubernetes
     dest: /etc/dnsmasq.d/20-kubernetes
-    mode: 755
+    mode: 0755
   when: cluster_name is defined
   notify:
     - restart dnsmasq
@@ -95,7 +95,7 @@
   template:
     src: resolv.conf.j2
     dest: /etc/resolv.conf
-    mode: 644
+    mode: 0644
   tags:
     - dnsmasq
 

@@ -137,7 +137,7 @@
   template:
     src: gluster_volume.sh.j2
     dest: /etc/glusterfs/gluster_volume.sh
-    mode: 755
+    mode: 0755
   tags:
     - glusterfs
 
