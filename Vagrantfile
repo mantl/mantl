@@ -10,6 +10,11 @@ CONTROL=1
 WORKER_IP_START = "192.168.100.20"
 CONTROL_IP_START = "192.168.100.10"
 
+# Check Vagrant version before continuing. TODO: delete when 2.0 is out.
+if not `vagrant --version` =~ /(1\.([89]|1[0-9])|2\.[0-9])/
+  abort("Mantl requires Vagrant 1.8 or higher, please upgrade and try again.")
+end
+
 Vagrant.configure(2) do |config|
   # Prefer VirtualBox before VMware Fusion
   config.vm.provider "virtualbox"
