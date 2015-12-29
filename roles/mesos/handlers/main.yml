@@ -1,4 +1,8 @@
 ---
+- name: reload unit files
+  sudo: yes
+  command: systemctl daemon-reload
+
 - name: restart mesos leader
   sudo: yes
   command: systemctl restart mesos-master
