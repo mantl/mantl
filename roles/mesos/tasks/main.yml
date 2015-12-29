@@ -11,15 +11,6 @@
     - mesos
     - bootstrap
 
-- name: disable mesos follower
-  sudo: yes
-  service:
-    name: mesos-slave
-    enabled: no
-  when: mesos_mode == "leader"
-  tags:
-    - mesos
-
 - name: ensure consul.d is present
   sudo: yes
   file:
