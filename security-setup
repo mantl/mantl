@@ -466,7 +466,7 @@ class Component(object):
 	    consul_dns_domain = config['consul_dns_domain']
 
 	common = "%s.service.%s" % (name, consul_dns_domain)
-	san = dict(SAN='DNS:localhost,DNS:*.node.' + consul_dns_domain + ',DNS:*.service.' + consul_dns_domain + ',IP:0.0.0.0,IP:127.0.0.1')
+	san = dict(SAN='DNS:localhost,DNS:*.node.' + consul_dns_domain + ',DNS:*.service.' + consul_dns_domain + ',IP:127.0.0.1')
 
         with self.chdir(CERT_PATH):
             if posixpath.exists(key):
