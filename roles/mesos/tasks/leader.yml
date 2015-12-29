@@ -25,6 +25,8 @@
   template:
     src: mesos-master.sysconfig.j2
     dest: /etc/sysconfig/mesos-master
+  tags:
+    - mesos
 
 - name: configure leader defaults
   sudo: yes
