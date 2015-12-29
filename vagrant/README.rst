@@ -8,33 +8,35 @@ lightweight, reproducible, and portable development environments." We use it
 to test Mantl locally before deploying to a cloud provider.
 
 Our current setup creates a configurable number of virtual machines, and you can
-choose how many via the ``WORKERS`` and ``CONTROL`` variables in the
-Vagrantfile. One of the control servers then provisions the others using the
-terraform.sample.yml playbook.
+define how many you want to build using a configuration file as described below.
+One of the control servers provisions the others using the terraform.sample.yml
+playbook.
 
 Getting Started
 ---------------
 
-Simply configure the Vagrantfile to your liking and run ``vagrant up``.
+Simply run ``vagrant up``. If you'd like to customize your build futher, you
+can create a vagrant-config.yml file in the project's root directory with
+variables as defined in the "Variables" section below.
 
 Variables
 ---------
 
-.. data:: WORKERS
+.. data:: num_workers
 
    The number of nodes with role=worker
 
-.. data:: CONTROL
+.. data:: num_controls
 
    The number of nodes with role=control
 
-.. data:: WORKER_IP_START
+.. data:: worker_ip_start
 
    A base IP address which will have its last digit appended. For example, if
    this is set to "192.168.100.10", the first worker node will have the IP
    address 192.168.100.101, the second will have 192.168.100.102, etc.
 
-.. data:: CONTROL_IP_START
+.. data:: control_ip_start
 
    Similar to the above, but for control nodes.
 

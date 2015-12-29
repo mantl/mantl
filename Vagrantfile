@@ -2,13 +2,23 @@
 # vi: set ft=ruby :
 require "yaml"
 
-# Number of VMs to create
-WORKERS=1
-CONTROL=1
+# These variables can be set in "vagrant-config.yml", see vagrant/README.rst
+num_workers=1
+num_controls=1
+worker_ip_start = "192.168.100.20"
+control_ip_start = "192.168.100.10"
 
-# see vagrant/README.rst for details on these variables
-WORKER_IP_START = "192.168.100.20"
-CONTROL_IP_START = "192.168.100.10"
+config_path = File.join(File.dirname(__FILE__), "vagrant-config.yml")
+if !File.exist? config_path
+  puts "No vagrant-config.yml found, using defaults"
+else
+ config_hash = YAML.load(File.read(config_path))
+ num_workers = config_hash.fetch("num_workers", num_workers)
+ num_controls = config_hash.fetch("num_controls", num_controls)
+ worker_ip_start = config_hash.fetch("worker_ip_start", worker_ip_start)
+ control_ip_start = config_hash.fetch("control_ip_start", control_ip_start)
+end
+
 
 # Check Vagrant version before continuing. TODO: delete when 2.0 is out.
 if not `vagrant --version` =~ /(1\.([89]|1[0-9])|2\.[0-9])/
@@ -35,9 +45,9 @@ Vagrant.configure(2) do |config|
   # This variable will be appended to the /etc/hosts file on the provisioner
   hosts = ""
 
-  (1..WORKERS).each do |w|
+  (1..num_workers).each do |w|
     hostname = "worker-00#{w}"
-    ip = WORKER_IP_START + "#{w}"
+    ip = worker_ip_start + "#{w}"
 
     config.vm.define hostname do |worker|
       # Tested with 2 workers w/ 512mb, and a single one w/ 1024mb memory.
@@ -62,10 +72,10 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  (1..CONTROL).each do |c|
+  (1..num_controls).each do |c|
     hostname = "control-0#{c}"
-    ip = CONTROL_IP_START + "#{c}"
-    last = (c >= CONTROL)
+    ip = control_ip_start + "#{c}"
+    last = (c >= num_controls)
 
     config.vm.define hostname, primary: last do |control|
       control.vm.provider :virtualbox do |vb|
