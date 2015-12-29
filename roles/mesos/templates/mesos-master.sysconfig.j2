@@ -17,4 +17,4 @@ MESOS_AUTHENTICATORS=crammd5
 # authentication
 {% if not (do_mesos_framework_auth|bool) %}# {% endif %}MESOS_AUTHENTICATE=true
 {% if not (do_mesos_follower_auth|bool) %}# {% endif %}MESOS_AUTHENTICATE_SLAVES=true
-{% if not (do_mesos_framework_auth|bool or do_mesos_follower_auth|bool) %}# {% endif %}MESOS_CREDENTIALS=file:///etc/sysconfig/mesos-master-credentials
+{% if not (do_mesos_framework_auth|bool or do_mesos_follower_auth|bool) %}# {% endif %}MESOS_CREDENTIALS=file:///etc/sysconfig/mesos-credentials
