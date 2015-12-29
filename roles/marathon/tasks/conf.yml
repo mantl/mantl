@@ -65,7 +65,7 @@
     - key: artifact_store
       value: "file:///etc/marathon/store"
     - key: master
-      value: "localhost:15050"
+      value: "{{ marathon_mesos }}"
   notify:
     - restart marathon
   tags:

@@ -1,11 +1,11 @@
 # common configuration
 MESOS_PORT={{ mesos_follower_port }}
-MESOS_IP={{ private_ipv4 }}
+MESOS_ADVERTISE_IP={{ private_ipv4 }}
 
 # agent configuration
 
 # required
-MESOS_MASTER=zk://{{ mesos_zk_auth }}{{ mesos_zk_dns }}:{{ mesos_zk_port }}/{{ mesos_zk_chroot }}
+MESOS_MASTER={{ mesos_zk }}
 
 # optional
 MESOS_ATTRIBUTES="node_id:{{ inventory_hostname }}"

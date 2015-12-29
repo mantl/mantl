@@ -1,6 +1,6 @@
 # common configuration
 MESOS_PORT={{ mesos_leader_port }}
-MESOS_IP={{ private_ipv4 }}
+MESOS_ADVERTISE_IP={{ private_ipv4 }}
 MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node." + consul_dns_domain) }}
 
 # master configuration
@@ -8,7 +8,7 @@ MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node." + consu
 # required
 MESOS_QUORUM={{ groups[mesos_leaders_group]|count // 2 + 1 }}
 MESOS_WORK_DIR={{ mesos_work_dir }}
-MESOS_ZK=zk://{{ mesos_zk_auth }}{{ mesos_zk_dns }}:{{ mesos_zk_port }}/{{ mesos_zk_chroot }}
+MESOS_ZK={{ mesos_zk }}
 
 # optional
 MESOS_CLUSTER={{ mesos_cluster }}
