@@ -64,6 +64,8 @@
       value: "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
     - key: artifact_store
       value: "file:///etc/marathon/store"
+    - key: master
+      value: "localhost:15050"
   notify:
     - restart marathon
   tags:
