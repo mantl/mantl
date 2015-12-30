@@ -63,14 +63,6 @@
     - name: pip
     - name: setuptools
 
-- name: install distributive
-  sudo: yes
-  yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/distributive-0.2.1-5.el7.centos.x86_64.rpm"
-    state: present
-  tags:
-    - distributive
-
 - name: disable requiretty in sudoers
   sudo: yes
   lineinfile:
@@ -90,3 +82,4 @@
 
 - include: users.yml
 - include: ssl.yml
+- include: distributive.yml
