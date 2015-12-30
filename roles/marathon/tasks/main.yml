@@ -1,13 +1,4 @@
 ---
-- name: add mesosphere repository
-  sudo: yes
-  yum:
-    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
-    state: present
-  tags:
-    - marathon
-    - bootstrap
-
 - name: install marathon package
   sudo: yes
   yum:
@@ -31,7 +22,7 @@
 - name: configure marathon unit file
   sudo: yes
   replace:
-    dest: /usr/lib/systemd/system/marathon.service
+    dest: /etc/systemd/system/marathon.service
     regexp: "=network.target"
     replace: '=mesos-master.service'
   notify:
@@ -43,7 +34,7 @@
 - name: configure marathon to wait for zookeeper before starting
   sudo: yes
   lineinfile:
-    dest: /usr/lib/systemd/system/marathon.service
+    dest: /etc/systemd/system/marathon.service
     line: "ExecStartPre=/usr/local/bin/zookeeper-wait-for-listen.sh {{ marathon_zk_dns }}"
     insertbefore: "^ExecStart="
     state: present
