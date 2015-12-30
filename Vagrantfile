@@ -21,11 +21,7 @@ else
  config_hash = default_config.merge(YAML.load(File.read(config_path)))
 end
 
-
-# Check Vagrant version before continuing. TODO: delete when 2.0 is out.
-if not `vagrant --version` =~ /(1\.([89]|1[0-9])|2\.[0-9])/
-  abort("Mantl requires Vagrant 1.8 or higher, please upgrade and try again.")
-end
+Vagrant.require_version ">= 1.8"
 
 Vagrant.configure(2) do |config|
   # Prefer VirtualBox before VMware Fusion
