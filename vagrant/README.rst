@@ -22,11 +22,11 @@ variables as defined in the "Variables" section below.
 Variables
 ---------
 
-.. data:: num_workers
+.. data:: worker_count
 
    The number of nodes with role=worker
 
-.. data:: num_controls
+.. data:: control_count
 
    The number of nodes with role=control
 
@@ -39,6 +39,33 @@ Variables
 .. data:: control_ip_start
 
    Similar to the above, but for control nodes.
+
+.. data:: worker_memory
+
+   The amount of memory in MB to allocate for worker node virtual machines. This
+   setting is only valid for the virtualbox provider.
+
+.. data:: worker_cpus
+
+   The number of CPUs to allocate for worker node virtual machines. This setting
+   is only valid for the virtualbox provider.
+
+.. data:: control_memory
+
+   The amount of memory in MB to allocate for control node virtual machines.
+   This setting is only valid for the virtualbox provider.
+
+.. data:: control_cpus
+
+   The number of CPUs to allocate for control node virtual machines. This
+   setting is only valid for the virtualbox provider.
+
+.. data:: addons
+
+   An array of addon Ansible playbooks to run after the main playbook. Each
+   entry should map to a playbook in the ``./addons`` directory. For example, to
+   attempt to run the GlusterFS addon (``./addons/glusterfs.yml`), you would add
+   a ``glusterfs`` entry.
 
 Limitations
 -----------
