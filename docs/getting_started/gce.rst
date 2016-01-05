@@ -81,8 +81,10 @@ Provisioning
 ------------
 
 Once you're all set up with the provider, customize your modules (for
-``control_count``, `` edge_count`` and ``worker_count``), run ``terraform get`` to prepare
-Terraform to provision your cluster, ``terraform plan`` to see what will be
+``control_count``, ``edge_count`` and ``worker_count``). Make sure your local 
+ssh-agent is running and your ssh key has been added, this is requrired
+by the Terraform provisioner. Run ``ssh-add ~/.ssh/id_rsa`` to add your ssh key.
+Run ``terraform get`` to prepare Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
 microservices-infrastructure on your new cluster.
