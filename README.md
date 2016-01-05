@@ -213,6 +213,8 @@ If you're interested in contributing to the project, install [Terraform](https:/
 
 Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
 
+The project uses [drone](drone.io) for testing. Drone supports local testing via its cli tools; you can find the documentation about it on the [readme](readme.drone.io).
+
 ## Getting Support
 
 If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily.

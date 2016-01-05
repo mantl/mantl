@@ -44,12 +44,13 @@ Contents:
    components/index.rst
    security/index.rst
    upgrading/index.rst
+   testing/index.rst
    packer.rst
    changelog.rst
    roadmap.rst
    license.rst
 
-.. only:: html 
+.. only:: html
 
    Indices and Tables
    ******************
