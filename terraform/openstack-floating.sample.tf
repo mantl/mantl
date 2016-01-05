@@ -25,4 +25,5 @@ module "dc2-hosts-floating" {
   external_net_id = ""
   control_data_volume_size = 20
   worker_data_volume_size = 100
+  edge_data_volume_size = 20
 }
