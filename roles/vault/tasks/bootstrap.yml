@@ -35,7 +35,7 @@
   template:
     src: vault.unseal.j2
     dest: /etc/vault/vault.unseal
-    mode: u=rwx,g=,o=
+    mode: 0700
   tags:
     - vault
 
