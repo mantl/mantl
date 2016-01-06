@@ -7,7 +7,9 @@ variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 1}
-variable "zone" {default = "us-central1-a"}
+variable "zones" {
+  default = "us-central1-a,us-central1-b"
+}
 
 provider "google" {
 	account_file = ""
@@ -38,7 +40,7 @@ module "control-nodes" {
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
-  zone = "${var.zone}"
+  zones = "${var.zones}"
 }
 
 module "edge-nodes" {
@@ -51,7 +53,7 @@ module "edge-nodes" {
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
-  zone = "${var.zone}"
+  zones = "${var.zones}"
 }
 
 module "worker-nodes" {
@@ -64,5 +66,5 @@ module "worker-nodes" {
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
-  zone = "${var.zone}"
+  zones = "${var.zones}"
 }
