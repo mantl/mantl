@@ -90,6 +90,23 @@
   tags:
     - dnsmasq
 
+- name: List network-scripts which need fixup
+  sudo: yes
+  shell: "find /etc/sysconfig/network-scripts -name 'ifcfg-*'"
+  register: list_of_network_scripts
+
+- name: fixing PEERDNS in network-scripts
+  sudo: yes
+  lineinfile:
+    dest: "{{ item }}"
+    line: "PEERDNS=no"
+    regexp: ^PEERDNS=.*'
+  with_items: list_of_network_scripts.stdout_lines  
+  notify:
+    - restart networkmanager
+  tags:
+    - dnsmasq
+
 - name: add dnsmasq to /etc/resolv.conf
   sudo: yes
   template:
