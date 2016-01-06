@@ -9,3 +9,6 @@ ssl/serial*
 # terraform
 **/*.tfstate*
 **/.terraform
+
+# account files
+account.json
