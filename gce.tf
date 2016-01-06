@@ -6,6 +6,7 @@ variable "long_name" {default = "microservices-infastructure"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
+variable "worker_count" {default = 1}
 variable "zone" {default = "us-central1-a"}
 
 provider "google" {
@@ -27,28 +28,41 @@ resource "terraform_remote_state" "gce-network" {
 	}
 }
 
-#module "control-nodes" {
-#	source = "./terraform/gce/nodes/control"
-#	control_count = "${var.control_count}"
- # 	datacenter = "${var.datacenter}"
-  #	image = "${var.image}"
-  #	long_name = "${var.long_name}"
-  #	network_name = "${terraform_remote_state.gce-network.output.network_name}"
-  #	short_name = "${var.short_name}"
-  #	ssh_user = "${var.ssh_user}"
-  #	ssh_key = "${var.ssh_key}"
-  #	zone = "${var.zone}"
-#}
+module "control-nodes" {
+	source = "./terraform/gce/nodes/control"
+	control_count = "${var.control_count}"
+  datacenter = "${var.datacenter}"
+  image = "${var.image}"
+  long_name = "${var.long_name}"
+  network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  short_name = "${var.short_name}"
+  ssh_user = "${var.ssh_user}"
+  ssh_key = "${var.ssh_key}"
+  zone = "${var.zone}"
+}
 
 module "edge-nodes" {
-    source = "./terraform/gce/nodes/edge"
-    control_count = "${var.edge_count}"
-    datacenter = "${var.datacenter}"
-    image = "${var.image}"
-    long_name = "${var.long_name}"
-    network_name = "${terraform_remote_state.gce-network.output.network_name}"
-    short_name = "${var.short_name}"
-    ssh_user = "${var.ssh_user}"
-    ssh_key = "${var.ssh_key}"
-    zone = "${var.zone}"
+  source = "./terraform/gce/nodes/edge"
+  edge_count = "${var.edge_count}"
+  datacenter = "${var.datacenter}"
+  image = "${var.image}"
+  long_name = "${var.long_name}"
+  network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  short_name = "${var.short_name}"
+  ssh_user = "${var.ssh_user}"
+  ssh_key = "${var.ssh_key}"
+  zone = "${var.zone}"
+}
+
+module "worker-nodes" {
+  source = "./terraform/gce/nodes/worker"
+  worker_count = "${var.worker_count}"
+  datacenter = "${var.datacenter}"
+  image = "${var.image}"
+  long_name = "${var.long_name}"
+  network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  short_name = "${var.short_name}"
+  ssh_user = "${var.ssh_user}"
+  ssh_key = "${var.ssh_key}"
+  zone = "${var.zone}"
 }
