@@ -1,4 +1,4 @@
-variable "control_count" { default = 3 }
+ariable "control_count" { default = 3 }
 variable "datacenter" {default = "gce"}
 variable "edge_count" { default = 3}
 variable "image" {default = "centos-7-v20150526"}
@@ -14,12 +14,12 @@ variable "zones" {
 provider "google" {
   credentials = "${file("account.json")}"
   project = ""
-  region = ""
+  region = "us-central1"
 }
 
 module "gce-network" {
-  source = "./terraform/gce/network"
-  network_ipv4 = "10.0.0.0/16"
+ source = "./terraform/gce/network"
+ network_ipv4 = "10.0.0.0/16"
 }
 
 # retmote state example
@@ -32,7 +32,6 @@ module "gce-network" {
 #    path = "./terraform/gce/network/terraform.tfstate"
 #  }
 #}
-
 
 module "control-nodes" {
   source = "./terraform/gce/nodes/control"
