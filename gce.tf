@@ -1,5 +1,6 @@
 variable "control_count" { default = 3 }
 variable "datacenter" {default = "gce"}
+variable "edge_count" { default = 3}
 variable "image" {default = "centos-7-v20150526"}
 variable "long_name" {default = "microservices-infastructure"}
 variable "short_name" {default = "mi"}
@@ -26,15 +27,28 @@ resource "terraform_remote_state" "gce-network" {
 	}
 }
 
-module "control-nodes" {
-	source = "./terraform/gce/nodes/control"
-	control_count = "${var.control_count}"
-  	datacenter = "${var.datacenter}"
-  	image = "${var.image}"
-  	long_name = "${var.long_name}"
-  	network_name = "${terraform_remote_state.gce-network.output.network_name}"
-  	short_name = "${var.short_name}"
-  	ssh_user = "${var.ssh_user}"
-  	ssh_key = "${var.ssh_key}"
-  	zone = "${var.zone}"
+#module "control-nodes" {
+#	source = "./terraform/gce/nodes/control"
+#	control_count = "${var.control_count}"
+ # 	datacenter = "${var.datacenter}"
+  #	image = "${var.image}"
+  #	long_name = "${var.long_name}"
+  #	network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  #	short_name = "${var.short_name}"
+  #	ssh_user = "${var.ssh_user}"
+  #	ssh_key = "${var.ssh_key}"
+  #	zone = "${var.zone}"
+#}
+
+module "edge-nodes" {
+    source = "./terraform/gce/nodes/edge"
+    control_count = "${var.edge_count}"
+    datacenter = "${var.datacenter}"
+    image = "${var.image}"
+    long_name = "${var.long_name}"
+    network_name = "${terraform_remote_state.gce-network.output.network_name}"
+    short_name = "${var.short_name}"
+    ssh_user = "${var.ssh_user}"
+    ssh_key = "${var.ssh_key}"
+    zone = "${var.zone}"
 }

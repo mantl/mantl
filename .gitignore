@@ -12,3 +12,4 @@ ssl/serial*
 
 # account files
 account.json
+.DS_Store
