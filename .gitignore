@@ -19,3 +19,4 @@ vagrant-config.yml
 =======
 # account files
 account.json
+.DS_Store
