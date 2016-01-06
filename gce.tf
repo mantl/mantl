@@ -1,0 +1,40 @@
+variable "control_count" { default = 3 }
+variable "datacenter" {default = "gce"}
+variable "image" {default = "centos-7-v20150526"}
+variable "long_name" {default = "microservices-infastructure"}
+variable "short_name" {default = "mi"}
+variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
+variable "ssh_user" {default = "centos"}
+variable "zone" {default = "us-central1-a"}
+
+provider "google" {
+	account_file = ""
+  	credentials = "${file("account.json")}"
+  	project = "mantl-1180"
+  	region = "us-central1"
+}
+
+#module "gce-network" {
+#	source = "./terraform/gce/network"
+#	network_ipv4 = "10.0.0.0/16"
+#}
+
+resource "terraform_remote_state" "gce-network" {
+	backend = "_local"
+	config {
+		path = "./terraform/gce/network/terraform.tfstate"
+	}
+}
+
+module "control-nodes" {
+	source = "./terraform/gce/nodes/control"
+	control_count = "${var.control_count}"
+  	datacenter = "${var.datacenter}"
+  	image = "${var.image}"
+  	long_name = "${var.long_name}"
+  	network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  	short_name = "${var.short_name}"
+  	ssh_user = "${var.ssh_user}"
+  	ssh_key = "${var.ssh_key}"
+  	zone = "${var.zone}"
+}

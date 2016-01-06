@@ -13,3 +13,7 @@ ssl/serial*
 # downloaded by playbook
 addons/library/
 library/lvg.py
+# account files
+account.json
+
+.DS_Store
