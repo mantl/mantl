@@ -10,14 +10,14 @@ variable "network_name" {}
 variable "short_name" {}
 variable "ssh_key" {}
 variable "ssh_user" {}
-variable "zone" {}
+variable "zones" {}
 
 
 # Instances
 resource "google_compute_disk" "mantl-control-lvm" {
   name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
-  zone = "${var.zone}"
+  zone = "${element(split(",", var.zones), count.index)}"
   size = "${var.control_data_volume_size}"
   count = "${var.control_count}"
 }
@@ -26,7 +26,7 @@ resource "google_compute_instance" "mantl-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
   description = "${var.long_name} control node #${format("%02d", count.index+1)}"
   machine_type = "${var.control_type}"
-  zone = "${var.zone}"
+  zone = "${element(split(",", var.zones), count.index)}"
   can_ip_forward = false
   tags = ["${var.short_name}", "control"]
 

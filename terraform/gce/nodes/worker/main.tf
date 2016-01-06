@@ -11,14 +11,14 @@ variable "network_name" {}
 variable "short_name" {}
 variable "ssh_key" {}
 variable "ssh_user" {}
-variable "zone" {}
+variable "zones" {}
 
 
 # Instances
 resource "google_compute_disk" "manlt-worker-lvm" {
   name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
-  zone = "${var.zone}"
+  zone = "${element(split(",", var.zones), count.index)}"
   size = "${var.worker_data_volume_size}"
 
   count = "${var.worker_count}"
@@ -29,7 +29,7 @@ resource "google_compute_instance" "manlt-worker-nodes" {
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
   description = "${var.long_name} worker node #${format("%03d", count.index+1)}"
   machine_type = "${var.worker_type}"
-  zone = "${var.zone}"
+  zone = "${element(split(",", var.zones), count.index)}"
   can_ip_forward = false
   tags = ["${var.short_name}", "worker"]
 

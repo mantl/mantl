@@ -11,16 +11,15 @@ variable "network_name" {}
 variable "short_name" {}
 variable "ssh_key" {}
 variable "ssh_user" {}
-variable "zone" {}
+variable "zones" {}
 
 
 # Instances
 resource "google_compute_disk" "mantl-edge-lvm" {
   name = "${var.short_name}-edge-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
-  zone = "${var.zone}"
+  zone = "${element(split(",", var.zones), count.index)}"
   size = "${var.edge_data_volume_size}"
-
   count = "${var.edge_count}"
 }
 
@@ -28,7 +27,7 @@ resource "google_compute_instance" "mantl-edge-nodes" {
   name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
   description = "${var.long_name} edge node #${format("%02d", count.index+1)}"
   machine_type = "${var.edge_type}"
-  zone = "${var.zone}"
+  zone = "${element(split(",", var.zones), count.index)}"
   can_ip_forward = false
   tags = ["${var.short_name}", "edge"]
 
