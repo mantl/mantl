@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 require "yaml"
 
-default_config = {
+config_hash = {
   "worker_count" => 1,
   "control_count" => 1,
   "worker_ip_start" => "192.168.100.20",
@@ -11,6 +11,7 @@ default_config = {
   "control_memory" => 1024,
   "worker_cpus" => 1,
   "control_cpus" => 1,
+  "network" => "private",
   "addons" => []
 }
 
@@ -18,7 +19,7 @@ config_path = File.join(File.dirname(__FILE__), "vagrant-config.yml")
 if !File.exist? config_path
   puts "No vagrant-config.yml found, using defaults"
 else
- config_hash = default_config.merge(YAML.load(File.read(config_path)))
+ config_hash = config_hash.merge(YAML.load(File.read(config_path)))
 end
 
 Vagrant.require_version ">= 1.8"
@@ -51,7 +52,7 @@ Vagrant.configure(2) do |config|
         vb.customize ["modifyvm", :id, "--memory", config_hash["worker_memory"]]
       end
       worker.vm.hostname = hostname
-      worker.vm.network "private_network", :ip => ip
+      worker.vm.network "#{config_hash['network']}_network", :ip => ip
 
       hosts += "#{ip}    #{hostname}"
       # Update Ansible variables
@@ -79,7 +80,7 @@ Vagrant.configure(2) do |config|
         vb.customize ["modifyvm", :id, "--memory", config_hash["control_memory"]]
       end
       control.vm.hostname = hostname
-      control.vm.network "private_network", :ip => ip
+      control.vm.network "#{config_hash['network']}_network", :ip => ip
       hosts += "#{ip}    #{hostname}"
       controls << hostname
       control_hostvars = {

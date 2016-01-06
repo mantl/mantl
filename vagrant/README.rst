@@ -60,6 +60,11 @@ Variables
    The number of CPUs to allocate for control node virtual machines. This
    setting is only valid for the virtualbox provider.
 
+.. data:: network
+
+   Default: private. Which type of Vagrant network to provision. See
+   https://docs.vagrantup.com/v2/networking/index.html
+
 .. data:: addons
 
    An array of addon Ansible playbooks to run after the main playbook. Each
