@@ -12,23 +12,26 @@ variable "zones" {
 }
 
 provider "google" {
-  account_file = ""
   credentials = "${file("account.json")}"
-  project = "mantl-1180"
+  project = ""
   region = "us-central1"
 }
 
-#module "gce-network" {
-# source = "./terraform/gce/network"
-# network_ipv4 = "10.0.0.0/16"
-#}
-
-resource "terraform_remote_state" "gce-network" {
-  backend = "_local"
-  config {
-    path = "./terraform/gce/network/terraform.tfstate"
-  }
+module "gce-network" {
+ source = "./terraform/gce/network"
+ network_ipv4 = "10.0.0.0/16"
 }
+
+# retmote state example
+# _local is for development only s3 or something else should be used
+# https://github.com/hashicorp/terraform/blob/master/state/remote/remote.go#L47
+# https://www.terraform.io/docs/state/remote.html
+#resource "terraform_remote_state" "gce-network" {
+#  backend = "_local"
+#  config {
+#    path = "./terraform/gce/network/terraform.tfstate"
+#  }
+#}
 
 module "control-nodes" {
   source = "./terraform/gce/nodes/control"
@@ -36,7 +39,8 @@ module "control-nodes" {
   datacenter = "${var.datacenter}"
   image = "${var.image}"
   long_name = "${var.long_name}"
-  network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  network_name = "${module.gce-network.network_name}"
+  #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
@@ -49,7 +53,8 @@ module "edge-nodes" {
   datacenter = "${var.datacenter}"
   image = "${var.image}"
   long_name = "${var.long_name}"
-  network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  network_name = "${module.gce-network.network_name}"
+  #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
@@ -62,7 +67,8 @@ module "worker-nodes" {
   datacenter = "${var.datacenter}"
   image = "${var.image}"
   long_name = "${var.long_name}"
-  network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  network_name = "${module.gce-network.network_name}"
+  #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
