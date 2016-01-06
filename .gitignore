@@ -16,4 +16,7 @@ library/lvg.py
 # account files
 account.json
 
+# account files
+account.json
+# annoying osx files
 .DS_Store
