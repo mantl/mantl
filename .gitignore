@@ -16,3 +16,6 @@ library/lvg.py
 
 # vagrant build customizations
 vagrant-config.yml
+=======
+# account files
+account.json
