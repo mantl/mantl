@@ -24,15 +24,15 @@
 
 - name: check if docker storage already set up with devicemapper
   sudo: yes
-  shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup && test $STORAGE_DRIVER == devicemapper"
+  shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup && echo ${STORAGE_DRIVER:-NOT_SET}"
   register: docker_already_set_up_with_devicemapper
 
 - name: setup docker storage
   sudo: yes
   lineinfile:
     dest: /etc/sysconfig/docker-storage-setup
-    regexp: "^{{ var }}="
-    line: "{{ var }}={{ value }}"
+    regexp: "^{{ item.var }}=.*"
+    line: "{{ item.var }}={{ item.value }}"
     state: present
     create: yes
   with_items:
@@ -46,7 +46,7 @@
       value: "{{ docker_lvm_data_volume_size_min }}"
     - var: AUTO_EXTEND_POOL
       value: "{{ docker_lvm_auto_extend_pool }}"
-  when: docker_already_set_up_with_devicemapper.rc == 0
+  when: docker_already_set_up_with_devicemapper.stdout == "NOT_SET"
   tags:
     - docker
     - bootstrap
