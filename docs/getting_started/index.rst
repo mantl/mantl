@@ -86,7 +86,7 @@ for verbose SSH debugging and try again to view the errors in more detail.
 
    .. code-block:: shell
 
-      ansible-playbook ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
+      ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
 
    If you neglect to upgrade packages, you will likely experience multiple
    failures, particularly around Consul. See issues `#907
