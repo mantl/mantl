@@ -100,6 +100,7 @@ Vagrant.configure(2) do |config|
           s.args = [hosts]
         end
 
+        workers = controls if workers.empty?
         ansible_groups = {
           "role=control" => controls,
           "role=control:vars" => { "consul_is_server" => true },
