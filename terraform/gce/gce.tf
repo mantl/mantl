@@ -1,3 +1,4 @@
+#monolithic file saved for backward compatibility
 variable "control_count" {default = 3}
 variable "control_type" {default = "n1-standard-1"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
@@ -12,7 +13,7 @@ variable "edge_data_volume_size" {default = "20"} # size is in gigabytes
 variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "region" {default = "us-central1"}
-variable "short_name" {default = "BLAH"}
+variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 1}
