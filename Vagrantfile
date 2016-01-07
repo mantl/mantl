@@ -53,7 +53,7 @@ Vagrant.configure(2) do |config|
       worker.vm.hostname = hostname
       worker.vm.network "#{config_hash['network']}_network", :ip => ip
 
-      hosts += "#{ip}    #{hostname}"
+      hosts += "#{ip}    #{hostname}\n"
       # Update Ansible variables
       workers << hostname
       worker_hostvars = {
@@ -80,7 +80,7 @@ Vagrant.configure(2) do |config|
       end
       control.vm.hostname = hostname
       control.vm.network "#{config_hash['network']}_network", :ip => ip
-      hosts += "#{ip}    #{hostname}"
+      hosts += "#{ip}    #{hostname}\n"
       controls << hostname
       control_hostvars = {
         hostname => {
@@ -94,7 +94,8 @@ Vagrant.configure(2) do |config|
 
       if last # Only run Ansible after all hosts are up
         # Sync Mantl source code, get required provisioning packages
-        control.vm.synced_folder ".", "/vagrant", type: "rsync"
+        control.vm.synced_folder ".", "/vagrant", type: "rsync",
+          rsync__exclude: [".terraform/", ".git/", ".vagrant/", "docs/"]
         control.vm.provision "shell" do |s|
           s.path = "vagrant/provision.sh"
           s.args = [hosts]

@@ -8,9 +8,6 @@ if ! [[ $(< /etc/hosts) == *"$1"* ]]; then
   echo "$1" >> /etc/hosts
 fi
 
-# Ensure that all hosts are reachable before continuing
-echo "$1" | awk '{ print $1 }' | xargs ping -c 1
-
 # enable EPEL and get sshpass if it's not already installed
 if ! sshpass; then
   if ! yum list installed epel-release > /dev/null; then
