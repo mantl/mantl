@@ -6,7 +6,6 @@ Vagrant
 `Vagrant <https://vagrantup.com/>`_ is used to "Create and configure
 lightweight, reproducible, and portable development environments." We use it
 to test Mantl locally before deploying to a cloud provider.
-
 Our current setup creates a configurable number of virtual machines, and you can
 define how many you want to build using a configuration file as described below.
 One of the control servers provisions the others using the terraform.sample.yml
@@ -69,7 +68,7 @@ Variables
 
    An array of paths to Ansible playbooks to run during the provisioning step.
    For example, to attempt to run the GlusterFS addon
-   (``./addons/glusterfs.yml`), you would add a
+   (``./addons/glusterfs.yml``), you would add a
    ``/vagrant/addons/glusterfs.yml`` entry. You can also use this directive to
    run playbooks other than ``terraform.sample.yml`` after provisioning for the
    first time, by modifying this variable and running ``vagrant provision``.
