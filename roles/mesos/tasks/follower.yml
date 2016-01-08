@@ -118,7 +118,7 @@
   copy:
     src: mesos-slave.py
     dest: /usr/share/collectd/plugins
-    mode: u=r
+    mode: 0444
   tags:
     - mesos
     - collectd

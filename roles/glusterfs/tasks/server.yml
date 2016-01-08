@@ -1,4 +1,70 @@
 ---
+- name: install glusterfs-server
+  sudo: yes
+  yum:
+    name: glusterfs-server
+    state: present
+  tags:
+    - glusterfs
+
+- name: install glusterd.service
+  sudo: yes
+  copy:
+    src: glusterd.service
+    dest: /etc/systemd/system/glusterd.service
+    mode: 0644
+  tags:
+    - glusterfs
+
+- name: enable services
+  sudo: yes
+  service:
+    enabled: yes
+    name: "{{ item }}"
+  with_items:
+    - glusterd
+    - glusterfsd
+  tags:
+    - glusterfs
+
+- name: start services
+  sudo: yes
+  service:
+    state: started
+    name: "{{ item }}"
+  with_items:
+    - glusterd
+    - glusterfsd
+  tags:
+    - glusterfs
+
+- name: wait for glusterd port
+  wait_for:
+    port: 24007
+    state: present
+  tags:
+    - glusterfs
+
+# set up clustering
+
+- name: probe servers
+  sudo: yes
+  run_once: true
+  command: gluster peer probe {{ item }}.node.{{ consul_dns_domain }}
+  with_items: play_hosts
+  tags:
+    - glusterfs
+
+- name: make sure the number of connected hosts is correct
+  sudo: yes
+  run_once: yes
+  shell: 'gluster peer status | grep -q "Number of Peers: {{ (play_hosts|count) - 1 }}"'
+  changed_when: no
+  tags:
+    - glusterfs
+
+# bricks
+
 - name: create volume for brick
   sudo: yes
   lvol:
@@ -55,69 +121,63 @@
   tags:
     - glusterfs
 
-- name: install server packages
-  sudo: yes
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - glusterfs-cli
-    - glusterfs-server
-  notify:
-    - reload glusterfs
-  tags:
-    - glusterfs
-
-- name: start services
-  sudo: yes
-  command: systemctl start {{ item }}
-  with_items:
-    - glusterd
-    - glusterfsd
-  tags:
-    - glusterfs
-
-- name: probe servers
-  run_once: true
-  sudo: yes
-  command: gluster peer probe {{ item }}.node.{{ consul_dns_domain }}
-  with_items: groups[glusterfs_server_group]
-  tags:
-    - glusterfs
-
+# volumes
 - name: create gluster_volume script
   sudo: yes
   template:
     src: gluster_volume.sh.j2
     dest: /etc/glusterfs/gluster_volume.sh
-    mode: 755
+    mode: 0755
   tags:
     - glusterfs
 
-- name: create container volume
+- name: create volumes
   run_once: true
   sudo: yes
-  command: /etc/glusterfs/gluster_volume.sh {{ glusterfs_container_data_name }}
+  command: /etc/glusterfs/gluster_volume.sh {{ item.name }}
+  with_items: glusterfs_volumes
   tags:
     - glusterfs
 
-- name: start container volume
+- name: start volumes
   sudo: yes
   run_once: true
   gluster_volume:
-    name: "{{ glusterfs_container_data_name }}"
+    name: "{{ item.name }}"
     state: started
+  with_items: glusterfs_volumes
   tags:
     - glusterfs
 
-- name: create consul service
+# consul services
+
+- name: let consul use glusterfs commands for health checking
   sudo: yes
   template:
-    src: glusterfs.json.j2
-    dest: /etc/consul/glusterfs.json
+    src: consul-gluster-healthchecks.j2
+    dest: /etc/sudoers.d/consul-gluster-healthchecks
+  tags:
+    - glusterfs
+
+- name: create consul services and healthchecks
+  sudo: yes
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/consul/{{ item }}
   notify:
     - reload consul
+  with_items:
+    - glusterfs.json
+    - glusterfs-volumes.json
   tags:
     - glusterfs
 
 - meta: flush_handlers
+
+- name: wait for gluster service
+  wait_for:
+    host: glusterfs.service.consul
+    port: 24007
+    state: present
+  tags:
+    - glusterfs

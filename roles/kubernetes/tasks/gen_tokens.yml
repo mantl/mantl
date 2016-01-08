@@ -4,7 +4,7 @@
   copy:
     src=kube-gen-token.sh
     dest={{ kube_script_dir }}
-    mode=u+x
+    mode=0744
 
 - name: tokens | generate tokens for master components
   sudo: yes

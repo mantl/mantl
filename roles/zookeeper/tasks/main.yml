@@ -39,7 +39,7 @@
     - zookeeper
 
 # Upgrade script MUST run between user creation and rpm installation
-- name: run zookeeper upgrade procedure, if it applicable
+- name: run zookeeper upgrade procedure, if applicable
   sudo: yes
   shell: "/usr/local/bin/zookeeper-update-mantl-0.5-0.6.sh {{ zookeeper_os_user }}"
   tags:
@@ -111,7 +111,7 @@
   file:
     path: /var/log/zookeeper
     state: directory
-    mode: u=rw,g-rwx,o-rwx
+    mode: 0600
     owner: "{{ zookeeper_os_user }}"
     recurse: true
     setype: svirt_sandbox_file_t

@@ -23,7 +23,7 @@ mesos_leaders_group: role=control
 mesos_zk_acl_world: "world:anyone:r"
 mesos_zk_acl: "{% if zk_mesos_user_secret is defined %}digest:{{ zk_mesos_user }}:{{ zk_mesos_user_secret_digest}}:cdraw{% endif %}"
 
-mesos_zk_acl_cmd: "zookeepercli -servers {{ mesos_zk_dns }}:{{ mesos_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ mesos_zk_chroot }} '{{ mesos_zk_acl_world }},{{ mesos_zk_acl }}'"
+mesos_zk_acl_cmd: "zookeepercli -servers localhost:{{ mesos_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ mesos_zk_chroot }} '{{ mesos_zk_acl_world }},{{ mesos_zk_acl }}'"
 
 # authentication options
 mesos_credentials: []

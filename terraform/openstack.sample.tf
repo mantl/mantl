@@ -25,4 +25,5 @@ module "dc2-hosts" {
   security_groups = ""
   control_data_volume_size = 20
   worker_data_volume_size = 100
+  edge_data_volume_size = 20
 }
