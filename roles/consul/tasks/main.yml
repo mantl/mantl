@@ -62,7 +62,7 @@
   copy:
     src: "{{ item }}"
     dest: /usr/local/bin/
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
   with_items:
     - consul-wait-for-leader.sh
     - consul-rolling-restart.sh
