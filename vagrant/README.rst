@@ -65,12 +65,14 @@ Variables
    Default: private. Which type of Vagrant network to provision. See
    https://docs.vagrantup.com/v2/networking/index.html
 
-.. data:: addons
+.. data:: playbooks
 
-   An array of addon Ansible playbooks to run after the main playbook. Each
-   entry should map to a playbook in the ``./addons`` directory. For example, to
-   attempt to run the GlusterFS addon (``./addons/glusterfs.yml`), you would add
-   a ``glusterfs`` entry.
+   An array of paths to Ansible playbooks to run during the provisioning step.
+   For example, to attempt to run the GlusterFS addon
+   (``./addons/glusterfs.yml`), you would add a
+   ``/vagrant/addons/glusterfs.yml`` entry. You can also use this directive to
+   run playbooks other than ``terraform.sample.yml`` after provisioning for the
+   first time, by modifying this variable and running ``vagrant provision``.
 
 Limitations
 -----------
