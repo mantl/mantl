@@ -5,12 +5,16 @@ require "yaml"
 config_hash = {
   "worker_count" => 1,
   "control_count" => 1,
+  "edge_count" => 0,
   "worker_ip_start" => "192.168.100.20",
   "control_ip_start" => "192.168.100.10",
+  "edge_ip_start" => "192.168.100.25",
   "worker_memory" => 1024,
   "control_memory" => 1024,
+  "edge_memory" => 512,
   "worker_cpus" => 1,
   "control_cpus" => 1,
+  "edge_cpus" => 1,
   "network" => "private",
   "addons" => []
 }
@@ -36,7 +40,7 @@ Vagrant.configure(2) do |config|
 
   # All hostvars will be stored in this hash, progressively as the VMs are made
   # and configured. These lists will hold hostnames that belong to these groups.
-  hostvars, workers, controls = {}, [], []
+  hostvars, workers, controls, edges = {}, [], [], []
   # This variable will be appended to the /etc/hosts file on the provisioner
   hosts = ""
 
@@ -65,6 +69,32 @@ Vagrant.configure(2) do |config|
         }
       }
       hostvars.merge!(worker_hostvars)
+    end
+  end
+
+  (1..config_hash["edge_count"]).each do |e|
+    hostname = "edge-0#{e}"
+    ip = config_hash["edge_ip_start"] + "#{e}"
+
+    config.vm.define hostname do |edge|
+      edge.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--cpus", config_hash["edge_cpus"]]
+        vb.customize ["modifyvm", :id, "--memory", config_hash["edge_memory"]]
+      end
+      edge.vm.hostname = hostname
+      edge.vm.network "#{config_hash['network']}_network", :ip => ip
+
+      hosts += "#{ip}    #{hostname}\n"
+      edges << hostname
+      edge_hostvars = {
+        hostname => {
+          "ansible_ssh_host" => ip,
+          "private_ipv4" => ip,
+          "public_ipv4" => ip,
+          "role" => "edge"
+        }
+      }
+      hostvars.merge!(edge_hostvars)
     end
   end
 
@@ -107,7 +137,9 @@ Vagrant.configure(2) do |config|
           "role=control:vars" => { "consul_is_server" => true },
           "role=worker" => workers,
           "role=worker:vars" => { "consul_is_server" => false },
-          "dc=vagrantdc" => workers + controls,
+          "role=edge" => edges,
+          "role=edge:vars" => { "consul_is_server" => false },
+          "dc=vagrantdc" => workers + controls + edges,
           "dc=vagrantdc:vars" => {
             # Ansible 2.0 depreciates the 'ssh' in these vars
             "ansible_ssh_user" => "vagrant",

@@ -22,6 +22,9 @@ variables as defined in the "Variables" section below.
 Variables
 ---------
 
+You can find the default values for all these variables in the ``config_hash``
+in the provided Vagrantfile.
+
 .. data:: worker_count
 
    The number of nodes with role=worker
@@ -29,6 +32,10 @@ Variables
 .. data:: control_count
 
    The number of nodes with role=control
+
+.. data:: edge_count
+
+   The number of nodes with role=edge
 
 .. data:: worker_ip_start
 
@@ -39,6 +46,10 @@ Variables
 .. data:: control_ip_start
 
    Similar to the above, but for control nodes.
+
+.. data:: edge_ip_start
+
+   Similar to the above, but for edge nodes.
 
 .. data:: worker_memory
 
@@ -52,13 +63,20 @@ Variables
 
 .. data:: control_memory
 
-   The amount of memory in MB to allocate for control node virtual machines.
-   This setting is only valid for the virtualbox provider.
+   Similar to the above, but for control nodes.
 
 .. data:: control_cpus
 
-   The number of CPUs to allocate for control node virtual machines. This
-   setting is only valid for the virtualbox provider.
+   Similar to the above, but for control nodes.
+
+
+.. data:: edge_memory
+
+   Similar to the above, but for edge nodes.
+
+.. data:: edge_cpus
+
+   Similar to the above, but for edge nodes.
 
 .. data:: network
 
@@ -79,7 +97,6 @@ Mantl will likely experience stability issues with one control node. As stated
 in the `Consul docs <https://www.consul.io/docs/guides/bootstrapping.html>`_,
 this setup is inherently unstable.
 
-Moreover two features of Mantl are not supported on Vagrant: GlusterFS and
-Traefik. The Traefik UI will show a 403 forbidden error, because there are no
-edge nodes. GlusterFS support might happen in the future, but it is an optional
-feature and not a priority.
+Moreover, GlusterFS and LVM are not supported on Vagrant, and Traefik
+(edge nodes) are turned off by default. GlusterFS support might happen in the
+future, but it is an optional feature and not a priority.
