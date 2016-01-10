@@ -12,7 +12,7 @@ config_hash = {
   "worker_cpus" => 1,
   "control_cpus" => 1,
   "network" => "private",
-  "addons" => []
+  "playbooks" => ["/vagrant/terraform.sample.yml"]
 }
 
 config_path = File.join(File.dirname(__FILE__), "vagrant-config.yml")
@@ -118,12 +118,8 @@ Vagrant.configure(2) do |config|
           }
         }
 
-        playbooks = ["/vagrant/terraform.sample.yml"] + config_hash["addons"].map { |a|
-          "/vagrant/addons/#{a}.yml"
-        }
-
         # Then use the built-in ansible provisioner
-        playbooks.each do |playbook|
+        config_hash["playbooks"].each do |playbook|
           control.vm.provision "ansible_local" do |ansible|
             ansible.install = false # should be installed via provision.sh
             ansible.playbook = playbook
