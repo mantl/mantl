@@ -17,6 +17,7 @@ module "dc2-hosts-floating" {
   worker_flavor_name  = ""
   edge_flavor_name  = ""
   image_name = ""
+  ssh_user = "centos"
   keypair_name = "${ module.dc2-keypair.keypair_name }"
   control_count = 3
   worker_count = 3
