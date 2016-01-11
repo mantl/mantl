@@ -49,6 +49,12 @@
         name: mesos
         state: absent
 
+    - name: remove marathon conf directory
+      sudo: yes
+      file:
+        dest: /etc/marathon/conf
+        state: absent
+
     # include new software
     - include_vars: ../roles/handlers/defaults/main.yml
     - include_vars: ../roles/mesos/defaults/main.yml
