@@ -2,7 +2,7 @@
 - name: install leader configuration
   sudo: yes
   yum:
-    name: https://bintray.com/artifact/download/asteris/mantl-rpm/mesos-master-{{ mesos_version }}-1.noarch.rpm
+    name: https://bintray.com/artifact/download/asteris/mantl-rpm/mesos-master-{{ mesos_fullversion }}.noarch.rpm
     state: present
   tags:
     - mesos
