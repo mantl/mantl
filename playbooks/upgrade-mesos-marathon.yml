@@ -16,12 +16,6 @@
         name: mesos
         state: absent
 
-    - name: remove mesosphere-el-repo
-      sudo: yes
-      yum:
-        name: mesosphere-el-repo
-        state: absent
-
     - include_vars: ../roles/handlers/defaults/main.yml
     - include_vars: ../roles/mesos/defaults/main.yml
     - include: ../roles/mesos/tasks/main.yml
@@ -53,12 +47,6 @@
       sudo: yes
       yum:
         name: mesos
-        state: absent
-
-    - name: remove mesosphere-el-repo
-      sudo: yes
-      yum:
-        name: mesosphere-el-repo
         state: absent
 
     # include new software
