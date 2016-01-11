@@ -5,7 +5,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-0.6.0-3.centos.x86_64.rpm
+    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-0.6.1-1.centos.x86_64.rpm
     - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-cli-0.1.0-2.x86_64.rpm
   tags:
     - consul
