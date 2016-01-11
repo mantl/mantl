@@ -36,6 +36,15 @@ of them. You should keep the follower machines free of "heavier" services
 running outside Mesos, as this will cause inaccurate resource availability
 counts in the cluster.
 
+Upgrading
+---------
+
+.. versionadded:: 0.6
+
+If you had an installation prior to 0.6, you'll need to run the
+``playbooks/upgrade-mesos-marathon.yml`` playbook. The packaging format changed
+in the 0.6 release, this will ensure a smooth upgrade.
+
 Variables
 ---------
 
