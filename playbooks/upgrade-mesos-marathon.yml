@@ -10,12 +10,12 @@
     - name: set consul maintenance enable
       command: consul maint -enable -reason "{{ lookup('env', 'USER') }} upgrading Mesos"
 
-    - name: stop mesos-slave
+    - name: stop and disable mesos-slave
       sudo: yes
-      command: "{{ item }}"
-      with_items:
-        - systemctl stop mesos-slave
-        - systemctl disable mesos-slave
+      service:
+        name: mesos-slave
+        state: stopped
+        enabled: no
 
     - name: remove mesos
       sudo: yes
@@ -38,6 +38,8 @@
   handlers:
     - include: ../roles/mesos/handlers/main.yml
     - include: ../roles/marathon/handlers/main.yml
+  roles:
+    - mantlui
   tasks:
     - name: set consul maintenance enable
       command: consul maint -enable -reason "{{ lookup('env', 'USER') }} upgrading Mesos and Marathon"
@@ -48,13 +50,6 @@
       yum:
         name: mesos
         state: absent
-
-    - name: stop mesos-master
-      sudo: yes
-      command: "{{ item }}"
-      with_items:
-        - systemctl stop mesos-slave
-        - systemctl disable mesos-slave
 
     # marathon
     - name: remove marathon
