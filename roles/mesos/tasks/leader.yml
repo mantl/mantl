@@ -1,9 +1,30 @@
 ---
-- name: configure leader defaults
+- name: install leader configuration
+  sudo: yes
+  yum:
+    name: https://bintray.com/artifact/download/asteris/mantl-rpm/mesos-master-{{ mesos_fullversion }}.noarch.rpm
+    state: present
+  tags:
+    - mesos
+    - bootstrap
+
+- name: configure mesos-master unit file
+  sudo: yes
+  replace:
+    dest: /etc/systemd/system/mesos-master.service
+    regexp: "=network.target"
+    replace: '=zookeeper.service'
+  when: mesos_mode == "leader"
+  notify:
+    - reload unit files
+  tags:
+    - mesos
+
+- name: configure mesos-master
   sudo: yes
   template:
-    src: master-defaults.j2
-    dest: /etc/default/mesos-master
+    src: mesos-master.sysconfig.j2
+    dest: /etc/sysconfig/mesos-master
   notify:
     - restart mesos leader
   tags:
@@ -14,7 +35,7 @@
   when: do_mesos_framework_auth|bool or do_mesos_follower_auth|bool
   template:
     src: master-credentials.j2
-    dest: /etc/mesos/credentials
+    dest: /etc/sysconfig/mesos-credentials
     mode: 0600
   notify:
     - restart mesos leader
@@ -25,7 +46,7 @@
   sudo: yes
   when: not do_mesos_framework_auth|bool and not do_mesos_follower_auth|bool
   file:
-    dest: /etc/mesos/credentials
+    dest: /etc/sysconfig/mesos-credentials
     state: absent
   tags:
     - mesos
