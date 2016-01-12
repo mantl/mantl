@@ -18,4 +18,5 @@ library/lvg.py
 vagrant-config.yml
 # account files
 account.json
+# annoying osx files
 .DS_Store

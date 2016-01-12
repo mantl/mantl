@@ -73,4 +73,8 @@ resource "google_compute_instance" "mantl-control-nodes" {
 
 output "control_ips" {
   value = "${join(\",\", google_compute_instance.mantl-control-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> bbf69c21024692f56609fd08667917d6a9b94aae
