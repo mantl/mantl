@@ -32,7 +32,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: "{{ item.mode | default('u=rw,g=r,o=r') }}"
+    mode: "{{ item.mode | default('0644') }}"
   with_items:
     - src: consul.json.j2
       dest: /etc/consul/consul.json
@@ -83,7 +83,7 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
   with_items:
     - src: consul-wait-for-leader.sh
       dest: /usr/local/bin
@@ -97,7 +97,7 @@
   copy:
     src: check-service-active
     dest: /usr/local/bin
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
   tags:
     - consul
 

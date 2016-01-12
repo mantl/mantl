@@ -4,7 +4,7 @@
   copy:
     src: zookeeper-collectd-plugin.py
     dest: /usr/share/collectd/plugins/zookeeper.py
-    mode: u=r
+    mode: 0444
   tags:
     - zookeeper
     - collectd

@@ -1,11 +1,11 @@
 FROM centos:7
 
-ENV TERRAFORM_VERSION 0.5.3
+ENV TERRAFORM_VERSION 0.6.8
 ENV TERRAFORM_STATE_ROOT /state
 
 RUN mkdir -p /tmp/terraform/ && \
     cd /tmp/terraform/ && \
-    curl -SLO https://dl.bintray.com/mitchellh/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    curl -SLO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     cd /usr/local/bin/ && \
     yum install -y unzip && \
     unzip /tmp/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \

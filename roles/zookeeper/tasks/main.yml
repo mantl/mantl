@@ -111,7 +111,7 @@
   file:
     path: /var/log/zookeeper
     state: directory
-    mode: u=rw,g-rwx,o-rwx
+    mode: 0600
     owner: "{{ zookeeper_os_user }}"
     recurse: true
     setype: svirt_sandbox_file_t
