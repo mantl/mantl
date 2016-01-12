@@ -21,7 +21,6 @@
   "verify_incoming": {{ consul_verify_incoming| to_nice_json }},
   "verify_outgoing": {{ consul_verify_outgoing| to_nice_json }},
   "data_dir": "/var/lib/consul",
-  "ui_dir": "/usr/share/consul-ui",
   "enable_syslog": true,
   "disable_remote_exec": {{ consul_disable_remote_exec|to_nice_json }},
   "http_api_response_headers": {
