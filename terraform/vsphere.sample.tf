@@ -19,4 +19,14 @@ module "vsphere-dc" {
   ssh_user = ""
   ssh_key = ""
   consul_dc = ""
+
+  #Optional Parameters
+  #linked_clone = ""
+  #folder = ""  
+  #control_cpu = ""
+  #worker_cpu = ""
+  #edge_cpu = ""
+  #control_ram = ""
+  #worker_ram = ""
+  #edge_ram = ""
 }

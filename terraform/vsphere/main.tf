@@ -9,6 +9,7 @@ variable "consul_dc" {}
 variable "short_name" {default = "mi"}
 variable "long_name" {default = "microservices-infrastructure"}
 
+variable "folder" {default = ""}
 variable "control_count" {default = 3}
 variable "worker_count" {default = 2}
 variable "edge_count" {default = 2}
@@ -19,11 +20,15 @@ variable "control_ram" { default = 4096 }
 variable "worker_ram" { default = 4096 }
 variable "edge_ram" { default = 4096 }
 
+variable "linked_clone" {default = true}
+
 resource "vsphere_virtual_machine" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
   image = "${var.template}"
+  linked_clone = "${var.linked_clone}"
 
   datacenter = "${var.datacenter}"
+  folder = "${var.folder}"
   host = "${var.host}"
   resource_pool = "${var.pool}"
 
@@ -52,8 +57,10 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
 resource "vsphere_virtual_machine" "mi-worker-nodes" {
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
   image = "${var.template}"
+  linked_clone = "${var.linked_clone}"
 
   datacenter = "${var.datacenter}"
+  folder = "${var.folder}"
   host = "${var.host}"
   resource_pool = "${var.pool}"
 
@@ -82,8 +89,10 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 resource "vsphere_virtual_machine" "mi-edge-nodes" {
   name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
   image = "${var.template}"
+  linked_clone = "${var.linked_clone}"
 
   datacenter = "${var.datacenter}"
+  folder = "${var.folder}"
   host = "${var.host}"
   resource_pool = "${var.pool}"
 
