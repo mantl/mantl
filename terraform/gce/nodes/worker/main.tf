@@ -15,7 +15,7 @@ variable "zones" {}
 
 
 # Instances
-resource "google_compute_disk" "manlt-worker-lvm" {
+resource "google_compute_disk" "mantl-worker-lvm" {
   name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
   type = "pd-ssd"
   zone = "${element(split(",", var.zones), count.index)}"
@@ -25,7 +25,7 @@ resource "google_compute_disk" "manlt-worker-lvm" {
 }
 
 
-resource "google_compute_instance" "manlt-worker-nodes" {
+resource "google_compute_instance" "mantl-worker-nodes" {
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
   description = "${var.long_name} worker node #${format("%03d", count.index+1)}"
   machine_type = "${var.worker_type}"
@@ -40,7 +40,7 @@ resource "google_compute_instance" "manlt-worker-nodes" {
   }
 
   disk {
-    disk = "${element(google_compute_disk.manlt-worker-lvm.*.name, count.index)}"
+    disk = "${element(google_compute_disk.mantl-worker-lvm.*.name, count.index)}"
     auto_delete = false
 
     # make disk available as "/dev/disk/by-id/google-lvm"
@@ -73,7 +73,7 @@ resource "google_compute_instance" "manlt-worker-nodes" {
 }
 
 output "worker_ips" {
-  value = "${join(\",\", google_compute_instance.manlt-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(\",\", google_compute_instance.mantl-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 
