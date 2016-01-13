@@ -9,7 +9,6 @@
 {% endif %}
 {% if consul_is_server %}
   "server": true,
-  "ui": true,
   "bootstrap_expect": {{ consul_bootstrap_expect }},
 {% endif %}
 {% if consul_gossip_key is defined %}
