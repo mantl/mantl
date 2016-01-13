@@ -1,9 +1,11 @@
 ---
 calico_image: calico/node
-calico_image_tag: v0.9.0
+calico_image_tag: v0.14.0
 
 bintray_baseurl: "https://bintray.com/artifact/download/asteris"
 calico_binary: "{{ bintray_baseurl }}/calico/calicoctl/calicoctl"
+
+calico_mesos_plugin: "https://github.com/projectcalico/calico-mesos/releases/download/v0.1.3/calico_mesos"
 
 etcd_service_name: etcd.service.{{ consul_dns_domain }}
 etcd_client_port: 2379

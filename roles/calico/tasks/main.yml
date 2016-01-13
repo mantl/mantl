@@ -39,6 +39,16 @@
     - calico
     - bootstrap
 
+- name: download calico-mesos plugin
+  sudo: yes
+  get_url:
+    url: "{{ calico_mesos_plugin }}"
+    dest: /usr/local/bin/calico_mesos 
+    mode: 0755
+  tags:
+    - calico
+    - bootstrap
+
 #- name: download calicoctl bash completion script
 #  sudo: yes
 #  get_url:
@@ -104,6 +114,22 @@
   when: consul_dc_group is defined
   notify:
     - reload consul
+  tags:
+    - calico
+
+- name: calico etc directory
+  sudo: yes
+  file: 
+    path: /etc/calico
+    state: directory
+  tags:
+    - calico
+
+- name: put calico-mesos integration file
+  sudo: yes
+  copy:
+    src: modules.json
+    dest: /etc/calico/modules.json
   tags:
     - calico
 
