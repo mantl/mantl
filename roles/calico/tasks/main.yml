@@ -139,6 +139,8 @@
 - include: kubernetes.yml
   when: kube_build is defined
 
+- include: calico-configure.yml
+
 - name: reload calico systemd file
   sudo: yes
   command: "systemctl daemon-reload"
@@ -183,4 +185,3 @@
 
 - meta: flush_handlers
 
-- include: calico-configure.yml
