@@ -87,6 +87,11 @@ output "control_security_group" {
   value = "${aws_security_group.edge.id}"
 }
 
+output "edge_ids" {
+  value = "${join(\",\", aws_instance.mantl-control-nodes.*.id)}"
+}
+
+
 output "edge_ips" {
   value = "${join(\",\", aws_instance.mantl-edge-nodes.*.public_ip)}"
 }
