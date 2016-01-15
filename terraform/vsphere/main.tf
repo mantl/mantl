@@ -20,7 +20,7 @@ variable "control_ram" { default = 4096 }
 variable "worker_ram" { default = 4096 }
 variable "edge_ram" { default = 4096 }
 
-variable "linked_clone" {default = true}
+variable "linked_clone" {default = false}
 
 resource "vsphere_virtual_machine" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
