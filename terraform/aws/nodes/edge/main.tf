@@ -88,7 +88,7 @@ output "control_security_group" {
 }
 
 output "edge_ids" {
-  value = "${join(\",\", aws_instance.mantl-control-nodes.*.id)}"
+  value = "${join(\",\", aws_instance.mantl-edge-nodes.*.id)}"
 }
 
 

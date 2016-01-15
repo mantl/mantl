@@ -9,6 +9,8 @@ variable elb_fqdn {}
 variable hosted_zone_id {}
 variable short_name {}
 variable subdomain { default = "" }
+variable traefik_elb_fqdn {}
+variable traefik_zone_id {}
 variable worker_count {}
 variable worker_ips {}
 
@@ -53,12 +55,15 @@ resource "aws_route53_record" "dns-control-group" {
 }
 
 resource "aws_route53_record" "dns-wildcard" {
-  count = "${var.edge_count}"
   zone_id = "${var.hosted_zone_id}"
   name = "*${var.subdomain}.${var.domain}"
-  records = ["${split(",", var.edge_ips)}"]
   type = "A"
-  ttl = 60
+
+  alias {
+    zone_id = "${var.traefik_zone_id}"
+    name = "${var.traefik_elb_fqdn}"
+    evaluate_target_health = true
+  }
 }
 
 resource "aws_route53_record" "elb-cname" {

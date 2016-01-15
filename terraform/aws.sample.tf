@@ -114,17 +114,30 @@ module "aws-elb" {
   ##security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
 }
 
+module "traefik-elb" {
+  source = "./terraform/aws/elb/traefik"
+  instances = "${module.edge-nodes.edge_ids}"
+  short_name = "${var.short_name}"
+  subnets = "${module.vpc.subnet_ids}" 
+  security_groups = "${module.control-nodes.ui_security_group},${module.vpc.default_security_group}"
+  ## uncomment below it you want to use remote state for vpc variables
+  ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}" 
+  ##security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
+}
+
 module "route53" {
   source = "./terraform/aws/route53/dns"
   control_count = "${var.control_count}"
   control_ips = "${module.control-nodes.control_ips}"
-  domain = "my-test-cloud.com"
+  domain = "my-domain.com"
   edge_count = "${var.edge_count}"
   edge_ips = "${module.edge-nodes.edge_ips}"
   elb_fqdn = "${module.aws-elb.fqdn}"
   hosted_zone_id = "XXXXXXXXXXXX"
   short_name = "${var.short_name}"
   subdomain = ".dev"
+  traefik_elb_fqdn = "${module.traefik-elb.fqdn}"
+  traefik_zone_id = "${module.traefik-elb.zone_id}"
   worker_count = "${var.worker_count}"
   worker_ips = "${module.worker-nodes.worker_ips}"
 }
