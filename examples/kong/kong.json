@@ -4,11 +4,15 @@
     "instances": 1,
     "cpus": 1,
     "mem": 1024,
+    "cmd": "cp $MESOS_SANDBOX/kong.yml /etc/kong/; kong start && tail -f /usr/local/kong/logs/error.log",
+    "uris": [
+      "http://ryanesc.s3.amazonaws.com/samples/kong.yml"
+    ],
     "container": {
         "type": "DOCKER",
         "docker": {
             "network": "BRIDGE",
-            "image": "mashape/kong",
+            "image": "mashape/kong:0.5.4",
             "portMappings": [
                 {
                     "containerPort": 8000,
@@ -19,16 +23,18 @@
                     "protocol": "tcp"
                 }
             ]
-        },
-        "volumes": [{
-            "containerPath": "/etc/kong",
-            "hostPath": "/etc/kong",
-            "mode": "RO"
-        }]
+        }
+    },
+    "labels": {
+      "traefik.port": "0"
     },
     "healthChecks": [ {
         "path": "/",
         "protocol": "HTTP",
-        "portIndex": 1
+        "portIndex": 1,
+        "gracePeriodSeconds": 30,
+        "intervalSeconds": 10,
+        "timeoutSeconds": 10,
+        "maxConsecutiveFailures": 5
     }]
 }

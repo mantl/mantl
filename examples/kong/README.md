@@ -1,11 +1,11 @@
 # Kong
 
-Kong is an "Open-source, Microservice & API Management Layer built on top of
-NGINX". It is a great example of a real world microservices based application
-that can be run with ease on Mantl. To do so, just fill in the $ip, $username,
-and $password variables in the deploy.sh script and run it from this directory.
-The script is extensively commented, and walks you through the steps necessary
-to deploy Kong.
+[Kong](https://getkong.org) is an "Open-source, Microservice & API Management
+Layer built on top of NGINX". It is a great example of a real world
+microservices based application that can be run with ease on Mantl. To do so,
+just fill in the $ip, $username, and $password variables in the deploy.sh script
+and run it from this directory. The script is extensively commented, and walks
+you through the steps necessary to deploy Kong.
 
 After deploying, you can log into the Marathon UI on any of your control nodes
 at `<control-ip>/marathon/#apps/%2Fkong`, see what port Kong is accessible on,
@@ -28,3 +28,9 @@ You should get a response that looks like this:
 	}
 }
 ```
+
+By default, Kong will also be load-balanced by
+[Traefik](https://traefik.github.io) on edge nodes. If you do not want this, add
+`"traefik.enable": "false"` to the "labels" section in the Marathon json
+(kong.json in this directory). Assuming you have DNS setup in your cluster, you
+will be able to reach the Kong proxy layer at `kong.<traefik_marathon_domain>`
