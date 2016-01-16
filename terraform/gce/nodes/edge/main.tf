@@ -73,3 +73,7 @@ resource "google_compute_instance" "mantl-edge-nodes" {
 output "edge_ips" {
   value = "${join(\",\", google_compute_instance.mantl-edge-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
+
+output "instances" {
+  value = "${join(",", google_compute_instance.mantl-edge-nodes.*.self_link)}"
+}
