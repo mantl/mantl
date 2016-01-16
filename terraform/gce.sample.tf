@@ -75,3 +75,9 @@ module "worker-nodes" {
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
 }
+
+module "network-lb" {
+  source = "./terraform/gce/lb"
+  instances = "${module.edge-nodes.instances}"
+  short_name = "${var.short_name}"
+}

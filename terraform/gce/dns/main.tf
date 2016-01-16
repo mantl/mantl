@@ -5,6 +5,7 @@ variable control_subdomain { default = "control" }
 variable domain {}
 variable edge_count {}
 variable edge_ips {}
+variable lb_ip {}
 variable managed_zone {}
 variable short_name {}
 variable subdomain { default = "" }
@@ -55,5 +56,5 @@ resource "google_dns_record_set" "dns-wildcard" {
   name = "*${var.subdomain}.${var.domain}."
   type = "A"
   ttl = 60
-  rrdatas = ["${split(",", var.edge_ips)}"]
+  rrdatas = ["${var.lb_ip}"]
 }
