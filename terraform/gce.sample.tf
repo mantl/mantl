@@ -81,3 +81,18 @@ module "network-lb" {
   instances = "${module.edge-nodes.instances}"
   short_name = "${var.short_name}"
 }
+
+module "cloud-dns" {
+  source = "./terraform/gce/dns"
+  control_count = "${var.control_count}"
+  control_ips = "${module.control-nodes.control_ips}"
+  domain = "mydomain.com"
+  edge_count = "${var.edge_count}"
+  edge_ips = "${module.edge-nodes.edge_ips}"
+  lb_ip = "${module.network-lb.public_ip}"
+  managed_zone = "my-cloud-dns-zone"
+  short_name = "${var.short_name}"
+  subdomain = "service"
+  worker_count = "${var.worker_count}"
+  worker_ips = "${module.worker-nodes.worker_ips}"
+}
