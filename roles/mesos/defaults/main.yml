@@ -1,7 +1,8 @@
 ---
-mesos_version: 0.26.0
+mesos_version: 0.25.0
 mesos_iteration: 1
-mesos_fullversion: "{{ mesos_version }}-{{ mesos_iteration }}"
+mesos_master_iteration: 1
+mesos_agent_iteration: 1
 
 mesos_mode: follower 
 mesos_log_dir: /var/log/mesos
