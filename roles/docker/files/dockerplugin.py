@@ -311,7 +311,7 @@ class DockerPlugin:
                     if not re.match("/.*/", name):
                         container['Name'] = name[1:]
 
-                if container['Id'] not in self.stats:
+                if container['Id'] in self.stats:
                     # Get and process stats from the container.
                     stats = self.stats[container['Id']].stats
                     t = stats['read']
