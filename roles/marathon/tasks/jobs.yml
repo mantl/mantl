@@ -24,7 +24,7 @@
 - name: start jobs
   run_once: true
   sudo: yes
-  command: 'curl -X PUT -d@/etc/marathon/{{ item }}.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/{{ item }}'
+  command: 'curl -X PUT -d@/etc/marathon/{{ item }}.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/{{ item }}' # ansible lint wants to use get_url or uri module
   changed_when: false
   failed_when: "'deploymentId' not in result.stdout"
   register: result

@@ -11,7 +11,7 @@
 - hosts: consul_servers
   tasks:
     - name: get list of installed packages before installing wireshark
-      command: rpm -qa
+      command: rpm -qa # ansible lint wants to use yum module
       register: packages_before
       changed_when: no
 
@@ -22,7 +22,7 @@
         state: present
 
     - name: get list of installed packages after installing wireshark
-      command: rpm -qa
+      command: rpm -qa # ansible lint wants to use yum module
       register: packages_after
       changed_when: no
 

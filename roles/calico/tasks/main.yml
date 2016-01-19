@@ -62,7 +62,7 @@
 - name: set calico environment
   sudo: yes
   template:
-    src: calico.env.j2 
+    src: calico.env.j2
     dest: /etc/default/calico
     owner: root
     group: root

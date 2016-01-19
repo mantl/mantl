@@ -6,11 +6,11 @@
 
   - name: clean yum
     sudo: yes
-    command: yum clean all
+    command: yum clean all # ansible lint wants to use yum module
 
   - name: refresh yum cache
     sudo: yes
-    command: yum makecache
+    command: yum makecache # ansible lint ... and here
 
   - name: upgrade kernel package
     sudo: yes
