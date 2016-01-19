@@ -16,7 +16,7 @@ roles/calico: `Apache 2.0 <https://github.com/projectcalico/calico/blob/master/L
 
 roles/chronos: `Apache 2.0 <https://github.com/mesos/chronos/blob/master/LICENSE>`_
 
-roles/collectd: `MIT <https://github.com/CSC-IT-Center-for-Science/ansible-role-collectd/blob/master/LICENSE>`_
+roles/collectd: `MIT <https://collectd.org/wiki/index.php/Category:MIT_License>`_
 
 roles/common: `MIT <https://github.com/sunscrapers/ansible-role-common/blob/master/LICENSE>`_
 
@@ -24,7 +24,7 @@ roles/ consul-template`MPL 2.0 <https://github.com/hashicorp/consul-template/blo
 
 roles/consul: `MLP 2.0 <https://github.com/hashicorp/consul/blob/master/LICENSE>`_
 
-roles/dnsmasq: `Apache 2.0 <https://github.com/mesos/chronos/blob/master/LICENSE>`_
+roles/dnsmasq: `Apache 2.0 <https://github.com/vmware/ansible-role-dnsmasq/blob/master/LICENSE>`_
 
 roles/docker: `Apache 2.0 <https://github.com/docker/docker/blob/master/LICENSE>`_
 
@@ -32,11 +32,11 @@ roles/etcd: `Apache 2.0 <https://github.com/coreos/etcd/blob/master/LICENSE>`_
 
 roles/flannel: `Apache 2.0 <https://github.com/coreos/flannel/blob/master/LICENSE>`_
 
-roles/glusterfs: `GNU GPL 3.0 <https://github.com/rosmo/ansible-glusterfs/blob/master/LICENSE>`_
+roles/glusterfs: `GNU GPL 3.0 <http://www.gluster.org/community/documentation/index.php/Gluster_3.2:_Understanding_the_GlusterFS_License>`_
 
 roles/handlers: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-roles/haproxy: `Apache 2.0 <https://github.com/vmware/ansible-role-haproxy/blob/master/LICENSE>`_
+roles/haproxy: `Haproxy <http://www.haproxy.org/download/1.3/doc/LICENSE>`_
 
 roles/kubernetes, k8's: `Apache 2.0 <https://github.com/vmware/ansible-role-kubernetes-master/blob/master/LICENSE>`_
 
@@ -44,7 +44,7 @@ roles/logrotate: `MIT <https://github.com/retr0h/ansible-logrotate/blob/master/L
 
 roles/logstash: `Apache 2.0 <https://github.com/elastic/logstash/blob/master/LICENSE>`_
 
-roles/lvm: license: `GNU GPL 3.0 <https://github.com/elastic/logstash/blob/master/LICENSE>`_
+roles/lvm: license: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
 roles/mantlui: `Apache 2.0 <http://microservices-infrastructure.readthedocs.org/en/latest/license.html>`_
 
@@ -66,10 +66,6 @@ terraform: `MLP 2.0 <https://github.com/hashicorp/terraform/blob/master/LICENSE>
 
 Vagrant: `MIT <license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE>`_
 
-Dockerfile: `Apache 2.0 <https://github.com/docker/docker/blob/master/LICENSE>`_
-
 security-setup: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
 kubernetes: `Apache 2.0 <https://github.com/kubernetes/kubernetes/blob/master/LICENSE>`_
-
-requirements.txt `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
