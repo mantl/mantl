@@ -1,192 +1,75 @@
 **License Documentation for Mantl**
 
-| mi-deploy:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+addons, examples, library: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-| Packer:  
-| license: GNU GPL 3.0  
-| license_url: http://www.gnu.org/licenses/gpl-3.0.en.html  
-|   
+mi-deploy: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-| playbooks:  
-| license: GNU GPL 3.0  
-| license_url: http://www.gnu.org/licenses/gpl-3.0.en.html  
-|   
+Packer: `MPL 2.0 <https://github.com/mitchellh/packer/blob/master/LICENSE>`_
 
-| plugins/callbacks/profile_tasks.py:  
-| license: MIT  
-| license_url: https://opensource.org/licenses/MIT  
-|   
+playbooks: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-| plugins/inventory/terraform.py:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+plugins/callbacks/profile_tasks.py: `MIT <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/plugins/callbacks/profile_tasks.py>`_
 
-| roles/calico:  
-| license: ASL 2.0  
-| license_url: https://github.com/projectcalico/calico/blob/master/LICENSE  
-|   
+plugins/inventory/terraform.py: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/plugins/inventory/terraform.py>`_
 
-| roles/collectd:  
-| license: Eli Courtwrite and other individual contributers  
-| license_url: https://github.com/appliedsec/collectd/blob/master/LICENSE.txt  
-|   
+roles/calico: `Apache 2.0 <https://github.com/projectcalico/calico/blob/master/LICENSE>`_
 
-| roles/chronos:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/chronos: `Apache 2.0 <https://github.com/mesos/chronos/blob/master/LICENSE>`_
 
-| roles/consul:  
-| license: MLP 2.0  
-| license_url: https://github.com/hashicorp/consul/blob/master/LICENSE  
-|   
+roles/collectd: `MIT <https://github.com/CSC-IT-Center-for-Science/ansible-role-collectd/blob/master/LICENSE>`_
 
-| roles/dnsmasq:  
-| license: GNU GPL 3.0  
-| license_url: http://www.gnu.org/licenses/gpl-3.0.en.html  
-|   
+roles/common: `MIT <https://github.com/sunscrapers/ansible-role-common/blob/master/LICENSE>`_
 
-| roles/docker:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/ consul-template`MPL 2.0 <https://github.com/hashicorp/consul-template/blob/master/LICENSE>`_
 
-| roles/etcd:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/consul: `MLP 2.0 <https://github.com/hashicorp/consul/blob/master/LICENSE>`_
 
-| roles/flannel:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/dnsmasq: `Apache 2.0 <https://github.com/mesos/chronos/blob/master/LICENSE>`_
 
-| roles/haproxy:  
-| license: GNU GPL 3.0  
-| license_url: http://www.gnu.org/licenses/gpl-3.0.en.html  
-|   
+roles/docker: `Apache 2.0 <https://github.com/docker/docker/blob/master/LICENSE>`_
 
-| roles/kubernetes:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/etcd: `Apache 2.0 <https://github.com/coreos/etcd/blob/master/LICENSE>`_
 
-| roles/logrotate:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/flannel: `Apache 2.0 <https://github.com/coreos/flannel/blob/master/LICENSE>`_
 
-| roles/logstash:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/glusterfs: `GNU GPL 3.0 <https://github.com/rosmo/ansible-glusterfs/blob/master/LICENSE>`_
 
-| roles/lvm:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/handlers: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-| roles/mantlui:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-| license: MLP 2.0  
-| license_url: https://github.com/hashicorp/consul/blob/master/LICENSE  
-|   
+roles/haproxy: `Apache 2.0 <https://github.com/vmware/ansible-role-haproxy/blob/master/LICENSE>`_
 
-| roles/marathon:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/kubernetes, k8's: `Apache 2.0 <https://github.com/vmware/ansible-role-kubernetes-master/blob/master/LICENSE>`_
 
-| roles/mesos:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/logrotate: `MIT <https://github.com/retr0h/ansible-logrotate/blob/master/LICENSE>`_
 
-| roles/nginx:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/logstash: `Apache 2.0 <https://github.com/elastic/logstash/blob/master/LICENSE>`_
 
-| roles/vault:  
-| license: MLP 2.0  
-| license_url: https://github.com/hashicorp/vault/blob/master/LICENSE  
-|   
+roles/lvm: license: `GNU GPL 3.0 <https://github.com/elastic/logstash/blob/master/LICENSE>`_
 
-| roles/zookeeper:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/mantlui: `Apache 2.0 <http://microservices-infrastructure.readthedocs.org/en/latest/license.html>`_
 
-| terraform:  
-| license: MLP 2.0  
-| license_url: https://github.com/hashicorp/terraform/blob/master/LICENSE  
-|   
+roles/marathon: `Apache 2.0 <https://github.com/mesosphere/marathon/blob/master/LICENSE>`_
 
-| Dockerfile:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/mesos: `Apache 2.0 <https://github.com/apache/mesos/blob/master/LICENSE>`_
 
-| Vagrantfile:  
-| license: MIT  
-| license_url: https://opensource.org/licenses/MIT  
-|   
+roles/nginx: `MIT <https://github.com/ANXS/nginx>`_
 
-| Mi-Deploy:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/traefik: `MIT <https://github.com/emilevauge/traefik/blob/master/LICENSE.md>`_
 
-|     AWS:  
-|     license: Amazon Software License  
-|     license_url: https://aws.amazon.com/asl/  
-|   
+roles/vault: `MLP 2.0 <https://github.com/hashicorp/vault/blob/master/LICENSE>`_
 
-|     DigitalOcean:  
-|     license: ASL 2.0  
-|     license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+roles/zookeeper: `Apache 2.0 <https://github.com/apache/zookeeper/blob/trunk/LICENSE.txt>`_
 
-|     GCE:  
-|     license: go  
-|     license_url: https://code.google.com/p/go/source/browse/LICENSE  
-|   
+ssl: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-|     Openstack:  
-|     license: ASL 2.0  
-|     license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+terraform: `MLP 2.0 <https://github.com/hashicorp/terraform/blob/master/LICENSE>`_
 
-|     Vagrant  
-|     license: MIT  
-|     license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE  
-|   
+Vagrant: `MIT <license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE>`_
 
-|     SoftLayer:  
-|     license: SoftLayer 2014  
-|     license_url: https://github.com/softlayer/softlayer-python/blob/master/LICENSE  
-|   
+Dockerfile: `Apache 2.0 <https://github.com/docker/docker/blob/master/LICENSE>`_
 
-| mesos-consul:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+security-setup: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
 
-| consul-cli:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
-|   
+kubernetes: `Apache 2.0 <https://github.com/kubernetes/kubernetes/blob/master/LICENSE>`_
 
-| mesos-ui:  
-| license: MIT  
-| license_url: https://github.com/Capgemini/mesos-ui/blob/master/LICENSE  
-|   
-
-| mantl-api:  
-| license: ASL 2.0  
-| license_url: http://www.apache.org/licenses/LICENSE-2.0  
+requirements.txt `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
