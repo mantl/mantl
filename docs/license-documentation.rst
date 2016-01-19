@@ -60,8 +60,6 @@ roles/vault: `MLP 2.0 <https://github.com/hashicorp/vault/blob/master/LICENSE>`_
 
 roles/zookeeper: `Apache 2.0 <https://github.com/apache/zookeeper/blob/trunk/LICENSE.txt>`_
 
-ssl: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
-
 terraform: `MLP 2.0 <https://github.com/hashicorp/terraform/blob/master/LICENSE>`_
 
 Vagrant: `MIT <license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE>`_
