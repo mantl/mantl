@@ -2,7 +2,7 @@
 - name: install consul
   sudo: yes
   yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.2-2.el7.centos.x86_64.rpm"
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.2-4.el7.centos.x86_64.rpm"
     state: present
   tags:
     - consul
@@ -11,7 +11,7 @@
 - name: install consul-ui
   sudo: yes
   yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.2-2.el7.centos.x86_64.rpm"
+    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.2-4.el7.centos.x86_64.rpm"
     state: present
   when: consul_is_server
   tags:
@@ -32,7 +32,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: "{{ item.mode | default('u=rw,g=r,o=r') }}"
+    mode: "{{ item.mode | default('0644') }}"
   with_items:
     - src: consul.json.j2
       dest: /etc/consul/consul.json
@@ -83,7 +83,7 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
   with_items:
     - src: consul-wait-for-leader.sh
       dest: /usr/local/bin
@@ -97,7 +97,7 @@
   copy:
     src: check-service-active
     dest: /usr/local/bin
-    mode: u=rwx,g=rx,o=rx
+    mode: 0755
   tags:
     - consul
 

@@ -4,7 +4,7 @@
   copy:
     src: marathon-collectd-plugin.py
     dest: /usr/share/collectd/plugins/marathon.py
-    mode: u=r
+    mode: 0444
   tags:
     - marathon
     - collectd

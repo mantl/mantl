@@ -14,21 +14,22 @@ Configuring OpenStack authentication
 
 Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
-the template located at ``terraform/openstack.sample.tf``. It looks like this:
+the template located at ``terraform/openstack-floating.sample.tf``. It looks
+like this:
 
 .. this is highlighted as javascript for convenience, but obviously that's not
    the *real* language.
-.. literalinclude:: ../../terraform/openstack.sample.tf
+
+.. literalinclude:: ../../terraform/openstack-floating.sample.tf
    :language: javascript
 
 Copy that file in it's entirety to the root of the project to start
 customization. NOTE: All configuration entries needs to be completed.
 In the next sections, we'll explain how to obtain these settings.
 
-There is another sample called ``openstack-floating.sample.tf`` in the
-``terraform`` directory. The default sample assumes you are booting VMs directly
-on a public network. Use the floating sample instead if you'd like to provision
-your virtual machines on a private network with floating IPs.
+There is another sample called ``openstack.sample.tf`` in the
+``terraform`` directory. This sample assumes you are booting VMs directly
+on a public network.
 
 You can also use this file as a base for further customization. For example, you
 can change the names of the modules to be specific to your environment. While we
@@ -38,14 +39,14 @@ can get these variables from the OpenStack command line tools. For example:
 
 - ``glance image-list`` for ``image_name``
 - ``keystone tenant-list`` for ``tenant_id`` and ``tenant_name``
-- ``nova flavor-list`` for ``control_flavor_name`` and ``resource_flavor_name``
+- ``nova flavor-list`` for ``control_flavor_name`` and ``worker_flavor_name``
 
 Or use the appropriate OpenStack commands such as ``openstack project list`` or
 the commands below.
 
 - ``openstack image list`` for ``image_name``
 - ``openstack network list`` for ``net_id``
-- ``openstack flavor list`` for ``control_flavor_name / resource_flavor_name``
+- ``openstack flavor list`` for ``control_flavor_name / worker_flavor_name``
 
 Generate SSH keys
 ^^^^^^^^^^^^^^^^^

@@ -1,0 +1,4 @@
+---
+flannel_version: 0.2.0
+
+flannel_backend_type: 'udp'

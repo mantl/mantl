@@ -1,0 +1,26 @@
+[Unit]
+Description=etcd
+After=etcd.service
+Requires=etcd.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker rm -f skydns
+ExecStartPre=/usr/bin/docker pull skynetservices/skydns:2.5.3a
+
+ExecStart=/usr/bin/docker run \
+    --name=skydns \
+    --publish={{ skydns_port }}:53 \
+    --publish={{ skydns_port }}:53/udp \
+    --env-file=/etc/default/skydns.env \
+    skynetservices/skydns:2.5.3a \
+    --addr=0.0.0.0:53
+
+ExecStop=/usr/bin/docker stop skydns
+ExecStopPost=-/usr/bin/docker rm -f skydns
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,18 @@
+{
+    "checks": [
+        {% for volume in glusterfs_volumes %}
+        {
+            "id": "glusterfs-{{ volume.name }}",
+            "name": "GlusterFS volume: {{ volume.name }}",
+            "script": "sudo /usr/sbin/gluster volume info {{ volume.name }}",
+            "interval": "30s"
+        },
+        {
+            "id": "glusterfs-{{ volume.name }}-started",
+            "name": "GlusterFS volume started: {{ volume.name }}",
+            "script": "sudo /usr/sbin/gluster volume info {{ volume.name }} | grep 'Status: Started'",
+            "interval": "30s"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}

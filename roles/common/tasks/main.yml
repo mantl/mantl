@@ -14,7 +14,7 @@
   template:
     src: hosts.j2
     dest: /etc/hosts
-    mode: 644
+    mode: 0644
   tags:
     - common
 
@@ -70,19 +70,23 @@
   tags:
     - distributive
 
-- name: increase ulimit for root
+- name: disable requiretty in sudoers
   sudo: yes
-  copy:
-    dest: /etc/security/limits.d/10-root-nofiles.conf
-    src: 10-root-nofiles.conf
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: ^.+requiretty$
+    line: "# Defaults	requiretty"
+  tags:
 
-- name: sysctl max file limit
+- name: configure selinux
   sudo: yes
-  sysctl:
-    name: fs.file-max
-    value: 65000
-    sysctl_set: true
-    reload: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags:
+    - security
+    - bootstrap
 
 - include: users.yml
 - include: ssl.yml

@@ -628,6 +628,15 @@ class Consul(Component):
                 print('consul_default_acl_policy already set')
 
 
+class Traefik(Component):
+    def check(self):
+        return [self.admin_cert]
+
+    def admin_cert(self):
+        "admin SSL certificate"
+        self.generate_certificate("traefik-admin")
+
+
 class Marathon(Component):
     def check(self):
         return [self.check_security, self.mesos_auth, self.password]

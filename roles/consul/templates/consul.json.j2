@@ -4,10 +4,8 @@
   "node_name": "{{ inventory_hostname }}",
   "rejoin_after_leave": true,
   "domain": "{{ consul_dns_domain }}",
-{% if consul_bootstrap_expect > 1 %}
   "retry_join": [ {{ consul_retry_join }} ],
-{% endif %}
-{% if consul_is_server %}
+{% if consul_is_server|bool %}
   "server": true,
   "bootstrap_expect": {{ consul_bootstrap_expect }},
 {% endif %}
@@ -17,8 +15,16 @@
   "ca_file": "/etc/consul/ssl/{{ consul_ca_file }}",
   "cert_file": "/etc/consul/ssl/{{ consul_cert_file }}",
   "key_file": "/etc/consul/ssl/{{ consul_key_file }}",
+{% if provider == "virtualbox" or provider == "vmware_fusion" %}
+  {# Used to fix a bad certificate error #}
+  "verify_incoming": false,
+  "verify_outgoing": false,
+  {# The hostnames will not include the datacenter #}
+  "verify_server_hostname": false,
+{% else %}
   "verify_incoming": {{ consul_verify_incoming| to_nice_json }},
   "verify_outgoing": {{ consul_verify_outgoing| to_nice_json }},
+{% endif %}
   "data_dir": "/var/lib/consul",
   "ui_dir": "/usr/share/consul-ui",
   "enable_syslog": true,

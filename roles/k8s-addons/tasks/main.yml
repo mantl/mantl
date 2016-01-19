@@ -1,0 +1,74 @@
+---
+- name: Write kube-system namespace manifest
+  sudo: yes
+  copy:
+    src=kube-system.yaml
+    dest="{{ kube_manifest_dir }}/kube-system.yaml"
+
+- name: Create kube-system namespace
+  sudo: yes
+  kube:
+    resource: namespace
+    name: kube-system
+    filename: "{{ kube_manifest_dir }}/kube-system.yaml"
+    state: present
+    config: "{{ kube_config_dir }}/kubectl.kubeconfig"
+  ignore_errors: yes
+  run_once: yes
+  when: inventory_hostname == groups[master_group_name][0]
+  tags:
+    - addons
+
+- name: Run kube-gen-token script to create system:dns {{ kube_token_dir }}/known_tokens.csv
+  sudo: yes
+  command: "{{ kube_script_dir }}/kube-gen-token.sh system:dns"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  run_once: yes
+  when: inventory_hostname == groups[master_group_name][0]
+  notify:
+    - restart apiserver
+  tags:
+    - addons
+
+- name: Run kube-gen-token script to create system:monitoring {{ kube_token_dir }}/known_tokens.csv
+  sudo: yes
+  command: "{{ kube_script_dir }}/kube-gen-token.sh system:monitoring"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  run_once: yes
+  when: inventory_hostname == groups[master_group_name][0]
+  notify:
+    - restart apiserver
+  tags:
+    - addons
+
+- name: Run kube-gen-token script to create system:logging {{ kube_token_dir }}/known_tokens.csv
+  sudo: yes
+  command: "{{ kube_script_dir }}/kube-gen-token.sh system:logging"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  run_once: yes
+  when: inventory_hostname == groups[master_group_name][0]
+  notify:
+    - restart apiserver
+  tags:
+    - addons
+
+- include: skydns.yml
+  when: dns_setup
+
+- include: kube-ui.yml
+  when: enable_ui
+
+- include: logging.yml
+  when: enable_logging
+
+- include: monitoring.yml
+  when: enable_monitoring

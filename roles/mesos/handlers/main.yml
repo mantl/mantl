@@ -1,4 +1,8 @@
 ---
+- name: reload unit files
+  sudo: yes
+  command: systemctl daemon-reload
+
 - name: restart mesos leader
   sudo: yes
   command: systemctl restart mesos-master
@@ -7,13 +11,13 @@
   sudo: yes
   command: "{{ item }}"
   with_items:
-    - systemctl stop mesos-slave
+    - systemctl stop mesos-agent
     - rm -rf /tmp/mesos/meta/slaves/latest
-    - systemctl start mesos-slave
+    - systemctl start mesos-agent
 
 - name: restart mesos follower
   sudo: yes
-  command: systemctl restart mesos-slave
+  command: systemctl restart mesos-agent
 
 - name: reload consul
   sudo: yes

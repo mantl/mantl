@@ -1,0 +1,76 @@
+# ansible remote user account
+# ansible_ssh_user: centos
+
+# ansible groups for service configuration
+etcd_group_name: role=control
+master_group_name: role=control
+minion_group_name: role=worker
+
+etcd_url_scheme: http
+
+
+# Kubernetes build to use, stable is used by default. 
+# Place "testing" here to use latest build avialable.
+kube_build: stable
+
+# Users to create for basic auth in Kubernetes API via HTTP
+kube_users:
+  kube:
+    pass: changeme
+    role: admin
+  root:
+    pass: changeme
+    role: admin
+
+
+# Select which network manager to use. After choosing, edit kubernetes.yml file and include aproriate roles.
+# network: calico
+network: flannel
+
+# Kubernetes cluster name, also will be used as DNS domain
+cluster_name: cluster.local
+
+# Kubernetes internal network for services, unused block of space.
+kube_service_addresses: 10.254.0.0/16
+
+# Kubernetes api port
+kube_master_port: 6443
+
+# internal network (optional). When used, it will assign IP
+# addresses from this range to individual pods.
+# This network must be unused in your network infrastructure!
+overlay_network_subnet: 4.0.0.0
+
+# internal network total size (optional). This is the prefix of the
+# entire overlay network.  So the entirety of 4.0.0.0/16 must be
+# unused in your environment.
+overlay_network_prefix: 16
+
+# internal network node size allocation (optional). This is the size allocated
+# to each node on your network.  With these defaults you should have
+# room for 4096 nodes with 254 pods per node.
+overlay_network_host_prefix: 24
+
+# Internal DNS configuration.
+# Kubernetes can create and mainatain its own DNS server to resolve service names
+# into appropriate IP addresses. It's highly advisable to run such DNS server,
+# as it greatly simplifies configuration of your applications - you can use
+# service names instead of magic environment variables.
+# You still must manually configure all your containers to use this DNS server,
+# Kubernetes won't do this for you (yet).
+
+# Turn this varable to 'false' to disable whole DNS configuration.
+dns_setup: true
+skydns_port: 153
+
+# Number of replicas of DNS instances started on kubernetes
+dns_replicas: 1
+
+# Set to 'false' to disable default Kubernetes UI setup
+enable_ui: true
+
+# Set to 'false' to disable default Elasticsearch + Kibana logging setup
+enable_logging: true
+
+# Set to "false' to disable default Monitoring (cAdvisor + heapster + influxdb + grafana)
+enable_monitoring: true

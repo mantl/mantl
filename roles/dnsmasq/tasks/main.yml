@@ -51,7 +51,20 @@
   template:
     src: 10-consul
     dest: /etc/dnsmasq.d/10-consul
-    mode: 755
+    mode: 0755
+  when: consul_dc_group is defined
+  notify:
+    - restart dnsmasq
+  tags:
+    - dnsmasq
+
+- name: configure dnsmasq for Kubernetes
+  sudo: yes
+  template:
+    src: 20-kubernetes
+    dest: /etc/dnsmasq.d/20-kubernetes
+    mode: 0755
+  when: cluster_name is defined
   notify:
     - restart dnsmasq
   tags:
@@ -77,12 +90,29 @@
   tags:
     - dnsmasq
 
+- name: List network-scripts which need fixup
+  sudo: yes
+  shell: "find /etc/sysconfig/network-scripts -name 'ifcfg-*'"
+  register: list_of_network_scripts
+
+- name: fixing PEERDNS in network-scripts
+  sudo: yes
+  lineinfile:
+    dest: "{{ item }}"
+    line: "PEERDNS=no"
+    regexp: ^PEERDNS=.*'
+  with_items: list_of_network_scripts.stdout_lines  
+  notify:
+    - restart networkmanager
+  tags:
+    - dnsmasq
+
 - name: add dnsmasq to /etc/resolv.conf
   sudo: yes
   template:
     src: resolv.conf.j2
     dest: /etc/resolv.conf
-    mode: 644
+    mode: 0644
   tags:
     - dnsmasq
 

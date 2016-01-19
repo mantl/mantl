@@ -1,0 +1,52 @@
+---
+- name: SkyDNS | Write pod file
+  sudo: yes
+  template:
+    src: skydns-rc.yaml.j2
+    dest: "{{ kube_manifest_dir }}/skydns-rc.yaml"
+  register: dns_rc_def
+  when: dns_setup
+  tags:
+    - addons
+    - skydns
+
+#- name: SkyDNS | Write service file
+#  sudo: yes
+#  template:
+#    src: skydns-svc.yaml.j2
+#    dest: "{{ kube_manifest_dir }}/skydns-svc.yaml"
+#  register: dns_svc_def
+#  when: dns_setup
+#  tags:
+#    - addons
+#    - skydns
+
+- name: SkyDNS | Create or update replication controller
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: kube-dns-v8
+    filename: "{{ kube_manifest_dir }}/skydns-rc.yaml"
+    state: "{{ dns_rc_def.changed | ternary('latest','present') }}"
+    config: "{{ kube_config_dir }}/kubectl.kubeconfig"
+  when: dns_setup
+  delegate_to: "{{ groups[master_group_name][0] }}"
+  run_once: true
+  tags:
+    - addons
+    - skydns
+
+#- name: SkyDNS | Create or update service
+#  sudo: yes
+#  kube:
+#    namespace: kube-system
+#    resource: svc
+#    name: kube-dns
+#    filename: "{{ kube_manifest_dir }}/skydns-svc.yaml"
+#    state: "{{ dns_svc_def.changed | ternary('latest','present') }}"
+#    config: "{{ kube_config_dir }}/kubectl.kubeconfig"
+#  when: dns_setup
+#  tags:
+#    - addons
+#    - skydns

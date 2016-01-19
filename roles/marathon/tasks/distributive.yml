@@ -12,11 +12,11 @@
     - distributive
     - marathon
 
-- name: create symlink to distributive marathon checklist
+- name: create distributive marathon checklist
   sudo: yes
-  file:
-    state: link
-    src: /usr/share/distributive/marathon.json
+  copy:
+    force: yes
+    src: distributive-checks.json
     dest: /etc/distributive.d/marathon.json
   tags:
     - consul

@@ -1,0 +1,33 @@
+---
+- name: tokens | copy the token gen script
+  sudo: yes
+  copy:
+    src=kube-gen-token.sh
+    dest={{ kube_script_dir }}
+    mode=0744
+
+- name: tokens | generate tokens for master components
+  sudo: yes
+  command: "{{ kube_script_dir }}/kube-gen-token.sh {{ item[0] }}-{{ item[1] }}"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  with_nested:
+    - [ "system:controller_manager", "system:scheduler", "system:kubectl", 'system:proxy' ]
+    - "{{ groups[master_group_name] }}"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  notify:
+    - restart daemons
+
+- name: tokens | generate tokens for node components
+  sudo: yes
+  command: "{{ kube_script_dir }}/kube-gen-token.sh {{ item[0] }}-{{ item[1] }}"
+  environment:
+    TOKEN_DIR: "{{ kube_token_dir }}"
+  with_nested:
+    - [ 'system:kubelet', 'system:proxy', 'system:calico' ]
+    - "{{ groups[minion_group_name] }}"
+  register: gentoken
+  changed_when: "'Added' in gentoken.stdout"
+  notify:
+    - restart daemons

@@ -1,0 +1,10 @@
+- name: install latest kubernetes node
+  sudo: yes
+  yum:
+    pkg="kubernetes-node"
+    state=latest
+    enablerepo="virt7-docker-common-candidate"
+  notify:
+    - restart daemons
+  tags:
+    - minion

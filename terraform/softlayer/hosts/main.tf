@@ -3,6 +3,8 @@ variable control_count { default = 1 }
 variable control_size { default = 4096 }
 variable datacenter { default = "mi" }
 variable domain { default = "example.com" }
+variable edge_count { default = 2 }
+variable edge_size { default = 4096 }
 variable image_name { default = "CENTOS_7_64" }
 variable region_name { default = "ams01" }
 variable short_name { default = "mi" }
@@ -35,10 +37,26 @@ resource "softlayer_virtualserver" "worker" {
   user_data = "{\"role\":\"worker\",\"dc\":\"${var.datacenter}\"}"
 }
 
+resource "softlayer_virtualserver" "edge" {
+  count = "${var.edge_count}"
+  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
+  domain = "${var.domain}"
+  image = "${var.image_name}"
+  region = "${var.region_name}"
+  ram = "${var.edge_size}"
+  cpu = 1
+  ssh_keys = ["${var.ssh_key}"]
+  user_data = "{\"role\":\"edge\",\"dc\":\"${var.datacenter}\"}"
+}
+
 output "control_ips" {
   value = "${join(\",\", softlayer_virtualserver.control.*.ipv4_address)}"
 }
 
 output "worker_ips" {
   value = "${join(\",\", softlayer_virtualserver.worker.*.ipv4_address)}"
+}
+
+output "edge_ips" {
+  value = "${join(\",\", softlayer_virtualserver.edge.*.ipv4_address)}"
 }

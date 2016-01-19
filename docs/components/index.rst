@@ -18,6 +18,7 @@ which can be customized, generally using Ansible variables.
    logstash.rst
    marathon.rst
    mesos.rst
+   traefik.rst
    zookeeper.rst
 
 The project also includes a number of Ansible roles that multiple components can

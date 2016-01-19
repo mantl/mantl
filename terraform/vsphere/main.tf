@@ -11,10 +11,13 @@ variable "long_name" {default = "microservices-infrastructure"}
 
 variable "control_count" {default = 3}
 variable "worker_count" {default = 2}
+variable "edge_count" {default = 2}
 variable "control_cpu" { default = 1 }
 variable "worker_cpu" { default = 1 }
+variable "edge_cpu" { default = 1 }
 variable "control_ram" { default = 4096 }
 variable "worker_ram" { default = 4096 }
+variable "edge_ram" { default = 4096 }
 
 resource "vsphere_virtual_machine" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
@@ -62,7 +65,7 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
   }
-  
+
   connection = {
       user = "${var.ssh_user}"
       key_file = "${var.ssh_key}"
@@ -76,10 +79,44 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   count = "${var.worker_count}"
 }
 
+resource "vsphere_virtual_machine" "mi-edge-nodes" {
+  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
+  image = "${var.template}"
+
+  datacenter = "${var.datacenter}"
+  host = "${var.host}"
+  resource_pool = "${var.pool}"
+
+  cpus = "${var.edge_cpu}"
+  memory = "${var.edge_ram}"
+
+  configuration_parameters = {
+    role = "edge"
+    ssh_user = "${var.ssh_user}"
+    consul_dc = "${var.consul_dc}"
+  }
+
+  connection = {
+    user = "${var.ssh_user}"
+    key_file = "${var.ssh_key}"
+    host = "${self.ip_address}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [ "sudo hostnamectl --static set-hostname ${self.name}" ]
+  }
+
+  count = "${var.edge_count}"
+}
+
 output "control_ips" {
   value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.ip_address)}"
 }
 
 output "worker_ips" {
   value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.ip_address)}"
+}
+
+output "edge_ips" {
+  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.ip_address)}"
 }

@@ -1,0 +1,26 @@
+---
+- name: create kubernetes config directory
+  sudo: yes
+  file: path={{ kube_config_dir }} state=directory
+
+- name: create kubernetes script directory
+  sudo: yes
+  file: path={{ kube_script_dir }} state=directory
+
+- name: Make sure manifest directory exists
+  sudo: yes
+  file: path={{ kube_manifest_dir }} state=directory
+
+- name: write the global config file
+  sudo: yes
+  template:
+    src: config.j2
+    dest: "{{ kube_config_dir }}/config"
+  notify:
+    - restart daemons
+  tags:
+    - kubernetes
+
+- include: secrets.yml
+  tags:
+    - secrets

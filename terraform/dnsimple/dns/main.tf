@@ -1,15 +1,30 @@
-variable control_ips {}
-variable worker_ips {}
+# input variables
 variable control_count {}
-variable worker_count {}
+variable control_ips {}
+variable control_subdomain { default = "control" }
 variable domain {}
+variable edge_count {}
+variable edge_ips {}
 variable short_name {}
+variable subdomain { default = "" }
+variable worker_count {}
+variable worker_ips {}
 
+# individual records
 resource "dnsimple_record" "dns-control" {
   count = "${var.control_count}"
   domain = "${var.domain}"
-  value = "${element(split(\",\", var.control_ips), count.index)}"
-  name = "${var.short_name}-control-${format("%02d", count.index+1)}"
+  value = "${element(split(",", var.control_ips), count.index)}"
+  name = "${var.short_name}-control-${format("%02d", count.index+1)}.node${var.subdomain}"
+  type = "A"
+  ttl = 60
+}
+
+resource "dnsimple_record" "dns-edge" {
+  count = "${var.edge_count}"
+  domain = "${var.domain}"
+  value = "${element(split(",", var.edge_ips), count.index)}"
+  name = "${var.short_name}-edge-${format("%02d", count.index+1)}.node${var.subdomain}"
   type = "A"
   ttl = 60
 }
@@ -17,17 +32,27 @@ resource "dnsimple_record" "dns-control" {
 resource "dnsimple_record" "dns-worker" {
   count = "${var.worker_count}"
   domain = "${var.domain}"
-  name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
-  value = "${element(split(\",\", var.worker_ips), count.index)}"
+  value = "${element(split(",", var.worker_ips), count.index)}"
+  name = "${var.short_name}-worker-${format("%03d", count.index+1)}.node${var.subdomain}"
   type = "A"
   ttl = 60
 }
 
-resource "dnsimple_record" "dns-worker-haproxy" {
-  count = "${var.worker_count}"
+# group records
+resource "dnsimple_record" "dns-control-group" {
+  count = "${var.control_count}"
   domain = "${var.domain}"
-  name = "*.${var.short_name}-lb"
-  value = "${element(split(\",\", var.worker_ips), count.index)}"
+  value = "${element(split(",", var.control_ips), count.index)}"
+  name = "${var.control_subdomain}${var.subdomain}"
+  type = "A"
+  ttl = 60
+}
+
+resource "dnsimple_record" "dns-wildcard" {
+  count = "${var.edge_count}"
+  domain = "${var.domain}"
+  value = "${element(split(",", var.edge_ips), count.index)}"
+  name = "*${var.subdomain}"
   type = "A"
   ttl = 60
 }

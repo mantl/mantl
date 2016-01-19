@@ -1,0 +1,11 @@
+[Unit]
+Description=Wait for remote filesystem mountpoint
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mount-monitor.sh %I
+Restart=on-failure
+RestartSec=20s
+
+[Install]
+WantedBy=%i.mount remote-fs.target

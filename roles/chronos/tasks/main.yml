@@ -15,16 +15,31 @@
   tags:
     - chronos
 
+- name: wait for zookeeper service to be registered
+  wait_for:
+    host: "{{ chronos_zk_dns }}"
+    port: "{{ chronos_zk_port }}"
+    delay: 10
+    timeout: 300
+    state: present
+  tags:
+    - marathon
+
 - name: wait for zookeeper to listen
-  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh localhost"
 
 - name: create zookeeper acl
   sudo: yes
+  run_once: yes
   command: "{{ chronos_zk_acl_cmd }}"
   notify:
     - restart chronos
   when: zk_chronos_user_secret is defined
   run_once: true
+  register: zk_acl_chronos
+  until: zk_acl_chronos.rc == 0
+  retries: 5
+  delay: 10
   tags:
     - chronos
 

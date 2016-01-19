@@ -1,7 +1,9 @@
 # input variables
-variable control_count { default = 1 }
+variable control_count { default = 3 }
 variable control_size { default = "4gb" }
 variable datacenter { default = "mi" }
+variable edge_count { default = 2 }
+variable edge_size { default = "2gb" }
 variable image_name { default = "centos-7-0-x64" }
 variable region_name { default = "nyc3" }
 variable short_name { default = "mi" }
@@ -30,10 +32,24 @@ resource "digitalocean_droplet" "worker" {
   user_data = "{\"role\":\"worker\",\"dc\":\"${var.datacenter}\"}"
 }
 
+resource "digitalocean_droplet" "edge" {
+  count = "${var.edge_count}"
+  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
+  image = "${var.image_name}"
+  region = "${var.region_name}"
+  size = "${var.edge_size}"
+  ssh_keys = ["${var.ssh_key}"]
+  user_data = "{\"role\":\"edge\",\"dc\":\"${var.datacenter}\"}"
+}
+
 output "control_ips" {
   value = "${join(\",\", digitalocean_droplet.control.*.ipv4_address)}"
 }
 
 output "worker_ips" {
   value = "${join(\",\", digitalocean_droplet.worker.*.ipv4_address)}"
+}
+
+output "edge_ips" {
+  value = "${join(\",\", digitalocean_droplet.edge.*.ipv4_address)}"
 }
