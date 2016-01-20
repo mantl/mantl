@@ -1,14 +1,14 @@
 variable "availability_zones"  {
   default = "a,b,c" 
 }
-variable "control_count" { default = 3 }
-variable "worker_count" { default = 2 }
-variable "edge_count" { default = 2 }
+variable "control_count" { default = 2 }
 variable "datacenter" {default = "aws-us-west-2"}
+variable "edge_count" { default = 2 }
 variable "region" {default = "us-west-2"}
 variable "short_name" {default = "mantl"}
 variable "source_ami" {default ="ami-d440a6e7"}
 variable "ssh_username" {default = "centos"}
+variable "worker_count" { default = 2 }
 
 
 provider "aws" {
@@ -46,92 +46,99 @@ module "ssh-key" {
   short_name = "${var.short_name}"
 }
 
+module "security-groups" {
+  source = "./terraform/aws/security_groups"
+  short_name = "${var.short_name}"
+  vpc_id = "${module.vpc.vpc_id}"
+}
+
 module "control-nodes" {
-  source = "./terraform/aws/nodes/control"
-  control_count = "${var.control_count}"
+  source = "./terraform/aws/instance"
+  count = "${var.control_count}"
   datacenter = "${var.datacenter}"
+  role = "control"
   ssh_username = "${var.ssh_username}"
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
-  default_security_group_id = "${module.vpc.default_security_group}"
-  vpc_id = "${module.vpc.vpc_id}"
+  security_group_ids = "${module.vpc.default_security_group},${module.security-groups.ui_security_group},${module.security-groups.control_security_group}"
   vpc_subnet_ids = "${module.vpc.subnet_ids}" 
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}" 
-  #default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.ui_security_group},${module.security-groups.control_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}" 
 }
 
 module "edge-nodes" {
- source = "./terraform/aws/nodes/edge"
+  source = "./terraform/aws/instance"
+  count = "${var.edge_count}"
   datacenter = "${var.datacenter}"
-  edge_count = "${var.edge_count}"
+  role = "control"
   ssh_username = "${var.ssh_username}"
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
-  default_security_group_id = "${module.vpc.default_security_group}"
-  vpc_id = "${module.vpc.vpc_id}"
+  security_group_ids = "${module.vpc.default_security_group},${module.security-groups.edge_security_group}"
   vpc_subnet_ids = "${module.vpc.subnet_ids}" 
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}" 
-  #default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.edge_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}" 
 }
 
 module "worker-nodes" {
-  source = "./terraform/aws/nodes/worker"
-  worker_count = "${var.worker_count}" 
+  source = "./terraform/aws/instance"
+  count = "${var.worker_count}"
   datacenter = "${var.datacenter}"
+  data_ebs_volume_size = "100"
+  role = "worker"
   ssh_username = "${var.ssh_username}"
   source_ami = "${var.source_ami}"
   short_name = "${var.short_name}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
-  default_security_group_id = "${module.vpc.default_security_group}"
-  vpc_id = "${module.vpc.vpc_id}"
+  security_group_ids = "${module.vpc.default_security_group},${module.security-groups.worker_security_group}"
   vpc_subnet_ids = "${module.vpc.subnet_ids}" 
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}" 
-  #default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.worker_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
-  #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"  
+  #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}" 
 }
 
 module "aws-elb" {
   source = "./terraform/aws/elb"
   short_name = "${var.short_name}"
-  instances = "${module.control-nodes.control_ids}"
+  instances = "${module.control-nodes.ec2_ids}"
   subnets = "${module.vpc.subnet_ids}" 
-  security_groups = "${module.control-nodes.ui_security_group},${module.vpc.default_security_group}"
+  security_groups = "${module.security-groups.ui_security_group},${module.vpc.default_security_group}"
   ## uncomment below it you want to use remote state for vpc variables
   ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}" 
-  ##security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
+  ##security_groups = "${module.security-groups.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
 }
 
 module "traefik-elb" {
   source = "./terraform/aws/elb/traefik"
-  instances = "${module.edge-nodes.edge_ids}"
+  instances = "${module.edge-nodes.ec2_ids}"
   short_name = "${var.short_name}"
   subnets = "${module.vpc.subnet_ids}" 
-  security_groups = "${module.control-nodes.ui_security_group},${module.vpc.default_security_group}"
+  security_groups = "${module.security-groups.ui_security_group},${module.vpc.default_security_group}"
   ## uncomment below it you want to use remote state for vpc variables
   ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}" 
-  ##security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
+  ##security_groups = "${module.security-groups.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
 }
 
 module "route53" {
   source = "./terraform/aws/route53/dns"
   control_count = "${var.control_count}"
-  control_ips = "${module.control-nodes.control_ips}"
+  control_ips = "${module.control-nodes.ec2_ips}"
   domain = "my-domain.com"
   edge_count = "${var.edge_count}"
-  edge_ips = "${module.edge-nodes.edge_ips}"
+  edge_ips = "${module.edge-nodes.ec2_ips}"
   elb_fqdn = "${module.aws-elb.fqdn}"
   hosted_zone_id = "XXXXXXXXXXXX"
   short_name = "${var.short_name}"
@@ -139,5 +146,5 @@ module "route53" {
   traefik_elb_fqdn = "${module.traefik-elb.fqdn}"
   traefik_zone_id = "${module.traefik-elb.zone_id}"
   worker_count = "${var.worker_count}"
-  worker_ips = "${module.worker-nodes.worker_ips}"
+  worker_ips = "${module.worker-nodes.ec2_ips}"
 }
