@@ -24,6 +24,9 @@ app_is_healthy() {
 
 # Install the Cassandra mesos framework via mantl-api
 # Available at: cassandra-kong-node.service.consul:9042
+# By default, this will be a single node cassandra cluster. You can adjust the
+# settings in the cassandra.json file in this directory to configure the number
+# of cassandra nodes.
 # Marathon ID: /cassandra/kong
 if ! service_is_available cassandra-kong-node; then
   echo "Installing Cassandra..." ; sleep 2

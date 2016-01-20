@@ -6,13 +6,13 @@
     "mem": 1024,
     "cmd": "cp $MESOS_SANDBOX/kong.yml /etc/kong/; kong start && tail -f /usr/local/kong/logs/error.log",
     "uris": [
-      "http://ryanesc.s3.amazonaws.com/samples/kong.yml"
+      "https://bintray.com/artifact/download/asteris/Kong-Example-Configuration/kong.yml"
     ],
     "container": {
         "type": "DOCKER",
         "docker": {
             "network": "BRIDGE",
-            "image": "mashape/kong:0.5.4",
+            "image": "mashape/kong:0.6.0rc3",
             "portMappings": [
                 {
                     "containerPort": 8000,
