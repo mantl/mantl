@@ -21,16 +21,18 @@ In your ``aws.tf``, you will want to uncomment the aws-elb module:
   module "route53" {
     source = "./terraform/aws/route53/dns"
     control_count = "${var.control_count}"
-    control_ips = "${module.control-nodes.control_ips}"
-    domain = "my-test-cloud.com"
+    control_ips = "${module.control-nodes.ec2_ips}"
+    domain = "my-domain.com"
     edge_count = "${var.edge_count}"
-    edge_ips = "${module.edge-nodes.edge_ips}"
+    edge_ips = "${module.edge-nodes.ec2_ips}"
     elb_fqdn = "${module.aws-elb.fqdn}"
     hosted_zone_id = "XXXXXXXXXXXX"
     short_name = "${var.short_name}"
     subdomain = ".dev"
+    traefik_elb_fqdn = "${module.traefik-elb.fqdn}"
+    traefik_zone_id = "${module.traefik-elb.zone_id}"
     worker_count = "${var.worker_count}"
-    worker_ips = "${module.worker-nodes.worker_ips}"
+    worker_ips = "${module.worker-nodes.ec2_ips}"
   }
 
 This module assumes you set-up an ELB, if not you will need to comment out the ELB section 
