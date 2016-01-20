@@ -1,9 +1,9 @@
-variable "control_count" {default = "4"}
-variable "control_iam_profile" {default = "" }
-variable "control_type" {default = "m3.medium"}
-variable "control_volume_size" {default = "20"} # size is in gigabytes
-variable "control_data_volume_size" {default = "20"} # size is in gigabytes
-
+variable "count" {default = "4"}
+variable "iam_profile" {default = "" }
+variable "ec2_type" {default = "m3.medium"}
+variable "ebs_volume_size" {default = "20"} # size is in gigabytes
+variable "data_ebs_volume_size" {default = "20"} # size is in gigabytes
+variable "role" {}
 variable "short_name" {default = "mantl"}
 variable "availability_zones" {}
 variable "ssh_key_pair" {}
@@ -15,51 +15,51 @@ variable "vpc_subnet_ids" {}
 variable "ssh_username" {default = "centos"}
 
 
-resource "aws_ebs_volume" "mantl-control-lvm" {
+resource "aws_ebs_volume" "ebs" {
   availability_zone = "${element(split(",", var.availability_zones), count.index)}"
-  count = "${var.control_count}"
-  size = "${var.control_data_volume_size}"
+  count = "${var.count}"
+  size = "${var.data_ebs_volume_size}"
   type = "gp2"
 
   tags {
-    Name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-${var.role}-lvm-${format("%02d", count.index+1)}"
   }
 }
 
-resource "aws_instance" "mantl-control-nodes" {
+resource "aws_instance" "instance" {
   ami = "${var.source_ami}"
-  instance_type = "${var.control_type}"
-  count = "${var.control_count}"
-  vpc_security_group_ids = ["${aws_security_group.control.id}",
+  instance_type = "${var.ec2_type}"
+  count = "${var.count}"
+  vpc_security_group_ids = ["${aws_security_group.main.id}",
     "${aws_security_group.ui.id}",
     "${var.default_security_group_id}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
   subnet_id = "${element(split(",", var.vpc_subnet_ids), count.index)}" 
-  iam_instance_profile = "${var.control_iam_profile}"
+  iam_instance_profile = "${var.iam_profile}"
   root_block_device {
     delete_on_termination = true
-    volume_size = "${var.control_volume_size}"
+    volume_size = "${var.ebs_volume_size}"
   }
 
   tags {
-    Name = "${var.short_name}-control-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-${var.role}-${format("%02d", count.index+1)}"
     sshUser = "${var.ssh_username}"
-    role = "control"
+    role = "${var.role}"
     dc = "${var.datacenter}"
   }
 }
 
-resource "aws_volume_attachment" "mantl-control-nodes-lvm-attachment" {
-  count = "${var.control_count}"
+resource "aws_volume_attachment" "instance-lvm-attachment" {
+  count = "${var.count}"
   device_name = "xvdh"
-  instance_id = "${element(aws_instance.mantl-control-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mantl-control-lvm.*.id, count.index)}"
+  instance_id = "${element(aws_instance.instance.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.ebs.*.id, count.index)}"
   force_detach = true
 }
 
-resource "aws_security_group" "control" {
-  name = "${var.short_name}-control"
+resource "aws_security_group" "main" {
+  name = "${var.short_name}-${var.role}"
   description = "Allow inbound traffic for control nodes"
   vpc_id = "${var.vpc_id}"
 
@@ -134,8 +134,8 @@ resource "aws_security_group" "ui" {
   }
 }
 
-output "control_security_group" {
-  value = "${aws_security_group.control.id}"
+output "main_security_group" {
+  value = "${aws_security_group.main.id}"
 }
 
 output "ui_security_group" {
@@ -143,10 +143,10 @@ output "ui_security_group" {
 }
 
 
-output "control_ids" {
-  value = "${join(\",\", aws_instance.mantl-control-nodes.*.id)}"
+output "ec2_ids" {
+  value = "${join(\",\", aws_instance.instance.*.id)}"
 }
 
-output "control_ips" {
-  value = "${join(\",\", aws_instance.mantl-control-nodes.*.public_ip)}"
+output "ec2_ips" {
+  value = "${join(\",\", aws_instance.instance.*.public_ip)}"
 }
