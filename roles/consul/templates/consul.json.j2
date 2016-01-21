@@ -27,7 +27,6 @@
 {% endif %}
   "data_dir": "/var/lib/consul",
   "ui_dir": "/usr/share/consul-ui",
-  "enable_syslog": true,
   "disable_remote_exec": {{ consul_disable_remote_exec|to_nice_json }},
   "http_api_response_headers": {
     "Access-Control-Allow-Origin": "*"
