@@ -93,7 +93,7 @@ module "cloud-dns" {
   lb_ip = "${module.network-lb.public_ip}"
   managed_zone = "my-cloud-dns-zone"
   short_name = "${var.short_name}"
-  subdomain = "service"
+  subdomain = ".service"
   worker_count = "${var.worker_count}"
   worker_ips = "${module.worker-nodes.gce_ips}"
 }
