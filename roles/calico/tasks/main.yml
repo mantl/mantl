@@ -1,65 +1,13 @@
 ---
-# Ansible modprobe module doesn't provide such functionality
-- name: add kernel modules to load at boot time
+- name: install calico 
   sudo: yes
-  copy:
-    src: calico-modules.conf
-    dest: /etc/modules-load.d/calico-modules.conf
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - calico
-
-- name: load kernel module xt_set
-  sudo: yes
-  modprobe:
-    name: xt_set
+  yum:
+    name: "{{ calico_binary }}"
     state: present
-  tags:
-    - calico
-
-- name: enable kernel packet forwarding
-  sudo: yes
-  sysctl:
-    name: net.ipv4.ip_forward
-    value: 1
-    state: present
-    reload: yes
-  tags:
-    - calico
-
-- name: download calicoctl binary
-  sudo: yes
-  get_url:
-    url: "{{ calico_binary }}"
-    dest: /usr/bin/calicoctl
-    mode: 0755
   tags:
     - calico
     - bootstrap
 
-- name: download calico-mesos plugin
-  sudo: yes
-  get_url:
-    url: "{{ calico_mesos_plugin }}"
-    dest: /usr/local/bin/calico_mesos 
-    mode: 0755
-  tags:
-    - calico
-    - bootstrap
-
-#- name: download calicoctl bash completion script
-#  sudo: yes
-#  get_url:
-#    url: "{{ bintray_baseurl }}/calico/calicoctl.sh"
-#    dest: /etc/bash_completion.d/calicoctl.sh
-#    mode: 0644
-#  tags:
-#    - calico
-
-# We can't use the Ansible standard docker module as it always starts
-# containers after image was pulled
 - name: ensure calico docker image is present
   sudo: yes
   command: /usr/bin/docker pull {{ calico_image }}:{{ calico_image_tag }}
