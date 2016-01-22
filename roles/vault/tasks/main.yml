@@ -2,7 +2,7 @@
 - name: install vault
   sudo: yes
   yum:
-    name: "https://bintray.com/artifact/download/chrisaubuchon/rpm/vault-0.4.0-1.x86_64.rpm"
+    name: "https://bintray.com/artifact/download/asteris/mantl-rpm/vault-0.4.1-1.x86_64.rpm"
     state: present
   tags:
     - vault
