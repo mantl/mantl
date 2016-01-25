@@ -13,3 +13,6 @@ ssl/serial*
 # downloaded by playbook
 addons/library/
 library/lvg.py
+
+# vagrant build customizations
+vagrant-config.yml

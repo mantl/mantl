@@ -1,0 +1,10 @@
+{
+  "name": "cassandra",
+  "config": {
+    "cassandra": {
+      "cluster-name": "kong",
+      "node-count": 1,
+      "seed-count": 1
+    }
+  }
+}

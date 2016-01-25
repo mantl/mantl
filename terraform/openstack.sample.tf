@@ -18,6 +18,7 @@ module "dc2-hosts" {
   edge_flavor_name = ""
   net_id = ""
   image_name = ""
+  ssh_user = "centos"
   keypair_name = "${ module.dc2-keypair.keypair_name }"
   control_count = 3
   worker_count = 3

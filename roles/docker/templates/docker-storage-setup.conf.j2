@@ -2,7 +2,7 @@
 # Other possible options are overlay and "". Empty string means do not do
 # any storage setup.
 #
-STORAGE_DRIVER=devicemapper
+STORAGE_DRIVER="{{ docker_storage_driver }}"
 
 # A quoted, space-separated list of devices to be used.  This currently
 # expects the devices to be unpartitioned drives.  If "VG" is not specified,

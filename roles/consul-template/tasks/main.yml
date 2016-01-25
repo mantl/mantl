@@ -2,7 +2,7 @@
 - name: install consul-template
   sudo: yes
   yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-template-0.8.0-2.el7.centos.x86_64.rpm"
+    name: https://bintray.com/artifact/download/asteris/mantl-rpm/consul-template-0.12.2-1.x86_64.rpm
     state: present
   tags:
     - consul-template
@@ -10,9 +10,9 @@
 
 - name: configure consul-template
   sudo: yes
-  template:
-    src: consul.cfg.j2
-    dest: /etc/consul-template/config.d/consul.cfg
+  copy:
+    src: consul.hcl
+    dest: /etc/consul-template/config.d
   notify:
     - reload consul-template
   tags:

@@ -1,6 +1,8 @@
 ---
-mesos_version: 0.23.0
-mesos_package: "mesos-{{ mesos_version }}"
+mesos_version: 0.25.0
+mesos_iteration: 1
+mesos_master_iteration: 1
+mesos_agent_iteration: 1
 
 mesos_mode: follower 
 mesos_log_dir: /var/log/mesos
@@ -18,6 +20,7 @@ mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ z
 mesos_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
 mesos_zk_port: 2181
 mesos_zk_chroot: mesos
+mesos_zk: zk://{{ mesos_zk_auth }}{{ mesos_zk_dns }}:{{ mesos_zk_port }}/{{ mesos_zk_chroot }}
 mesos_leaders_group: role=control
 
 mesos_zk_acl_world: "world:anyone:r"
