@@ -16,3 +16,7 @@ library/lvg.py
 
 # vagrant build customizations
 vagrant-config.yml
+
+# packer directories
+builds/
+packer_cache/
