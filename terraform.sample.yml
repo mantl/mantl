@@ -1,7 +1,7 @@
 ---
-# CHECK SECURITY - when customizing you should leave this in. If you take it out
-# and forget to specify security.yml, security could be turned off on components
-# in your cluster!
+# CHECK SECURITY AND ANSIBLE - when customizing you should leave this in. If you
+# take it out and forget to specify security.yml, security could be turned off
+# on components in your cluster!
 - hosts: localhost
   gather_facts: no
   tasks:
@@ -12,6 +12,13 @@
           Security is not enabled. Please run `security-setup` in the root
           directory and re-run this playbook with the `--extra-vars`/`-e` option
           pointing to your `security.yml` (e.g., `-e @security.yml`)
+    # Change concurrently with the required ansible version in requirements.txt
+    - name: check for compatible Ansible version
+      when: ansible_version["string"] | version_compare("1.9.1", "<") or ansible_version["string"] | version_compare("2", ">=")
+      fail:
+        msg: |
+          Your version of Ansible doesn't match the required version. Please
+          install ansible-playbook with `pip install -r requirements.txt`.
 
 # BASICS - we need every node in the cluster to have common software running to
 # increase stability and enable service discovery. You can look at the
