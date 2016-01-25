@@ -1,7 +1,7 @@
 variable "control_count" { default = 3 }
 variable "datacenter" {default = "gce"}
 variable "edge_count" { default = 3}
-variable "image" {default = "centos-7-v20150526"}
+variable "image" {default = "centos-7-v20160119"}
 variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
