@@ -3,4 +3,4 @@ ansible>=1.9.1,<2.0
 pytest==2.7.1
 PyYAML==3.11
 Sphinx==1.2.3
-ansible-lint
+ansible-lint>=2.2.0
