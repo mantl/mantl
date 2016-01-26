@@ -24,7 +24,63 @@
 - name: check if docker storage already set up with devicemapper
   sudo: yes
   shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup && echo ${STORAGE_DRIVER:-NOT_SET}"
-  register: docker_already_set_up_with_devicemapper
+  register: docker_storage_already_set_up
+  tags:
+    - disk
+    - docker
+
+- debug: var=volume_group_name
+
+- debug: var=docker_storage_already_set_up
+
+- debug: var=docker_storage_driver
+
+- name: create backing storage volume for docker storage
+  sudo: yes
+  lvol:
+    vg: "{{ volume_group_name }}"
+    lv: "{{ docker_volume_name }}"
+    size: "{{ docker_volume_size }}"
+  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  tags:
+    - disk
+    - docker
+
+- name: create backing storage filesystem for docker storage
+  sudo: yes
+  filesystem:
+    dev: "{{ docker_volume_device }}"
+    fstype: "{{ docker_volume_fs_type }}"
+    opts: "{{ docker_volume_fs_opts }}" 
+  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  tags:
+    - disk
+    - docker
+
+- name: create mount point for docker storage
+  sudo: yes
+  file:
+    state: directory
+    name: "{{ docker_volume_mount }}"
+    mode: 0755
+  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  tags:
+    - disk
+    - docker
+
+- name: mount docker storage
+  sudo: yes
+  mount:
+    state: mounted
+    name: "{{ docker_volume_mount }}"
+    fstype: "{{ docker_volume_fs_type }}"
+    src: "{{ docker_volume_device }}"
+    dump: 1
+    passno: 2
+  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  tags:
+    - disk
+    - docker
 
 - name: setup docker storage
   sudo: yes
@@ -45,7 +101,7 @@
       value: "{{ docker_lvm_data_volume_size_min }}"
     - var: AUTO_EXTEND_POOL
       value: "{{ docker_lvm_auto_extend_pool }}"
-  when: docker_already_set_up_with_devicemapper.stdout == "NOT_SET"
+  when: docker_storage_already_set_up.stdout == "NOT_SET"
   tags:
     - docker
     - bootstrap
