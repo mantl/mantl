@@ -102,6 +102,7 @@
 - hosts: role=edge
   gather_facts: no
   vars:
+    consul_dns_domain: consul
     # this is the domain that traefik will match on to do host-based HTTP
     # routing. Set it to a domain you control and add a star domain to route
     # traffic. (EG *.marathon.localhost)
