@@ -15,3 +15,6 @@ All outgoing traffic from the cluster to the Internet is
 permitted. Forwarding is enabled so that docker containers
 can contact each other and its host worker nodes. Every
 server within the cluster can contact the docker containers.
+
+This is a community supported addon, and will not be tested as frequently as
+core Mantl components.
