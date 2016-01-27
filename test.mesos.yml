@@ -95,9 +95,8 @@
     - kubernetes-master
     - kubernetes-addons
 
+
 - hosts: role=kubeworker
-  # role=worker hosts are a subset of "all". Since we already gathered facts on
-  # all servers, we can skip it here to speed up the deployment.
   gather_facts: yes
   vars:
     consul_dns_domain: consul
@@ -109,9 +108,36 @@
     # In this example, short-name is "mi" and domain is "example.com":
     haproxy_domain: mi-lb.example.com
   roles:
-    - flannel
+    - calico
     - kubernetes
     - kubernetes-node
+
+- hosts: role=control
+  gather_facts: yes
+  vars:
+    consul_dns_domain: consul
+    consul_servers_group: role=control
+  roles:
+    - kubernetes
+    - kubernetes-master
+    - kubernetes-addons
+
+
+# The edge role exists solely for routing traffic into the cluster. Firewall
+# settings should be such that web traffic (ports 80 and 443) is exposed to the
+# world.
+- hosts: role=edge
+  gather_facts: no
+  vars:
+    # this is the domain that traefik will match on to do host-based HTTP
+    # routing. Set it to a domain you control and add a star domain to route
+    # traffic. (EG *.marathon.localhost)
+    #
+    # For those migrating from haproxy, this variable serves the same purpose
+    # and format as `haproxy_domain`.
+    traefik_marathon_domain: marathon.localhost
+  roles:
+    - traefik
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.
