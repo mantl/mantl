@@ -1,3 +1,5 @@
+# WARNING: This module has been deprecated as of Mantl 0.6
+
 variable auth_url { }
 variable control_count {}
 variable control_flavor_name { }
