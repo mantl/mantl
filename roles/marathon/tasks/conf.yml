@@ -32,6 +32,7 @@
   template:
     src: marathon.sysconfig.j2
     dest: /etc/sysconfig/marathon
+    mode: 0600
   notify:
     - restart marathon
   tags:
