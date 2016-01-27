@@ -22,6 +22,35 @@
     - docker
     - bootstrap
 
+- name: check if docker storage already set up with devicemapper
+  sudo: yes
+  shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup && echo ${STORAGE_DRIVER:-NOT_SET}"
+  register: docker_already_set_up_with_devicemapper
+
+- name: setup docker storage
+  sudo: yes
+  lineinfile:
+    dest: /etc/sysconfig/docker-storage-setup
+    regexp: "^{{ item.var }}=.*"
+    line: "{{ item.var }}={{ item.value }}"
+    state: present
+    create: yes
+  with_items:
+    - var: STORAGE_DRIVER
+      value: "{{ docker_storage_driver }}"
+    - var: DATA_SIZE
+      value: "{{ docker_lvm_data_volume_size }}"
+    - var: VG
+      value: "{{ volume_group_name }}"
+    - var: MIN_DATA_SIZE
+      value: "{{ docker_lvm_data_volume_size_min }}"
+    - var: AUTO_EXTEND_POOL
+      value: "{{ docker_lvm_auto_extend_pool }}"
+  when: docker_already_set_up_with_devicemapper.stdout == "NOT_SET"
+  tags:
+    - docker
+    - bootstrap
+
 - include: lvm.yml
   when: docker_lvm_backed_devicemapper
 
@@ -32,7 +61,6 @@
     state: directory
   tags:
     - docker
-    - bootstrap
 
 - name: create docker entry for syslogd
   sudo: yes
@@ -46,7 +74,6 @@
     - restart rsyslog
   tags:
     - docker
-    - bootstrap
 
 
 - name: configure docker consul dns
@@ -54,7 +81,7 @@
   lineinfile:
     dest: /etc/sysconfig/docker
     regexp: ^OPTIONS=
-    line: OPTIONS='--selinux-enabled --dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} {% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %} --log-driver=syslog'
+    line: OPTIONS='{% if docker_selinux_enabled %}--selinux-enabled {% endif %}--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} {% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %} --log-driver=syslog'
     state: present
     create: yes
   notify:

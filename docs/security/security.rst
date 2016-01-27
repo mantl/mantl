@@ -166,11 +166,9 @@ Docker
 ~~~~~~
 
 The project is currently using the default Docker configuration for CentOS.
-Docker 1.5 is the minimum version installed.
+Docker 1.8 is the minimum version installed.
 
 - ReST HTTP port is disabled
-- Docker is started with SELinux enabled via ``OPTIONS='--selinux-enabled'`` in
-  ``/etc/sysconfig/docker``
 
 Marathon
 ~~~~~~~~

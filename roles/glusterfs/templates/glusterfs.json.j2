@@ -2,15 +2,14 @@
     "services": [
         {
             "name": "glusterfs",
-            "tags": ["fs"],
             "port": 24007,
-            "id": "24007:glusterfs-{{ inventory_hostname }}"
-        },
-        {
-            "name": "glusterfs",
-            "tags": ["infiniband"],
-            "port": 24008,
-            "id": "24008:glusterfs-{{ inventory_hostname }}"
+            "id": "24007:glusterfs-{{ inventory_hostname }}",
+            "checks": [
+                {
+                    "script": "sudo /usr/sbin/gluster pool list | grep localhost | grep Connected",
+                    "interval": "10s"
+                }
+            ]
         }
     ]
 }

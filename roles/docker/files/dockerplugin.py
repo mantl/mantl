@@ -302,6 +302,29 @@ class DockerPlugin:
             self.stats[cid].stop = True
             del self.stats[cid]
 
+        # Firstly we process existing containers
+        for container in containers:
+            try:
+                for name in container['Names']:
+                    # Containers can be linked and the container name is not
+                    # necessarly the first entry of the list
+                    if not re.match("/.*/", name):
+                        container['Name'] = name[1:]
+
+                if container['Id'] in self.stats:
+                    # Get and process stats from the container.
+                    stats = self.stats[container['Id']].stats
+                    t = stats['read']
+                    for klass in self.CLASSES:
+                        klass.read(container, stats, t)
+            except Exception, e:
+                collectd.warning(('Error getting stats for container '
+                                  '{container}: {msg}')
+                                 .format(container=_c(container), msg=e))
+
+        # Secondly we add new spawned containers,
+        # but skip gathering stats for now, wait for thread to gather stats
+        # we will get the stats on the next interation
         for container in containers:
             try:
                 for name in container['Names']:
@@ -314,12 +337,6 @@ class DockerPlugin:
                 if container['Id'] not in self.stats:
                     self.stats[container['Id']] = ContainerStats(container,
                                                                  self.client)
-
-                # Get and process stats from the container.
-                stats = self.stats[container['Id']].stats
-                t = stats['read']
-                for klass in self.CLASSES:
-                    klass.read(container, stats, t)
             except Exception, e:
                 collectd.warning(('Error getting stats for container '
                                   '{container}: {msg}')

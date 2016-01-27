@@ -1,9 +1,15 @@
 do_private_docker_registry: false
 docker_lvm_backed_devicemapper: "{% if provider in ['gce', 'openstack', 'aws'] %} true {% else %} false {% endif %}"
 
+# Possible values: overlay, devicemapper
+# Used with docker-storage-setup
+docker_storage_driver: overlay
+
 ## Refer to commentaries in ../templates/docker-storage-setup.conf.j2 
 ## or `man lvcreate` for acceptable sizes, and their syntax
 docker_lvm_data_volume_size: 40%FREE
 docker_lvm_data_volume_size_min: 2G
 
 docker_lvm_auto_extend_pool: yes
+
+docker_selinux_enabled: no

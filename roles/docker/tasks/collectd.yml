@@ -37,7 +37,7 @@
   copy:
     src: "{{ item }}"
     dest: "/usr/share/collectd/plugins/{{ item }}"
-    mode: u=r
+    mode: 0444
   with_items:
     - dockerplugin.py
     - dockerplugin.db

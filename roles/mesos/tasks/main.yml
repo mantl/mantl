@@ -1,75 +1,15 @@
 ---
-- name: add mesosphere repository
+- name: install mesos packages
   sudo: yes
   yum:
-    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
+    name: "{{ item }}"
     state: present
+  with_items:
+    - https://bintray.com/artifact/download/asteris/mantl-rpm/mesos-{{ mesos_version }}-{{ mesos_iteration }}.x86_64.rpm
+    - cyrus-sasl-md5
   tags:
     - mesos
     - bootstrap
-
-- name: install mesos package
-  sudo: yes
-  yum:
-    name: "{{ mesos_package }}"
-    state: present
-  tags:
-    - mesos
-    - bootstrap
-
-- name: install cyrus-sasl-md5
-  sudo: yes
-  yum:
-    name: cyrus-sasl-md5
-    state: present
-  tags:
-    - mesos
-    - bootstrap
-
-- name: configure /etc/mesos/zk
-  sudo: yes
-  template:
-    src: zk.j2
-    dest: /etc/mesos/zk
-  tags:
-    - mesos
-
-- name: configure /etc/mesos/hostname
-  sudo: yes
-  template:
-    src: hostname.j2
-    dest: /etc/mesos/hostname
-    mode: 0600
-  tags:
-    - mesos
-
-- name: disable mesos leader
-  sudo: yes
-  service:
-    name: mesos-master
-    enabled: no
-  when: mesos_mode == "follower"
-  tags:
-    - mesos
-
-- name: configure mesos-master unit file
-  sudo: yes
-  replace:
-    dest: /usr/lib/systemd/system/mesos-master.service
-    regexp: "=network.target"
-    replace: '=zookeeper.service'
-  when: mesos_mode == "leader"
-  tags:
-    - mesos
-
-- name: disable mesos follower
-  sudo: yes
-  service:
-    name: mesos-slave
-    enabled: no
-  when: mesos_mode == "leader"
-  tags:
-    - mesos
 
 - name: ensure consul.d is present
   sudo: yes

@@ -2,27 +2,12 @@
 - name: install consul
   sudo: yes
   yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-0.5.2-3.el7.centos.x86_64.rpm"
+    name: "{{ item }}"
     state: present
-  tags:
-    - consul
-    - bootstrap
-
-- name: install consul-ui
-  sudo: yes
-  yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-ui-0.5.2-3.el7.centos.x86_64.rpm"
-    state: present
-  when: consul_is_server
-  tags:
-    - consul
-    - bootstrap
-
-- name: install consul-utils
-  sudo: yes
-  yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/consul-utils-0.1.0-1.el7.centos.x86_64.rpm"
-    state: present
+  with_items:
+    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-0.6.3-1.centos.x86_64.rpm
+    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-ui-0.6.3-1.x86_64.rpm
+    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-cli-0.1.0-2.x86_64.rpm
   tags:
     - consul
     - bootstrap
@@ -30,12 +15,13 @@
 - name: configure consul
   sudo: yes
   template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: "{{ item.mode | default('u=rw,g=r,o=r') }}"
+    src: "{{ item }}.j2"
+    dest: /etc/consul/{{ item }}
+    owner: consul
+    group: consul
   with_items:
-    - src: consul.json.j2
-      dest: /etc/consul/consul.json
+    - consul.json
+    - acl.json
   notify:
     - restart consul
   tags:
@@ -68,36 +54,16 @@
   tags:
     - consul
 
-- name: configure consul acl policy
-  sudo: yes
-  template:
-    src: acl.json.j2
-    dest: /etc/consul/acl.json
-  notify:
-    - restart consul
-  tags:
-    - consul
-
-- name: install consul scripts
+- name: install scripts
   sudo: yes
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: u=rwx,g=rx,o=rx
+    src: "{{ item }}"
+    dest: /usr/local/bin/
+    mode: 0755
   with_items:
-    - src: consul-wait-for-leader.sh
-      dest: /usr/local/bin
-    - src: consul-rolling-restart.sh
-      dest: /usr/local/bin
-  tags:
-    - consul
-
-- name: install check scripts
-  sudo: yes
-  copy:
-    src: check-service-active
-    dest: /usr/local/bin
-    mode: u=rwx,g=rx,o=rx
+    - consul-wait-for-leader.sh
+    - consul-rolling-restart.sh
+    - check-service-active
   tags:
     - consul
 
@@ -107,6 +73,10 @@
     name: consul
     enabled: yes
     state: started
+  tags:
+    - consul
+
+- meta: flush_handlers
   tags:
     - consul
 

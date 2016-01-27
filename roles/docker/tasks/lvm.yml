@@ -9,11 +9,3 @@
   tags:
     - docker
     - bootstrap
-
-- name: install docker-storage-setup config
-  sudo: yes
-  template:
-    src: docker-storage-setup.conf.j2
-    dest: /etc/sysconfig/docker-storage-setup
-  tags:
-    - docker

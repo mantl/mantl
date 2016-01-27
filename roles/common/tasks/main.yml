@@ -14,7 +14,7 @@
   template:
     src: hosts.j2
     dest: /etc/hosts
-    mode: 644
+    mode: 0644
   tags:
     - common
 
@@ -69,6 +69,24 @@
     state: present
   tags:
     - distributive
+
+- name: disable requiretty in sudoers
+  sudo: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: ^.+requiretty$
+    line: "# Defaults	requiretty"
+  tags:
+
+- name: configure selinux
+  sudo: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags:
+    - security
+    - bootstrap
 
 - include: users.yml
 - include: ssl.yml

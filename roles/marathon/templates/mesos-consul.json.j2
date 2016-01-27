@@ -4,6 +4,7 @@
     "--consul-ssl",
     "--consul-ssl-verify=false"{% endif %},
     "--consul-token={{ consul_acl_master_token }}",
+    "--mesos-ip-order=mesos,host",
     "--refresh={{ mesos_consul_refresh }}"
   ],
   "container": {

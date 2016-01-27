@@ -1,10 +1,13 @@
 ---
-glusterfs_version: 3.7.6
-glusterfs_minor_version: 3.7
-glusterfs_repo: https://download.gluster.org/pub/gluster/glusterfs/{{ glusterfs_minor_version }}/{{ glusterfs_version }}/EPEL.repo/glusterfs-epel.repo
-glusterfs_repo_sha256sum: 2e2e85fe728b04d19be098b218bd70e304bc33bdf55cbdb8ab86b9d65e7d8538
-
+# installation mode
 glusterfs_mode: client
+
+# software sources
+glusterfs_version: 3.7.6
+glusterfs_repo: https://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version.split(".")[:2]|join(".")}}/{{glusterfs_version}}/EPEL.repo/glusterfs-epel.repo
+glusterfs_repo_sha256sum: ee06398d5b09d230fa3ffad4995b83089012a426265741c58a70bf587d14613c.
+
+# clustering and replication
 glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"
 glusterfs_server_group: role=control
 
@@ -17,9 +20,10 @@ glusterfs_brick_volume_name: glusterfs
 # 100%FREE mean all space remain from docker volumes
 glusterfs_brick_volume_size: "100%FREE"
 glusterfs_brick_device: "/dev/{{ volume_group_name }}/{{ glusterfs_brick_volume_name }}"
-glusterfs_volume_force: "{% if volume_group_name !='' %}no{% else %}yes{% endif %}"
+glusterfs_volume_force: "{% if volume_group_name != '' %}no{% else %}yes{% endif %}"
 glusterfs_brick_location: "{% if volume_group_name != '' %}{{ glusterfs_brick_mount }}{% else %}/etc/glusterfs/data{% endif %}"
 
-# docker volume
-glusterfs_container_data_name: container-volumes
-glusterfs_container_data_mount: /mnt/{{ glusterfs_container_data_name }}
+# volumes
+glusterfs_volumes:
+  - name: container-volumes
+    mount: /mnt/container-volumes

@@ -13,6 +13,19 @@
           directory and re-run this playbook with the `--extra-vars`/`-e` option
           pointing to your `security.yml` (e.g., `-e @security.yml`)
 
+# CHECK CENTOS VERSION - another one you should leave in. Ensures we're using a
+# compatible and up-to-date version of Centos.
+- hosts: all
+  gather_facts: yes
+  tasks:
+    - name: check centos version
+      when: ansible_distribution_version | version_compare('7.2', '<')
+      fail:
+        msg: |
+          Your hosts don't appear to be running a compatible version of Centos.
+          Please run the playbook playbooks/upgrade-packages.yml before
+          continuing.
+
 # BASICS - we need every node in the cluster to have common software running to
 # increase stability and enable service discovery. You can look at the
 # documentation for each of these components in their README file in the
@@ -98,20 +111,3 @@
     traefik_marathon_domain: marathon.localhost
   roles:
     - traefik
-
-# GlusterFS has to be provisioned in reverse order from Mesos: servers then
-# clients.
-- hosts: role=control
-  gather_facts: no
-  vars:
-    consul_dns_domain: consul
-    glusterfs_mode: server
-  roles:
-    - glusterfs
-
-- hosts: role=worker
-  vars:
-    consul_dns_domain: consul
-    glusterfs_mode: client
-  roles:
-    - glusterfs
