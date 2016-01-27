@@ -29,12 +29,6 @@
     - disk
     - docker
 
-- debug: var=volume_group_name
-
-- debug: var=docker_storage_already_set_up
-
-- debug: var=docker_storage_driver
-
 - name: create backing storage volume for docker storage
   sudo: yes
   lvol:

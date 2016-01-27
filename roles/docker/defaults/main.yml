@@ -1,7 +1,7 @@
 do_private_docker_registry: false
 docker_lvm_backed_devicemapper: "{% if provider in ['gce', 'openstack', 'aws'] %} true {% else %} false {% endif %}"
 
-# Possible values: overlay, devicemapper, btrfs
+# Possible values: overlay (default), devicemapper, btrfs (unsupported)
 # Used with docker-storage-setup
 docker_storage_driver: overlay
 
