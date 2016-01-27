@@ -10,10 +10,8 @@
 - name: Get calico-kubernetes plugin
   sudo: yes
   get_url:
-    url: https://github.com/projectcalico/calico-docker/releases/download/v0.5.4/calico_kubernetes
+    url: https://github.com/projectcalico/calico-kubernetes/releases/download/v0.7.0/calico_kubernetes
     dest: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/calico
     mode: 0755
   tags:
     - calico
-
-
