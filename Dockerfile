@@ -1,6 +1,6 @@
 FROM centos:7
 
-ENV TERRAFORM_VERSION 0.6.8
+ENV TERRAFORM_VERSION 0.6.10
 ENV TERRAFORM_STATE_ROOT /state
 
 RUN mkdir -p /tmp/terraform/ && \
