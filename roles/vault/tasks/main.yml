@@ -26,6 +26,13 @@
   tags:
     - vault
 
+- name: create consul acl for vault
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Vault ACL token" --rule='key:vault:write' --rule='key:core:write' {{ consul_acl_vault_token }}
+  tags:
+    - vault
+
 - name: configure vault
   sudo: yes
   template:

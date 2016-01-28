@@ -32,6 +32,8 @@
   copy:
     src: docker-service.json
     dest: /etc/consul
+    owner: consul
+    group: consul
   notify:
     - reload consul
   tags:
@@ -42,6 +44,8 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    owner: consul
+    group: consul
   with_items:
     - src: ssl/cacert.pem
       dest: /etc/consul/ssl/{{ consul_ca_file }}
@@ -86,11 +90,18 @@
   tags:
     - consul
 
-- meta: flush_handlers
+- name: create secure acl
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl Secure Token" --rule='key:secure:write' --rule='service::write' {{ consul_acl_secure_token }}
+  tags:
+    - consul
 
 - include: acl.yml
 
 - meta: flush_handlers
+  tags:
+    - consul
 
 - include: nginx_proxy.yml
 

@@ -9,7 +9,6 @@
     - docker
     - bootstrap
 
-
 - name: install docker packages
   sudo: yes
   yum:

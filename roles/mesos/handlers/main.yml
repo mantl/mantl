@@ -19,10 +19,6 @@
   sudo: yes
   command: systemctl restart mesos-agent
 
-- name: reload consul
-  sudo: yes
-  command: "{{ consul_bin }} reload"
-
 - name: restart nginx-mesos-leader
   sudo: yes
   command: systemctl restart nginx-mesos-leader
