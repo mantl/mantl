@@ -85,7 +85,7 @@ If your cluster is built with SELinux enabled and enforcing, a custom SELinux
 policy will be installed to support the collectd docker plugin. The TE file
 looks like this:
 
-.. literalinclude:: files/collectd_docker_plugin.te
+.. literalinclude:: ../../roles/collectd/files/collectd_docker_plugin.te
    :language: shell
 
 and is included in ``roles/collectd/files/collectd_docker_plugin.te``.
