@@ -29,13 +29,20 @@
     - disk
     - docker
 
+- name: set docker_configure_lvm
+  set_fact:
+    docker_configure_lvm: docker_lvm_backed == true and docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  tags:
+    - disk
+    - docker
+
 - name: create backing storage volume for docker storage
   sudo: yes
   lvol:
     vg: "{{ volume_group_name }}"
     lv: "{{ docker_volume_name }}"
     size: "{{ docker_volume_size }}"
-  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  when: docker_configure_lvm == true
   tags:
     - disk
     - docker
@@ -46,7 +53,7 @@
     dev: "{{ docker_volume_device }}"
     fstype: "{{ docker_volume_fs_type }}"
     opts: "{{ docker_volume_fs_opts }}" 
-  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  when: docker_configure_lvm == true
   tags:
     - disk
     - docker
@@ -57,7 +64,7 @@
     state: directory
     name: "{{ docker_volume_mount }}"
     mode: 0755
-  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  when: docker_configure_lvm == true
   tags:
     - disk
     - docker
@@ -71,7 +78,7 @@
     src: "{{ docker_volume_device }}"
     dump: 1
     passno: 2
-  when: docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"]
+  when: docker_configure_lvm == true
   tags:
     - disk
     - docker
@@ -95,13 +102,13 @@
       value: "{{ docker_lvm_data_volume_size_min }}"
     - var: AUTO_EXTEND_POOL
       value: "{{ docker_lvm_auto_extend_pool }}"
-  when: docker_storage_already_set_up.stdout == "NOT_SET"
+  when: docker_lvm_backed == true and docker_storage_already_set_up.stdout == "NOT_SET"
   tags:
     - docker
     - bootstrap
 
 - include: lvm.yml
-  when: docker_lvm_backed_devicemapper
+  when: docker_lvm_backed == true
 
 - name: create rsyslog.d
   sudo: yes
