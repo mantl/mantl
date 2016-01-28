@@ -1,4 +1,6 @@
 ---
+- include: playbooks/check-requirements.yml
+
 - hosts: role=worker
   serial: "{{ serial | default(1) }}"
   vars:
