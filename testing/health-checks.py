@@ -41,8 +41,9 @@ def node_health_check(node_address):
                 NUM_FAILS += 1
                 EXIT_STATUS = 1
     except Exception, e:
-        print("Skipping IP ", node_address, " due to this error\n", e)
-        NUM_SKIPS += 1
+        print("Check at IP ", node_address, " exited with this error\n", e)
+        NUM_FAILS += 1
+        EXIT_STATUS = 1
 
 
 def cluster_health_check(ip_addresses):

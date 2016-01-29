@@ -42,17 +42,17 @@ function skip_if_failed() {
 
 }
 
-./security-setup
+echo "Running security-setup without TTY"; ./security-setup < /dev/null
 
 skip_if_failed "terraform get"
-skip_if_failed "terraform apply -state=$TERRAFORM_STATE_ROOT/terraform.tfstate"
+skip_if_failed "terraform apply"
 retry_command "ansible-playbook playbooks/wait-for-hosts.yml --private-key ~/.ssh/id_rsa"
 skip_if_failed "ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml"
 skip_if_failed "ansible-playbook terraform.yml --extra-vars=@security.yml --private-key ~/.ssh/id_rsa"
 skip_if_failed "testing/health-checks.py $(plugins/inventory/terraform.py --hostfile | awk '/control/ {print $1}')"
 
 # must retry for terraform bugs
-retry_command "terraform destroy -force -state=$TERRAFORM_STATE_ROOT/terraform.tfstate"
+retry_command "terraform destroy -force"
 
 rm security.yml terraform.tf terraform.yml # convenient for local builds
 

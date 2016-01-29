@@ -6,14 +6,14 @@ provider "google" {
   project = "mantl-ci"
 }
 
-module "drone-ci-dc" {
+module "mantl-ci-dc" {
   source = "./terraform/gce"
-  datacenter = "drone-dc"
+  datacenter = "mantl-dc"
   control_type = "n1-standard-1"
   worker_type = "n1-highcpu-2"
   network_ipv4 = "10.0.0.0/16"
-  long_name = "ciscocloud-drone-ci-${var.build_number}"
-  short_name = "drone-ci-${var.build_number}"
+  long_name = "ciscocloud-mantl-ci-${var.build_number}"
+  short_name = "mantl-ci-${var.build_number}"
   region = "us-central1"
   zone = "us-central1-a"
   control_count = 3

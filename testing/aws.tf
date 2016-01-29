@@ -1,16 +1,16 @@
 variable "build_number" {}
 
 provider "aws" {
-  region = "eu-central-1"
+  region = "us-west-1"
 }
 
-module "aws-drone-testing" {
+module "aws-mantl-testing" {
   source = "./terraform/aws"
-  availability_zone = "eu-central-1a"
+  availability_zone = "us-west-1b"
   ssh_username = "centos"
-  source_ami = "ami-e68f82fb"
-  short_name = "drone-ci-${var.build_number}"
-  long_name = "ciscocloud-drone-ci-${var.build_number}"
+  source_ami = "ami-f77fbeb3"
+  short_name = "mantl-ci-${var.build_number}"
+  long_name = "ciscocloud-mantl-ci-${var.build_number}"
 
   control_count = 3
   worker_count = 3
