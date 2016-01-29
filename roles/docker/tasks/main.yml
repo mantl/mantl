@@ -114,6 +114,7 @@
     chdir: /root
   tags:
     - docker
+    - skip_ansible_lint
 
 - name: enable docker
   sudo: yes

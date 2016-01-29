@@ -3,7 +3,7 @@ chronos_version: 2.3.4
 chronos_package: "chronos-{{ chronos_version }}"
 
 # right now there is an issue with chronos zookeeper connection with auth, so leave it blank for now
-chronos_zk_auth: "" 
+chronos_zk_auth: ""
 chronos_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
 chronos_zk_port: 2181
 chronos_zk_chroot: chronos

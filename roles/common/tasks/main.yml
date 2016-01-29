@@ -78,7 +78,6 @@
     state: present
     regexp: ^.+requiretty$
     line: "# Defaults	requiretty"
-  tags:
 
 - name: configure selinux
   sudo: yes

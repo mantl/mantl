@@ -2,8 +2,8 @@
 - name: reload systemd daemon
   sudo: yes
   command: systemctl daemon-reload
-  tags: 
-    - zookeeper 
+  tags:
+    - zookeeper
 
 - name: restart zookeeper
   sudo: yes

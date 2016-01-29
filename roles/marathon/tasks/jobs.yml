@@ -33,3 +33,4 @@
     - mantl-api
   tags:
     - marathon
+    - skip_ansible_lint

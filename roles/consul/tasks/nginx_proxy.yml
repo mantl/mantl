@@ -1,5 +1,5 @@
 ---
-- name: deploy nginx template 
+- name: deploy nginx template
   sudo: yes
   template:
     src: consul.nginx.j2
@@ -30,7 +30,7 @@
   when: nginx_template.changed
   tags:
     - consul
-    
+
 - name: install nginx admin password
   sudo: yes
   run_once: yes
