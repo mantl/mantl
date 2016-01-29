@@ -33,6 +33,9 @@
   sudo: yes
   command: vgscan
   register: volume_groups
+  tags:
+    - docker
+    - lvm
 
 - name: Create volume group
   sudo: yes
