@@ -47,20 +47,6 @@
     - node
     - kubernetes
 
-- name: populate kublet's environment file
-  sudo: yes
-  template:
-    src: kubelet.env.j2
-    dest: "{{ kube_config_dir }}/environ"
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - reload systemd
-    - restart kubelet
-  tags:
-    - master
-
 - name: enable and start kubelet service
   sudo: yes
   service:

@@ -5,8 +5,6 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-EnvironmentFile=/etc/kubernetes/environ
-
 ExecStart=/usr/bin/kubelet \
   --api-servers=http://localhost:8085 \
   --register-schedulable=false \
