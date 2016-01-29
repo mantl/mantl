@@ -1,8 +1,7 @@
----
 - name: Calico directory for plugins
   sudo: yes
   file:
-    path: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/
+    path: /opt/cni/bin/calico
     state: directory
   tags:
     - calico
@@ -10,8 +9,24 @@
 - name: Get calico-kubernetes plugin
   sudo: yes
   get_url:
-    url: https://github.com/projectcalico/calico-kubernetes/releases/download/v0.7.0/calico_kubernetes
-    dest: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/calico
+    url: https://github.com/projectcalico/calico-cni/releases/download/v1.0.0/calico
+    dest: /opt/cni/bin/calico
     mode: 0755
+  tags:
+    - calico
+
+- name: Calico directory for cni config
+  sudo: yes
+  file:
+    path: /etc/cni/net.d
+    state: directory
+  tags:
+    - calico
+
+- name: Get calico-kubernetes plugin
+  sudo: yes
+  template:
+    src: calico-plugin.conf
+    dest: /etc/cni/net.d/10-calico.conf
   tags:
     - calico
