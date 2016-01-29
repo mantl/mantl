@@ -22,9 +22,17 @@
   gather_facts: yes
   tasks:
     - name: check for compatible centos version
-      when: ansible_distribution_version | version_compare('7.2', '<')
+      when: ansible_distribution_version | version_compare("7.2", "<")
       fail:
         msg: |
           Your hosts don't appear to be running a compatible version of Centos.
           Please run the playbook playbooks/upgrade-packages.yml before
           continuing.
+
+    - name: check for compatible kernel version
+      when: ansible_kernel | version_compare("3.10.0-327", "<")
+      fail:
+        msg: |
+          Your hosts don't appear to be running a compatible version of the
+          Linux kernel. Please run the playbook playbooks/upgrade-packages.yml
+          before continuing.
