@@ -83,7 +83,7 @@
     src: /etc/zookeeper/conf
     dest: /opt/mesosphere/zookeeper/conf
   tags:
-    - zookeeper    
+    - zookeeper
 
 - name: create zookeeper auth digest
   sudo: yes

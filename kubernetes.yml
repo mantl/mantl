@@ -36,7 +36,7 @@
   vars:
     haproxy_domain: mi-lb.example.com
   roles:
-    - {role: k8s-minion, tags: k8s} 
+    - {role: k8s-minion, tags: k8s}
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.
