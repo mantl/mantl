@@ -27,9 +27,11 @@
       run_once: yes
 
     - name: get list of packages installed on host
-      shell: rpm -qa | sort -V # ansible lint does not like this, wants to use yum module
+      shell: rpm -qa | sort -V
       register: packages
       changed_when: no
+      tags:
+        - skip_ansible_lint
 
     - name: write package manifest for host to tmp directory
       local_action:
