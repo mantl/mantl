@@ -13,18 +13,18 @@ Vagrant README to figure out the IP addresses it will assign. If you're using
 the default configuration, you'll have one control node at "192.168.100.101" and
 one worker at "192.168.100.201".
 
-1. Open a browser window to the [Marathon UI](https://192.168.100.101:8080/)
+1. Open a browser window to the [Marathon UI](https://192.168.100.101/marathon/)
 (vagrant-control-ip:8080).
 2. Run the following command to start the _hello-world_ example:
 ```
-examples/hello-world/launch.sh -c examples/hello-world/hello-world.json -m 192.168.242.55 -u <user> -p <pass>
+examples/hello-world/launch.sh -c examples/hello-world/hello-world.json -m 192.168.100.101 -u <user> -p <pass>
 ```
 You will see the Marathon UI update with the new application as two instances
 are deployed.
 3. To get information about an app click on the row in the UI, or from the
 command line, run
 ```bash
-curl -k -s -u "<user>:<pass>" "https://192.168.242.55:8080/v2/apps/hello-world" | python -m json.tool
+curl -k -s -u "<user>:<pass>" "https://192.168.100.101/marathon/v2/apps/hello-world" | python -m json.tool
 ```
 4. To see the app running, look at the output of the above command, under tasks.
 You should see a host, id, and port. In your browser go to the
@@ -33,7 +33,7 @@ If this is the case, try another browswer.
 5. To remove the application use the _Destroy App_ button on the details pop-up
 in the UI. Or, from the command line run
 ```bash
-curl -ksu "<user>:<pass>" -X DELETE "https://192.168.242.55:8080/v2/apps/hello-world" | python -m json.tool
+curl -ksu "<user>:<pass>" -X DELETE "https://192.168.100.101/marathon/v2/apps/hello-world" | python -m json.tool
 ```
 
 See the [Marathon REST API Documentation](https://mesosphere.github.io/marathon/docs/rest-api.html) for more information on the options available.

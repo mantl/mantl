@@ -21,7 +21,7 @@ of minutes and you can read on while you wait.
 To run these examples you will need to know:
 
 1. The url for marathon:
-Marathon runs on port 8080 and if you look in
+Marathon runs on port 8080 or at the /marathon endpoint, and if you look in
 [the Vagrant README](../vagrant/README.rst), you will see that your control node
 will by default have the IP "192.168.100.101" and your worker will have the IP
 "192.168.100.201".
@@ -56,14 +56,14 @@ which is the password used for Marathon.
 
 If you want to dive right into a cloud cluster go through
 [Getting Started](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html)
-at the Documetation site. You can then change the relevant parts of the
+at the Documentation site. You can then change the relevant parts of the
 following instructions.
 
 ### Submitting Applications to The Marathon API
 
 While in a terminal, in this examples directory enter:
 
-    $ curl -k -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.242.55:8080/v2/apps"
+    $ curl -k -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/mararthon/v2/apps"
 
 You should get back something like:
 
@@ -74,7 +74,7 @@ If not perhaps you messed up an option. Here is what they do:
 Option -k turns off ssl certificate verification. Mantl, by default, uses
 self-signed certificates. If you forgot the -k you get this message:
 
-    $ curl -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.242.55:8080/v2/apps"
+    $ curl -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
     curl: (60) SSL certificate problem: Invalid certificate chain
     More details here: http://curl.haxx.se/docs/sslcerts.html
 
@@ -91,10 +91,10 @@ self-signed certificates. If you forgot the -k you get this message:
 
 Option -X allows you to specify a HTTP verb other than the default GET. In this
 case we want to POST.  The following error happens if we forget the -X or the
-`-d@"file.json"`, or possible because you are submiting the command from the
+`-d@"file.json"`, or possibly because you are submiting the command from the
 wrong directory (i.e. you should change the path to `file.json`).
 
-    $ curl -k -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.242.55:8080/v2/apps"
+    $ curl -k -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
     <html>
     <head>
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
@@ -109,7 +109,7 @@ wrong directory (i.e. you should change the path to `file.json`).
 Option -H specifies a header argument. In this case we want to set the content type to json.  If you leave this off
 you will get:
 
-    $ curl -k -X POST -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.242.55:8080/v2/apps"
+    $ curl -k -X POST -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
     curl: (6) Could not resolve host:  
     {"message":"Unsupported Media Type"}
 
@@ -123,15 +123,15 @@ See [Marathon REST API](https://mesosphere.github.io/marathon/docs/rest-api.html
 
 From this REST API, get current status with:
 
-    curl -k -u "admin:hardpass" "https://192.168.242.55:8080/v2/apps/hello-world"
+    curl -k -u "admin:hardpass" "https://192.168.100.101/marathon/v2/apps/hello-world"
 
 which returns a big blob of json.  If you want this cleaned up a bit try adding `| python -m json.tool` :
 
-    curl -k -u "admin:hardpass" "https://192.168.242.55:8080/v2/apps/hello-world" | python -m json.tool
+    curl -k -u "admin:hardpass" "https://192.168.100.101/marathon/v2/apps/hello-world" | python -m json.tool
 
 That should give you a nicely formated output of the current state of the app.
 
-Notice that we didn't need headers `-h` and the http verb was the default GET,
+Notice that we didn't need headers `-H` and the http verb was the default GET,
 so we didn't need `-X`. We still needed the -k to get around our self signed ssl
 certificate.
 
@@ -139,7 +139,7 @@ certificate.
 
 From this REST API, the call to destroy the application is:
 
-    curl -k -X DELETE -u "admin:hardpass" "https://192.168.242.55:8080/v2/apps/hello-world"
+    curl -k -X DELETE -u "admin:hardpass" "https://192.168.100.101/marathon/v2/apps/hello-world"
 
 which is the same as the current status path but with the HTTP DELETE verb
 instead of the default GET. If the call is successful you will get something
@@ -174,16 +174,19 @@ You'll notice that there are two instances. Each one has a line under it in
 gray `default:<####>` where <####> is some port number. In the picture above,
 these are ports 9061 and 25312.
 
+If there aren't two instances, see step 2 under "Destroy the Vagrant Cluster and
+Build on for Minecraft" to add more memory to your VMs.
+
 There are two instances here becasue the hello-world.json file you submitted
 specifies for two instances to be created. This is two seperate hello-world
 applications, possibly running on different hosts.
 
-If you click on the `default:9061` it will open your browser to default:9061 and
-get a `webpage is not avaiable` error. This is because you don't have default
-mapped to the Vagrant VM's IP address in my hosts file.  Rather than mess with
-that, you can just take the port information and add it to the IP of where we
-know the Vagrant machine is located. Open the browser to `<VM-IP>:9061` and
-you'll see:
+If you click on the `worker-001:9061` it will open your browser to
+`worker-001:9061` and get a `webpage is not avaiable` error. This is because you
+don't have `worker-001` mapped to the Vagrant VM's IP address in your hosts
+file. Rather than mess with that, you can just take the port information and add
+it to the IP of where we know the Vagrant machine is located. Open the browser
+to `<VM-IP>:9061` and you'll see:
 
  ![hello world application](./images/helloworld.png)
 
@@ -193,7 +196,7 @@ If you look into the json file for [hello world](hello-world/hello-world.json)
 you will see that you are submiting a call to create two instances of a docker
 image: `"image": "keithchambers/docker-hello-world"`. You can see the the [php code running in this container](https://github.com/keithchambers/docker-hello-world/blob/master/index.php).
 
-## Destory the Vagrant Cluster and Build on for MineCraft
+## Destroy the Vagrant Cluster and Build on for Minecraft
 
 If you want to use the vagrant cluster for the Minecraft example you have to
 make a worker VM with more resources. Minecraft requires 2GB of RAM free for
