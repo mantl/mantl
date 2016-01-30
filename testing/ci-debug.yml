@@ -1,0 +1,33 @@
+- hosts: all
+  vars:
+    consul_dns_domain: consul
+  tasks:
+    - name: collect journal logs (all hosts)
+      become: yes
+      command: journalctl -u "{{ item }}" -l --no-pager
+      register: journald_logs
+      with_items:
+        - docker
+        - consul
+
+    - name: print journal logs
+      debug:
+        msg: "{{ item.stdout }}"
+      with_items: "{{ journald_logs.results }}"
+
+- hosts: role=control
+  vars:
+    consul_dns_domain: consul
+  tasks:
+    - name: collect journal logs (control)
+      become: yes
+      command: journalctl -u "{{ item }}" -l --no-pager
+      register: journald_logs
+      with_items:
+        - marathon
+        - zookeeper
+
+    - name: print journal logs
+      debug:
+        msg: "{{ item.stdout }}"
+      with_items: "{{ journald_logs.results }}"

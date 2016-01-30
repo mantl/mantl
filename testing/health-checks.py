@@ -1,10 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 from __future__ import print_function
 import sys
 import json
 import base64
 from time import sleep
 import urllib2
+import ssl
 
 
 NUM_SKIPS = 0
@@ -29,10 +30,17 @@ def node_health_check(node_address):
     global EXIT_STATUS
     url = "https://" + node_address + "/consul/v1/health/state/any"
     auth = b'Basic ' + base64.b64encode(get_credentials())
+
+    # Create a context that doesn't validate SSL certificates, since Mantl's
+    # are self-signed.
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
     request = urllib2.Request(url)
     request.add_header("Authorization", auth)
     try:
-        f = urllib2.urlopen(request)
+        f = urllib2.urlopen(request, context=ctx)
         health_checks = json.loads(f.read().decode('utf8'))
 
         for check in health_checks:
