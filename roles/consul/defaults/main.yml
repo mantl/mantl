@@ -2,10 +2,10 @@
 consul_package: consul-0.6.3
 consul_ui_package: consul-ui-0.6.3
 consul_cli_package: consul-cli-0.1.1
-consul_is_server: yes
 consul_dc: dc1
 consul_dc_group: dc={{ consul_dc }}
 consul_servers_group: role=control
+consul_is_server: "{{ consul_servers_group in group_names }}"
 consul_advertise: "{{ private_ipv4 }}"
 consul_retry_join: "{% for host in groups[consul_servers_group] | intersect(groups[consul_dc_group]) %}\"{{ hostvars[host].private_ipv4 }}\"{% if not loop.last %}, {% endif %}{% endfor %}"
 consul_bootstrap_expect: "{{ groups[consul_servers_group] | intersect(groups[consul_dc_group]) | length }}"
