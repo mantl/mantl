@@ -12,7 +12,7 @@
         "type": "DOCKER",
         "docker": {
             "network": "BRIDGE",
-            "image": "mashape/kong:0.6.0rc3",
+            "image": "mashape/kong:0.6.0",
             "portMappings": [
                 {
                     "containerPort": 8000,
