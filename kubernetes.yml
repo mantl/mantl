@@ -12,7 +12,6 @@
 
 - hosts: all
   vars:
-    consul_dns_domain: consul
     consul_servers_group: role=control
   roles:
     - common
@@ -43,14 +42,12 @@
 #- hosts: role=control
 #  gather_facts: no
 #  vars:
-#    consul_dns_domain: consul
 #    glusterfs_mode: server
 #  roles:
 #    - glusterfs
 #
 #- hosts: role=worker
 #  vars:
-#    consul_dns_domain: consul
 #    glusterfs_mode: client
 #  roles:
 #    - glusterfs

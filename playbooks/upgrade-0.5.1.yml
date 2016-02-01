@@ -1,5 +1,3 @@
 ---
 - include: ./upgrade-consul.yml
 - include: ./upgrade-mesos-marathon.yml
-  vars:
-    consul_dns_domain: consul
