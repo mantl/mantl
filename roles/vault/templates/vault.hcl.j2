@@ -7,7 +7,7 @@ backend "consul" {
 }
 
 listener "tcp" {
-	address = "0.0.0.0:8200"
+	address = "0.0.0.0:{{ vault_default_port }}"
 	tls_cert_file = "/etc/consul/ssl/consul.cert"
 	tls_key_file = "/etc/consul/ssl/consul.key"
 }
