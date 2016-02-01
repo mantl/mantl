@@ -90,7 +90,7 @@ module "edge-nodes" {
   source = "./terraform/aws/instance"
   count = "${var.edge_count}"
   datacenter = "${var.datacenter}"
-  role = "control"
+  role = "edge"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"
