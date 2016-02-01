@@ -11,7 +11,7 @@ module "do-mantl-keypair" {
 module "do-mantl-hosts" {
   source = "./terraform/digitalocean/hosts"
   ssh_key = "${module.do-mantl-keypair.keypair_id}"
-  region_name = "nyc3" # this must be a region with metadata support
+  region_name = "sfo1" # this must be a region with metadata support
   short_name = "mantl-ci-${var.build_number}"
 
   control_count = 3
