@@ -41,6 +41,7 @@ if [ ! -f security.yml ] || [ ! -d ssl/ ]; then
     # Otherwise, create new ones and back them up
     mkdir -p ssl/ # avoid an error in security-setup
     ./security-setup --enable=false
+    chown -R vagrant:vagrant "$PWD"
     cp    security.yml $semi_permanent
     cp -a ssl $semi_permanent
   fi
