@@ -21,6 +21,9 @@ variable "region" {default = "us-west-2"}
 variable "short_name" {default = "mantl"}
 variable "ssh_username" {default = "centos"}
 variable "worker_count" { default = 2 }
+variable "dns_subdomain" { default = ".dev" }
+variable "dns_domain" { default = "my-domain.com" }
+variable "dns_zone_id" { default = "XXXXXXXXXXXX" }
 
 
 provider "aws" {
@@ -148,13 +151,13 @@ module "route53" {
   source = "./terraform/aws/route53/dns"
   control_count = "${var.control_count}"
   control_ips = "${module.control-nodes.ec2_ips}"
-  domain = "my-domain.com"
+  domain = "${var.dns_domain}"
   edge_count = "${var.edge_count}"
   edge_ips = "${module.edge-nodes.ec2_ips}"
   elb_fqdn = "${module.aws-elb.fqdn}"
-  hosted_zone_id = "XXXXXXXXXXXX"
+  hosted_zone_id = "${var.dns_zone_id}"
   short_name = "${var.short_name}"
-  subdomain = ".dev"
+  subdomain = "${var.dns_subdomain}"
   traefik_elb_fqdn = "${module.traefik-elb.fqdn}"
   traefik_zone_id = "${module.traefik-elb.zone_id}"
   worker_count = "${var.worker_count}"
