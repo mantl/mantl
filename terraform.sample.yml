@@ -45,10 +45,6 @@
     # this variable.
     # consul_acl_datacenter: your_primary_datacenter
 
-    # consul_dns_domain is repeated across these plays so that all the
-    # components know what information to use for this values to help with
-    # service discovery.
-    consul_dns_domain: consul
     consul_servers_group: role=control
   roles:
     - common
@@ -77,7 +73,6 @@
   # all servers, we can skip it here to speed up the deployment.
   gather_facts: no
   vars:
-    consul_dns_domain: consul
     mesos_mode: follower
   roles:
     - mesos
@@ -90,7 +85,6 @@
 - hosts: role=control
   gather_facts: no
   vars:
-    consul_dns_domain: consul
     consul_servers_group: role=control
     mesos_leaders_group: role=control
     mesos_mode: leader
