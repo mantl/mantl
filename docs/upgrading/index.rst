@@ -47,19 +47,15 @@ the likelihood of mistakes. If you are working with a customized
 from it and ensure ``consul_dns_domain`` is set as desired in your
 ``security.yml``.
 
-Upgrade Consul, Mesos, and Marathon
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Upgrade Distributive, Consul, Mesos, and Marathon
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: shell
 
   ansible-playbook -e @security.yml playbooks/upgrade-0.5.1.yml
 
-This playbook simply includes a couple of other playbooks that perform a rolling
-upgrade of Consul, Mesos, and Marathon. If you want, you can run the following
-playbooks independently:
-
-* playbooks/upgrade-consul.yml
-* playbooks/upgrade-mesos-marathon.yml
+This playbook performans a Distributive upgrade and includes a couple of other
+playbooks that perform a rolling upgrade of Consul, Mesos, and Marathon.
 
 Upgrade to Mantl 0.6
 ~~~~~~~~~~~~~~~~~~~~
