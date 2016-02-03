@@ -4,8 +4,6 @@ calico_image_tag: v0.15.0
 
 bintray_baseurl: "https://bintray.com/artifact/download/asteris"
 
-calico_binary: "https://github.com/projectcalico/calico-containers/releases/download/v0.15.0/calicoctl"
-
 etcd_service_name: etcd.service.{{ consul_dns_domain }}
 etcd_client_port: 2379
 
