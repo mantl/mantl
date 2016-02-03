@@ -4,8 +4,6 @@
   template:
     src: consul.nginx.j2
     dest: /etc/consul/consul.nginx
-  register:
-    nginx_template
   tags:
     - consul
 
@@ -26,8 +24,8 @@
 
 - name: install nginx template
   sudo: yes
+  run_once: yes
   command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/templates/consul @/etc/consul/consul.nginx
-  when: nginx_template.changed
   tags:
     - consul
 
