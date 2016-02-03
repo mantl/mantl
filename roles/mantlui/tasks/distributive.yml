@@ -1,6 +1,4 @@
 ---
-# some created directories may be redundant, but are kept in case anything else
-# changes, and to enable the picking and choosing of components/roles.
 - name: create consul configuration directory
   sudo: yes
   file:
@@ -10,27 +8,27 @@
   tags:
     - consul
     - distributive
-    - nginx
+    - mantlui
 
-- name: create symlink to distributive nginx checklist
+- name: create symlink to distributive mantlui checklist
   sudo: yes
   file:
     state: link
-    src: /usr/share/distributive/nginx.json
-    dest: /etc/distributive.d/nginx.json
+    src: /usr/share/distributive/mantlui.json
+    dest: /etc/distributive.d/mantlui.json
   tags:
     - consul
     - distributive
-    - nginx
+    - mantlui
 
 - name: register distributive tests with consul
   sudo: yes
   copy:
-    src: distributive-nginx-check.json
+    src: distributive-mantlui-check.json
     dest: /etc/consul/
   notify:
     - reload consul
   tags:
     - consul
     - distributive
-    - nginx
+    - mantlui

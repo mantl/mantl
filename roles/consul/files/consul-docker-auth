@@ -1,0 +1,1 @@
+consul ALL=(ALL)    NOPASSWD:   /bin/docker

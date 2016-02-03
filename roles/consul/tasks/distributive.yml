@@ -11,6 +11,17 @@
     - consul
     - distributive
 
+- name: give consul privileges to run docker commands
+  become: yes
+  copy:
+    src: consul-docker-auth
+    dest: /etc/sudoers.d/
+    validate: visudo -c -f "%s"
+  tags:
+    - consul
+    - distributive
+    - docker
+
 - name: create symlink to distributive consul checklist
   sudo: yes
   file:
@@ -29,13 +40,6 @@
   when: "'{{ consul_servers_group}}' in group_names"
   notify:
     - reload consul
-  tags:
-    - consul
-    - distributive
-
-- name: run distributive consul test
-  sudo: yes
-  command: /usr/bin/distributive -f /etc/distributive.d/consul.json -d "" --verbosity="info"
   tags:
     - consul
     - distributive
