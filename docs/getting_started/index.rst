@@ -30,6 +30,7 @@ platforms:
    digitalocean.rst
    vsphere.rst
    softlayer.rst
+   clc.rst
 
 Setting up DNS
 --------------
