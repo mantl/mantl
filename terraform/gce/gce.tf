@@ -1,3 +1,4 @@
+#monolithic file saved for backward compatibility
 variable "control_count" {default = 3}
 variable "control_type" {default = "n1-standard-1"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes

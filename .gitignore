@@ -20,3 +20,8 @@ vagrant-config.yml
 # packer directories
 builds/
 packer_cache/
+
+# account files
+account.json
+# annoying osx files
+.DS_Store
