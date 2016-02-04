@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x 
-
 token=$1
 
 if [ -n "${token}" ]; then
