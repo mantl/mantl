@@ -1,7 +1,7 @@
 variable "control_count" { default = 3 }
 variable "datacenter" {default = "gce"}
 variable "edge_count" { default = 3}
-variable "image" {default = "centos-7-v20150526"}
+variable "image" {default = "centos-7-v20160119"}
 variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
@@ -35,13 +35,13 @@ module "gce-network" {
 
 
 module "control-nodes" {
-  source = "./terraform/gce/nodes/control"
-  control_count = "${var.control_count}"
+  source = "./terraform/gce/instance"
+  count = "${var.control_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
-  long_name = "${var.long_name}"
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  role = "control"
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
@@ -49,13 +49,13 @@ module "control-nodes" {
 }
 
 module "edge-nodes" {
-  source = "./terraform/gce/nodes/edge"
-  edge_count = "${var.edge_count}"
+  source = "./terraform/gce/instance"
+  count = "${var.edge_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
-  long_name = "${var.long_name}"
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  role = "edge"
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
@@ -63,15 +63,37 @@ module "edge-nodes" {
 }
 
 module "worker-nodes" {
-  source = "./terraform/gce/nodes/worker"
-  worker_count = "${var.worker_count}"
+  source = "./terraform/gce/instance"
+  count = "${var.worker_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
-  long_name = "${var.long_name}"
+  machine_type = "n1-highcpu-2"
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
+  role = "worker"
   short_name = "${var.short_name}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
+}
+
+module "network-lb" {
+  source = "./terraform/gce/lb"
+  instances = "${module.edge-nodes.instances}"
+  short_name = "${var.short_name}"
+}
+
+module "cloud-dns" {
+  source = "./terraform/gce/dns"
+  control_count = "${var.control_count}"
+  control_ips = "${module.control-nodes.gce_ips}"
+  domain = "mydomain.com"
+  edge_count = "${var.edge_count}"
+  edge_ips = "${module.edge-nodes.gce_ips}"
+  lb_ip = "${module.network-lb.public_ip}"
+  managed_zone = "my-cloud-dns-zone"
+  short_name = "${var.short_name}"
+  subdomain = ".service"
+  worker_count = "${var.worker_count}"
+  worker_ips = "${module.worker-nodes.gce_ips}"
 }

@@ -18,7 +18,7 @@ These are the supported DNS providers:
 
    cloudflare.rst
    dnsimple.rst
-   gce.rst
+   clouddns.rst
    route53.rst
 
 DNS Records and Configuration
@@ -30,7 +30,7 @@ The providers create a uniform set of DNS A records:
 - ``{short-name}-edge-{nn}.node{subdomain}.{domain}``
 - ``{short-name}-worker-{nnn}.node{subdomain}.{domain}``
 - ``{control}{subdomain}.{domain}``
-- ``*{subdomain}.{domain}``
+- ``*.{subdomain}.{domain}``
 
 For example, with ``short-name=mantl``, ``domain=example.com``, a blank
 subdomain, 3 control nodes, 4 worker nodes, and 2 edge nodes, that will give us
@@ -48,8 +48,7 @@ these DNS records:
 - ``control.example.com`` (pointing to control 1)
 - ``control.example.com`` (pointing to control 2)
 - ``control.example.com`` (pointing to control 3)
-- ``*.example.com`` (pointing to edge 1)
-- ``*.example.com`` (pointing to edge 2)
+- ``*.example.com`` (pointing to edge node load balancer)
 
 If you don't want the DNS records hanging off the apex, you can specify the
 ``subdomain`` parameter to the DNS providers, which will be inserted in the

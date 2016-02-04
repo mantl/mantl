@@ -183,15 +183,9 @@ good explanation on how to configure and use remote state.
 Configuring DNS with Google Cloud DNS
 -------------------------------------
 
-In addition to the :doc:`normal provider variables <dns>`, you will need to
-specify the ``managed_zone`` parameter. If you haven't set up a managed zone for
-the domain you're using, you can do that with Terraform as well, just add this
-extra snippet in your .tf file:
+You can set up your DNS records with Terraform:
 
-.. code-block:: javascript
+.. toctree::
+   :maxdepth: 1
 
-   resource "google_dns_managed_zone" "managed-zone" {
-     name = "my-managed-zone"
-     dns_name = "example.com."
-     description "Managed zone for example.com."
-   }
+   dns.rst
