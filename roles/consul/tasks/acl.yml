@@ -36,7 +36,7 @@
   replace:
     dest: /etc/consul/acl.json
     regexp: '"acl_default_policy": "allow"'
-    replace: '"acl_default_policy": "deny"'
+    replace: '"acl_default_policy": "{{ consul_acl_default_policy }}"'
   tags:
     - consul
   notify:

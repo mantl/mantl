@@ -80,13 +80,13 @@
   tags:
     - consul
 
-- meta: flush_handlers
-  tags:
-    - consul
-
 # Give consul time to elect a leader
 - name: wait for leader
   command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
+
+- meta: flush_handlers
   tags:
     - consul
 

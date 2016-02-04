@@ -1,96 +1,34 @@
 #!/bin/bash
-#
-# Restart the Consul agents one at a time to avoid losing quorum.
-
-set -x
 
 token=$1
 
-# This will loop forever if the remote consul node
-# doesn't come up. Maybe add a timer.
-#
-function wait_for_upness {
-	n=$1
-
-	# Give the remote agent a few seconds to shut down
-	# before checking upness
-	#
-	sleep 5
-
-	while :; do
-		status=$(consul-cli agent-members ${ccargs} | jq -r ".[] | select(.Name == \"$n\") | .Status")
-		if [ "${status}" == "1" ]; then
-			return
-		fi
-		sleep 5
-	done
-}
-
 if [ -n "${token}" ]; then
-	cargs="-token ${token}"
-	ccargs="--token=${token}"
+  ccargs="--token=${token}"
 fi
 
-me=$(consul-cli agent-self ${ccargs} | jq -r .Member.Addr)
-leader=$(consul-cli status-leader ${ccargs} | cut -f 1 -d ':')
+# Non-server nodes can be restart immediately with no effect on the quorum
+#
+if [ $(consul-cli agent-self ${ccargs} | jq -r .Member.Tags.role) == node ]; then
+  systemctl restart consul
 
-if [ -z "${me}" ]; then
-	echo "Not a consul server."
-	exit 0
+  exit 0
 fi
 
-# Not sure if this check should exit as a failure
-# or as a success. Failure for now.
-#
-if [ -z "${leader}" ]; then
-	echo "No leader found. Exiting."
-	exit 1
-fi
+# Try to acquire a lock on 'locks/consul'
+sessionid=$(consul-cli kv-lock ${ccargs} locks/consul)
 
-# Currently, non-leaders set a watch on a K/V node and restart the agent
-# when the node changes. If there is a command executor in place, it can
-# be used to restart the agent instead of the watch mechanism.
-#
-if [ "${me}" != "$leader" ]; then
-	# Not the leader. Set a watch on /v1/kv/secure/$me/restart. When that
-	# changes, restart consul
-	#
-	consul-cli kv-watch ${ccargs} secure/${me}/restart >/dev/nul
-	if [ $? -ne 0 ]; then
-		echo "Error watching restart key"
-		exit 1
-	fi
+# Lock acquired. Pause briefly to allow the previous holder to restart
+# If it takes longer than five seconds run `systemctl restart consul`
+# after releasing the lock then we might cause a quorum outage
+sleep 5
 
-	consul-cli kv-delete ${ccargs} secure/${me}/restart
+# Verify that there is a leader before releasing the lock and restarting
+/usr/local/bin/consul-wait-for-leader.sh
 
-	systemctl restart consul
+# Release the lock
+consul-cli kv-unlock ${ccargs} locks/consul --session=${sessionid}
 
-	exit 0
-fi
-
-# Restart any consul client instances first. This is done by sorting
-# on the 'role'. 'node' == client and 'consul' == server.
-#
-for i in $(consul-cli agent-members ${ccargs} | \
-		jq -r '.[] | .Name + ":" + .Addr + ":" + .Tags.role' | \
-		sort -r -t ':' -k 3); do
-	node=$(echo ${i} | cut -f 1 -d ':')
-	ip=$(echo ${i} | cut -f 2 -d ':')
-
-	if [ -z "${node}" -o -z "${ip}" ]; then
-		echo "Bad return from `consul-cli agent-members`: ${i}"
-		exit 1
-	fi
-
-	if [ "${ip}" != "${me}" ]; then
-		consul-cli kv-write ${ccargs} secure/${ip}/restart restart
-		wait_for_upness ${node}
-	fi
-done
-
-# All restarted except for leader
-#
-echo "Restarting leader"
+# Restart the service
 systemctl restart consul
 
 exit 0
