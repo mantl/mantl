@@ -9,7 +9,7 @@ minion_group_name: role=worker
 etcd_url_scheme: http
 
 
-# Kubernetes build to use, stable is used by default. 
+# Kubernetes build to use, stable is used by default.
 # Place "testing" here to use latest build avialable.
 kube_build: stable
 

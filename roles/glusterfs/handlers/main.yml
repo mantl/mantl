@@ -10,3 +10,11 @@
 - name: reload consul
   sudo: yes
   command: "consul reload"
+
+- name: reload systemd units
+  sudo: yes
+  command: "systemctl daemon-reload"
+
+- name: restart glusterd
+  sudo: yes
+  command: "systemctl restart glusterd"

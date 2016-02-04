@@ -36,6 +36,18 @@ of them. You should keep the follower machines free of "heavier" services
 running outside Mesos, as this will cause inaccurate resource availability
 counts in the cluster.
 
+Upgrading
+---------
+
+.. versionadded:: 0.6
+
+If you are running Mantl 0.5.1, you'll need to run the
+``playbooks/upgrade-mesos-marathon.yml`` playbook before reprovisioning your
+cluster to 0.6. The packaging format changed in the 0.6 release, this will
+ensure a smooth upgrade.
+
+Upgrades from releases prior to Mantl 0.5.1 have not been tested.
+
 Variables
 ---------
 

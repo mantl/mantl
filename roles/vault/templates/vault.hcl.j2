@@ -1,0 +1,13 @@
+backend "consul" {
+	address = "127.0.0.1:8500"
+	path = "vault"
+	scheme = "http"
+	token = "{{ consul_acl_master_token }}"
+	advertise_addr = "https://{{ inventory_hostname }}.node.{{ consul_dns_domain }}:{{ vault_default_port }}"
+}
+
+listener "tcp" {
+	address = "0.0.0.0:{{ vault_default_port }}"
+	tls_cert_file = "/etc/consul/ssl/consul.cert"
+	tls_key_file = "/etc/consul/ssl/consul.key"
+}

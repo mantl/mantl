@@ -60,18 +60,40 @@ Deploying software via Ansible
 
 In the following examples, we're going to assume you deployed hosts using
 Terraform. This project ships with a dynamic inventory file to read Terraform
-``.tfstate`` files. To use it, just use the ``-i
-plugins/inventory/terraform.py`` argument of ``ansible`` or
-``ansible-playbook``.
+``.tfstate`` files. If you are running ansible from the root directory of the
+project, this inventory file will be used by default. If not, or to use a custom
+inventory file, you can use the ``-i`` argument of ``ansible`` or
+``ansible-playbook`` to specify the inventory file path. For example:
+
+.. code-block:: shell
+
+   ansible-playbook -i path/to/inventory -e @security.yml terraform.yml
 
 First, ping the servers to ensure they are reachable via ssh:
 
 .. code-block:: shell
 
-  ansible all -i plugins/inventory/terraform.py -m ping 
+  ansible all -m ping
 
 If any servers fail to connect, check your connection by adding ``-vvvv``
 for verbose SSH debugging and try again to view the errors in more detail.
+
+.. warning::
+
+   Due to updated packages in the recent CentOS-7 (1511) release, it is critical
+   that you upgrade operating system packages on all server before proceeding
+   with deployment:
+
+   .. code-block:: shell
+
+      ansible-playbook -e 'serial=0' playbooks/upgrade-packages.yml
+
+   If you neglect to upgrade packages, you will likely experience multiple
+   failures, particularly around Consul. See issues `#907
+   <https://github.com/CiscoCloud/microservices-infrastructure/issues/907>`_ and
+   `#927
+   <https://github.com/CiscoCloud/microservices-infrastructure/issues/927>`_ for
+   more details.
 
 Next, deploy the software. First, you'll need to customize a playbook. A sample
 can be found at ``terraform.sample.yml`` in the root directory, you can find
@@ -82,7 +104,7 @@ you've placed the filled-out template at ``terraform.yml``:
 
 .. code-block:: shell
 
-  ansible-playbook -i plugins/inventory/terraform.py -e @security.yml terraform.yml
+  ansible-playbook -e @security.yml terraform.yml
 
 The deployment will probably take a while as all tasks are completed.
 

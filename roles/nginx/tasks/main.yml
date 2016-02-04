@@ -13,7 +13,7 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: u=r
+    mode: 0444
   with_items:
     - src: ssl/certs/nginx.cert.pem
       dest: /etc/nginx/ssl/nginx.cert
@@ -31,5 +31,3 @@
 - name: set admin password variable
   set_fact:
     nginx_admin_password_encrypted: "{{ nginx_admin_password_encrypted.stdout }}"
-
-- include: distributive.yml

@@ -1,0 +1,34 @@
+---
+- name: create consul configuration directory
+  sudo: yes
+  file:
+    path: /etc/consul
+    state: directory
+    mode: 0770
+  tags:
+    - consul
+    - distributive
+    - mantlui
+
+- name: create symlink to distributive mantlui checklist
+  sudo: yes
+  file:
+    state: link
+    src: /usr/share/distributive/mantlui.json
+    dest: /etc/distributive.d/mantlui.json
+  tags:
+    - consul
+    - distributive
+    - mantlui
+
+- name: register distributive tests with consul
+  sudo: yes
+  copy:
+    src: distributive-mantlui-check.json
+    dest: /etc/consul/
+  notify:
+    - reload consul
+  tags:
+    - consul
+    - distributive
+    - mantlui

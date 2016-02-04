@@ -1,0 +1,40 @@
+{
+    "id": "/kong",
+    "dependencies": [],
+    "instances": 1,
+    "cpus": 1,
+    "mem": 1024,
+    "cmd": "cp $MESOS_SANDBOX/kong.yml /etc/kong/; kong start && tail -f /usr/local/kong/logs/error.log",
+    "uris": [
+      "https://bintray.com/artifact/download/asteris/Kong-Example-Configuration/kong.yml"
+    ],
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "network": "BRIDGE",
+            "image": "mashape/kong:0.6.0",
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8001,
+                    "protocol": "tcp"
+                }
+            ]
+        }
+    },
+    "labels": {
+      "traefik.portIndex": "0"
+    },
+    "healthChecks": [ {
+        "path": "/",
+        "protocol": "HTTP",
+        "portIndex": 1,
+        "gracePeriodSeconds": 30,
+        "intervalSeconds": 10,
+        "timeoutSeconds": 10,
+        "maxConsecutiveFailures": 5
+    }]
+}

@@ -12,7 +12,7 @@ A: **Absolutley**, yes.
 #### Q: How do I contribute?
  A: Same as always, raise a pull request. All of our current roadmap/tasks are visible in the 'issues' section of the repo. 
 
-#### Q: Will the repo/docs/naming be changing.
+#### Q: Will the repo/docs/naming be changing?
 A: Yes, over the next few days, we'll be changing the github repo to ciscocloud/mantl, as well as updating any references to 'microservices-infrastructure' in the docs.
 
 We haven't done this right away as we wanted to provide time for automation checks for our existing development community.
