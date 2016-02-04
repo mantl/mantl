@@ -49,7 +49,7 @@ Contents:
    roadmap.rst
    license.rst
 
-.. only:: html 
+.. only:: html
 
    Indices and Tables
    ******************
