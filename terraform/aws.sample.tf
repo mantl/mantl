@@ -14,7 +14,7 @@ variable "amis" {
 variable "availability_zones"  {
   default = "a,b,c" 
 }
-variable "control_count" { default = 2 }
+variable "control_count" { default = 3 }
 variable "datacenter" {default = "aws-us-west-2"}
 variable "edge_count" { default = 2 }
 variable "region" {default = "us-west-2"}
