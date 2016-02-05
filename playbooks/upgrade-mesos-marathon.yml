@@ -74,3 +74,13 @@
 
     - name: set consul maintenance disable
       command: consul maint -disable
+
+- hosts: role=control
+  serial: "{{ serial | default(1) }}"
+  tasks:
+    # collectd gets confused after the mesos upgrade
+    - name: restart collectd
+      sudo: yes
+      service:
+        name: collectd
+        state: restarted

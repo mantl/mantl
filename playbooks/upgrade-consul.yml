@@ -21,3 +21,10 @@
  
     - name: wait for leader
       command: /usr/local/bin/consul-wait-for-leader.sh
+
+    - name: create secure acl
+      sudo: yes
+      run_once: yes
+      command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl Secure Token" --rule='key:secure:write' --rule='service::write' {{ consul_acl_secure_token }}
+      tags:
+        - consul
