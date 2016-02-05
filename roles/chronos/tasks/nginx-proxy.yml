@@ -11,7 +11,7 @@
 
 - name: configure nginx
   sudo: yes
-  command: consul-cli kv-write service/nginx/templates/chronos @/etc/chronos/chronos.nginx
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/templates/chronos @/etc/chronos/chronos.nginx
   tags:
     - chronos
 

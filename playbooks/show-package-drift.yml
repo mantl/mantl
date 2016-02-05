@@ -14,7 +14,7 @@
       shell: ls -1 {{ tmp_dir }}
       register: files
       changed_when: no
-      delegate_to: localhost 
+      delegate_to: localhost
       run_once: yes
 
     - name: purge existing files
@@ -23,13 +23,15 @@
         state: absent
       with_items: files.stdout_lines
       when: files.stdout_lines|count > 0
-      delegate_to: localhost 
+      delegate_to: localhost
       run_once: yes
 
     - name: get list of packages installed on host
       shell: rpm -qa | sort -V
       register: packages
       changed_when: no
+      tags:
+        - skip_ansible_lint
 
     - name: write package manifest for host to tmp directory
       local_action:

@@ -1,4 +1,4 @@
-- name: install latest kubernetes master 
+- name: install latest kubernetes master
   sudo: yes
   yum:
     pkg="kubernetes"
