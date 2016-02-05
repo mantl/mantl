@@ -42,6 +42,7 @@ Fixes
 * Fix consul rolling restart script #1070
 * Cloudflare modules #902
 * Replace mesosphere repo with direct links on packages #1092
+* Simplify logrotate role with loops #965
 
 0.5.1 (December 22, 2015)
 -------------------------
