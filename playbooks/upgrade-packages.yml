@@ -1,15 +1,4 @@
 ---
-- hosts: role=control
-  tasks:
-  - name: mantl api check
-    local_action:
-      command: "curl -k https://{{ ansible_ssh_host }}/api/health"
-    register: health_check
-
-  - name: run in parallel if check fails
-    set_fact: serial=0
-    when: health_check.failure
-
 - hosts:  "{{ dc | default('all') }}"
   gather_facts: no
   serial: "{{ serial | default(1) }}"
