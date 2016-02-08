@@ -1,6 +1,49 @@
 Changelog
 =========
 
+0.6.0 (February 5, 2015)
+-------------------------
+
+Features and Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Mesos 0.25 and Marathon 0.13 #955, #998
+* Consul-template 0.12.2 #1012
+* Consul 0.6.3 #1000
+* Kong example #966, #1071
+* Use Overlayfs (backed by xfs) for Docker storage #922, #1032
+* Upgrade support (alpha) #1028
+* mantl-api 0.1.4 (support for additional frameworks like Elasticsearch) #1086
+* Multi-cloud integration testing with Travis CI #1076, #1009
+* Improved vault support #1045
+
+Fixes
+^^^^^
+
+* Updated mantlui nginx container tag #961
+* Update traefik for go 1.5.3 fix #1035
+* Tightening of permissions on Marathon configuration directories #1034, #1050
+* Unify notation for file system permissions #944
+* Consul ACLs #603
+* Refactored AWS terraform modules #937, #870, #1090, #1074
+* Refactored GCE terraform modules #964, #958
+* Refactored Openstack terraform modules #901, #945, #979
+* Improved documentation #906, #956, #1007, #975, #967
+* DNS configuration improvements #928
+* Multi-node Vagrant support #942, #1054, #1022, #977, #974
+* Validate ansible version when running provisioning playbook #1019
+* Require Centos 7.2 when running provisioning playbook #1020
+* Improve performance of collectd docker plugin #1001
+* Improved version of wait-for-hosts playbook #982
+* Fixed download button in Mesos UI #955
+* Updated distributive version #959
+* Updated terraform version #1036
+* Updated mantlui Traefik support #1075
+* Fix consul rolling restart script #1070
+* Cloudflare modules #902
+* Replace mesosphere repo with direct links on packages #1092
+* Simplify logrotate role with loops #965
+
 0.5.1 (December 22, 2015)
 -------------------------
 
