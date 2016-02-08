@@ -3,13 +3,12 @@
   tasks:
   - name: mantl api check
     local_action:
-      module: uri
-      url: "https://{{ ansible_ssh_host }}/api/health"
+      command: "curl -k https://{{ ansible_ssh_host }}/api/health"
     register: health_check
 
   - name: run in parallel if check fails
     set_fact: serial=0
-    when: health_check.success
+    when: health_check.failure
 
 - hosts:  "{{ dc | default('all') }}"
   gather_facts: no
