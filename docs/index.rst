@@ -47,6 +47,7 @@ Contents:
    packer.rst
    changelog.rst
    roadmap.rst
+   faq.rst
    license.rst
 
 .. only:: html
