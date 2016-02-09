@@ -1,0 +1,46 @@
+---
+- hosts:  "{{ dc | default('all') }}"
+  gather_facts: no
+  serial: "{{ serial | default(1) }}"
+  tasks:
+
+  - name: clean yum
+    sudo: yes
+    command: yum clean all
+    tags:
+      - skip_ansible_lint
+
+  - name: refresh yum cache
+    sudo: yes
+    command: yum makecache
+    tags:
+      - skip_ansible_lint
+
+  - name: upgrade kernel package
+    sudo: yes
+    yum:
+      name: kernel
+      state: latest
+    register: kernel
+
+  - name: upgrade all packages
+    sudo: yes
+    yum:
+      name: "*"
+      state: latest
+
+  - name: reboot host
+    sudo: yes
+    shell: nohup bash -c "sleep 2s && reboot" &
+    register: reboot
+    when: kernel.changed
+
+  - name: wait for host boot
+    local_action:
+      module: wait_for
+      host: "{{ ansible_ssh_host }}"
+      port: 22
+      delay: "{{ boot_wait | default(60) }}"
+      timeout: 120
+      state: started
+    when: reboot.changed

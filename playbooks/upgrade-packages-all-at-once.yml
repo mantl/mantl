@@ -1,3 +1,0 @@
-- include: upgrade-packages.yml
-  vars:
-    serial: 0
