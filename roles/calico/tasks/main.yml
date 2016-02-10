@@ -120,16 +120,5 @@
   failed_when: false
   changed_when: false
 
-- name: configure mesos-slave for networking integration
-  sudo: yes
-  template:
-    src: executor_environment_variables
-    dest: /etc/mesos-slave/executor_environment_variables
-    mode: 0644
-  notify:
-    - restart mesos agent
-  tags:
-    - calico
-
 - meta: flush_handlers
 

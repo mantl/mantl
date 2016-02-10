@@ -100,7 +100,6 @@
     - marathon
     - chronos
     - mantlui
-    - calico
     - kubernetes
     - kubernetes-master
     - kubernetes-addons
