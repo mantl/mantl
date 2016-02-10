@@ -12,7 +12,7 @@
   sudo: yes
   template:
     src: vault.hcl.j2
-    dest: /etc/vault/vault.hcl
+    dest: "{{ vault_config_file }}"
   tags:
     - vault
 
@@ -32,3 +32,6 @@
     - vault
 
 - include: bootstrap.yml
+
+- include: otp.yml
+  when: vault_otp

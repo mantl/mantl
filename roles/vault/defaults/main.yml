@@ -2,8 +2,19 @@
 vault_package: vault-0.4.1
 vault_default_port: 8200
 vault_command_options: -tls-skip-verify
+vault_config_file: /etc/vault/vault.hcl
+vault_addr: "https://{{ inventory_hostname }}.node.{{ consul_dns_domain }}:{{ vault_default_port }}"
 
 vault_init_json: '{
 	"secret_shares": 5,
 	"secret_threshold": 3
 }' # ansible lint doesn't like the line split between curly braces
+
+# Allow generation of one time passwords
+vault_otp: true
+
+# Vault ssh helper - allow logins from one time passwords
+ssh_helper_config: /etc/vault/ssh-helper.hcl
+ssh_helper_version: 0.1.0
+ssh_helper_url: "https://releases.hashicorp.com/vault-ssh-helper/0.1.0/vault-ssh-helper_{{ ssh_helper_version }}_linux_amd64.zip"
+ssh_helper_checksum: 5365f2faedb68a65d36dd75ff9ffc2d8f53d1a8c3063db743f0a13f4f19c11cf

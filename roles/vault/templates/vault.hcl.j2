@@ -3,7 +3,7 @@ backend "consul" {
 	path = "vault"
 	scheme = "http"
 	token = "{{ consul_acl_master_token }}"
-	advertise_addr = "https://{{ inventory_hostname }}.node.{{ consul_dns_domain }}:{{ vault_default_port }}"
+	advertise_addr = "{{ vault_addr }}"
 }
 
 listener "tcp" {

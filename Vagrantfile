@@ -127,8 +127,17 @@ Vagrant.configure(2) do |config|
         control.vm.synced_folder ".", "/vagrant", type: "rsync",
           rsync__exclude: [
             ".terraform/", ".git/", ".vagrant/", "docs/", "builds/",
-            "packer_cache/"
+            "packer_cache/", "security.yml"
         ]
+        # Don't clobber security.yml, it might have vault tokens
+        # Caution: this causes https://github.com/mitchellh/vagrant/issues/7036
+        # such that no files will be overwritten on `vagrant rsync`
+        control.vm.synced_folder ".", "/vagrant", type: "rsync",
+          rsync__args: [
+            "--verbose", "--archive", "-z", "--copy-links", # defaults
+            "--ignore-existing", "--include=security.yml", "--exclude='*'"
+        ]
+        # Get provisioning dependencies, security-setup
         control.vm.provision "shell" do |s|
           s.path = "vagrant/provision.sh"
           s.args = [hosts]

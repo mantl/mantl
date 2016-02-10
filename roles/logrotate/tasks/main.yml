@@ -29,8 +29,8 @@
     group: root
   when: item.1
   with_together:
-    - [ mesos, docker, zookeeper ]
-    - [ true, true, role == 'control' ]
+    - [ mesos, docker, vault-ssh-helper, zookeeper ]
+    - [ true, true, role == 'control', role == 'control' ]
   tags:
     - docker
     - logrotate
@@ -45,8 +45,8 @@
     state: directory
   when: item.1
   with_together:
-    - [ docker, zookeeper ]
-    - [ true, role == 'control' ]
+    - [ mesos, docker, vault-ssh-helper, zookeeper ]
+    - [ true, true, role == 'control', role == 'control' ]
   tags:
     - docker
     - logrotate

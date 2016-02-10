@@ -1,0 +1,93 @@
+---
+- name: authenticate with vault
+  command: vault auth "{{ vault_command_options }}" "{{ vault_root_token }}"
+  tags:
+    - vault
+
+- name: mount ssh backend
+  command: vault mount "{{ vault_command_options }}" ssh
+  register: mount_cmd
+  failed_when: >
+    mount_cmd.rc != 0
+    and "* existing mount at ssh/" not in mount_cmd.stderr
+    and "* cannot mount under existing mount 'ssh/'" not in mount_cmd.stderr
+  tags:
+    - vault
+
+- name: create ssh role
+  # "ssh" in ansible_ssh_port is deprecated in 2.0
+  # This CIDR list allows for generation for any IP address
+  command: >
+    vault write "{{ vault_command_options }}"
+    ssh/roles/otp_key_role key_type=otp
+    default_user={{ ansible_ssh_user }}
+    allowed_users={{ ansible_ssh_user }}
+    port={{ ansible_ssh_port }}
+    cidr_list=0.0.0.0/0
+  tags:
+    - vault
+
+- name: download vault-ssh-helper
+  get_url:
+    url: "{{ ssh_helper_url }}"
+    dest: /tmp/vault-ssh-helper.zip
+    # Deprecated - use "checksum" in Ansible 2.0
+    sha256sum: "{{ ssh_helper_checksum }}"
+  tags:
+    - vault
+
+- name: extract vault-ssh-helper
+  become: yes
+  unarchive:
+    copy: no
+    src: /tmp/vault-ssh-helper.zip
+    dest: /usr/local/bin/
+    creates: /usr/local/bin/vault-ssh-helper
+    mode: 0775
+    owner: root
+    group: root
+  tags:
+    - vault
+
+- name: render vault-ssh-helper configuration file
+  become: yes
+  template:
+    src: ssh-helper-config.hcl.j2
+    dest: "{{ ssh_helper_config }}"
+  tags:
+    - vault
+
+- name: edit sshd configuration, enable PAM authorization
+  become: yes
+  lineinfile:
+    line: "{{ item.0 }}"
+    regexp: "{{ item.1 }}"
+    state: present
+    dest: /etc/ssh/sshd_config
+  with_together:
+    -
+      - 'ChallengeResponseAuthentication yes'
+      - 'UsePAM yes'
+      - 'PasswordAuthentication no'
+    -
+      - 'ChallengeResponseAuthentication\s+([Yy][Ee][Ss]|[Nn][Oo])'
+      - 'UsePAM\s+([Yy][Ee][Ss]|[Nn][Oo])'
+      - 'PasswordAuthentication\s+([Yy][Ee][Ss]|[Nn][Oo])'
+  notify:
+    - reload sshd
+  tags:
+    - vault
+
+- name: insert vault-ssh-helper lines into PAM configuration
+  become: yes
+  lineinfile:
+    line: "{{ item }}"
+    state: present
+    dest: /etc/pam.d/sshd
+    insertafter: '#%PAM-\d.\d'
+  with_items:
+    - 'auth       optional     pam_unix.so not_set_pass use_first_pass nodelay'
+    - 'auth       sufficient   pam_exec.so quiet expose_authtok log=/var/log/secure/vault-ssh-helper.log /usr/local/bin/vault-ssh-helper -config-file=/etc/vault/ssh-helper.hcl'
+
+- name: verify vault-ssh-helper functionality
+  command: vault-ssh-helper -verify -config-file="{{ ssh_helper_config }}"
