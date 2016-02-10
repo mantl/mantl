@@ -1,0 +1,9 @@
+{
+    "check": {
+        "id": "distributive-common-checks",
+        "name": "Common Distributive Mantl Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/common.json -d '' --verbosity=info",
+        "interval": "1m",
+        "timeout": "30s"
+    }
+}

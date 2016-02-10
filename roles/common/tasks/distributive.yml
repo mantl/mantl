@@ -1,0 +1,42 @@
+---
+- name: install distributive
+  sudo: yes
+  yum:
+    name: "{{ distributive_rpm_url }}"
+    state: present
+  tags:
+    - distributive
+    - common
+
+- name: create consul configuration directory
+  sudo: yes
+  file:
+    path: /etc/consul
+    state: directory
+    mode: 0770
+  tags:
+    - consul
+    - distributive
+    - common
+
+- name: create symlink to distributive common checklist
+  sudo: yes
+  file:
+    state: link
+    src: /usr/share/distributive/common.json
+    dest: /etc/distributive.d/common.json
+  tags:
+    - consul
+    - distributive
+    - common
+
+# We don't reload because consul hasn't been installed
+- name: register distributive tests with consul
+  sudo: yes
+  copy:
+    src: distributive-common-check.json
+    dest: /etc/consul/
+  tags:
+    - consul
+    - distributive
+    - common

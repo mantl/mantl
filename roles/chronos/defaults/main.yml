@@ -1,9 +1,9 @@
 ---
 chronos_version: 2.3.4
-chronos_package: "chronos-{{ chronos_version }}"
+chronos_package: "http://repos.mesosphere.io/el/7/x86_64/RPMS/chronos-2.4.0-0.1.20151007110204.el7.x86_64.rpm"
 
 # right now there is an issue with chronos zookeeper connection with auth, so leave it blank for now
-chronos_zk_auth: "" 
+chronos_zk_auth: ""
 chronos_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
 chronos_zk_port: 2181
 chronos_zk_chroot: chronos

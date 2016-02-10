@@ -2,7 +2,6 @@
 - hosts: role=worker
   serial: "{{ serial | default(1) }}"
   vars:
-    consul_dns_domain: consul
     mesos_mode: follower
   handlers:
     - include: ../roles/mesos/handlers/main.yml
@@ -33,7 +32,6 @@
 - hosts: role=control
   serial: "{{ serial | default(1) }}"
   vars:
-    consul_dns_domain: consul
     mesos_mode: leader
   handlers:
     - include: ../roles/mesos/handlers/main.yml

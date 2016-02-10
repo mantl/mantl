@@ -4,7 +4,7 @@ mesos_iteration: 1
 mesos_master_iteration: 1
 mesos_agent_iteration: 1
 
-mesos_mode: follower 
+mesos_mode: follower
 mesos_log_dir: /var/log/mesos
 mesos_work_dir: /var/run/mesos
 mesos_leader_port: 15050

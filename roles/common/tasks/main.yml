@@ -18,6 +18,21 @@
   tags:
     - common
 
+- name: increase timeouts in YUM
+  sudo: yes
+  shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
+  with_items:
+    - option: timeout
+      value: 60.0
+    - option: retries
+      value: 30
+
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+
 - name: install system utilities
   sudo: yes
   yum:
@@ -29,6 +44,7 @@
     - openssh
     - policycoreutils-python
     - unzip
+    - jq
   tags:
     - bootstrap
 
@@ -40,12 +56,6 @@
     state: stopped
   register: command_result
   failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"
-
-- name: enable EPEL repo
-  sudo: yes
-  yum:
-    name: epel-release
-    state: latest
 
 - name: install pip
   sudo: yes
@@ -62,14 +72,6 @@
     - name: pip
     - name: setuptools
 
-- name: install distributive
-  sudo: yes
-  yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/distributive-0.2.1-5.el7.centos.x86_64.rpm"
-    state: present
-  tags:
-    - distributive
-
 - name: disable requiretty in sudoers
   sudo: yes
   lineinfile:
@@ -77,7 +79,6 @@
     state: present
     regexp: ^.+requiretty$
     line: "# Defaults	requiretty"
-  tags:
 
 - name: configure selinux
   sudo: yes
@@ -90,3 +91,4 @@
 
 - include: users.yml
 - include: ssl.yml
+- include: distributive.yml

@@ -92,7 +92,6 @@
   file:
     state: directory
     name: "{{ glusterfs_brick_mount }}"
-    recurse: yes
     mode: 0755
   when: volume_group_name != ""
   tags:

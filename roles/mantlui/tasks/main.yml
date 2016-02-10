@@ -32,3 +32,5 @@
     - restart nginx-mantlui
   tags:
     - mantlui
+
+- include: distributive.yml

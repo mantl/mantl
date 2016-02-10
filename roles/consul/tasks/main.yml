@@ -5,9 +5,9 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-0.6.3-1.centos.x86_64.rpm
-    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-ui-0.6.3-1.x86_64.rpm
-    - https://bintray.com/artifact/download/asteris/mantl-rpm/consul-cli-0.1.0-2.x86_64.rpm
+    - "{{ consul_package }}"
+    - "{{ consul_ui_package }}"
+    - "{{ consul_cli_package }}"
   tags:
     - consul
     - bootstrap
@@ -32,6 +32,8 @@
   copy:
     src: docker-service.json
     dest: /etc/consul
+    owner: consul
+    group: consul
   notify:
     - reload consul
   tags:
@@ -42,6 +44,8 @@
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    owner: consul
+    group: consul
   with_items:
     - src: ssl/cacert.pem
       dest: /etc/consul/ssl/{{ consul_ca_file }}
@@ -76,10 +80,6 @@
   tags:
     - consul
 
-- meta: flush_handlers
-  tags:
-    - consul
-
 # Give consul time to elect a leader
 - name: wait for leader
   command: /usr/local/bin/consul-wait-for-leader.sh
@@ -87,10 +87,21 @@
     - consul
 
 - meta: flush_handlers
+  tags:
+    - consul
+
+- name: create secure acl
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl Secure Token" --rule='key:secure:write' --rule='service::write' {{ consul_acl_secure_token }}
+  tags:
+    - consul
 
 - include: acl.yml
 
 - meta: flush_handlers
+  tags:
+    - consul
 
 - include: nginx_proxy.yml
 

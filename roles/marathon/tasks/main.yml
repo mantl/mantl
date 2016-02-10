@@ -8,6 +8,13 @@
     - marathon
     - bootstrap
 
+- name: create consul acl for marathon
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Marathon ACL Token" --rule='key:marathon:write' {{ consul_acl_marathon_token }}
+  tags:
+    - marathon
+
 - name: install wait script
   sudo: yes
   template:
@@ -92,5 +99,3 @@
     - marathon
 
 - include: jobs.yml
-
-- include: distributive.yml

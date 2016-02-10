@@ -1,0 +1,23 @@
+---
+- hosts: all
+  serial: "{{ serial | default(1) }}"
+  tasks:
+    - include_vars: ../roles/consul/defaults/main.yml
+
+    - name: install consul
+      sudo: yes
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ consul_package }}"
+        - "{{ consul_ui_package }}"
+
+    - name: restart consul
+      sudo: yes
+      service:
+        name: consul
+        state: restarted
+ 
+    - name: wait for leader
+      command: /usr/local/bin/consul-wait-for-leader.sh

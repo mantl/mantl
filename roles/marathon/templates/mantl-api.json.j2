@@ -9,7 +9,14 @@
         { "containerPort": 4001, "hostPort": 0, "protocol": "tcp" }
       ],
       "forcePullImage": true
-    }
+    },
+    "volumes": [
+      {
+        "containerPath": "/etc/sysconfig/mantl-api",
+        "hostPath": "/etc/sysconfig/mantl-api",
+        "mode": "RO"
+      }
+    ]
   },
   "instances": 1,
   "cpus": 0.1,
@@ -23,7 +30,7 @@
     "MANTL_API_MARATHON_PASSWORD": "{{ marathon_http_credentials.split(':')[1] }}"{% endif %}{% if do_marathon_ssl %},
     "MANTL_API_MARATHON_NO_VERIFY_SSL": "true"{% endif %}{% if do_mesos_auth %},
     "MANTL_API_MESOS_PRINCIPAL": "{{ mantl_api_principal }}",
-    "MANTL_API_MESOS_SECRET": "{{ mantl_api_secret }}"{% endif %}
+    "MANTL_API_MESOS_SECRET_PATH": "/etc/sysconfig/mantl-api"{% endif %}
   },
   "labels": {
       "traefik.enable": "false"

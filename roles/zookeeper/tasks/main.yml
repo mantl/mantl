@@ -8,14 +8,6 @@
     - zookeeper
     - bootstrap
 
-- name: add mesosphere repository
-  sudo: yes
-  yum:
-    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
-    state: present
-  tags:
-    - zookeeper
-
 - name: install zookeeper scripts
   sudo: yes
   copy:
@@ -71,7 +63,7 @@
 - name: install zookeeper package
   sudo: yes
   yum:
-    name: mesosphere-zookeeper
+    name: http://repos.mesosphere.io/el/7/x86_64/RPMS/mesosphere-zookeeper-3.4.6-0.1.20141204175332.centos7.x86_64.rpm
     state: present
   tags:
     - zookeeper
@@ -83,7 +75,7 @@
     src: /etc/zookeeper/conf
     dest: /opt/mesosphere/zookeeper/conf
   tags:
-    - zookeeper    
+    - zookeeper
 
 - name: create zookeeper auth digest
   sudo: yes

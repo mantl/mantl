@@ -1,7 +1,7 @@
 ---
-# CHECK SECURITY - when customizing you should leave this in. If you take it out
-# and forget to specify security.yml, security could be turned off on components
-# in your cluster!
+# CHECK SECURITY AND ANSIBLE - when customizing you should leave this in. If you
+# take it out and forget to specify security.yml, security could be turned off
+# on components in your cluster!
 - hosts: localhost
   gather_facts: no
   tasks:
@@ -12,6 +12,13 @@
           Security is not enabled. Please run `security-setup` in the root
           directory and re-run this playbook with the `--extra-vars`/`-e` option
           pointing to your `security.yml` (e.g., `-e @security.yml`)
+    # Change concurrently with the required ansible version in requirements.txt
+    - name: check for compatible Ansible version
+      when: ansible_version["string"] | version_compare("1.9.1", "<") or ansible_version["string"] | version_compare("2", ">=")
+      fail:
+        msg: |
+          Your version of Ansible doesn't match the required version. Please
+          install ansible-playbook with `pip install -r requirements.txt`.
 
 # CHECK CENTOS VERSION - another one you should leave in. Ensures we're using a
 # compatible and up-to-date version of Centos.
@@ -38,10 +45,6 @@
     # this variable.
     # consul_acl_datacenter: your_primary_datacenter
 
-    # consul_dns_domain is repeated across these plays so that all the
-    # components know what information to use for this values to help with
-    # service discovery.
-    consul_dns_domain: consul
     consul_servers_group: role=control
   roles:
     - common
@@ -70,7 +73,6 @@
   # all servers, we can skip it here to speed up the deployment.
   gather_facts: no
   vars:
-    consul_dns_domain: consul
     mesos_mode: follower
   roles:
     - mesos
@@ -83,7 +85,6 @@
 - hosts: role=control
   gather_facts: no
   vars:
-    consul_dns_domain: consul
     consul_servers_group: role=control
     mesos_leaders_group: role=control
     mesos_mode: leader
@@ -102,7 +103,6 @@
 - hosts: role=edge
   gather_facts: no
   vars:
-    consul_dns_domain: consul
     # this is the domain that traefik will match on to do host-based HTTP
     # routing. Set it to a domain you control and add a star domain to route
     # traffic. (EG *.marathon.localhost)

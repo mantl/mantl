@@ -31,5 +31,3 @@
 - name: set admin password variable
   set_fact:
     nginx_admin_password_encrypted: "{{ nginx_admin_password_encrypted.stdout }}"
-
-- include: distributive.yml

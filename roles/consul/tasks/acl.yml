@@ -8,6 +8,7 @@
     mode: 0700
   tags:
     - consul
+    - acl
 
 - name: upsert agent acl
   sudo: yes
@@ -16,6 +17,7 @@
   command: /usr/local/bin/consul-acl-bootstrap.sh {{ consul_acl_master_token }} {{ consul_acl_agent_token }}
   tags:
     - consul
+    - acl
 
 - name: create agent_acl consul config
   sudo: yes
@@ -26,3 +28,16 @@
     - restart consul
   tags:
     - consul
+
+- meta: flush_handlers
+
+- name: set default policy to deny
+  sudo: yes
+  replace:
+    dest: /etc/consul/acl.json
+    regexp: '"acl_default_policy": "allow"'
+    replace: '"acl_default_policy": "{{ consul_acl_default_policy }}"'
+  tags:
+    - consul
+  notify:
+    - restart consul

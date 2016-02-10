@@ -101,7 +101,7 @@
     dest: "{{ item }}"
     line: "PEERDNS=no"
     regexp: ^PEERDNS=.*'
-  with_items: list_of_network_scripts.stdout_lines  
+  with_items: list_of_network_scripts.stdout_lines
   notify:
     - restart networkmanager
   tags:
