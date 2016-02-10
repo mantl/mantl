@@ -14,12 +14,12 @@ report any issues you have with the process.
 Upgrading OS packages
 ---------------------
 
-We provide two playbooks for upgrading OS-level system packages on a cluster
-after is has been provisioned: ``playbooks/upgrade-packages.yml`` and
-``playbooks/rolling-upgrade-packages.yml``. The first playbook upgrades each
-node on your cluster in parallel, and the second upgrades each node serially.
-You want the use the rolling upgrade on a cluster that is already running
-consul; otherwise, you will likely lose quorum and distablize your cluster.
+We provide two playbooks for upgrading OS-level system packages on a cluster:
+``playbooks/upgrade-packages.yml`` and ``playbooks/rolling-upgrade-packages.yml``.
+The first playbook upgrades all nodes on your cluster in parallel, and the
+second upgrades each node serially. You want the use the rolling upgrade on a
+cluster that is already running consul; otherwise, you will likely lose quorum
+and destabilize your cluster.
 
 Upgrading from 0.5.1 to 0.6
 ---------------------------
@@ -64,7 +64,7 @@ Upgrade Distributive, Consul, Mesos, and Marathon
 
   ansible-playbook -e @security.yml playbooks/upgrade-0.5.1.yml
 
-This playbook performans a Distributive upgrade and includes a couple of other
+This playbook performs a Distributive upgrade and includes a couple of other
 playbooks that perform a rolling upgrade of Consul, Mesos, and Marathon.
 
 Upgrade to Mantl 0.6
