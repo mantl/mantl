@@ -1,4 +1,6 @@
 ---
+- include: playbooks/check-requirements.yml
+
 - hosts: consul_servers
   tasks:
 
