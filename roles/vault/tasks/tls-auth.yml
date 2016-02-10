@@ -2,7 +2,7 @@
 - name: authenticate with vault
   sudo: yes
   run_once: yes
-  command: vault auth {{ vault_command_options | join(' ') }} {{ vault_token }}
+  command: vault auth {{ vault_command_options | join(' ') }} {{ vault_root_token }}
   changed_when: false
   tags:
     - vault
