@@ -119,6 +119,9 @@ Thus, you have the option to query Consul in two ways:
 
    dig @localhost -p 8600 testapp-direct.service.consul
 
+In the above examples, adjust the `.consul` domain as needed if you customized
+it when building your cluster.
+
 calicoctl
 ^^^^^^^^^
 

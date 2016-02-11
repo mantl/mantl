@@ -14,6 +14,8 @@ and ping it from any of your other nodes:
 ```bash
 curl kong.service.consul:<port-number>
 ```
+
+Adjust the `.consul` domain if you customized it when you built your cluster.
 You should get a response that looks like this:
 
 ```json
