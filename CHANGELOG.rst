@@ -28,7 +28,7 @@ Fixes
 * Refactored AWS terraform modules #937, #870, #1090, #1074
 * Refactored GCE terraform modules #964, #958
 * Refactored Openstack terraform modules #901, #945, #979
-* Improved documentation #906, #956, #1007, #975, #967
+* Improved documentation #906, #956, #1007, #975, #967, #1069
 * DNS configuration improvements #928
 * Multi-node Vagrant support #942, #1054, #1022, #977, #974
 * Validate ansible version when running provisioning playbook #1019
@@ -43,6 +43,10 @@ Fixes
 * Cloudflare modules #902
 * Replace mesosphere repo with direct links on packages #1092
 * Simplify logrotate role with loops #965
+* Consul DNS domain is fully configurable #1031
+* Rolling and parallel versions of playbook to upgrade OS packages #1102
+* Consolidated requirement validation in single playbook #1040
+* PEP 0394 compatible ./security-setup #1037
 
 0.5.1 (December 22, 2015)
 -------------------------
