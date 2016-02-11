@@ -12,7 +12,9 @@
 
     # Change concurrently with the required ansible version in requirements.txt
     - name: check for compatible Ansible version
-      when: ansible_version["string"] | version_compare("1.9.1", "<") or ansible_version["string"] | version_compare("2", ">=")
+      when: >
+        ansible_version["string"] | version_compare("1.9.1", "<")
+        or ansible_version["string"] | version_compare("2", ">=")
       fail:
         msg: |
           Your version of Ansible doesn't match the required version. Please
@@ -30,7 +32,10 @@
           continuing.
 
     - name: check for compatible kernel version
-      when: ansible_kernel | version_compare("3.10.0-327", "<")
+      when: >
+        ansible_kernel | version_compare("3.10.0-327", "<")
+        and provider != "digitalocean"
+        and provider != "packer"
       fail:
         msg: |
           Your hosts don't appear to be running a compatible version of the
