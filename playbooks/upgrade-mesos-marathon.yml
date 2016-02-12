@@ -1,5 +1,5 @@
 ---
-- include: playbooks/check-requirements.yml
+- include: "{{ playbook_dir }}/check-requirements.yml"
 
 - hosts: role=worker
   serial: "{{ serial | default(1) }}"
