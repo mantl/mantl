@@ -12,7 +12,7 @@ container on each worker node and managed by systemd. Any workload managed by
 Calico is registered as a service in Consul.
 
 Calico is not enabled by default. In order to run Calico, you should make a
-couple of changes to your ``terraform.yml``. You will need to add the ``etcd``
+couple of changes to your ``mantl.yml``. You will need to add the ``etcd``
 role into the ``roles`` section for ``all`` hosts:
 
 .. code-block:: json

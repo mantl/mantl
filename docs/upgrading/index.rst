@@ -53,7 +53,7 @@ Prior to 1.0, the ansible ``consul_dns_domain`` variable was defined in a number
 of different playbooks. It is now included in ``security.yml`` and can be
 customized from a single location. This simplifies the configuration and reduces
 the likelihood of mistakes. If you are working with a customized
-``terraform.yml`` file, you should remove all ``consul_dns_domain`` definitions
+``mantl.yml`` file, you should remove all ``consul_dns_domain`` definitions
 from it and ensure ``consul_dns_domain`` is set as desired in your
 ``security.yml``.
 
@@ -75,4 +75,4 @@ standard provisioning playbook:
 
 .. code-block:: shell
 
-  ansible-playbook -e @security.yml terraform.yml
+  ansible-playbook -e @security.yml mantl.yml

@@ -67,7 +67,7 @@ inventory file, you can use the ``-i`` argument of ``ansible`` or
 
 .. code-block:: shell
 
-   ansible-playbook -i path/to/inventory -e @security.yml terraform.yml
+   ansible-playbook -i path/to/inventory -e @security.yml mantl.yml
 
 First, ping the servers to ensure they are reachable via ssh:
 
@@ -96,15 +96,15 @@ for verbose SSH debugging and try again to view the errors in more detail.
    more details.
 
 Next, deploy the software. First, you'll need to customize a playbook. A sample
-can be found at ``terraform.sample.yml`` in the root directory, you can find
+can be found at ``sample.yml`` in the root directory, you can find
 more about customizing this at :doc:`playbook`. The main change you'll want
 to make is changing ``consul_acl_datacenter`` to your preferred ACL datacenter.
 If you only have one datacenter, you can remove this variable. Next, assuming
-you've placed the filled-out template at ``terraform.yml``:
+you've placed the filled-out template at ``mantl.yml``:
 
 .. code-block:: shell
 
-  ansible-playbook -e @security.yml terraform.yml
+  ansible-playbook -e @security.yml mantl.yml
 
 The deployment will probably take a while as all tasks are completed.
 

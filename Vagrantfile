@@ -16,7 +16,7 @@ config_hash = {
   "control_cpus" => 1,
   "edge_cpus" => 1,
   "network" => "private",
-  "playbooks" => ["/vagrant/terraform.sample.yml"]
+  "playbooks" => ["/vagrant/sample.yml"]
 }
 
 config_path = File.join(File.dirname(__FILE__), "vagrant-config.yml")
