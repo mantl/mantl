@@ -1,29 +1,3 @@
-- name: Calico directory for plugins
-  sudo: yes
-  file:
-    path: /opt/cni/bin/
-    state: directory
-  tags:
-    - calico
-
-- name: Get calico-kubernetes plugin
-  sudo: yes
-  get_url:
-    url: https://github.com/projectcalico/calico-cni/releases/download/v1.0.0/calico
-    dest: /opt/cni/bin/calico
-    mode: 0755
-  tags:
-    - calico
-
-- name: Get calico-kubernetes ipam plugin
-  sudo: yes
-  get_url:
-    url: https://github.com/projectcalico/calico-cni/releases/download/v1.0.0/calico-ipam
-    dest: /opt/cni/bin/calico-ipam
-    mode: 0755
-  tags:
-    - calico
-
 - name: Calico directory for cni config
   sudo: yes
   file:
