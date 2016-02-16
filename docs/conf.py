@@ -113,7 +113,7 @@ html_theme = 'alabaster'
 extensions += ['alabaster']
 html_theme_options = {
     'github_user': 'ciscocloud',
-    'github_repo': 'microservices-infrastructure',
+    'github_repo': 'mantl',
     'logo': 'cisco.png',
     'logo_name': True,
 }

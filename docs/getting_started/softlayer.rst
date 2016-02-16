@@ -53,4 +53,4 @@ Once you're all set up with the provider, customize your modules (for
 Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+Mantl on your new cluster.

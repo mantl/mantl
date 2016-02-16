@@ -1,5 +1,5 @@
 ---
-# Workaround for https://github.com/CiscoCloud/microservices-infrastructure/issues/161
+# Workaround for https://github.com/CiscoCloud/mantl/issues/161
 - name: install latest device-mapper-libs
   sudo: yes
   yum:

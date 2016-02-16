@@ -9,7 +9,7 @@ Existing Developer? For information on how the rename affects you, [see our hand
 
 # Overview
 
-[![Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/microservices-infrastructure?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/microservices-infrastructure?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Stories in Ready](https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready)](https://waffle.io/CiscoCloud/microservices-infrastructure)
 
 
@@ -94,7 +94,7 @@ Edge nodes are responsible for proxying external traffic into services running i
 All development is done on the `master` branch. Tested, stable versions are identified via git tags.
 
 ```
-    git clone https://github.com/CiscoCloud/microservices-infrastructure.git
+    git clone https://github.com/CiscoCloud/mantl.git
 
 ```
 
@@ -129,11 +129,11 @@ Requirements for running the project are listed in `requirements.txt`. Of note: 
 
 ### Deploying on multiple servers
 
-Please refer to the [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html), which covers multi-server and OpenStack deployments.
+Please refer to the [Getting Started Guide](http://docs.mantl.io/en/latest/getting_started/index.html), which covers multi-server and OpenStack deployments.
 
 ## Documentation
 
-All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest).
+All documentation is located at [http://docs.mantl.io](http://docs.mantl.io/en/latest).
 
 To build the documentation locally, run:
 
@@ -205,19 +205,19 @@ Mantl is always in the [mantl-universe repo](https://github.com/CiscoCloud/mantl
 - [ ] Apache CloudStack
 - [x] Digital Ocean
 
-Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
+Please see [milestones](https://github.com/CiscoCloud/mantl/milestones) for more details on the roadmap.
 
 ## Development
 
 If you're interested in contributing to the project, install [Terraform](https://www.terraform.io/downloads.html) and the Python modules listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
 
-Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
+Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/mantl/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
 
 ## Getting Support
 
-If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily.
+If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/mantl) against the project. We review issues daily.
 
-We also have a [gitter chat room](https://gitter.im/CiscoCloud/microservices-infrastructure). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
+We also have a [gitter chat room](https://gitter.im/CiscoCloud/mantl). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
 
 [Cisco Intercloud Services](https://developer.cisco.com/cloud) provides support for OpenStack based deployments of Mantl.
 

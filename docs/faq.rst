@@ -35,5 +35,5 @@ as a cluster manager for microservices. The Mantl team is in the process of
 evaluating Kubernetes as a cluster manager. The `Mantl roadmap`_ will be
 used to provide details if/when Kubernetes is supported.
 
-.. _Mantl roadmap: http://microservices-infrastructure.readthedocs.org/en/latest/roadmap.html
+.. _Mantl roadmap: http://docs.mantl.io/en/latest/roadmap.html
 .. _OpenStack Provider : https://www.terraform.io/docs/providers/openstack/index.html
