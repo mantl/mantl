@@ -5,7 +5,7 @@ calico_image: calico/node
 calico_image_tag: v{{ calico_version }}
 
 bintray_baseurl: "https://bintray.com/artifact/download/asteris"
-calico_binary: "{{ bintray_baseurl }}/testing/calico-{{ calico_version }}-1.x86_64.rpm"
+calico_binary: "{{ bintray_baseurl }}/mantl-rpm/calico-{{ calico_version }}-1.x86_64.rpm"
 
 etcd_service_name: etcd.service.{{ consul_dns_domain }}
 etcd_client_port: 2379
