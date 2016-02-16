@@ -1,7 +1,7 @@
 Vagrant
 =======
 
-.. versionadded:: 0.6
+.. versionadded:: 1.0
 
 `Vagrant <https://vagrantup.com/>`_ is used to "Create and configure
 lightweight, reproducible, and portable development environments." We use it

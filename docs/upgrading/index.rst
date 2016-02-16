@@ -4,7 +4,7 @@ Upgrading
 Overview
 --------
 
-Beginning with Mantl 0.6,  our goal is to support a straightforward upgrade path
+Beginning with Mantl 1.0,  our goal is to support a straightforward upgrade path
 from a cluster running a previous release.
 
 However, upgrade support should be considered alpha at this time; it has not
@@ -21,7 +21,7 @@ second upgrades each node serially. You want the use the rolling upgrade on a
 cluster that is already running consul; otherwise, you will likely lose quorum
 and destabilize your cluster.
 
-Upgrading from 0.5.1 to 0.6
+Upgrading from 0.5.1 to 1.0
 ---------------------------
 
 If you have a running 0.5.1 cluster, you need to perform the following steps:
@@ -29,7 +29,7 @@ If you have a running 0.5.1 cluster, you need to perform the following steps:
 Update security.yml
 ~~~~~~~~~~~~~~~~~~~
 
-Mantl 0.6 requires some additional settings in the ``security.yml`` file that
+Mantl 1.0 requires some additional settings in the ``security.yml`` file that
 you generated when you built your cluster. To auto-generate the necessary
 settings, you simply need to re-run ``security-setup``:
 
@@ -49,7 +49,7 @@ For your reference, the following settings have been added:
 A note on consul_dns_domain
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Prior to 0.6, the ansible ``consul_dns_domain`` variable was defined in a number
+Prior to 1.0, the ansible ``consul_dns_domain`` variable was defined in a number
 of different playbooks. It is now included in ``security.yml`` and can be
 customized from a single location. This simplifies the configuration and reduces
 the likelihood of mistakes. If you are working with a customized
@@ -67,10 +67,10 @@ Upgrade Distributive, Consul, Mesos, and Marathon
 This playbook performs a Distributive upgrade and includes a couple of other
 playbooks that perform a rolling upgrade of Consul, Mesos, and Marathon.
 
-Upgrade to Mantl 0.6
+Upgrade to Mantl 1.0
 ~~~~~~~~~~~~~~~~~~~~
 
-At this point, you can now upgrade the rest of the components to 0.6 with the
+At this point, you can now upgrade the rest of the components to 1.0 with the
 standard provisioning playbook:
 
 .. code-block:: shell
