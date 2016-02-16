@@ -4,7 +4,7 @@ Google Compute Engine
 .. versionadded:: 1.0 multi-zone support and terraform modularization
 
 As of Mantl 0.3 you can bring up Google Compute Engine environments using
-Terraform. microservices-infrastructure uses Terraform to provision hosts. You
+Terraform. Mantl uses Terraform to provision hosts. You
 can `download Terraform from terraform.io
 <http://www.terraform.io/downloads.html>`_.
 
@@ -120,7 +120,7 @@ by the Terraform provisioner. Run ``ssh-add ~/.ssh/id_rsa`` to add your ssh key.
 Run ``terraform get`` to prepare Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+Mantl on your new cluster.
 
 .. note:: If you get the below when running terraform plan or apply, 
   you will need to add : ``account_file = ""`` to the provider section of your gce.tf file.::

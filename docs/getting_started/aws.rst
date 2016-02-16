@@ -3,7 +3,7 @@ Amazon Web Services
 
 .. versionadded:: 1.0 multi-az support and terraform modularization
 
-As of microservices-infrastructure 0.3 you can bring up Amazon Web Services
+As of Mantl 0.3 you can bring up Amazon Web Services
 environments using Terraform. You can `download Terraform from terraform.io
 <http://www.terraform.io/downloads.html>`_.
 
@@ -177,7 +177,7 @@ Once you're all set up with the provider, customize your modules (for
 Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+Mantl on your new cluster.
 
 Terraform State
 ^^^^^^^^^^^^^^^^^^^^^^

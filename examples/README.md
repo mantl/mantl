@@ -55,7 +55,7 @@ which is the password used for Marathon.
 ### Other Clusters
 
 If you want to dive right into a cloud cluster go through
-[Getting Started](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html)
+[Getting Started](https://docs.mantl.io/en/latest/getting_started/index.html)
 at the Documentation site. You can then change the relevant parts of the
 following instructions.
 

@@ -46,7 +46,7 @@ roles/logstash: `Apache 2.0 <https://github.com/elastic/logstash/blob/master/LIC
 
 roles/lvm: license: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
-roles/mantlui: `Apache 2.0 <http://microservices-infrastructure.readthedocs.org/en/latest/license.html>`_
+roles/mantlui: `Apache 2.0 <http://docs.mantl.io/en/latest/license.html>`_
 
 roles/marathon: `Apache 2.0 <https://github.com/mesosphere/marathon/blob/master/LICENSE>`_
 
