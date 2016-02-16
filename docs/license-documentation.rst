@@ -1,16 +1,16 @@
 **License Documentation for Mantl**
 
-addons, examples, library: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
+addons, examples, library: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
-mi-deploy: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
+mi-deploy: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
 Packer: `MPL 2.0 <https://github.com/mitchellh/packer/blob/master/LICENSE>`_
 
-playbooks: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
+playbooks: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
-plugins/callbacks/profile_tasks.py: `MIT <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/plugins/callbacks/profile_tasks.py>`_
+plugins/callbacks/profile_tasks.py: `MIT <https://github.com/CiscoCloud/mantl/blob/master/plugins/callbacks/profile_tasks.py>`_
 
-plugins/inventory/terraform.py: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/plugins/inventory/terraform.py>`_
+plugins/inventory/terraform.py: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/plugins/inventory/terraform.py>`_
 
 roles/calico: `Apache 2.0 <https://github.com/projectcalico/calico/blob/master/LICENSE>`_
 
@@ -34,7 +34,7 @@ roles/flannel: `Apache 2.0 <https://github.com/coreos/flannel/blob/master/LICENS
 
 roles/glusterfs: `GNU GPL 3.0 <http://www.gluster.org/community/documentation/index.php/Gluster_3.2:_Understanding_the_GlusterFS_License>`_
 
-roles/handlers: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
+roles/handlers: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
 roles/haproxy: `Haproxy <http://www.haproxy.org/download/1.3/doc/LICENSE>`_
 
@@ -44,7 +44,7 @@ roles/logrotate: `MIT <https://github.com/retr0h/ansible-logrotate/blob/master/L
 
 roles/logstash: `Apache 2.0 <https://github.com/elastic/logstash/blob/master/LICENSE>`_
 
-roles/lvm: license: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
+roles/lvm: license: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
 roles/mantlui: `Apache 2.0 <http://microservices-infrastructure.readthedocs.org/en/latest/license.html>`_
 
@@ -64,6 +64,6 @@ terraform: `MLP 2.0 <https://github.com/hashicorp/terraform/blob/master/LICENSE>
 
 Vagrant: `MIT <license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE>`_
 
-security-setup: `Apache 2.0 <https://github.com/CiscoCloud/microservices-infrastructure/blob/master/LICENSE>`_
+security-setup: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`_
 
 kubernetes: `Apache 2.0 <https://github.com/kubernetes/kubernetes/blob/master/LICENSE>`_

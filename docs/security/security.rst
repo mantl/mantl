@@ -51,7 +51,7 @@ The following security features are implemented or on the roadmap:
 - Create sudo administrative users and provide ssh access (version 0.1)
 - Update Linux kernel & all packages on the node (version 0.1)
 - Automate creation of passwords/SSL certificates `#65
-  <https://github.com/CiscoCloud/microservices-infrastructure/issues/65>`__
+  <https://github.com/CiscoCloud/mantl/issues/65>`__
   (version 0.2)
 - Encrypt local secrets using `Ansible Vault
   <http://docs.ansible.com/playbooks_vault.html>`_. This means that the all
@@ -108,7 +108,7 @@ Consul
 
 - Consul endpoints are encrypted with Self-signed TLS certificates. A master ACL
   token is created as part of the Ansible installation `#46
-  <https://github.com/CiscoCloud/microservices-infrastructure/issues/46>`__
+  <https://github.com/CiscoCloud/mantl/issues/46>`__
   (version 0.2)
 - Disable consul exec (version 0.2)
 - The consul API/UI port (8500) is bound to localhost, and an nginx proxy is

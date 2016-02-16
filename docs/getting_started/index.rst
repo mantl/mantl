@@ -90,9 +90,9 @@ for verbose SSH debugging and try again to view the errors in more detail.
 
    If you neglect to upgrade packages, you will likely experience multiple
    failures, particularly around Consul. See issues `#907
-   <https://github.com/CiscoCloud/microservices-infrastructure/issues/907>`_ and
+   <https://github.com/CiscoCloud/mantl/issues/907>`_ and
    `#927
-   <https://github.com/CiscoCloud/microservices-infrastructure/issues/927>`_ for
+   <https://github.com/CiscoCloud/mantl/issues/927>`_ for
    more details.
 
 Next, deploy the software. First, you'll need to customize a playbook. A sample

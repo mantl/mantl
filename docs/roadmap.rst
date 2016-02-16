@@ -64,6 +64,6 @@ Platform Support
 
 Please see milestones_ for more details on the roadmap.
 
-.. _milestones: https://github.com/CiscoCloud/microservices-infrastructure/milestones
+.. _milestones: https://github.com/CiscoCloud/mantl/milestones
 .. |_| unicode:: U+2610
 .. |x| unicode:: U+2611
