@@ -1,7 +1,7 @@
 Amazon Web Services
 =====================
 
-.. versionadded:: 0.6 multi-az support and terraform modularization
+.. versionadded:: 1.0 multi-az support and terraform modularization
 
 As of microservices-infrastructure 0.3 you can bring up Amazon Web Services
 environments using Terraform. You can `download Terraform from terraform.io

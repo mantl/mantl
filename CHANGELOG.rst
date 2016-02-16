@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.6.0 (February 5, 2016)
+1.0.0 (February 16, 2016)
 -------------------------
 
 Features and Improvements

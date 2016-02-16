@@ -9,11 +9,11 @@ discovery, specifically using the inbuilt DNS server.
 Upgrading
 ---------
 
-.. versionadded:: 0.6
+.. versionadded:: 1.0
 
-Mantl 0.6 includes Consul v0.6.3. If you are running Mantl 0.5.1, you'll need to
+Mantl 1.0 includes Consul v0.6.3. If you are running Mantl 0.5.1, you'll need to
 run the ``playbooks/upgrade-consul.yml`` playbook before reprovisioning your
-cluster to 0.6 in order to ensure a smooth upgrade.
+cluster to 1.0 in order to ensure a smooth upgrade.
 
 Upgrades from releases prior to Mantl 0.5.1 have not been tested.
 

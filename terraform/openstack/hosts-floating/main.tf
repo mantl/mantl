@@ -1,4 +1,4 @@
-# WARNING: This module has been deprecated as of Mantl 0.6
+# WARNING: This module has been deprecated as of Mantl 1.0
 
 variable auth_url { }
 variable control_count {}
