@@ -2,7 +2,7 @@
 # Passed to Consul via Registrator for service discovery
 zookeeper_service: zookeeper
 zookeeper_service_tags: "{{ zookeeper_service }}"
-zookeeper_ensemble: cluster1
+zookeeper_ensemble: mantl
 zookeeper_container_name: "{{ zookeeper_service }}"
 zookeeper_data_volume: "{{ zookeeper_service }}-data-volume"
 
