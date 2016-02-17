@@ -3,9 +3,15 @@ ELK
 
 .. versionadded:: 1.0
 
-The ELK role combines Elasticsearch, Logstash, and Kibana to provide automatic log shipping and metrics collection from all Mantl nodes to an Elasticsearch cluster. Kibana is available to visualize and analyze this data.
+The ELK role combines Elasticsearch, Logstash, and Kibana to provide automatic
+log shipping and metrics collection from all Mantl nodes to an Elasticsearch
+cluster. Kibana is available to visualize and analyze this data.
 
-This role runs an Elasticsearch cluster via the `Elasticsearch Mesos Framework <https://github.com/mesos/elasticsearch>`_. It also configures Logstash on all nodes to forward logs to that cluster. Finally, Kibana is installed on all control nodes and is configured to talk to Elasticsearch and includes a default sample dashboard.
+This role runs an Elasticsearch cluster via the `Elasticsearch Mesos Framework
+<https://github.com/mesos/elasticsearch>`_. It also configures Logstash on all
+nodes to forward logs to that cluster. Finally, Kibana is installed on all
+control nodes and is configured to talk to Elasticsearch and includes a default
+sample dashboard.
 
 Installation
 ------------
@@ -17,14 +23,35 @@ it with ``ansible-playbook -e @security.yml addons/elk.yml``.
 Accessing Kibana
 ----------------
 
-Kibana is available on all control nodes on port 5601 (tcp). If you are deploying to a cloud provider that is behind security groups or a firewall, you will need to open up that port to users. Alternatively, you could access the Kibana UI via a VPN or SSH tunnel.
+Kibana is available on all control nodes on port 5601 (tcp). If you are
+deploying to a cloud provider that is behind security groups or a firewall, you
+will need to open up that port to users. Alternatively, you could access the
+Kibana UI via a VPN or SSH tunnel.
+
+Importing a Custom Dashboard
+----------------------------
+
+We have a custom dashboard template available that you can import into your
+Kibana installation at ``http://<control-node>:5601``. Navigate to the
+``Settings`` -> ``Objects`` tab. Save the following JSON into a file on your
+local system.
+
+`Default Dashboard </_static/kibana-default-dashboard.json>`_
+
+Next, click the ``Import`` button and choose the file you just saved. The
+Dashboard should import correctly and you should be able to view the dashboard
+on the Kibana Dashboards tab.
 
 Configuration
 -------------
 
-The default configuration of the ELK stack will require at least 4 nodes, each having at least 1 full CPU and 1 GB of memory available to Mesos. In addition, each node will need to have at least 5 GBs of free disk space.
+The default configuration of the ELK stack will require at least 4 nodes, each
+having at least 1 full CPU and 1 GB of memory available to Mesos. In addition,
+each node will need to have at least 5 GBs of free disk space.
 
-While a cluster of this size will be sufficient to evaluate and test the ELK stack on Mantl, we encourage you to review the configuration options below to size the cluster as appropriate for your environment.
+While a cluster of this size will be sufficient to evaluate and test the ELK
+stack on Mantl, we encourage you to review the configuration options below to
+size the cluster as appropriate for your environment.
 
 Variables
 ---------
