@@ -38,7 +38,7 @@ ExecStart=/usr/bin/docker run \
 {% endif %}
     --volume=/usr/share/collectd:/collectd:ro \
     {{ logstash_image }}:{{ logstash_image_tag }} \
-    logstash -f /config-dir/logstash.conf
+    logstash -f /config-dir/
 
 ExecStop=/bin/bash -c " \
     /usr/bin/docker kill logstash && \
