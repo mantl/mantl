@@ -1,7 +1,9 @@
 ---
 elasticsearch_ram: 1024
+elasticsearch_executor_ram: 1024
 elasticsearch_disk: 5120
 elasticsearch_cpu: 1.0
+elasticsearch_executor_cpu: 1.0
 elasticsearch_nodes: 3
 elasticsearch_cluster_name: "mantl"
 
