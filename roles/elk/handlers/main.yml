@@ -1,0 +1,25 @@
+---
+- name: reload consul
+  sudo: yes
+  command: systemctl reload consul
+
+- name: reload consul-template
+  sudo: yes
+  command: systemctl reload consul-template
+  tags:
+    - elk
+
+- name: reload systemd daemon
+  sudo: yes
+  command: systemctl daemon-reload
+  tags:
+    - elk
+
+- name: enable and start kibana
+  sudo: yes
+  service:
+    name: kibana
+    enabled: yes
+    state: restarted
+  tags:
+    - elk

@@ -45,6 +45,7 @@
     - policycoreutils-python
     - unzip
     - jq
+    - java-1.8.0-openjdk
   tags:
     - bootstrap
 
