@@ -82,7 +82,7 @@
             "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": ".vbox_version",
-            "vm_name": "microservices-infrastructure-0.5.0-x86_64",
+            "vm_name": "mantl-x86_64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "512"],
                 ["modifyvm", "{{.Name}}", "--cpus", "2"]
@@ -94,7 +94,7 @@
             {
                 "type": "vagrant",
                 "compression_level": 9,
-                "output": "builds/VirtualBox-microservices-infrastructure-0.5.0.box",
+                "output": "builds/VirtualBox-mantl.box",
                 "keep_input_artifact": false
             },
             {
