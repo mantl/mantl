@@ -105,7 +105,6 @@
   when: docker_lvm_backed|bool and docker_storage_already_set_up.stdout == "NOT_SET"
   tags:
     - docker
-    - bootstrap
 
 - include: lvm.yml
   when: docker_lvm_backed|bool
