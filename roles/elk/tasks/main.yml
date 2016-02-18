@@ -78,8 +78,8 @@
       dest: /etc/consul-template/templates/kibana.yml.tmpl
     - src: kibana-dashboard.cfg
       dest: /etc/consul-template/config.d
-    - src: create-kibana-dashboard.sh.tmpl
-      dest: /etc/consul-template/templates/create-kibana-dashboard.sh.tmpl
+    - src: kibana-create-dashboard.sh.tmpl
+      dest: /etc/consul-template/templates/kibana-create-dashboard.sh.tmpl
   notify:
     - reload consul-template
   tags:
