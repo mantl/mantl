@@ -1,5 +1,5 @@
 ---
-consul_package: https://bintray.com/artifact/download/asteris/mantl-rpm/consul-0.6.3-1.centos.x86_64.rpm
+consul_package: https://bintray.com/artifact/download/asteris/mantl-rpm/consul-0.6.3-3.centos.x86_64.rpm
 consul_ui_package: https://bintray.com/artifact/download/asteris/mantl-rpm/consul-ui-0.6.3-1.x86_64.rpm
 consul_cli_package: https://bintray.com/artifact/download/asteris/mantl-rpm/consul-cli-0.1.1-2.x86_64.rpm
 consul_is_server: yes
