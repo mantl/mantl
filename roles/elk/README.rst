@@ -28,20 +28,6 @@ deploying to a cloud provider that is behind security groups or a firewall, you
 will need to open up that port to users. Alternatively, you could access the
 Kibana UI via a VPN or SSH tunnel.
 
-Importing a Custom Dashboard
-----------------------------
-
-We have a custom dashboard template available that you can import into your
-Kibana installation at ``http://<control-node>:5601``. Navigate to the
-``Settings`` -> ``Objects`` tab. Save the following JSON into a file on your
-local system.
-
-`Default Dashboard </_static/kibana-default-dashboard.json>`_
-
-Next, click the ``Import`` button and choose the file you just saved. The
-Dashboard should import correctly and you should be able to view the dashboard
-on the Kibana Dashboards tab.
-
 Configuration
 -------------
 
