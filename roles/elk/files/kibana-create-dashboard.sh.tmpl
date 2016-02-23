@@ -1,9 +1,11 @@
+{{range service "kibana" "any"}}
+{{if ne .Status "passing"}}exit 0{{end}}
+{{end}}
+
 {{$es := service "client_port.elasticsearch-executor"}}{{with $es}}
 {{range $idx, $service := $es}}{{if eq $idx 0}}
 elasticsearch_url="http://{{.Address}}:{{.Port}}"
 {{end}}{{end}}{{end}}
-
-exit 0 # stopping here until the schema issue below is fixed
 
 curl -XPUT "$elasticsearch_url/.kibana/_mapping/dashboard" -d '{"properties":{"description":{"type":"string"},"hits":{"type":"integer"},"kibanaSavedObjectMeta":{"properties":{"searchSourceJSON":{"type":"string"}}},"optionsJSON":{"type":"string"},"panelsJSON":{"type":"string"},"timeFrom":{"type":"string"},"timeRestore":{"type":"boolean"},"timeTo":{"type":"string"},"title":{"type":"string"},"uiStateJSON":{"type":"string"},"version":{"type":"integer"}}}'
 
