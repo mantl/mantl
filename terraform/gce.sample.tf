@@ -1,12 +1,12 @@
 variable "control_count" { default = 3 }
 variable "datacenter" {default = "gce"}
-variable "edge_count" { default = 3}
+variable "edge_count" { default = 1}
 variable "image" {default = "centos-7-v20160119"}
 variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
-variable "worker_count" {default = 1}
+variable "worker_count" {default = 3}
 variable "zones" {
   default = "us-central1-a,us-central1-b"
 }
