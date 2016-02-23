@@ -18,11 +18,13 @@ provider "google" {
 }
 
 module "gce-network" {
- source = "./terraform/gce/network"
- network_ipv4 = "10.0.0.0/16"
+  source = "./terraform/gce/network"
+  network_ipv4 = "10.0.0.0/16"
+  long_name = "${var.long_name}"
+  short_name = "${var.short_name}"
 }
 
-# retmote state example
+# remote state example
 # _local is for development only s3 or something else should be used
 # https://github.com/hashicorp/terraform/blob/master/state/remote/remote.go#L47
 # https://www.terraform.io/docs/state/remote.html
