@@ -13,7 +13,7 @@ install: "pip install -r requirements.txt"
 before_script:
   - python2 testing/test-health-checks.py
   - ssh-keygen -N '' -f ~/.ssh/id_rsa && eval $(ssh-agent) && ssh-add ~/.ssh/id_rsa
-  - ln -sf $ANSIBLE_PLAYBOOK terraform.yml
+  - ln -sf $ANSIBLE_PLAYBOOK mantl.yml
   - ln -sf $TERRAFORM_FILE terraform.tf
   - mkdir $HOME/bin && export PATH=$PATH:$HOME/bin
   - export TERRAFORM_VERSION=0.6.8
