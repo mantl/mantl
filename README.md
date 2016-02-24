@@ -166,7 +166,7 @@ make html
 - [x] HDFS
 - [ ] Spark
 - [ ] Storm
-- [ ] Chronos
+- [x] Chronos
 - [x] MemSQL
 
 Note: The most up-to-date list of Mesos frameworks that are known to work with
