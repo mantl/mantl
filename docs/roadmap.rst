@@ -16,14 +16,18 @@ Mesos Frameworks
 
 | |x| Marathon
 | |_| Kubernetes
-| |_| Kafka
+| |x| Kafka
 | |_| Riak
-| |_| Cassandra
-| |_| ElasticSearch
-| |_| HDFS
+| |x| Cassandra
+| |x| ElasticSearch
+| |x| HDFS
 | |_| Spark
 | |_| Storm
 | |_| Chronos
+| |x| MemSQL
+
+Note: The most up-to-date list of Mesos frameworks that are known to work with
+Mantl is always in the [mantl-universe repo](https://github.com/CiscoCloud/mantl-universe).
 
 Security
 --------
@@ -38,8 +42,8 @@ Security
 Operations
 ----------
 
-| |_| Logging
-| |_| Metrics
+| |x| Logging
+| |x| Metrics
 | |_| In-service upgrade with rollback
 | |_| Autoscaling of Resource Nodes
 | |_| Self maintaining system (log rotation, etc)
@@ -55,12 +59,12 @@ Platform Support
 | |x| Cisco Cloud Services
 | |x| Cisco MetaCloud
 | |_| Cisco Unified Computing System
-| |_| Amazon Web Services
+| |x| Amazon Web Services
 | |_| Microsoft Azure
 | |x| Google Compute Engine
 | |_| VMware vSphere
 | |_| Apache CloudStack
-|
+| |_| Digital Ocean
 
 Please see milestones_ for more details on the roadmap.
 
