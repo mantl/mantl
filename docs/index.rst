@@ -47,7 +47,6 @@ Contents:
    upgrading/index.rst
    packer.rst
    changelog.rst
-   roadmap.rst
    faq.rst
    license.rst
 

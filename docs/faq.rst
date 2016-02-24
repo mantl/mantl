@@ -32,8 +32,6 @@ make up an application into logical units for easy management and discovery.
 Mantl is an end-to-end solution for deploying and managing a microservices
 infrastructure. Mantl currently uses `Apache Mesos <http://mesos.apache.org/>`_
 as a cluster manager for microservices. The Mantl team is in the process of
-evaluating Kubernetes as a cluster manager. The `Mantl roadmap`_ will be
-used to provide details if/when Kubernetes is supported.
+evaluating Kubernetes as a cluster manager.
 
-.. _Mantl roadmap: http://docs.mantl.io/en/latest/roadmap.html
 .. _OpenStack Provider : https://www.terraform.io/docs/providers/openstack/index.html
