@@ -12,6 +12,7 @@ variable "source_ami" {}
 variable "security_group_ids" {}
 variable "vpc_subnet_ids" {}
 variable "ssh_username" {default = "centos"}
+variable "user_data" {}
 
 
 resource "aws_ebs_volume" "ebs" {
@@ -38,6 +39,7 @@ resource "aws_instance" "instance" {
     delete_on_termination = true
     volume_size = "${var.ebs_volume_size}"
   }
+  user_data = "${var.user_data}"
 
   tags {
     Name = "${var.short_name}-${var.role}-${format("%02d", count.index+1)}"

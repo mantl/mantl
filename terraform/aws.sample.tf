@@ -87,6 +87,7 @@ module "control-nodes" {
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.ui_security_group},${module.security-groups.control_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "edge-nodes" {
@@ -107,6 +108,7 @@ module "edge-nodes" {
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.edge_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "worker-nodes" {
@@ -128,6 +130,7 @@ module "worker-nodes" {
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.worker_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "aws-elb" {
@@ -167,4 +170,23 @@ module "route53" {
   traefik_zone_id = "${module.traefik-elb.zone_id}"
   worker_count = "${var.worker_count}"
   worker_ips = "${module.worker-nodes.ec2_ips}"
+}
+
+resource "template_file" "cloud-config" {
+	template = "${file("${path.module}/cloud-config.tpl")}"
+	vars {
+		timezone = "Etc/UTC"
+	}
+}
+
+resource "template_cloudinit_config" "config" {
+	gzip = true
+	
+	part {
+		content = "${template_file.cloud-config.rendered}"
+	}
+	part {
+		content_type = "text/x-shellscript"
+		content = "echo hello cloud-init"
+	}
 }
