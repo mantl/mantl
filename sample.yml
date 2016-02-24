@@ -72,7 +72,7 @@
 # settings should be such that web traffic (ports 80 and 443) is exposed to the
 # world.
 - hosts: role=edge
-  gather_facts: no
+  gather_facts: yes
   vars:
     # this is the domain that traefik will match on to do host-based HTTP
     # routing. Set it to a domain you control and add a star domain to route

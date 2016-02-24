@@ -133,7 +133,7 @@ don't put a file system on the partion.
 
 Note that I am creating a partion size 50 Gigs, this is for docker.  Just make it consistent across your cluster.
 
-if you have MS-dos partions make it a primary partion or it won't work.
+if you have MS-dos partions make it a primary partion, not an extended partion or it won't work.
 
 Additionally.  If you hang on TASK "lvm | create volume group" then you will have to apply the patch
 https://github.com/ansible/ansible-modules-extras/issues/1504 the file you need to do this to is in
@@ -143,6 +143,8 @@ mantl base directory /library/lvg.py
 Do all the computers to this point.
 
 ## Creating Your Inventory
+
+Here is an example inventory file. It should be place in the root of the mantl directory.
 
     [role=control]
     control01 private_ipv4=172.16.222.6 ansible_ssh_host=172.16.222.6
@@ -182,27 +184,37 @@ Do all the computers to this point.
 
 I had to add the ansible_ssh_host line to run `playbooks/reboot-hosts.yml`
 
-the private_ipv4 is needed by several roles.
+The private_ipv4 is needed by several roles.
 
 The dc=dc1 group is needed to set `consul_dc_group` in the consul roles. And is specifically usd in this setup in the
-dnsmasq role.  Setting this in the inventory file is suggested by how the `vagrant\vagrant-inventory` is set.
+dnsmasq role.
 
 Note that dc1 is the default.  If you change the name of the data center in your inventory file
-you will need to set consul_dc in your bare-metal.yml file.  I went ahead and put an entry for dc1 in bare-metal.yml
-so you know where to change it if you need to.
+you will need to set consul_dc in an environment variable.  For example, if you called your dc 'mydc' then you
+would need to enter:
+
+    ansible-playbook -u centos -i inventory -e consul_dc=mydc \
+            -e provider=bare-metal  -e @security.yml  terraform.sample.yml >& bare-metal.log
+
+the rest of the options will be discussed below.
 
 ## Getting Started with Ansible
 
 
-Add your key to all the machines in your test inventory
+Add your key to all the machines in your inventory
 
-    ansible all -i testinventory  -u centos -k -m authorized_key -a "user=centos key=https://github.com/larry-svds.keys"
+    ansible all -i inventory  -u centos -k -m authorized_key -a "user=centos key=https://github.com/youraccount.keys"
+
+Note this makes use of your public key on github.  if you don't have a git hub account or a key pair on your git hub
+account, get one.
 
 the -k is needed cause I have to have it ask for a password at this point.
 
 now all commands can happen with out the password and -k option. Test with:
 
-    ansible all -i testinventory -u centos -m ping
+    ansible all -i inventory -u centos -m ping
+
+You should get back a pong from each machine in your inventory.
 
 ### Copy the /etc/host file over
 
@@ -224,61 +236,63 @@ content is:
 
 Copy the /etc/host file over.
 
-    ansible all -i testinventory -u centos --sudo --ask-sudo-pass -m copy -a "src=hosts dest=/etc/hosts"
+    ansible all -i inventory -u centos --sudo --ask-sudo-pass -m copy -a "src=hosts dest=/etc/hosts"
 
 
 Might as well set the timezone just for grins.
 
-    ansible all -i testinventory -u centos --sudo --ask-sudo-pass -m command -a "timedatectl set-timezone America/Los_Angeles"
+    ansible all -i inventory -u centos --sudo --ask-sudo-pass -m command -a "timedatectl set-timezone America/Los_Angeles"
 
 
-## Create Your bare-metal.yml
+## Run It!
 
-
-`docs/bare-metal.yml` is almost identical to `terraform.samle.yml`
-
-Everything in terraform.samle.yml is in bare-metal.yml  bare-metal.yml has the following in additons.
-
- * Every section has `provider: bare-metal` in its `vars` section.
- * Under `-hosts: all` in the `vars` section
-
-        # Docker needs to be lvm backed.  This is why we had to break our LVM
-        # partitions in the install, and add the lvm_physical_device to the
-        # inventory. Note this is setting 80%FREE becasue this isn't going to
-        # share LVM with the Glusterfs. These partitions are just for Docker.
-        docker_lvm_backed: True
-        docker_lvm_data_volume_size: 80%FREE
-
- *  We gather facts for Edge.. per..
-
-         <   # gather facts so that we can fill in networkInterface = "{{ ansible_default_ipv4['interface'] }}"
-         <   # in roles/traefik/templates/traefik.toml.j2
-         <   gather_facts: yes
-         ---
-         >   gather_facts: no
-
-
-## Run it
-
-Copy your bare-metal.yml file to the microservices-infrastructure base directory and run comamnds from the base directory.
-
-Copy your inventory file to the base directory as well.
+You now are ready to run the playbook.  Change directory to the mantl root.  Your inventory should be there as well as
+the file `security_setup` (along with quite a few others).
 
 Run the security-setup script:
 
     ./security-setup
 
-It asks for one admin password. At the end of that run there will be a `.securty.yml` file.  It will have the password
+It asks for one admin password. At the end of that run there will be a `security.yml` file.  It will have the password
 you entered and a lot of keys and such that are used in the installs and in the installed software.
 
+The file you will be running is `terraform.sample.yml`.  Since you created your own inventory and didn't use terraform,
+there are a few environment variables you need to set for your run.
 
-
-    ansible-playbook -u centos -i inventory -e @security.yml bare-metal.yml >& bare-metal/bare-metal.log
+    ansible-playbook -u centos -i inventory \
+            -e provider=bare-metal \
+            -e consul_dc=dc1 \
+            -e docker-lvm-backed=true \
+            -e docker_lvm_data_volume_size="80%FREE" \
+            -e @security.yml  terraform.sample.yml >& bare-metal.log
 
 
 In another window tail -f  that log file to follow whats going on.
 
+The meaning of the parts of this command are as follows:
+
+ * ansible-playbook -u centos -i inventory
+   * run the ansible play book as centos user against the inventory found in the ./inventory file.
+ * -e provider=bare-metal
+   * The "provider" is not terraform for a cloud, but rather bare-metal. If the inventory had been generated
+   by terraform on Google Cloud, this value would have been set automatically to 'gcs'
+ * -e consul_dc=dc1
+   * This is the name found in your ./inventory file for your datacenter.
+ * -e docker-lvm-backed=true
+   * lvm back docker is a really good idea in centos. This is why you craeted the extra partion during installation.
+ * -e docker_lvm_data_volume_size="80%FREE"
+   * This defaults to "40%FREE" in the docker role because the default LVM partition is shared with other things.
+   You could leave this off, but its likely with your own hardware you will have different constraints and its a good
+   variable to know.
+ * -e @security.yml
+   * this a series of environment variable settings that have all the security settings of the varios parts of mantl. The @
+   causes ansible to evaluate the file.
+ * terraform.sample.yml
+   * this is the ansible file that is being run.
+ * >& bare-metal.log
+   * this redirects the output to a file so that you can review it later.   Tailing with a -f flag lets you watch the
+   progress as ansible works through the rolls accross your inventory.
+
+
 Once you are done go to the browser and go to the /ui directory of any control node and you should see the mantlui.
-
-
 
