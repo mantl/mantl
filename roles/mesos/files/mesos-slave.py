@@ -155,7 +155,7 @@ def fetch_stats():
       try:
         result = json.load(urllib2.urlopen(conf['mesos_url'], timeout=10))
       except urllib2.URLError, e:
-        collectd.error('mesos-slave plugin: Error connecting to %s - %r' % (onf['mesos_url'], e))
+        collectd.error('mesos-slave plugin: Error connecting to %s - %r' % (conf['mesos_url'], e))
         return None
       parse_stats(conf, result)
 
