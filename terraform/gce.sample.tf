@@ -6,7 +6,10 @@ variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
-variable "worker_count" {default = 3}
+variable "worker_count" {default = 4}
+variable "control_type" { default = "n1-standard-1" }
+variable "edge_type" { default = "n1-standard-1" }
+variable "worker_type" { default = "n1-standard-2" }
 variable "zones" {
   default = "us-central1-a,us-central1-b"
 }
@@ -41,6 +44,7 @@ module "control-nodes" {
   count = "${var.control_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
+  machine_type = "${var.control_type}"
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "control"
@@ -55,6 +59,7 @@ module "edge-nodes" {
   count = "${var.edge_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
+  machine_type = "${var.edge_type}"
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "edge"
@@ -69,7 +74,7 @@ module "worker-nodes" {
   count = "${var.worker_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
-  machine_type = "n1-highcpu-2"
+  machine_type = "${var.worker_type}"
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "worker"
