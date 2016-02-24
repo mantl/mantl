@@ -6,8 +6,8 @@ variable "ssh_user" {}
 variable "ssh_key" {}
 variable "consul_dc" {}
 
-variable "short_name" {default = "mi"}
-variable "long_name" {default = "microservices-infrastructure"}
+variable "short_name" {default = "mantl"}
+variable "long_name" {default = "mantl"}
 
 variable "control_count" {default = 3}
 variable "worker_count" {default = 2}

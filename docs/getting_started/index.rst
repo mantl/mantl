@@ -6,8 +6,8 @@ Getting Started
           continuing. This can be done simply by running ``pip install -r
           requirements.txt`` from the root of the project.
 
-The Microservices Infrastructure project uses Ansible to bring up
-nodes and clusters. This generally means that you need three things:
+The Mantl project uses Ansible to bring up nodes and clusters. This generally
+means that you need three things:
 
  1. hosts to use as the base for your cluster
  2. an `inventory file`_ with the hosts you want to be modified.

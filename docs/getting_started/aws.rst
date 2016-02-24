@@ -61,9 +61,9 @@ Next, navigate to the "Users" screen and click the "Create New Users" button.
    :alt: Create IAM User
 
 You will be given the opportunity to create 5 different users on the next
-screen. For our purposes, we are just going to create one:
-"microservices-infrastructure". Make sure that you leave the "Generate an access
-key for each user" option checked and click the "Create" button.
+screen. For our purposes, we are just going to create one: "mantl". Make sure
+that you leave the "Generate an access key for each user" option checked and
+click the "Create" button.
 
 .. image:: /_static/aws_iam_create_user.png
    :alt: IAM Create User
