@@ -1,6 +1,5 @@
 ---
-# Gluster distributed storage. Run this playbook after running the core playbook
-# (terraform.sample.yml)
+# Gluster distributed storage. Run this playbook after mantl is up and running
 
 # CHECK SECURITY - when customizing you should leave this in. If you take it out
 # and forget to specify security.yml, security could be turned off on components

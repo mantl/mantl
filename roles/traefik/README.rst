@@ -18,7 +18,7 @@ Migrating from haproxy
 
 In 0.5, this role replaces haproxy. To migrate, set ``traefik_marathon_domain``
 to whatever was previously the value of ``haproxy_domain`` and make sure your
-customized config has the new role from ``terraform.sample.yml``.
+customized config has the new role from ``sample.yml``.
 
 Variables
 ---------

@@ -24,7 +24,7 @@
 	},
         {
             "type": "ansible-local",
-            "playbook_file": "{{pwd}}/terraform.sample.yml",
+            "playbook_file": "{{pwd}}/sample.yml",
             "role_paths": [
                 "{{pwd}}/roles/calico",
                 "{{pwd}}/roles/chronos",
