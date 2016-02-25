@@ -24,7 +24,6 @@
     - collectd
     - logrotate
     - consul-template
-    - logstash
     - nginx
     - consul
     - dnsmasq

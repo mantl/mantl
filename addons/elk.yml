@@ -8,4 +8,5 @@
 
 - hosts: role=control
   roles:
+    - logstash
     - elk
