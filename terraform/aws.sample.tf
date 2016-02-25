@@ -173,20 +173,9 @@ module "route53" {
 }
 
 resource "template_file" "cloud-config" {
-	template = "${file("${path.module}/cloud-config.tpl")}"
+	template = "${file("${path.module}/terraform/cloud-config.tpl")}"
 	vars {
 		timezone = "Etc/UTC"
-	}
-}
-
-resource "template_cloudinit_config" "config" {
-	gzip = true
-	
-	part {
-		content = "${template_file.cloud-config.rendered}"
-	}
-	part {
-		content_type = "text/x-shellscript"
-		content = "echo hello cloud-init"
+		repo_url = "https://bintray.com/asteris/mantl-rpm/rpm"
 	}
 }
