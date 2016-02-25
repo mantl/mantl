@@ -3,9 +3,10 @@
 [Kong](https://getkong.org) is an "Open-source, Microservice & API Management
 Layer built on top of NGINX". It is a great example of a real world
 microservices based application that can be run with ease on Mantl. To do so,
-just fill in the $ip, $username, and $password variables in the deploy.sh script
-and run it from this directory. The script is extensively commented, and walks
-you through the steps necessary to deploy Kong.
+first fill in the $ip, $username, and $password variables in the deploy.sh
+script. Make sure that you are in the `examples/kong` directory and then run
+deploy.sh. The script is extensively commented, and walks you through the steps
+necessary to deploy Kong.
 
 After deploying, you can log into the Marathon UI on any of your control nodes
 at `<control-ip>/marathon/#apps/%2Fkong`, see what port Kong is accessible on,
