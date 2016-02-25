@@ -153,7 +153,7 @@ make html
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availability
-- [ ] Rapid immutable deployment (with Terraform + Packer)
+- [x] Rapid immutable deployment (with Terraform + Packer)
 
 ### Mesos Frameworks
 
@@ -193,6 +193,7 @@ Mantl is always in the [mantl-universe repo](https://github.com/CiscoCloud/mantl
 ### Platform Support
 
 - [x] Vagrant (Mac OSX + VirtualBox)
+- [x] Vagrant (Linux + VirtualBox)
 - [ ] Vagrant (Windows + VirtualBox)
 - [x] OpenStack
 - [x] Cisco Cloud Services
