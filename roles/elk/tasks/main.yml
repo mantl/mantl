@@ -25,21 +25,6 @@
   tags:
     - elk
 
-- name: deploy logstash consul-template configuration
-  sudo: yes
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: logstash-elasticsearch.cfg
-      dest: /etc/consul-template/config.d
-    - src: logstash-elasticsearch.tmpl
-      dest: /etc/consul-template/templates/logstash-elasticsearch.tmpl
-  notify:
-    - reload consul-template
-  tags:
-    - elk
-
 - name: ensure kibana docker image is present
   sudo: yes
   command: /usr/bin/docker pull {{ kibana_image }}:{{ kibana_image_tag }}

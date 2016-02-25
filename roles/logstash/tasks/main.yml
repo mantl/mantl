@@ -63,4 +63,19 @@
   tags:
     - logstash
 
+- name: deploy logstash consul-template configuration
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: logstash-elasticsearch.cfg
+      dest: /etc/consul-template/config.d
+    - src: logstash-elasticsearch.tmpl
+      dest: /etc/consul-template/templates/logstash-elasticsearch.tmpl
+  notify:
+    - reload consul-template
+  tags:
+    - logstash
+
 - meta: flush_handlers
