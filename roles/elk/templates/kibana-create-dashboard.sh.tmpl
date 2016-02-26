@@ -1,11 +1,19 @@
-{{range service "kibana" "any"}}
-{{if ne .Status "passing"}}exit 0{{end}}
-{{end}}
+{% raw %}
+{{range $idx, $service := service "kibana" "any"}}
+{{if ne .Status "passing"}}exit 0{{end}}{{if eq $idx 0}}
+kibana_url="http://{{.Address}}:{{.Port}}"
+{{end}}{{end}}
 
 {{$es := service "client_port.elasticsearch-executor"}}{{with $es}}
 {{range $idx, $service := $es}}{{if eq $idx 0}}
 elasticsearch_url="http://{{.Address}}:{{.Port}}"
 {{end}}{{end}}{{end}}
+{% endraw %}
+
+curl -XPOST -H 'kbn-version: {{ kibana_image_tag }}' $kibana_url/elasticsearch/.kibana/index-pattern/logstash-*?op_type=create -d '{"title":"logstash-*","timeFieldName":"@timestamp"}'
+
+curl -XPOST -H 'kbn-version: {{ kibana_image_tag }}' $kibana_url/elasticsearch/.kibana/config/{{ kibana_image_tag }}/_update -d '{"doc":{"buildNum":{{ kibana_build_num }},"defaultIndex":"logstash-*"}}'
+
 
 curl -XPUT "$elasticsearch_url/.kibana/_mapping/dashboard" -d '{"properties":{"description":{"type":"string"},"hits":{"type":"integer"},"kibanaSavedObjectMeta":{"properties":{"searchSourceJSON":{"type":"string"}}},"optionsJSON":{"type":"string"},"panelsJSON":{"type":"string"},"timeFrom":{"type":"string"},"timeRestore":{"type":"boolean"},"timeTo":{"type":"string"},"title":{"type":"string"},"uiStateJSON":{"type":"string"},"version":{"type":"integer"}}}'
 

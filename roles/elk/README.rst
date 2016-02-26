@@ -123,3 +123,10 @@ Variables
    The tag of the Kibana docker image. 
 
    default: 4.3.1
+
+.. data:: kibana_build_num
+
+   The Kibana build number. This is necessary to properly create the default
+   index pattern during the installation.
+
+   default: 9517
