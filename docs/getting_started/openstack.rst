@@ -14,22 +14,18 @@ Configuring OpenStack authentication
 
 Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
-the template located at ``terraform/openstack-floating.sample.tf``. It looks
+the template located at ``terraform/openstack-modules.sample.tf``. It looks
 like this:
 
 .. this is highlighted as javascript for convenience, but obviously that's not
    the *real* language.
 
-.. literalinclude:: ../../terraform/openstack-floating.sample.tf
+.. literalinclude:: ../../terraform/openstack-modules.sample.tf
    :language: javascript
 
 Copy that file in it's entirety to the root of the project to start
 customization. NOTE: All configuration entries needs to be completed.
 In the next sections, we'll explain how to obtain these settings.
-
-There is another sample called ``openstack.sample.tf`` in the
-``terraform`` directory. This sample assumes you are booting VMs directly
-on a public network.
 
 You can also use this file as a base for further customization. For example, you
 can change the names of the modules to be specific to your environment. While we
