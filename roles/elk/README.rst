@@ -20,13 +20,12 @@ As of 1.0, the ELK stack is distributed as an addon for Mantl. After a
 successful initial run (from your customized ``terraform.sample.yml``), install
 it with ``ansible-playbook -e @security.yml addons/elk.yml``.
 
-Accessing Kibana
-----------------
+Accessing User Interfaces
+-------------------------
 
-Kibana is available on all control nodes on port 5601 (tcp). If you are
-deploying to a cloud provider that is behind security groups or a firewall, you
-will need to open up that port to users. Alternatively, you could access the
-Kibana UI via a VPN or SSH tunnel.
+After the Elasticsearch framework and the Kibana application have been
+successfully installed and initialized, it should be possible to access their
+corresponding user interfaces directly from Mantl UI.
 
 Configuration
 -------------
@@ -124,3 +123,10 @@ Variables
    The tag of the Kibana docker image. 
 
    default: 4.3.1
+
+.. data:: kibana_build_num
+
+   The Kibana build number. This is necessary to properly create the default
+   index pattern during the installation.
+
+   default: 9517
