@@ -14,7 +14,7 @@ module "vsphere-dc" {
   pool = ""
   template = ""
   control_count = 3
-  worker_count = 3
+  worker_count = 4
   edge_count = 2
   ssh_user = ""
   ssh_key = ""
