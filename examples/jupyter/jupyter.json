@@ -1,6 +1,6 @@
 {
-	"cpus": 1, 
-	"mem": 512,
+	"cpus": 0.25, 
+	"mem": 128,
 	"id": "jupyter",
 	"instances": 1,
 	"labels": {"traefik.frontend.entryPoints":"http,https,ws"},
