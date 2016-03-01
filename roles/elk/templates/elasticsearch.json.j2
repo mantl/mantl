@@ -1,7 +1,7 @@
 {
   "id": "{{ framework_name }}",
-  "cpus": 1,
-  "mem": 512,
+  "cpus": {{ elasticsearch_cpu }},
+  "mem": {{ elasticsearch_ram }},
   "instances": 1,
   "uris": [
     "{{ framework_download_url }}"
