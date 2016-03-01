@@ -9,7 +9,7 @@
 server.basePath: "/kibana"
 
 # The Elasticsearch instance to use for all your queries.
-{{$es := service "client_port.elasticsearch-executor"}}{{with $es}}
+{{$es := service "client_port.elasticsearch-executor" "any"}}{{with $es}}
 {{range $idx, $service := $es}}{{if eq $idx 0}}
 elasticsearch.url: "http://{{.Address}}:{{.Port}}"
 {{end}}{{end}}{{end}}
