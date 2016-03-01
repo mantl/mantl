@@ -409,8 +409,8 @@ def gce_host(resource, module_name):
 
     try:
         attrs.update({
-            'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'],
-            'public_ipv4': interfaces[0]['access_config'][0]['nat_ip'],
+            'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'] or interfaces[0]['access_config'][0]['assigned_nat_ip'],
+            'public_ipv4': interfaces[0]['access_config'][0]['nat_ip'] or interfaces[0]['access_config'][0]['assigned_nat_ip'],
             'private_ipv4': interfaces[0]['address'],
             'publicly_routable': True,
         })
