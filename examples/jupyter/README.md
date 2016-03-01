@@ -6,7 +6,7 @@ We wrapped the Marathon submit REST call in a small script: `marathon_submit.sh`
 
 ```bash
 source bin/set_env.sh #you will asked to enter your control node hostname (without https://), and admin password 
-bin/marathon_submit.sh Jupyter/jupyter.json
+bin/marathon_submit.sh jupyter.json
 ```
 
 If everything went fine, you should be able to figure out the front end URL of your Jupyter deployment from the Traefik UI.
