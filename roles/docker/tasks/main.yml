@@ -181,5 +181,3 @@
   tags:
     - docker
     - bootstrap # needed to install Docker images during bootstrap
-
-- include: collectd.yml

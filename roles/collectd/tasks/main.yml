@@ -11,6 +11,27 @@
     - collectd
     - bootstrap
 
+- name: install collectd docker plugin dependencies
+  sudo: yes
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - py-dateutil
+    - docker-py>=1.0.0
+    - six>=1.9.0
+  tags:
+    - collectd
+
+- name: create collectd config directory
+  sudo: yes
+  file:
+    path: /etc/collectd.d
+    state: directory
+    mode: 0755
+  tags:
+    - collectd
+
 - name: create collectd plugin directory
   sudo: yes
   file:
@@ -30,6 +51,25 @@
   tags:
     - collectd
 
+- name: install collectd docker plugin
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/collectd/plugins/{{ item }}"
+    mode: 0444
+  with_items:
+    - dockerplugin.py
+    - dockerplugin.db
+
+- name: configure collectd docker plugin
+  sudo: yes
+  copy:
+    src: dockerplugin.conf
+    dest: /etc/collectd.d/docker.conf
+  notify:
+    - restart collectd
+  tags:
+    - collectd
 
 - name: authorize collectd to make tcp connections
   sudo: yes
