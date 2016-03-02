@@ -1,7 +1,6 @@
 ---
 marathon_version: 0.13.0
-marathon_iteration: 1
-marathon_package: "marathon-{{ marathon_version }}-{{ marathon_iteration }}"
+marathon_package: "marathon-{{ marathon_version }}"
 
 marathon_zk_auth: "{% if zk_marathon_user_secret is defined %}{{ zk_marathon_user }}:{{ zk_marathon_user_secret }}@{% endif %}"
 marathon_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"

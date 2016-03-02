@@ -1,7 +1,7 @@
 ---
-consul_package: consul-0.6.3-3
-consul_ui_package: consul-ui-0.6.3-1
-consul_cli_package: consul-cli-0.1.1-2
+consul_package: consul-0.6.3
+consul_ui_package: consul-ui-0.6.3
+consul_cli_package: consul-cli-0.1.1
 consul_is_server: yes
 consul_dc: dc1
 consul_dc_group: dc={{ consul_dc }}

@@ -1,12 +1,9 @@
 ---
 mesos_version: 0.25.0
-mesos_iteration: 1
-mesos_master_iteration: 1
-mesos_agent_iteration: 1
 
-mesos_package: "mesos-{{ mesos_version }}-{{ mesos_iteration }}"
-mesos_master_package: "mesos-master-{{ mesos_version }}-{{ mesos_master_iteration }}"
-mesos_agent_package: "mesos-agent-{{ mesos_version }}-{{ mesos_agent_iteration }}"
+mesos_package: "mesos-{{ mesos_version }}"
+mesos_master_package: "mesos-master-{{ mesos_version }}"
+mesos_agent_package: "mesos-agent-{{ mesos_version }}"
 
 mesos_mode: follower
 mesos_log_dir: /var/log/mesos
