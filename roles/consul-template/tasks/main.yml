@@ -2,7 +2,7 @@
 - name: install consul-template
   sudo: yes
   yum:
-    name: https://bintray.com/artifact/download/asteris/mantl-rpm/consul-template-0.12.2-1.x86_64.rpm
+    name: consul-template-0.12.2-1
     state: present
   tags:
     - consul-template

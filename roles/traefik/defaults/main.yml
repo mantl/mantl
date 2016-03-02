@@ -1,7 +1,4 @@
 ---
-traefik_version: 0.0.0-9
-traefik_filename: traefik-{{ traefik_version }}.x86_64.rpm
-traefik_download: https://bintray.com/artifact/download/asteris/mantl-rpm/{{ traefik_filename }}
-traefik_sha256_checksum: b140aa5509497fbe2f0104a4d203a94926faa4bc82b53a054c9251eef0aaec65
+traefik_package: traefik-0.0.0-9
 traefik_marathon_endpoint: http://marathon.service.{{ consul_dns_domain }}:18080
 traefik_marathon_domain: marathon.localhost
