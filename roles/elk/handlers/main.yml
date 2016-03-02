@@ -14,12 +14,3 @@
   command: systemctl daemon-reload
   tags:
     - elk
-
-- name: enable and start kibana
-  sudo: yes
-  service:
-    name: kibana
-    enabled: yes
-    state: restarted
-  tags:
-    - elk

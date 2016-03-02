@@ -13,6 +13,6 @@ module "softlayer-hosts" {
   region_name = "ams01"
   domain = "example.com"
   control_count = 3
-  worker_count = 3
+  worker_count = 4
   edge_count = 2
 }

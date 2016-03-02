@@ -20,13 +20,13 @@ variable "edge_count" { default = 2 }
 variable "region" {default = "us-west-2"}
 variable "short_name" {default = "mantl"}
 variable "ssh_username" {default = "centos"}
-variable "worker_count" { default = 2 }
+variable "worker_count" { default = 4 }
 variable "dns_subdomain" { default = ".dev" }
 variable "dns_domain" { default = "my-domain.com" }
 variable "dns_zone_id" { default = "XXXXXXXXXXXX" }
 variable "control_type" { default = "m3.medium" }
 variable "edge_type" { default = "m3.medium" }
-variable "worker_type" { default = "m3.medium" }
+variable "worker_type" { default = "m3.large" }
 
 provider "aws" {
   region = "${var.region}"
