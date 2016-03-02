@@ -12,7 +12,7 @@ variable name { default = "mantl" }
 variable network_uuid {}
 variable role { default = "instance" }
 variable security_groups { default = "default" }
-variable ssh_user { default = "cloud-user" }
+variable ssh_user {}
 variable volume_size { default = 20 }
 variable volume_device { default = "/dev/vdb" }
 variable user_data { default = "" }
