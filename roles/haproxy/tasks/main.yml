@@ -32,5 +32,3 @@
     - restart haproxy
   tags:
     - haproxy
-
-- include: distributive.yml
