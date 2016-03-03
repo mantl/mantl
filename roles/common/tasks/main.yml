@@ -46,8 +46,16 @@
     - unzip
     - jq
     - java-1.8.0-openjdk
+    - chrony
   tags:
     - bootstrap
+
+- name: enable chronyd
+  sudo: yes
+  service:
+    name: chronyd
+    enabled: yes
+    state: started
 
 - name: disable firewalld
   sudo: yes
