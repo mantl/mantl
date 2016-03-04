@@ -157,6 +157,11 @@ where your cluster will be provisioned. As an alternative to specifying
 
 Basic Settings
 ^^^^^^^^^^^^^^^
+``short_name`` is appended to the name tag and dns (if used) of each of the nodes to help better identify them.
+If you are planning to deploy multiple mantl clusters into the same AWS account, you'll need to change this
+(otherwise AWS items like ssh key names will conflict and the second ```terraform plan``` will fail)
+
+* The defaults for the below settings will work out of the box in amazons US-WEST-1 Datacenter, change them if you don't want these defaults, or if you want larger VM's for each of the Mantl nodes *
 
 ``region`` is the name of the `region
 <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html>`_
@@ -173,8 +178,6 @@ This value will be dependent on the ``source_ami`` that you use. Common values
 are ``centos`` or ``ec2-user``.
 
 ``datacenter`` is a name to identify your datacenter, this is important if you have more than one datacenter.
-
-``short_name`` is appended to the name tag and dns (if used) of each of the nodes to help better identify them.
 
 ``control_count``, ``edge_count`` and ``worker_count`` are the number of EC2 instances that will get deployed for each node type.
 
