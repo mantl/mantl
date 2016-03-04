@@ -144,10 +144,15 @@
 - name: generate zookeeper config
   sudo: yes
   template:
-    src: zoo.cfg.j2
-    dest: /etc/zookeeper/conf/zoo.cfg
+    src: "{{ item }}.j2"
+    dest: /etc/zookeeper/conf/{{ item }}
+  with_items:
+    - zoo.cfg
+    - log4j.properties
   notify:
     - restart zookeeper
+  tags:
+    - zookeeper
 
 - name: register zookeeper service
   sudo: yes

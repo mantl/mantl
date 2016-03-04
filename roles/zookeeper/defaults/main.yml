@@ -5,6 +5,7 @@ zookeeper_service_tags: "{{ zookeeper_service }}"
 zookeeper_ensemble: mantl
 zookeeper_container_name: "{{ zookeeper_service }}"
 zookeeper_data_volume: "{{ zookeeper_service }}-data-volume"
+zookeeper_log_threshold: WARN
 
 # Allow larger than default maximum client connections.
 zookeeper_max_conns: 200
