@@ -169,6 +169,18 @@ are ``centos`` or ``ec2-user``.
 for your control nodes and worker nodes and they must be compatible with the
 ``source_ami`` you have specified. The default EC2 instance type is an m3.medium.
 
+Security Setup
+^^^^^^^^^^^^^^
+
+Mantl doesn't ship with default passwords or ceritificates. For security, we have provided a script to generate
+all the security configuration for your deployment.
+
+Please run ``./security_setup`` from the base of the mantl repository.
+This will generate cetificates and other security tokens needed for the mantl deployment, as well as prompting you for a mantl admin password.
+
+If you get an 'Import' error when running security setup, your local machine lacks certain python modules that the script needs.
+Please try `` pip install pyyaml `` and then re-run ``./security_setup``.
+
 Provisioning
 ------------
 
