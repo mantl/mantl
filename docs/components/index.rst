@@ -1,8 +1,8 @@
 Components
 ==========
 
-Microservices Infrastructure is made up of a number of components
-which can be customized, generally using Ansible variables.
+Mantl is made up of a number of components which can be customized, generally
+using Ansible variables.
 
 .. toctree::
    :maxdepth: 1
@@ -41,3 +41,9 @@ and build initial implementations against:
    :maxdepth: 1
 
    vault.rst
+
+Mantl includes some logic that is provided via our own packaging system, and so
+is not visible in the Ansible roles. Here are the links to our package sources:
+
+ - `mantl-packaging <https://github.com/asteris-llc/mantl-packaging>`_
+ - `mesos-packaging <https://github.com/asteris-llc/mesos-packaging>`_

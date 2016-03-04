@@ -20,11 +20,11 @@
         },
 	{
 	    "type": "ansible-local",
-	    "playbook_file": "{{pwd}}/playbooks/upgrade-packages.yml"
+	    "playbook_file": "{{pwd}}/playbooks/rolling-upgrade-packages.yml"
 	},
         {
             "type": "ansible-local",
-            "playbook_file": "{{pwd}}/terraform.sample.yml",
+            "playbook_file": "{{pwd}}/sample.yml",
             "role_paths": [
                 "{{pwd}}/roles/calico",
                 "{{pwd}}/roles/chronos",
@@ -70,11 +70,11 @@
             "headless": false,
             "http_directory": "{{pwd}}/packer/kickstarts",
             "iso_urls": [
-                "iso/CentOS-7-x86_64-Minimal-1503-01.iso",
-                "http://centos.mirrors.hoobly.com/7.1.1503/isos/x86_64/CentOS-7-x86_64-Minimal-1503-01.iso"
+                "iso/CentOS-7-x86_64-Minimal-1511.iso",
+                "http://centos.mirrors.hoobly.com/7/isos/x86_64/CentOS-7-x86_64-Minimal-1511.iso"
             ],
             "iso_checksum_type": "sha256",
-            "iso_checksum": "7cf1ac8da13f54d6be41e3ccf228dc5bb35792f515642755ff4780d5714d4278",
+            "iso_checksum": "f90e4d28fa377669b2db16cbcb451fcb9a89d2460e3645993e30e137ac37d284",
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "ssh_port": 22,
@@ -82,7 +82,7 @@
             "shutdown_command": "echo 'vagrant' | sudo -S /sbin/halt -h -p",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
             "virtualbox_version_file": ".vbox_version",
-            "vm_name": "microservices-infrastructure-0.5.0-x86_64",
+            "vm_name": "mantl-x86_64",
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "512"],
                 ["modifyvm", "{{.Name}}", "--cpus", "2"]
@@ -94,7 +94,7 @@
             {
                 "type": "vagrant",
                 "compression_level": 9,
-                "output": "builds/VirtualBox-microservices-infrastructure-0.5.0.box",
+                "output": "builds/VirtualBox-mantl.box",
                 "keep_input_artifact": false
             },
             {

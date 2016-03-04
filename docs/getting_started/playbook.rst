@@ -1,12 +1,12 @@
 Custom Playbook
 ===============
 
-Your customized ``terraform.yml`` `playbook`_ should be used to deploy
+Your customized ``mantl.yml`` `playbook`_ should be used to deploy
 Mantl to your servers.
 
 Below is an annotated playbook explaining the values:
 
-.. literalinclude:: ../../terraform.sample.yml
+.. literalinclude:: ../../sample.yml
    :language: yaml+jinja
 
 Run this playbook with ``ansible-playbook -i plugins/inventory/terraform.py -e

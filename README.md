@@ -9,8 +9,9 @@ Existing Developer? For information on how the rename affects you, [see our hand
 
 # Overview
 
-[![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/microservices-infrastructure?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/mantl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Stories in Ready](https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready)](https://waffle.io/CiscoCloud/microservices-infrastructure)
+[![Build Status](https://travis-ci.org/CiscoCloud/mantl.svg?branch=master)](https://travis-ci.org/CiscoCloud/mantl)
 
 
 Mantl is a modern, batteries included platform for rapidly deploying globally distributed services
@@ -153,7 +154,7 @@ make html
 - [x] Consul
 - [x] Multi-datacenter
 - [x] High availability
-- [ ] Rapid immutable deployment (with Terraform + Packer)
+- [x] Rapid immutable deployment (with Terraform + Packer)
 
 ### Mesos Frameworks
 
@@ -166,7 +167,7 @@ make html
 - [x] HDFS
 - [ ] Spark
 - [ ] Storm
-- [ ] Chronos
+- [x] Chronos
 - [x] MemSQL
 
 Note: The most up-to-date list of Mesos frameworks that are known to work with
@@ -193,6 +194,7 @@ Mantl is always in the [mantl-universe repo](https://github.com/CiscoCloud/mantl
 ### Platform Support
 
 - [x] Vagrant (Mac OSX + VirtualBox)
+- [x] Vagrant (Linux + VirtualBox)
 - [ ] Vagrant (Windows + VirtualBox)
 - [x] OpenStack
 - [x] Cisco Cloud Services

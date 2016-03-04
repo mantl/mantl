@@ -9,14 +9,14 @@
         { "containerPort": 4001, "hostPort": 0, "protocol": "tcp" }
       ],
       "forcePullImage": true
-    },
+    }{% if do_mesos_auth %},
     "volumes": [
       {
         "containerPath": "/etc/sysconfig/mantl-api",
         "hostPath": "/etc/sysconfig/mantl-api",
         "mode": "RO"
       }
-    ]
+    ]{% endif %}
   },
   "instances": 1,
   "cpus": 0.1,

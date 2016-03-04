@@ -53,7 +53,7 @@ if __name__ == "__main__":
         (["terraform", "apply"], 1),
         (ap + ["playbooks/wait-for-hosts.yml"], 3),
         (ap + ["-e", "serial=0", "playbooks/upgrade-packages.yml"], 1),
-        (ap + ["terraform.yml"], 1),
+        (ap + ["sample.yml"], 1),
         (["python2", "testing/healthchecks.py"], 2)
     ]
     debug = []

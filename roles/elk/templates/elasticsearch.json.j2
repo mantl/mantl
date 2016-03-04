@@ -1,7 +1,7 @@
 {
   "id": "{{ framework_name }}",
-  "cpus": 1,
-  "mem": 512,
+  "cpus": {{ elasticsearch_cpu }},
+  "mem": {{ elasticsearch_ram }},
   "instances": 1,
   "uris": [
     "{{ framework_download_url }}"
@@ -27,7 +27,9 @@
   "ports": [{{ framework_ui_port }}],
   "requirePorts": true,
   "labels": {
-    "traefik.enable": "false"
+    "traefik.enable": "false",
+    "check_script": "if [[ \"$(node=$(curl --silent --show-error --fail --retry 2 --connect-timeout 5 --max-time 5 http://{host}:{port}/v1/tasks/ | jq -r '.[0].http_address') && curl --silent --show-error --fail --retry 2 --connect-timeout 5 --max-time 5 http://$node/_cluster/health | jq -r .status)\" != \"green\" ]]; then echo The Elasticsearch cluster is not healthy.; exit 1; fi;",
+    "check_interval": "30s"
   },
   "healthChecks": [
     {

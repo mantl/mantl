@@ -1,6 +1,40 @@
 Changelog
 =========
 
+1.0.3 (March 04, 2016)
+-------------------------
+
+Features and Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* All OS packages installed from central repositories #1193, #1204
+* Elasticsearch and Kibana UIs are now available in Mantl UI #1175
+* Default Kibana dashboard imported by default #1139
+* ELK improvements #1191
+* Addon: iptables role to restrict network traffic within the cluster #593
+* Improved documentation #1106, #1153, #1160, #1161, #1163, #1164, #1169, #1181, #1222, #1227
+* Update terraform.py #1105
+* Mantl rename: references to microservices-insfrastructure replaced with Mantl #1134
+* Pull request and issue templates #1137
+* Updated Vagrant box (CiscoCloud/mantl) #1138
+* Jupyter notebook example #1187
+
+Fixes
+^^^^^
+
+* Update mesos_cluster name to mantl! #963
+* untangle collectd and docker role and document custom selinux policy #1044
+* Fix vault root token persistence #1059
+* Changed terraform.sample.yml to sample.yml, and terraform.yml to mantl.yml #1119
+* mantl-api: run on security-disabled clusters #1145
+* GCE support for Terraform v0.6.11+ #1150
+* Fix collectd mesos-slave.py typo #1156
+* Add condition to check for definition of "provider" #1170
+* kong: update readme and use updated api endpoint #1171
+* Derive defaults for consul_is_server variable #1215
+* marathon: don't pull down docker images in advance #1218
+* marathon: generate consul service before iptables #1219
+
 1.0.0 (February 16, 2016)
 -------------------------
 

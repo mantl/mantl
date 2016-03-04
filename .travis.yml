@@ -1,9 +1,9 @@
 language: python
 env:
   matrix:
-     - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=terraform.sample.yml
-     - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=terraform.sample.yml
-     - TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=terraform.sample.yml
+     - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=sample.yml
+     - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=sample.yml
+     - TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=sample.yml
     # - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=kubernetes.yml
     # - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=kubernetes.yml
     # - TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=kubernetes.yml

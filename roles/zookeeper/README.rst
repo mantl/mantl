@@ -27,7 +27,7 @@ You can use these variables to customize your ZooKepeer installation.
 
 .. data:: zookeeper_ensemble
 
-   default: ``cluster1``
+   default: ``mantl``
 
 .. data:: zookeeper_container_name
 

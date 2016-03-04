@@ -5,7 +5,7 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - https://bintray.com/artifact/download/asteris/mantl-rpm/mesos-{{ mesos_version }}-{{ mesos_iteration }}.x86_64.rpm
+    - "{{ mesos_package }}"
     - cyrus-sasl-md5
   tags:
     - mesos

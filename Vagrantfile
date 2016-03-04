@@ -16,7 +16,7 @@ config_hash = {
   "control_cpus" => 1,
   "edge_cpus" => 1,
   "network" => "private",
-  "playbooks" => ["/vagrant/terraform.sample.yml"]
+  "playbooks" => ["/vagrant/sample.yml"]
 }
 
 config_path = File.join(File.dirname(__FILE__), "vagrant-config.yml")
@@ -32,7 +32,7 @@ Vagrant.configure(2) do |config|
   # Prefer VirtualBox before VMware Fusion
   config.vm.provider "virtualbox"
   config.vm.provider "vmware_fusion"
-  config.vm.box = "CiscoCloud/microservices-infrastructure"
+  config.vm.box = "CiscoCloud/mantl"
 
   # Disable shared folder(s) for non-provisioning machines
   config.vm.synced_folder ".", "/vagrant", disabled: true

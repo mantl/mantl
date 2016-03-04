@@ -76,7 +76,7 @@ def parses(prefix):
 
 
 def calculate_mi_vars(func):
-    """calculate microservices-infrastructure vars"""
+    """calculate Mantl vars"""
 
     @wraps(func)
     def inner(*args, **kwargs):
@@ -165,10 +165,11 @@ def digitalocean_host(resource, tfvars=None):
         'provider': 'digitalocean',
     }
 
-    # attrs specific to microservices-infrastructure
+    # attrs specific to Mantl
     attrs.update({
         'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
-        'role': attrs['metadata'].get('role', 'none')
+        'role': attrs['metadata'].get('role', 'none'),
+        'ansible_python_interpreter': attrs['metadata'].get('python_bin','python')
     })
 
     # add groups based on attrs
@@ -180,7 +181,7 @@ def digitalocean_host(resource, tfvars=None):
     groups.extend('do_metadata_%s=%s' % item
                   for item in attrs['metadata'].items())
 
-    # groups specific to microservices-infrastructure
+    # groups specific to Mantl
     groups.append('role=' + attrs['role'])
     groups.append('dc=' + attrs['consul_dc'])
 
@@ -198,7 +199,7 @@ def softlayer_host(resource, module_name):
         'id': raw_attrs['id'],
         'image': raw_attrs['image'],
         'ipv4_address': raw_attrs['ipv4_address'],
-        'metadata': json.loads(raw_attrs['user_data']),
+        'metadata': json.loads(raw_attrs.get('user_data', '{}')),
         'region': raw_attrs['region'],
         'ram': raw_attrs['ram'],
         'cpu': raw_attrs['cpu'],
@@ -211,13 +212,14 @@ def softlayer_host(resource, module_name):
         'provider': 'softlayer',
     }
 
-    # attrs specific to microservices-infrastructure
+    # attrs specific to Mantl
     attrs.update({
         'consul_dc': _clean_dc(attrs['metadata'].get('dc', attrs['region'])),
-        'role': attrs['metadata'].get('role', 'none')
+        'role': attrs['metadata'].get('role', 'none'),
+        'ansible_python_interpreter': attrs['metadata'].get('python_bin','python')
     })
 
-    # groups specific to microservices-infrastructure
+    # groups specific to Mantl
     groups.append('role=' + attrs['role'])
     groups.append('dc=' + attrs['consul_dc'])
 
@@ -246,7 +248,6 @@ def openstack_host(resource, module_name):
         'security_groups': parse_list(raw_attrs, 'security_groups'),
         # ansible
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
         # workaround for an OpenStack bug where hosts have a different domain
         # after they're restarted
         'host_domain': 'novalocal',
@@ -268,10 +269,15 @@ def openstack_host(resource, module_name):
     except (KeyError, ValueError):
         attrs.update({'ansible_ssh_host': '', 'publicly_routable': False})
 
-    # attrs specific to microservices-infrastructure
+    # attrs specific to Ansible
+    if 'metadata.ssh_user' in raw_attrs:
+        attrs['ansible_ssh_user'] = raw_attrs['metadata.ssh_user']
+
+    # attrs specific to Mantl
     attrs.update({
         'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
         'role': attrs['metadata'].get('role', 'none'),
+        'ansible_python_interpreter': attrs['metadata'].get('python_bin','python')
     })
 
     # add groups based on attrs
@@ -281,7 +287,7 @@ def openstack_host(resource, module_name):
                   for item in attrs['metadata'].items())
     groups.append('os_region=' + attrs['region'])
 
-    # groups specific to microservices-infrastructure
+    # groups specific to Mantl
     groups.append('role=' + attrs['metadata'].get('role', 'none'))
     groups.append('dc=' + attrs['consul_dc'])
 
@@ -319,7 +325,6 @@ def aws_host(resource, module_name):
                                              'vpc_security_group_ids'),
         # ansible-specific
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs['tags.sshUser'],
         'ansible_ssh_host': raw_attrs['public_ip'],
         # generic
         'public_ipv4': raw_attrs['public_ip'],
@@ -327,13 +332,20 @@ def aws_host(resource, module_name):
         'provider': 'aws',
     }
 
-    # attrs specific to microservices-infrastructure
+    # attrs specific to Ansible
+    if 'tags.sshUser' in raw_attrs:
+        attrs['ansible_ssh_user'] = raw_attrs['tags.sshUser']
+    if 'tags.sshPrivateIp' in raw_attrs:
+        attrs['ansible_ssh_host'] = raw_attrs['private_ip']
+
+    # attrs specific to Mantl
     attrs.update({
         'consul_dc': _clean_dc(attrs['tags'].get('dc', module_name)),
-        'role': attrs['tags'].get('role', 'none')
+        'role': attrs['tags'].get('role', 'none'),
+        'ansible_python_interpreter': attrs['tags'].get('python_bin','python')
     })
 
-    # groups specific to microservices-infrastructure
+    # groups specific to Mantl
     groups.extend(['aws_ami=' + attrs['ami'],
                    'aws_az=' + attrs['availability_zone'],
                    'aws_key_name=' + attrs['key_name'],
@@ -344,7 +356,7 @@ def aws_host(resource, module_name):
     groups.extend('aws_subnet_%s=%s' % subnet
                   for subnet in attrs['subnet'].items())
 
-    # groups specific to microservices-infrastructure
+    # groups specific to Mantl
     groups.append('role=' + attrs['role'])
     groups.append('dc=' + attrs['consul_dc'])
 
@@ -381,20 +393,24 @@ def gce_host(resource, module_name):
         'zone': raw_attrs['zone'],
         # ansible
         'ansible_ssh_port': 22,
-        'ansible_ssh_user': raw_attrs.get('metadata.ssh_user', 'centos'),
         'provider': 'gce',
     }
 
-    # attrs specific to microservices-infrastructure
+    # attrs specific to Ansible
+    if 'metadata.ssh_user' in raw_attrs:
+        attrs['ansible_ssh_user'] = raw_attrs['metadata.ssh_user']
+
+    # attrs specific to Mantl
     attrs.update({
         'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
         'role': attrs['metadata'].get('role', 'none'),
+        'ansible_python_interpreter': attrs['metadata'].get('python_bin','python')
     })
 
     try:
         attrs.update({
-            'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'],
-            'public_ipv4': interfaces[0]['access_config'][0]['nat_ip'],
+            'ansible_ssh_host': interfaces[0]['access_config'][0]['nat_ip'] or interfaces[0]['access_config'][0]['assigned_nat_ip'],
+            'public_ipv4': interfaces[0]['access_config'][0]['nat_ip'] or interfaces[0]['access_config'][0]['assigned_nat_ip'],
             'private_ipv4': interfaces[0]['address'],
             'publicly_routable': True,
         })
@@ -415,7 +431,7 @@ def gce_host(resource, module_name):
     if attrs['publicly_routable']:
         groups.append('gce_publicly_routable')
 
-    # groups specific to microservices-infrastructure
+    # groups specific to Mantl
     groups.append('role=' + attrs['metadata'].get('role', 'none'))
     groups.append('dc=' + attrs['consul_dc'])
 
@@ -426,20 +442,25 @@ def gce_host(resource, module_name):
 @calculate_mi_vars
 def vsphere_host(resource, module_name):
     raw_attrs = resource['primary']['attributes']
+    network_attrs = parse_dict(raw_attrs, 'network_interface')
+    network = parse_dict(network_attrs, '0')
+    ip_address = network.get('ipv4_address', network['ip_address'])
     name = raw_attrs['name']
     groups = []
 
     attrs = {
         'id': raw_attrs['id'],
-        'ip_address': raw_attrs['ip_address'],
-        'metadata': parse_dict(raw_attrs, 'configuration_parameters'),
+        'ip_address': ip_address,
+        'private_ipv4': ip_address,
+        'public_ipv4': ip_address,
+        'metadata': parse_dict(raw_attrs, 'custom_configuration_parameters'),
         'ansible_ssh_port': 22,
         'provider': 'vsphere',
     }
 
     try:
         attrs.update({
-            'ansible_ssh_host': raw_attrs['ip_address'],
+            'ansible_ssh_host': ip_address,
         })
     except (KeyError, ValueError):
         attrs.update({'ansible_ssh_host': '', })
@@ -447,14 +468,67 @@ def vsphere_host(resource, module_name):
     attrs.update({
         'consul_dc': _clean_dc(attrs['metadata'].get('consul_dc', module_name)),
         'role': attrs['metadata'].get('role', 'none'),
-        'ansible_ssh_user': attrs['metadata'].get('ssh_user', 'centos'),
+        'ansible_python_interpreter': attrs['metadata'].get('python_bin','python')
     })
+
+    # attrs specific to Ansible
+    if 'ssh_user' in attrs['metadata']:
+        attrs['ansible_ssh_user'] = attrs['metadata']['ssh_user']
 
     groups.append('role=' + attrs['role'])
     groups.append('dc=' + attrs['consul_dc'])
 
     return name, attrs, groups
 
+@parses('azure_instance')
+@calculate_mi_vars
+def azure_host(resource, module_name):
+    name = resource['primary']['attributes']['name']
+    raw_attrs = resource['primary']['attributes']
+
+    groups = []
+
+    attrs = {
+        'automatic_updates': raw_attrs['automatic_updates'],
+        'description': raw_attrs['description'],
+        'hosted_service_name': raw_attrs['hosted_service_name'],
+        'id': raw_attrs['id'],
+        'image': raw_attrs['image'],
+        'ip_address': raw_attrs['ip_address'],
+        'location': raw_attrs['location'],
+        'name': raw_attrs['name'],
+        'reverse_dns': raw_attrs['reverse_dns'],
+        'security_group': raw_attrs['security_group'],
+        'size': raw_attrs['size'],
+        'ssh_key_thumbprint': raw_attrs['ssh_key_thumbprint'],
+        'subnet': raw_attrs['subnet'],
+        'username': raw_attrs['username'],
+        'vip_address': raw_attrs['vip_address'],
+        'virtual_network': raw_attrs['virtual_network'],
+        'endpoint': parse_attr_list(raw_attrs, 'endpoint'),
+        # ansible
+        'ansible_ssh_port': 22,
+        'ansible_ssh_user': raw_attrs['username'],
+        'ansible_ssh_host': raw_attrs['vip_address'],
+    }
+
+    # attrs specific to microservices-infrastructure
+    attrs.update({
+        'consul_dc': attrs['location'].lower().replace(" ", "-"),
+        'role': attrs['description']
+    })
+
+    # groups specific to microservices-infrastructure
+    groups.extend(['azure_image=' + attrs['image'],
+                   'azure_location=' + attrs['location'].lower().replace(" ", "-"),
+                   'azure_username=' + attrs['username'],
+                   'azure_security_group=' + attrs['security_group']])
+
+    # groups specific to microservices-infrastructure
+    groups.append('role=' + attrs['role'])
+    groups.append('dc=' + attrs['consul_dc'])
+
+    return name, attrs, groups
 
 ## QUERY TYPES
 def query_host(hosts, target):

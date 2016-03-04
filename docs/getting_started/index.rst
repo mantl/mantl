@@ -6,8 +6,8 @@ Getting Started
           continuing. This can be done simply by running ``pip install -r
           requirements.txt`` from the root of the project.
 
-The Microservices Infrastructure project uses Ansible to bring up
-nodes and clusters. This generally means that you need three things:
+The Mantl project uses Ansible to bring up nodes and clusters. This generally
+means that you need three things:
 
  1. hosts to use as the base for your cluster
  2. an `inventory file`_ with the hosts you want to be modified.
@@ -67,7 +67,7 @@ inventory file, you can use the ``-i`` argument of ``ansible`` or
 
 .. code-block:: shell
 
-   ansible-playbook -i path/to/inventory -e @security.yml terraform.yml
+   ansible-playbook -i path/to/inventory -e @security.yml mantl.yml
 
 First, ping the servers to ensure they are reachable via ssh:
 
@@ -96,15 +96,15 @@ for verbose SSH debugging and try again to view the errors in more detail.
    more details.
 
 Next, deploy the software. First, you'll need to customize a playbook. A sample
-can be found at ``terraform.sample.yml`` in the root directory, you can find
+can be found at ``sample.yml`` in the root directory, you can find
 more about customizing this at :doc:`playbook`. The main change you'll want
 to make is changing ``consul_acl_datacenter`` to your preferred ACL datacenter.
 If you only have one datacenter, you can remove this variable. Next, assuming
-you've placed the filled-out template at ``terraform.yml``:
+you've placed the filled-out template at ``mantl.yml``:
 
 .. code-block:: shell
 
-  ansible-playbook -e @security.yml terraform.yml
+  ansible-playbook -e @security.yml mantl.yml
 
 The deployment will probably take a while as all tasks are completed.
 

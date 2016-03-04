@@ -63,7 +63,7 @@ following instructions.
 
 While in a terminal, in this examples directory enter:
 
-    $ curl -k -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/mararthon/v2/apps"
+    $ curl -k -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
 
 You should get back something like:
 

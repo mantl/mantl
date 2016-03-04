@@ -1,7 +1,6 @@
 ---
 marathon_version: 0.13.0
-marathon_iteration: 1
-marathon_package: "https://bintray.com/artifact/download/asteris/mantl-rpm/marathon-{{ marathon_version }}-{{ marathon_iteration }}.x86_64.rpm"
+marathon_package: "marathon-{{ marathon_version }}"
 
 marathon_zk_auth: "{% if zk_marathon_user_secret is defined %}{{ zk_marathon_user }}:{{ zk_marathon_user_secret }}@{% endif %}"
 marathon_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
@@ -28,9 +27,9 @@ marathon_secret: ""
 
 # jobs
 mesos_consul_image: ciscocloud/mesos-consul
-mesos_consul_image_tag: v0.3.1
+mesos_consul_image_tag: v0.3.2
 mesos_consul_refresh: "7s"
 marathon_consul_image: ciscocloud/marathon-consul
 marathon_consul_image_tag: 0.2
 mantl_api_image: ciscocloud/mantl-api
-mantl_api_image_tag: 0.1.4
+mantl_api_image_tag: 0.1.5

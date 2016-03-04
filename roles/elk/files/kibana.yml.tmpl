@@ -6,10 +6,10 @@
 
 # If you are running kibana behind a proxy, and want to mount it at a path,
 # specify that path here. The basePath can't end in a slash.
-# server.basePath: "/kibana"
+server.basePath: "/kibana"
 
 # The Elasticsearch instance to use for all your queries.
-{{$es := service "client_port.elasticsearch-executor"}}{{with $es}}
+{{$es := service "client_port.elasticsearch-executor" "any"}}{{with $es}}
 {{range $idx, $service := $es}}{{if eq $idx 0}}
 elasticsearch.url: "http://{{.Address}}:{{.Port}}"
 {{end}}{{end}}{{end}}

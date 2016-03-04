@@ -1,0 +1,1 @@
+.. include:: ../../vagrant/README.rst

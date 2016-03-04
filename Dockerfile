@@ -25,7 +25,7 @@ COPY . /mi/
 # load user custom setup
 ONBUILD COPY ssl/ /mi/ssl/
 ONBUILD COPY security.yml /mi/security.yml
-ONBUILD COPY terraform.yml /mi/terraform.yml
+ONBUILD COPY mantl.yml /mi/mantl.yml
 ONBUILD COPY *.tf /mi/
 
 RUN mkdir -p /state

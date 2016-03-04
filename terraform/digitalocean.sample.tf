@@ -13,6 +13,6 @@ module "do-hosts" {
   region_name = "nyc3" # this must be a region with metadata support
 
   control_count = 3
-  worker_count = 3
+  worker_count = 4
   edge_count = 2
 }

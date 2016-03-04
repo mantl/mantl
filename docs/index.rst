@@ -43,11 +43,11 @@ Contents:
 
    getting_started/index.rst
    components/index.rst
+   addons.rst
    security/index.rst
    upgrading/index.rst
    packer.rst
    changelog.rst
-   roadmap.rst
    faq.rst
    license.rst
 

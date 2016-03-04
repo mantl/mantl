@@ -1,0 +1,29 @@
+
+module collectd_docker_plugin 1.0;
+
+require {
+	type tmp_t;
+	type usr_t;
+	type root_t;
+	type collectd_t;
+	type shell_exec_t;
+	type docker_t;
+        type bin_t;
+        type ldconfig_exec_t;
+	class unix_stream_socket connectto;
+	class file { open read execute execute_no_trans create write getattr ioctl unlink };
+	class dir { write add_name remove_name };
+}
+
+#============= collectd_t ==============
+
+allow collectd_t docker_t:unix_stream_socket connectto;
+allow collectd_t root_t:file { read write open create getattr ioctl };
+allow collectd_t root_t:dir { add_name remove_name write };
+allow collectd_t shell_exec_t:file { execute execute_no_trans };
+allow collectd_t tmp_t:dir { add_name remove_name write };
+allow collectd_t tmp_t:file { write open create };
+allow collectd_t usr_t:dir { add_name write remove_name };
+allow collectd_t usr_t:file { create write unlink };
+allow collectd_t bin_t:file { execute execute_no_trans };
+allow collectd_t ldconfig_exec_t:file { execute execute_no_trans getattr read open };

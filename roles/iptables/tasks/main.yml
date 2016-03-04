@@ -1,0 +1,23 @@
+---
+- name: deploy iptables configuration
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: iptables-core.cfg
+      dest: /etc/consul-template/config.d
+  notify:
+    - reload consul-template
+  tags:
+    - iptables
+
+- name: deploy iptables template
+  sudo: yes
+  template:
+    src: iptables-core.tmpl.j2
+    dest: /etc/consul-template/templates/iptables-core.tmpl
+  notify:
+    - reload consul-template
+  tags:
+    - iptables

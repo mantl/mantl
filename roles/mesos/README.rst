@@ -95,7 +95,7 @@ You can use these variables to customize your Mesos installation.
 
 .. data:: mesos_cluster
 
-   default: ``cluster1``
+   default: ``mantl``
 
 .. data:: mesos_zk_dns
 
