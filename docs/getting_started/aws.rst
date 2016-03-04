@@ -188,11 +188,11 @@ for your control nodes and worker nodes and they must be compatible with the
 Security Setup
 ^^^^^^^^^^^^^^
 
-Mantl doesn't ship with default passwords or ceritificates. For security, we have provided a script to generate
+Mantl doesn't ship with default passwords or certs. For security, we have provided a script to generate
 all the security configuration for your deployment.
 
 Please run ``./security_setup`` from the base of the mantl repository.
-This will generate cetificates and other security tokens needed for the mantl deployment, as well as prompting you for a mantl admin password.
+This will generate certificates and other security tokens needed for the mantl deployment, as well as prompting you for a mantl admin password.
 
 If you get an 'Import' error when running security setup, your local machine lacks certain python modules that the script needs.
 Please try `` pip install pyyaml `` and then re-run ``./security_setup``.
@@ -223,7 +223,7 @@ are stored in local terraform.tfstate file at the root of this project.
 
 Instead of storing the state for all the modules in one file, you might deploy the modules
 independently and have different terraform.tfstate for each module (either locally or remote).
-This can help with blue/green deployments, or making sure you don't accidently override more static
+This can help with blue/green deployments, or making sure you don't accidentally override more static
 parts of the infrastructure such as a VPC.
 
 In the aws.sample.tf we have included examples of how you would reference a remote state file for VPC variables.
