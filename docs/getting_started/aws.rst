@@ -27,13 +27,26 @@ the template located at ``terraform/aws.sample.tf``. The beginning of it looks l
 
   provider "aws" {
     access_key = ""
-    secrect_key = ""
+    secret_key = ""
     region = "${var.region}"
   }
 
-Copy that file in it's entirety to the root of the project as ``aws.tf`` to start
+Copy that *file* in it's entirety to the root of the project as ``aws.tf`` to start
 customization. In the next sections, we'll describe the settings that you need
 to configure.
+
+Do not copy the text contents above into a file, if you do not have the terraform/aws.sample.tf file, you need to clone the mantl repository.
+Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from amazon's new "AWS Credentials file" standard.
+
+Store your credentials like below in a file called ``~/.aws/credentials`` on Linux/Mac, or ``%USERPROFILE%\.aws\credentials`` on Windows.
+
+.. code-block:: json
+
+  [default]
+  aws_access_key_id = ACCESS_KEY
+  aws_secret_access_key = SECRET_KEY
+
+If you do not have an AWS access key ID and secret key, then follow the "Creating an IAM user" section below. If you already have working AWS credentials, you can skip this step.
 
 Creating an IAM User
 ^^^^^^^^^^^^^^^^^^^^^
@@ -145,10 +158,10 @@ where your cluster will be provisioned. As an alternative to specifying
 Basic Settings
 ^^^^^^^^^^^^^^^
 
-``region`` is the name of the `region 
+``region`` is the name of the `region
 <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html>`_
 where your cluster resources will be provisioned. As long as your control, worker and edge count is
-greater than 1, your nodes will be spread across the availability zones in your ``region``.  
+greater than 1, your nodes will be spread across the availability zones in your ``region``.
 
 ``availability_zones`` are the availability zones in your region that you want to deploy your EC2 instances to.
 
@@ -159,11 +172,11 @@ AMI id that is available in the ``region`` your specified.
 This value will be dependent on the ``source_ami`` that you use. Common values
 are ``centos`` or ``ec2-user``.
 
-``datacenter`` is a name to identify your datacenter, this is important if you have more than one datacenter. 
+``datacenter`` is a name to identify your datacenter, this is important if you have more than one datacenter.
 
-``short_name`` is appended to the name tag and dns (if used) of each of the nodes to help better identify them. 
+``short_name`` is appended to the name tag and dns (if used) of each of the nodes to help better identify them.
 
-``control_count``, ``edge_count`` and ``worker_count`` are the number of EC2 instances that will get deployed for each node type. 
+``control_count``, ``edge_count`` and ``worker_count`` are the number of EC2 instances that will get deployed for each node type.
 
 ``control_type``, ``edge_type`` and ``worker_type`` are used to specify the `EC2 instance type <https://aws.amazon.com/ec2/instance-types/>`_
 for your control nodes and worker nodes and they must be compatible with the
@@ -187,28 +200,33 @@ Provisioning
 Once you're all set up with the provider, customize your modules (for
 ``control_count``, ``worker_count``, etc), run ``terraform get`` to prepare
 Terraform to provision your cluster, ``terraform plan`` to see what will be
-created, and ``terraform apply`` to provision the cluster. Afterwards, you can
-use the instructions in :doc:`getting started <index>` to install
-Mantl on your new cluster.
+created, and ``terraform apply`` to provision the cluster.
+
+After ``terraform apply`` has completed without errors, you're ready to continue.
+Next, follow the instructions at :doc:`getting started <index>` to install
+Mantl on your new AWS VM's
+
+* The below sections are for more information / customization only. They are not required *
+
 
 Terraform State
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Terraform stores the `state <https://terraform.io/docs/state/index.html>`_ of your 
-infrastructure in a file called "terraform.tfstate". This file can be stored locally 
-or in a `remote <https://terraform.io/docs/state/index.html>`_ location such as S3. 
-If you use the ``aws.sample.tf`` that is provided, by default the state of all the modules 
+Terraform stores the `state <https://terraform.io/docs/state/index.html>`_ of your
+infrastructure in a file called "terraform.tfstate". This file can be stored locally
+or in a `remote <https://terraform.io/docs/state/index.html>`_ location such as S3.
+If you use the ``aws.sample.tf`` that is provided, by default the state of all the modules
 are stored in local terraform.tfstate file at the root of this project.
 
 Instead of storing the state for all the modules in one file, you might deploy the modules
-independently and have different terraform.tfstate for each module (either locally or remote). 
+independently and have different terraform.tfstate for each module (either locally or remote).
 This can help with blue/green deployments, or making sure you don't accidently override more static
-parts of the infrastructure such as a VPC. 
+parts of the infrastructure such as a VPC.
 
-In the aws.sample.tf we have included examples of how you would reference a remote state file for VPC variables. 
+In the aws.sample.tf we have included examples of how you would reference a remote state file for VPC variables.
 
-To create ``terraform.tfstate`` locally for the VPC module, you would simply run ``terraform get``, ``terraform plan`` and 
-``terraform apply`` in the ``terraform/aws/vpc/`` directory. 
+To create ``terraform.tfstate`` locally for the VPC module, you would simply run ``terraform get``, ``terraform plan`` and
+``terraform apply`` in the ``terraform/aws/vpc/`` directory.
 Then in your ``aws.tf`` file you would want to comment out:
 
 .. code-block:: json
@@ -231,14 +249,14 @@ And uncomment:
   #  }
   # }
 
-  #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}" 
+  #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
   #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
-  #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}" 
+  #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
 
-Ideally you would store the state remotely, but configuring that is outside the scope of 
-this document. `This <http://blog.mattiasgees.be/2015/07/29/terraform-remote-state/>`_ is a 
-good explanation on how to configure and use remote state. 
+Ideally you would store the state remotely, but configuring that is outside the scope of
+this document. `This <http://blog.mattiasgees.be/2015/07/29/terraform-remote-state/>`_ is a
+good explanation on how to configure and use remote state.
 
 
 Custom IAM Policy
@@ -289,8 +307,6 @@ In your ``aws.tf``, you will want to uncomment the aws-elb module:
     source = "./terraform/aws/elb"
     short_name = "${var.short_name}"
     instances = "${module.control-nodes.control_ids}"
-    subnets = "${terraform_remote_state.vpc.output.subnet_ids}" 
+    subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
     security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
   }
-
-
