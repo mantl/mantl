@@ -102,3 +102,4 @@
 - include: users.yml
 - include: ssl.yml
 - include: distributive.yml
+- include: ssh.yml
