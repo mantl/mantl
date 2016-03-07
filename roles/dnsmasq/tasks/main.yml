@@ -11,7 +11,6 @@
 - name: remove consul from list of search domains
   sudo: yes
   command: sed -i'' 's/consul *//g' /etc/resolv.conf.masq
-  register: resolve_without_consul
   tags:
     - dnsmasq
 
