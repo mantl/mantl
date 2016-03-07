@@ -8,7 +8,7 @@ you. From a Mantl.io perspective, this doc is about setting up the inventory fil
 by hand and preparing the machines to a state similar to what terraform would have
 done.
 
-The minimum requirement for installing mantl based on the AWS sample is a edge, control and worker nodes with
+The minimum requirement for installing mantl based on the AWS sample are edge, control and worker nodes with
 1 core and 4 GB of RAM.  If you are building a bare-metal system you will almost certainly have much more than
 that.  It should be pointed out this documentation is really a description of how to set up a static inventory
 file when you don't create your inventory with Terraform.   In other words, maybe you
@@ -16,17 +16,17 @@ have a couple of physical boxes, and then created a few virtual machine vms for 
 on a couple of laptops. There is nothing about this document that requires that they be physical systems.  This
 document does address challenges that people creating a cluster with physical systems face.
 
-This document explains how to:
- * prepare your machine with the base OS,
- * Network hard drive concerns,
- * Creating your inventory and
- * getting ansible ready and runing the ansible install scripts.
+This document explains:
+ * Preparing your machines with Centos
+ * Network and storage concerns
+ * Creating your inventory
+ * Setting up Ansible
 
 ## Setting Up Centos 7
 
 ### Thumb Drive Install
 
-There are much more professional ways of creating your instances.  But if you are looking for a solution for a
+There are much more professional ways of creating your instances, but if you are looking for a solution for a
 couple machines at home, perhaps you actually need some tips on how to do it.  The least technical way to do this is
 with a thumb drive.
 
@@ -36,14 +36,15 @@ Mantl.io should start with the current Centos 7 minimum.
 
 During installation you will do the defaults except:
 
- * manually configure your partitions. ON the Manual partioning page.
+ * manually configure your partitions. ON the Manual partioning page:
    * Remove existing partitions
-   * Press the button to automatically partition. This will give you a default set.
-   * It will put 50 toward root and the rest in home, change this:
-     * These are services machines and won't store many files in home.
+   * Press the button to automatically partition. This will give you a default set to start with.
+   * The automatic partioning will put 50 toward root and the rest in home, change this:
+     * These are services machines and won't store many files in home, Home should be set to a small partion size
+     leaving you with some unpartioned space.
      * You will need to leave unformatted space on the drive for docker. Try to leave at least 50 unformated for
      the docker LVM partion that is described in the "Create Partion for Docker LVM" section below.
- * turn on your wired internet connection.  It should just be a toggle switch for your device.
+ * Turn on your wired internet connection.  It should just be a toggle switch for your device.
  * Once the install starts it asks for a root password and a first user.
    * Having a `centos` admin user will match what happens in cloud environments.
 
@@ -58,13 +59,13 @@ automated (therefore less error prone) to just reinstall and remember to turn on
 
 #### Chosing a static IP range
 
-I chose 172.16.222.x because its unlikely to overlap with anhy network I might move this cluster too.
+I chose 172.16.222.x because its unlikely to overlap with any network I might move this cluster too.
 
 #### Give it a static IP and set DNS and Gateway
 
 http://ask.xmodulo.com/configure-static-ip-address-centos7.html
 
-at the command line enter:
+At the command line enter:
 
     ip addr
 
@@ -86,7 +87,7 @@ You should see somethng like:
 from this you can see that eno1 is the ethernet device.
 
 
-edit `/etc/sysconfig/network-scripts/ifcfg-eno1`
+Edit `/etc/sysconfig/network-scripts/ifcfg-eno1`
 
 You can leave everything that is in there but you need to to change  or add
 the following. BOOTPROTO and ONBOOT are probably already there.
@@ -100,13 +101,13 @@ the following. BOOTPROTO and ONBOOT are probably already there.
     NM_CONTROLLED=no
     ONBOOT="yes"
 
-the dns lines are going to have to change once consul is up.
+The dns lines are going to have to change once consul is up.
 
 NOTE: in centos 7 /etc/resolv.conf is a generated file.
 
 You could also put the dns lines in /etc/sysconfig/network.
 
-permanently change your hostname with
+Permanently change your hostname with:
 
     hostnamectl set-hostname edge22
 
@@ -131,7 +132,7 @@ After saving then finally:
  * reboot
 
 
-don't put a file system on the partion.
+Don't put a file system on the partion.
 
 Note that I am creating a partion size 50 Gigs, this is for docker.  Just make it consistent across your cluster.
 
@@ -139,12 +140,9 @@ There are two main types of drives on the market today. The older type of drive 
 partioning these types of drives you will be asked if you want to create a `primary` partion or a `extended` partition.
 You will need to make it a `primary` partition.
 
-Additionally.  If you hang on TASK "lvm | create volume group" then you will have to apply the patch
-https://github.com/ansible/ansible-modules-extras/issues/1504 the file you need to do this to is in
-mantl base directory /library/lvg.py
-
-
-Do all the computers to this point.
+Additionally, if you have a MS-DOS partioned drive you may have to run the following patch https://github.com/ansible/ansible-modules-extras/issues/1504
+against the file /Library/lvg.py. If during the ansible run (as described in the section "Run It!" below) the run hangs
+on task "lvm | create volume group" then you will need to follow the instructions in issue 1504.
 
 ## Creating Your Inventory
 
@@ -186,21 +184,19 @@ Here is an example inventory file. It should be placed in the root of the mantl 
     edge01
     edge02
 
-I had to add the ansible_ssh_host line to run `playbooks/reboot-hosts.yml`
+I had to add the ansible_ssh_host line to run `playbooks/reboot-hosts.yml` and the private_ipv4 is needed by several roles.
 
-The private_ipv4 is needed by several roles.
-
-The dc=dc1 group is needed to set `consul_dc_group` in the consul roles. And is specifically usd in this setup in the
+The dc=dc1 group is needed to set `consul_dc_group` in the consul roles. It is specifically used in the
 dnsmasq role.
 
 Note that dc1 is the default.  If you change the name of the data center in your inventory file
-you will need to set consul_dc in an environment variable.  For example, if you called your dc 'mydc' then you
+you will need to set the consul_dc variable.  For example, if you called your dc 'mydc' then you
 would need to enter:
 
     ansible-playbook -u centos -i inventory -e consul_dc=mydc \
-            -e provider=bare-metal  -e @security.yml  terraform.sample.yml >& bare-metal.log
+            -e provider=bare-metal  -e @security.yml  sample.yml >& bare-metal.log
 
-the rest of the options will be discussed below.
+The rest of the options will be discussed below.
 
 ## Getting Started with Ansible
 
@@ -210,8 +206,7 @@ Add your key to all the machines in your inventory
     ansible all -i inventory  -u centos -k -m authorized_key -a "user=centos key=https://github.com/youraccount.keys"
 
 Note this makes use of your public key on Github.  If you don't have a Github account or a key pair on your Github
-account, you can run a ansible copy command to move your public key over, add it to
-authorized_keys and change the file permissions. The Github and Ansible authorized_key module is a handy way to do this.
+account, please look at the documentation for Ansible authorized_key module for other options.
 
 The -k is needed because the ssh connection is still uses password based authentication.
 
@@ -255,9 +250,9 @@ Run the security-setup script:
     ./security-setup
 
 It asks for one admin password. At the end of that run there will be a `security.yml` file.  It will have the password
-you entered and a lot of keys and such that are used in the installs and in the installed software.
+you entered and a lot of keys needed for installation.
 
-The playbook you will be running is `terraform.sample.yml`.  Since you created your own inventory and didn't use terraform,
+The playbook you will be running is `sample.yml`.  Since you created your own inventory and didn't use terraform,
 there are a few variables you need to set for your run.
 
     ansible-playbook -u centos -i inventory \
@@ -265,7 +260,7 @@ there are a few variables you need to set for your run.
             -e consul_dc=dc1 \
             -e docker-lvm-backed=true \
             -e docker_lvm_data_volume_size="80%FREE" \
-            -e @security.yml  terraform.sample.yml >& bare-metal.log
+            -e @security.yml  sample.yml >& bare-metal.log
 
 
 In another window tail -f  that log file to follow whats going on.
@@ -289,7 +284,7 @@ The meaning of the parts of this command are as follows:
  * -e @security.yml
    * this a series of environment variable settings that have all the security settings of the varios parts of mantl. The @
    causes ansible to evaluate the file.
- * terraform.sample.yml
+ * sample.yml
    * this is the ansible file that is being run.
  * >& bare-metal.log
    * this redirects the output to a file so that you can review it later.   Tailing with a -f flag lets you watch the
