@@ -70,6 +70,19 @@
   tags:
     - chronos
 
+- name: configure chronos to use log4j override
+  sudo: yes
+  lineinfile:
+    dest: /usr/lib/systemd/system/chronos.service
+    line: Environment=JAVA_OPTS=-Dlog4j.configuration="file:///etc/chronos/log4j.properties"
+    insertbefore: "^ExecStart="
+    state: present
+  notify:
+    - reload chronos
+    - restart chronos
+  tags:
+    - chronos
+
 - name: fix chronos bin file
   sudo: yes
   replace:
@@ -98,6 +111,16 @@
       value: "{{ chronos_port }}"
     - key: mesos_framework_name
       value: "chronos"
+  notify:
+    - restart chronos
+  tags:
+    - chronos
+
+- name: add log4j conf
+  sudo: yes
+  template:
+    src: log4j.properties.j2
+    dest: /etc/chronos/log4j.properties
   notify:
     - restart chronos
   tags:

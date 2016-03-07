@@ -1,0 +1,7 @@
+log4j.rootLogger={{ chronos_log_threshold }}, stdout
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+
+# Pattern to output the caller's file name and line number.
+log4j.appender.stdout.layout.ConversionPattern=%d %5p [%t] (%F:%L) - %m%n
