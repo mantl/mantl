@@ -11,8 +11,8 @@
 
 - name: enable fail2ban jails
   sudo: yes
-  template:
-    src: fail2ban/{{ item }}.j2
+  copy:
+    src: fail2ban/{{ item }}
     dest: /etc/fail2ban/jail.d/{{ item }}
   with_items:
     - sshd.local
