@@ -107,8 +107,7 @@
     - docker
 
 - include: lvm.yml
-  when: docker_lvm_backed|bool
-  and: provider!=bare-metal
+  when: docker_lvm_backed|bool and provider!=bare-metal
 
 - name: create rsyslog.d
   sudo: yes

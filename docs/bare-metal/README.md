@@ -3,22 +3,24 @@
 By bare-metal we mean a set of physical computers that
 have centos 7 installed on them.
 
-If you are using open-stack, Vmware, or a cloud provider, Mantl.io has terraform scripts for
+If you are using open-stack, Vmware, or some other cloud provider, Mantl.io has terraform scripts for
 you. From a Mantl.io perspective, this doc is about setting up the inventory file
 by hand and preparing the machines to a state similar to what terraform would have
 done.
 
-These scripts were created for set of 8 Intel NUCs. Each had 16GB of RAM
-2 hyper threaded cores (I5s and I3s).  3 of them had 500 GB SSDs and 3
-have 2 TB HDs.  Your hardware can vary.  Theses systems are 4 times larger
-that the AWS systems defined in `terraform/aws.sample.tf` (m3.medium
-instances have 1 core and 4GB RAM).  In other words, your machines could
-be even smaller than our test system.   In fact, maybe you
+The minimum requirement for installing mantl based on the AWS sample is a edge, control and worker nodes with
+1 core and 4 GB of RAM.  If you are building a bare-metal system you will almost certainly have much more than
+that.  It should be pointed out this documentation is really a description of how to set up a static inventory
+file when you don't create your inventory with Terraform.   In other words, maybe you
 have a couple of physical boxes, and then created a few virtual machine vms for the controls
-on a couple of laptops. They have also been used on much larger machines.
+on a couple of laptops. There is nothing about this document that requires that they be physical systems.  This
+document does address challenges that people creating a cluster with physical systems face.
 
-This document explains how to prepare your machine with the base OS, network
-hard drive concerns, creating your inventory and getting ansible ready.
+This document explains how to:
+ * prepare your machine with the base OS,
+ * Network hard drive concerns,
+ * Creating your inventory and
+ * getting ansible ready and runing the ansible install scripts.
 
 ## Setting Up Centos 7
 
@@ -38,18 +40,18 @@ During installation you will do the defaults except:
    * Remove existing partitions
    * Press the button to automatically partition. This will give you a default set.
    * It will put 50 toward root and the rest in home, change this:
-     * These are services machines and shouldn't really have much if in home.
-     * You will need to leave unformatted space on the drive for docker. Mantl defaults to 100 Gigs.
-     * if you have lots of space leave 50 in home, but you won't need much there. Leave the rest unformatted.
+     * These are services machines and won't store many files in home.
+     * You will need to leave unformatted space on the drive for docker. Try to leave at least 50 unformated for
+     the docker LVM partion that is described in the "Create Partion for Docker LVM" section below.
  * turn on your wired internet connection.  It should just be a toggle switch for your device.
- * Once the istall starts it asks for a root password and a first user.
+ * Once the install starts it asks for a root password and a first user.
    * Having a `centos` admin user will match what happens in cloud environments.
 
 
 Once rebooted,
 if you forgot to turn on your internet in the install, you can set it up like so
 http://www.krizna.com/centos/setup-network-centos-7/ .  It might be easier and more
-automated (there for less error prone) to just reinstall and remember to turn on your internet during the install.
+automated (therefore less error prone) to just reinstall and remember to turn on your internet during the install.
 
 
 ### Set up Base Network
@@ -104,7 +106,7 @@ NOTE: in centos 7 /etc/resolv.conf is a generated file.
 
 You could also put the dns lines in /etc/sysconfig/network.
 
-permanently change your host name with
+permanently change your hostname with
 
     hostnamectl set-hostname edge22
 
@@ -121,7 +123,7 @@ After saving then finally:
  * Command: n
  * partion : default
    * please note which partition it is in.  So if its partition 5, eventually you will need to tell mantl /dev/sda5 for the LVM
-   * you kinda want all your machines to use the same partition because this partition is entered as a ssytem wide variable.
+   * you kinda want all your machines to use the same partition because this partition is entered as a system wide variable.
  * first sector: default
  * last sector: +50G
  * Command: w
@@ -133,7 +135,9 @@ don't put a file system on the partion.
 
 Note that I am creating a partion size 50 Gigs, this is for docker.  Just make it consistent across your cluster.
 
-if you have MS-dos partions make it a primary partion, not an extended partion or it won't work.
+There are two main types of drives on the market today. The older type of drive is said to have MS-DOS partions. When
+partioning these types of drives you will be asked if you want to create a `primary` partion or a `extended` partition.
+You will need to make it a `primary` partition.
 
 Additionally.  If you hang on TASK "lvm | create volume group" then you will have to apply the patch
 https://github.com/ansible/ansible-modules-extras/issues/1504 the file you need to do this to is in
@@ -144,7 +148,7 @@ Do all the computers to this point.
 
 ## Creating Your Inventory
 
-Here is an example inventory file. It should be place in the root of the mantl directory.
+Here is an example inventory file. It should be placed in the root of the mantl directory.
 
     [role=control]
     control01 private_ipv4=172.16.222.6 ansible_ssh_host=172.16.222.6
@@ -205,12 +209,14 @@ Add your key to all the machines in your inventory
 
     ansible all -i inventory  -u centos -k -m authorized_key -a "user=centos key=https://github.com/youraccount.keys"
 
-Note this makes use of your public key on github.  if you don't have a git hub account or a key pair on your git hub
-account, get one.
+Note this makes use of your public key on Github.  If you don't have a Github account or a key pair on your Github
+account, you can run a ansible copy command to move your public key over, add it to
+authorized_keys and change the file permissions. The Github and Ansible authorized_key module is a handy way to do this.
 
-the -k is needed cause I have to have it ask for a password at this point.
+The -k is needed because the ssh connection is still uses password based authentication.
 
-now all commands can happen with out the password and -k option. Test with:
+After this authorization step has been completed, all commands can happen without the password and -k option.
+Test with:
 
     ansible all -i inventory -u centos -m ping
 
@@ -225,23 +231,18 @@ content is:
         127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
         ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
         172.16.222.5 MyMac
-        172.16.222.6 control01
-        172.16.222.7 control02
-        172.16.222.8 control03
-        172.16.222.11 resource01
-        172.16.222.12 resource02
-        172.16.222.13 resource03
-        172.16.222.16 edge01
-        172.16.222.17 edge02
+        172.16.222.6 control-01
+        172.16.222.7 control-02
+        172.16.222.8 control-03
+        172.16.222.11 worker-01
+        172.16.222.12 worker-02
+        172.16.222.13 worker-03
+        172.16.222.16 edge-01
+        172.16.222.17 edge-02
 
-Copy the /etc/host file over.
+Copy the /etc/hosts file over.
 
     ansible all -i inventory -u centos --sudo --ask-sudo-pass -m copy -a "src=hosts dest=/etc/hosts"
-
-
-Might as well set the timezone just for grins.
-
-    ansible all -i inventory -u centos --sudo --ask-sudo-pass -m command -a "timedatectl set-timezone America/Los_Angeles"
 
 
 ## Run It!
@@ -256,8 +257,8 @@ Run the security-setup script:
 It asks for one admin password. At the end of that run there will be a `security.yml` file.  It will have the password
 you entered and a lot of keys and such that are used in the installs and in the installed software.
 
-The file you will be running is `terraform.sample.yml`.  Since you created your own inventory and didn't use terraform,
-there are a few environment variables you need to set for your run.
+The playbook you will be running is `terraform.sample.yml`.  Since you created your own inventory and didn't use terraform,
+there are a few variables you need to set for your run.
 
     ansible-playbook -u centos -i inventory \
             -e provider=bare-metal \
@@ -274,12 +275,13 @@ The meaning of the parts of this command are as follows:
  * ansible-playbook -u centos -i inventory
    * run the ansible play book as centos user against the inventory found in the ./inventory file.
  * -e provider=bare-metal
-   * The "provider" is not terraform for a cloud, but rather bare-metal. If the inventory had been generated
-   by terraform on Google Cloud, this value would have been set automatically to 'gcs'
+   * The "provider" is bare-metal where a user sets up the infrastructure and then creates an inventory file as described
+   above. If the inventory had been generated by terraform.py against a terraform state file for infrastructure
+   built on Google Cloud, this value would have been set automatically to 'gcs'
  * -e consul_dc=dc1
    * This is the name found in your ./inventory file for your datacenter.
  * -e docker-lvm-backed=true
-   * lvm back docker is a really good idea in centos. This is why you craeted the extra partion during installation.
+   * lvm backed docker is a really good idea in centos. This is why you craeted the extra partion during installation.
  * -e docker_lvm_data_volume_size="80%FREE"
    * This defaults to "40%FREE" in the docker role because the default LVM partition is shared with other things.
    You could leave this off, but its likely with your own hardware you will have different constraints and its a good
@@ -294,5 +296,6 @@ The meaning of the parts of this command are as follows:
    progress as ansible works through the rolls accross your inventory.
 
 
-Once you are done go to the browser and go to the /ui directory of any control node and you should see the mantlui.
+Once you are done go to the browser and go to the /ui directory of any control node and you should see the Mantl UI.  For the
+inventory shown above, you could go to `172.16.222.6/ui` and you should see the Mantl UI.
 
