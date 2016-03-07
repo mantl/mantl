@@ -32,6 +32,8 @@
   yum:
     name: epel-release
     state: latest
+  tags:
+    - bootstrap
 
 - name: install system utilities
   sudo: yes
@@ -103,3 +105,4 @@
 - include: ssl.yml
 - include: distributive.yml
 - include: ssh.yml
+- include: fail2ban.yml
