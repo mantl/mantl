@@ -12,7 +12,7 @@
     - distributive
     - docker
 
-- name: install distributive health check configuration for current role
+- name: install distributive, health check packages for current role
   become: yes
   yum:
     state: present
