@@ -10,7 +10,6 @@
     - bootstrap
     - lvm
 
-
 - name: install LVM tools
   sudo: yes
   yum:
@@ -54,8 +53,11 @@
   sudo: yes
   yum: 
     name: mantl-storage-setup
+  when: not debug_storage_setup
   tags:
     - docker
     - lvm
 
-  
+- name: install mantl-storage-setup (development)
+  include: debug.yml
+  when: debug_storage_setup
