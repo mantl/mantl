@@ -21,6 +21,8 @@ marathon_keystore_password: ""
 marathon_port: 18080
 marathon_proxy_port: 8080
 
+marathon_log_level: warn
+
 # framework authentication
 marathon_principal: marathon
 marathon_secret: ""
