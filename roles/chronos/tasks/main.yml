@@ -1,0 +1,23 @@
+---
+- name: create chronos application json
+  sudo: yes
+  template:
+    src: chronos.json.j2
+    dest: /etc/marathon/apps/chronos.json
+  tags:
+    - chronos
+
+- name: install chronos addon
+  sudo: yes
+  run_once: yes
+  command: consul-cli kv-write mantl-install/apps/chronos @/etc/marathon/apps/chronos.json
+  tags:
+    - chronos
+
+- name: remove chronos application json
+  sudo: yes
+  file:
+    dest: /etc/marathon/apps/chronos.json
+    state: absent
+  tags:
+    - chronos
