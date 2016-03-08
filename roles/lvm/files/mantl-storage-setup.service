@@ -1,5 +1,5 @@
 [Unit]
-Before=local-fs.target
+Before=local-fs.target docker.service docker-storage-setup.service
 
 [Service]
 Type=oneshot

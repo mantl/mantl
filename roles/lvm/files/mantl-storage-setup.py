@@ -181,7 +181,7 @@ def process_volume(sec, params):
 
 UNIT_TEMPLATE = """
 [Unit]
-Before=local-fs.target
+Before=local-fs.target {before}
 
 [Mount]
 What={what}
@@ -222,9 +222,15 @@ def process_fs(sec, params):
 
         if not os.path.exists(unitfile):
             with closing(open(unitfile, "w")) as f:
-                f.write(UNIT_TEMPLATE.format(what=dev, where=mount, type=fstype, wanted_by=" ".join(wanted_by),required_by=" ".join(required_by)))
-        check_call(["systemctl", "daemon-reload"])
+                f.write(UNIT_TEMPLATE.format(
+                    what=dev,
+                    where=mount,
+                    type=fstype,
+                    wanted_by=" ".join(wanted_by),
+                    required_by=" ".join(required_by),
+                    before=" ".join(wanted_by+required_by)))
         check_call(["systemctl", "enable", unit])
+        check_call(["systemctl", "daemon-reload"])
 
 
 def iterate_config(prefix, fun, cp):
