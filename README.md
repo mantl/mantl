@@ -121,7 +121,7 @@ vagrant up
 
 Note:
 * There is no support for Windows at this time, however support is planned.
-* Vagrant 1.7.3+ is required for best results.
+* Vagrant 1.8+ is required for best results.
 * There is no support for the VMware Fusion Vagrant provider; hence your provider is set to Virtualbox in your Vagrantfile. In order to start running just issue the `vagrant up` command.
 
 ### Software Requirements
