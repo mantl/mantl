@@ -11,7 +11,6 @@ VOLUME /local
 ENV MANTL_CONFIG_DIR /local
 
 VOLUME /root/.ssh
-ENV SSH_KEY /root/.ssh/id_rsa
 
 ENV TERRAFORM_VERSION 0.6.12
 RUN mkdir -p /tmp/terraform/ && \
