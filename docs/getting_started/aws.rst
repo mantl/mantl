@@ -166,8 +166,6 @@ are ``centos`` or ``ec2-user``.
 
 ``datacenter`` is a name to identify your datacenter, this is important if you have more than one datacenter.
 
-``short_name`` is appended to the name tag and dns (if used) of each of the nodes to help better identify them.
-
 ``control_count``, ``edge_count`` and ``worker_count`` are the number of EC2 instances that will get deployed for each node type.
 
 ``control_type``, ``edge_type`` and ``worker_type`` are used to specify the `EC2 instance type <https://aws.amazon.com/ec2/instance-types/>`_
