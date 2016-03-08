@@ -4,11 +4,10 @@ interface=*
 addn-hosts=/etc/hosts
 
 bogus-priv
+domain-needed
 
-#Set upstream dns servers
-server=8.8.8.8
-server=8.8.4.4
+# Set upstream dns servers
+resolv-file=/etc/resolv.conf.masq
 
 # Forward k8s domain to kube-dns
 server=/{{ cluster_name }}/127.0.0.1#{{ skydns_port }}
-
