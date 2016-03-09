@@ -30,7 +30,7 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
   cpus = "${var.control_cpu}"
   memory = "${var.control_ram}"
 
-  configuration_parameters = {
+  custom_configuration_parameters = {
     role = "control"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
@@ -60,7 +60,7 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   cpus = "${var.worker_cpu}"
   memory = "${var.worker_ram}"
 
-  configuration_parameters = {
+  custom_configuration_parameters = {
     role = "worker"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
@@ -90,7 +90,7 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   cpus = "${var.edge_cpu}"
   memory = "${var.edge_ram}"
 
-  configuration_parameters = {
+  custom_configuration_parameters = {
     role = "edge"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
