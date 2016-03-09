@@ -17,7 +17,7 @@ Installation
 ------------
 
 As of 1.0, the ELK stack is distributed as an addon for Mantl. After a
-successful initial run (from your customized ``terraform.sample.yml``), install
+successful initial run (from your customized ``sample.yml``), install
 it with ``ansible-playbook -e @security.yml addons/elk.yml``.
 
 Accessing User Interfaces
