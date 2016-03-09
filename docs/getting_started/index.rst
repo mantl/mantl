@@ -13,8 +13,8 @@ means that you need three things:
  2. an `inventory file`_ with the hosts you want to be modified.
  3. a playbook to show which components should go where.
 
-Provisioning Cloud Hosts
-------------------------
+Provisioning Hosts
+------------------
 
 The playbooks and roles in this project will work on whatever provider
 (or metal) you care to spin up, as long as it can run CentOS 7 or
@@ -31,6 +31,7 @@ platforms:
    vsphere.rst
    softlayer.rst
    clc.rst
+   bare-metal.rst
 
 Setting up DNS
 --------------
@@ -154,7 +155,7 @@ Below are guides customizing your deployment:
 .. toctree::
    :maxdepth: 1
 
-   ssh_users.rst  
+   ssh_users.rst
    playbook.rst
    dockerfile.rst
 
