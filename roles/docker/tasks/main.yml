@@ -30,7 +30,6 @@
     - docker
     - bootstrap
 
-
 - name: create rsyslog.d
   sudo: yes
   file:
@@ -62,6 +61,7 @@
   tags:
     - docker
 
+# Not restart docker on file drop
 - name: systemd drop-in for options
   sudo: yes
   template:
@@ -73,10 +73,10 @@
     - 14-storage-options.conf
   notify:
     - reload docker
-    - restart docker
   tags:
     - docker
 
+# Not restart docker on file drop
 - name: systemd drop-in for ExecStart
   sudo: yes
   copy:
@@ -84,7 +84,6 @@
     dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
   notify: 
     - reload docker
-    - restart docker
   tags: 
     - docker
 
