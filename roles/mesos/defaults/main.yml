@@ -7,6 +7,7 @@ mesos_agent_package: "mesos-agent-{{ mesos_version }}"
 
 mesos_mode: follower
 mesos_log_dir: /var/log/mesos
+mesos_logging_level: WARNING
 mesos_work_dir: /var/run/mesos
 mesos_leader_port: 15050
 mesos_leader_proxy_port: 5050

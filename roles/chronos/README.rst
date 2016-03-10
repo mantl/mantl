@@ -49,3 +49,9 @@ Variables
 .. data:: chronos_proxy_port
 
    Chronos proxy port
+
+.. data:: chronos_log_threshold
+
+   Log threshold for Chronos
+
+   Default: ``WARNING``
