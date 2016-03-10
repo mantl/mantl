@@ -126,47 +126,30 @@ def process_vg(sec, params):
     else:
         subprocess.check_call([VGCREATE_CMD] + vgoptions + ['-s', str(pesize), name] + list(dev_list))
 
+pct_re = re.compile(r'^(\d+)%(PVS|LV|FREE)$')
+size_re = re.compile(r'^(\d+)[bskmgtpe]$')
+def parse_size(size):
+    if size:
+        m = pct_re.match(size)
+        if m:
+            if int(m.group(1)) > 100:
+                fail("Size percentage cannot be larger than 100%")
+            return size, "l", ""
+        m = size_re.match(size.lower())
+        if m:
+            return int(m.group(1)), "L", m.group(2)
+        if size.isdigit():
+            return size, "L", "m"
+        fail("Bad size specification")
+    fail("size not specified")
+
 
 def process_volume(sec, params):
     lv = params.get(sec, "volume")
     vg = params.get(sec, "group")
     size = params.get(sec, "size")
     force = optional(params.getboolean, sec, "force", False)
-    size_opt = 'L'
-    size_unit = 'm'
-
-    # FIXME: rewrite due licensing (possible using regexps)
-    if size:
-        # -l --extents -- option with percentage
-        if '%' in size:
-            size_parts = size.split('%', 1)
-            size_percent = int(size_parts[0])
-            if size_percent > 100:
-                fail("Size percentage cannot be larger than 100%")
-            whole = size_parts[1]
-            if size_parts[1] not in ['VG', 'PVS', 'FREE']:
-                fail("Specify extents as a percentage of VG|PVS|FREE")
-            size_opt = 'l'
-            size_unit = ''
-
-        #  -L --size -- option with unit
-        elif size[-1].isalpha():
-            if size[-1].upper() in 'BSKMGTPE':
-                size_unit = size[-1].lower()
-                if size[0:-1].isdigit():
-                    size = int(size[0:-1])
-                else:
-                    fail("Bad size specification for unit %s" % size_unit)
-                size_opt = 'L'
-            else:
-                fail("Size unit should be one of [BSKMGTPE]")
-        # when no unit, megabytes by default
-        elif size.isdigit():
-            size = int(size)
-        else:
-            fail("Bad size specification")
-    else:
-        fail("size not specified")
+    size, size_opt, size_unit = parse_size(size)
 
     this = None
     for test in lvs(vg, size_opt == 'l' and 'm' or size_unit):
@@ -232,9 +215,21 @@ def process_fs(sec, params):
         check_call(["systemctl", "enable", unit])
         check_call(["systemctl", "daemon-reload"])
 
+def write_file(sec, params):
+    filename = params.get(sec, "file")
+    content = params.get(sec, "content")
+    crlf = optional(params.getboolean, sec, "crlf", True)
+
+
+    if not os.path.exists(filename):
+        with closing(open(filename, "w")) as f:
+            print "WRITE: " + filename
+            f.write(content)
+            if crlf:
+                f.write("\n")
 
 def iterate_config(prefix, fun, cp):
-    for each in cp.sections():
+    for each in sorted(cp.sections()):
         if each.startswith(prefix):
             fun(each, cp)
 
@@ -249,6 +244,7 @@ def main():
         iterate_config("group", process_vg, cp)
         iterate_config("volume", process_volume, cp)
         iterate_config("filesystem", process_fs, cp)
+        iterate_config("write", write_file, cp)
 
 
     print "ALL DONE!"

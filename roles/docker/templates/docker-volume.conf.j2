@@ -9,4 +9,8 @@ dev = {{ docker_volume_device }}
 fstype = {{ docker_volume_fs_type }}
 mount = {{ docker_volume_mount }}
 required_by = docker-storage-setup.service docker.service
+
+[write:config]
+file = /etc/sysconfig/docker-storage
+content = DOCKER_STORAGE_OPTIONS=--storage-driver {{ docker_storage_driver }} 
 {% endif %}
