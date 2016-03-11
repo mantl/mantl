@@ -24,6 +24,16 @@
     - "{{ distributive_package }}"
     - "distributive-{{ current_role }}"
 
+- name: create consul configuration directory
+  become: yes
+  file:
+    path: /etc/consul
+    state: directory
+    mode: 0770
+  tags:
+    - consul
+    - distributive
+
 - name: configure consul health check
   become: yes
   template:
