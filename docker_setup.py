@@ -10,7 +10,7 @@ from shlex import split
 from sys import exit
 from subprocess import call
 
-def link_or_generate_ssh_key():
+def link_or_generate_ssh_keys():
     if 'SSH_KEY' not in os.environ:
         os.environ['SSH_KEY'] = 'id_rsa'
 
@@ -21,14 +21,19 @@ def link_or_generate_ssh_key():
     print("Symlinking {} to /root/.ssh/id_rsa".format(ssh_key))
     symlink(ssh_key, '/root/.ssh/id_rsa')
 
+    ssh_key += '.pub'
+    print("Symlinking {} to /root/.ssh/id_rsa.pub".format(ssh_key))
+    symlink(ssh_key, '/root/.ssh/id_rsa.pub')
+
 
 def link_terraform_files():
-    tfs = [os.path.abspath(f) for f in os.listdir(os.environ['MANTL_CONFIG_DIR'])
-            if f.endswith('.tf')]
+    cfg_d = os.environ['MANTL_CONFIG_DIR']
+    tfs = [join(cfg_d, f) for f in os.listdir(cfg_d) if f.endswith('.tf')]
     if len(tfs):
         for tf in tfs:
-            print("Symlinking {} to {}".format(tf, os.path.basename(tf)))
-            symlink(tf, os.path.basename(tf))
+            base = os.path.basename(tf)
+            print("Symlinking {} to {}".format(tf, base))
+            symlink(tf, base)
     else:
         if 'MANTL_PROVIDER' not in os.environ:
             print("mantl.readthedocs.org for provider")
@@ -64,7 +69,7 @@ if __name__ == "__main__":
         print('mantl.readthedocs.org for mantl config dir')
         exit(1)
 
-    link_or_generate_ssh_key()
+    link_or_generate_ssh_keys()
     link_ansible_playbook()
     link_terraform_files()
     link_or_generate_security_file()

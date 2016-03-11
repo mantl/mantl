@@ -1,29 +1,29 @@
 language: python
 env:
   global:
-    - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}'
+    - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
+    - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number'
     - DOCKER_IMAGE=sehqlr/mantl:testing
   matrix:
-    - TERRAFORM_FILE=testing/aws MANTL_PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID'
-    - TERRAFORM_FILE=testing/do MANTL_PROVIDER=do DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN=$DIGITALOCEAN_TOKEN'
-    - TERRAFORM_FILE=testing/gce MANTL_PROVIDER=gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS=$GOOGLE_CREDENTIALS'
+    - TERRAFORM_FILE=testing/aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
+    - TERRAFORM_FILE=testing/do DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
+    - TERRAFORM_FILE=testing/gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
 
 install: "pip install -r requirements.txt"
 
 before_script: 
   - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
-  - docker pull sehqlr/mantl:testing
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "ls /local"
+  - docker pull $DOCKER_IMAGE
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker_setup.py"
 
 script: 
   - python2 testing/test-health-checks.py
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 testing/build-cluster.py"
+    # ssh-agent is getting evaluated in travis, not in the container
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "./docker_ssh.sh; python2 testing/build-cluster.py"
 
 after_script:
   # Just once doesn't always work
-  - terraform destroy --force || true
-  - terraform destroy --force
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "./docker_ssh.sh; terraform destroy --force || true; terraform destroy --force"
 
 after_success: echo "slack notification here"
 
