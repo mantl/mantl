@@ -75,6 +75,32 @@ Uninstalling the Chronos addon can be done with a single API call. For example:
 You will need to adjust the ``creds`` and ``url`` variables with values that are
 applicable to your cluster.
 
+Upgrading from 1.0
+------------------
+
+If you are upgrading from a Mantl 1.0 cluster that is already running Chronos,
+there is actually little reason to switch over to the addon version that runs in
+Marathon. Feel free to continue using your existing Chronos installation.
+However, if for some reason you want to switch, you can run the following steps
+to disable the existing Chronos install.
+
+.. warning::
+
+   Please note that you will need to recreate any tasks you already have
+   scheduled in Chronos. They will not be automatically migrated.
+
+.. code-block:: shell
+
+   ansible 'role=control' -s -m shell -a 'consul-cli service-deregister chronos'
+   ansible 'role=control' -s -m shell -a 'rm /etc/consul/chronos.json'
+   ansible 'role=control' -s -m service -a 'name=chronos enabled=no state=stopped'
+
+Now you can install the addon in the usual way:
+
+.. code-block:: shell
+
+   ansible-playbook addons/chronos.yml
+
 Variables
 ---------
 
