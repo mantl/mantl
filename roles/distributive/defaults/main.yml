@@ -1,4 +1,4 @@
 ---
-distributive_package: https://bintray.com/artifact/download/siddharthist/distributive-testing/distributive-0.2.5-1.x86_64.rpm
+distributive_package: distributive
 distributive_interval: 1m
 distributive_timeout: 30s
