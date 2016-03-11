@@ -14,22 +14,9 @@ Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
 the template located at ``terraform/aws.sample.tf``. The beginning of it looks like this:
 
-.. code-block:: json
-
-  variable "control_count" { default = 3 }
-  variable "worker_count" { default = 2 }
-  variable "edge_count" { default = 2 }
-  variable "datacenter" {default = "aws-us-west-2"}
-  variable "region" {default = "us-west-2"}
-  variable "short_name" {default = "mantl"}
-  variable "source_ami" {default ="ami-d440a6e7"}
-  variable "ssh_username" {default = "centos"}
-
-  provider "aws" {
-    access_key = ""
-    secret_key = ""
-    region = "${var.region}"
-  }
+.. include:: ../../terraform/aws.sample.tf
+   :end-before: # _local is for development only
+   :code:
 
 Copy that *file* in it's entirety to the root of the project as ``aws.tf`` to start
 customization. In the next sections, we'll describe the settings that you need
