@@ -95,7 +95,10 @@ to disable the existing Chronos install.
    ansible 'role=control' -s -m shell -a 'rm /etc/consul/chronos.json'
    ansible 'role=control' -s -m service -a 'name=chronos enabled=no state=stopped'
 
-Now you can install the addon in the usual way:
+The new method of installing Chronos requires a version of mantl-api later than
+0.1.7. You can upgrade mantl-api manually, or run a sample playbook from a more
+recent version of Mantl (after 1.0.4) to get it. After upgrading mantl-api, you
+can install the addon in the usual way:
 
 .. code-block:: shell
 
@@ -136,7 +139,7 @@ Variables
 
 .. data:: chronos_disable_after_failures
 
-   Disables a job after this many failures have occurred. 
+   Disables a job after this many failures have occurred.
 
    default: 0
 
@@ -160,7 +163,7 @@ Variables
 
 .. data:: chronos_graphite_reporting_interval
 
-   Graphite reporting interval (seconds). 
+   Graphite reporting interval (seconds).
 
    default: 60
 
@@ -205,7 +208,7 @@ Variables
 .. data:: chronos_min_revive_offers_interval
 
    Do not ask for all offers (also already seen ones) more often than this
-   interval (ms). 
+   interval (ms).
 
    default: 5000
 
@@ -229,13 +232,13 @@ Variables
 
 .. data:: chronos_task_epsilon
 
-   The default epsilon value for tasks, in seconds. 
+   The default epsilon value for tasks, in seconds.
 
    default: 60
 
 .. data:: chronos_zk_hosts
 
-   The list of ZooKeeper servers for storing state. 
+   The list of ZooKeeper servers for storing state.
 
    default: "zookeeper.service.consul:2181"
 
