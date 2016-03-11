@@ -8,10 +8,12 @@ using Ansible variables.
    :maxdepth: 1
 
    calico.rst
+   chronos.rst
    collectd.rst
    consul.rst
    dnsmasq.rst
    docker.rst
+   elk.rst
    etcd.rst
    glusterfs.rst
    haproxy.rst
@@ -20,7 +22,6 @@ using Ansible variables.
    mesos.rst
    traefik.rst
    zookeeper.rst
-   elk.rst
 
 The project also includes a number of Ansible roles that multiple components can
 use:

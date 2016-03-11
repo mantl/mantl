@@ -22,6 +22,7 @@ Features
   isolation and sharing across distributed services
 * `Marathon <https://mesosphere.github.io/marathon/>`_ for cluster management of
   long running containerized services
+* `Chronos <https://mesos.github.io/chronos/>`_ a distributed task scheduler
 * `Consul <http://consul.io>`_ for service discovery
 * `Vault <http://vaultproject.io>`_ for managing secrets
 * `Docker <http://docker.io>`_ container runtime
