@@ -22,9 +22,4 @@ RUN mkdir -p /tmp/terraform/ && \
 ENV TERRAFORM_STATE $MANTL_CONFIG_DIR/terraform.tfstate
 
 WORKDIR /mantl
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["./docker_launch.sh"]
-# DOCS NEEDED:
-# copy over keys/certs if preexisting, otherwise generate ssh keys
-# copy over *.tf, mantl.yml, and security.yml if pre-existing
-# set env vars
+ENTRYPOINT ["/usr/bin/ssh-agent", "-t", "3600", "/bin/sh", "-c"]
