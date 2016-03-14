@@ -64,7 +64,10 @@ distributed services
 * [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
 * [Calico](http://www.projectcalico.org) a new kind of virtual network
 * [collectd](https://collectd.org/) for metrics collection
+* [Chronos](https://mesos.github.io/chronos/) a distributed task scheduler
 * [Kong](http://getkong.org) for managing APIs
+
+See the `addons/` directory for the most up-to-date information.
 
 ### Goals
 * Security
