@@ -12,8 +12,8 @@ Getting Started
 General Information about Mantl with Ansible
 ============================================
 
-The Mantl project uses Ansible to bring up
-nodes and clusters. This generally means that you need three things:
+The Mantl project uses Ansible to bring up nodes and clusters. This generally
+means that you need three things:
 
 1. Hosts to use as the base for your cluster
 2. An `inventory file`_ with the hosts you want to be modified. Mantl includes
@@ -75,6 +75,7 @@ Here are some guides specific to each of the platforms that Mantl supports:
 - `digitalocean.rst`_
 - `vsphere.rst`_
 - `softlayer.rst`_
+- `clc.rst`_
 
 Deploying software via Ansible
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -95,9 +96,6 @@ of ``ansible`` or ``ansible-playbook`` to specify the inventory file path.
 .. code-block:: shell
 
        ansible-playbook -i path/to/inventory -e @security.yml mantl.yml
-
-Steps to deploying via Ansible:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Step 1: Add password to the ssh-agent
 -------------------------------------
@@ -140,9 +138,9 @@ Step 4: Deploy the software
 
 First, you will need to customize a playbook. A sample can be found at
 ``sample.yml`` in the root directory which you can copy to ``mantl.yml``.  You
-can find more about customizing this at `playbooks`_. The main change you'll
-want to make is changing ``consul_acl_datacenter`` to your preferred ACL
-datacenter. If you only have one datacenter, you can remove this variable.
+can find more about customizing this at `playbooks`_. You'll want to change
+``consul_acl_datacenter`` to your preferred ACL datacenter. If you only have
+one datacenter, you can remove this variable.
 
 Next, assuming you've placed the filled-out template at ``mantl.yml``:
 
