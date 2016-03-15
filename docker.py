@@ -7,7 +7,7 @@ import os.path
 from os import symlink
 from os.path import exists, join
 from shlex import split
-from sys import exit
+from sys import argv, exit
 from subprocess import call
 
 def link_or_generate_ssh_keys():
@@ -63,14 +63,37 @@ def link_or_generate_security_file():
         call(split('./security-setup --enable=false'))
 
 
+def setup():
+    link_or_generate_ssh_keys()
+    link_ansible_playbook()
+    link_terraform_files()
+    link_or_generate_security_file()
+
+
+def deploy():
+    link_or_generate_ssh_keys()
+    # ssh-add
+    # terraform get
+    # terraform apply -state=$TERRAFORM_STATE
+    # ansible-playbook /mantl/playbooks/wait-for-hosts.yml
+    # ansible-playbook mantl.yml -e @security.yml
+
+def test():
+    # testing run_test|build-cluster.py
+
+
 if __name__ == "__main__":
 
     if 'MANTL_CONFIG_DIR' not in os.environ:
         print('mantl.readthedocs.org for mantl config dir')
         exit(1)
 
-    link_or_generate_ssh_keys()
-    link_ansible_playbook()
-    link_terraform_files()
-    link_or_generate_security_file()
-    exit(0)
+    if argv:
+        if argv[1] == 'setup':
+            setup()
+        elif argv[1] == 'deploy':
+            deploy()
+        elif argv[1] == 'test':
+            test()
+    else:
+        print("Usage: docker.py [CMD]")
