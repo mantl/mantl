@@ -15,7 +15,7 @@
 - name: install distributive, health check packages for current role
   become: yes
   yum:
-    state: present
+    state: latest
     name: "{{ item }}"
   tags:
     - distributive
