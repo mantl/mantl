@@ -1,0 +1,12 @@
+[volume:docker]
+group = {{ volume_group_name }}
+volume = {{ docker_volume_name }}
+size = {{ docker_volume_size }}
+
+{% if docker_lvm_backed|bool and docker_storage_driver in ["btrfs", "overlay"] %}
+[filesystem:docker]
+dev = {{ docker_volume_device }}
+fstype = {{ docker_volume_fs_type }}
+mount = {{ docker_volume_mount }}
+required_by = docker-storage-setup.service docker.service
+{% endif %}
