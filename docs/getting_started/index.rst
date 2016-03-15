@@ -34,6 +34,15 @@ Your hosts will have to be accessible with your SSH key. If you're unfamiliar
 with SSH keys, please read `DigitalOcean's guide to setting up SSH keys
 <https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2>`_.
 
+   openstack.rst
+   gce.rst
+   aws.rst
+   digitalocean.rst
+   vsphere.rst
+   softlayer.rst
+   clc.rst
+   bare-metal.rst
+
 There are several preparatory steps to provisioning the cloud hosts that are
 common to all providers:
 
