@@ -187,40 +187,40 @@ the mantl directory.
 ::
 
     [role=control]
-    control01 private_ipv4=172.16.222.6 ansible_ssh_host=172.16.222.6
-    control02 private_ipv4=172.16.222.7 ansible_ssh_host=172.16.222.7
-    control03 private_ipv4=172.16.222.8 ansible_ssh_host=172.16.222.8
+    control-01 private_ipv4=172.16.222.6 ansible_ssh_host=172.16.222.6
+    control-02 private_ipv4=172.16.222.7 ansible_ssh_host=172.16.222.7
+    control-03 private_ipv4=172.16.222.8 ansible_ssh_host=172.16.222.8
 
     [role=control:vars]
     consul_is_server=true
     lvm_physical_device=/dev/sda3
 
     [role=worker]
-    resource01 private_ipv4=172.16.222.11 ansible_ssh_host=172.16.222.11
-    resource02 private_ipv4=172.16.222.12 ansible_ssh_host=172.16.222.12
-    resource03 private_ipv4=172.16.222.13 ansible_ssh_host=172.16.222.13
+    worker-001 private_ipv4=172.16.222.11 ansible_ssh_host=172.16.222.11
+    worker-002 private_ipv4=172.16.222.12 ansible_ssh_host=172.16.222.12
+    worker-003 private_ipv4=172.16.222.13 ansible_ssh_host=172.16.222.13
 
     [role=worker:vars]
     consul_is_server=false
     lvm_physical_device=/dev/sda3
 
     [role=edge]
-    edge01 private_ipv4=172.16.222.16 ansible_ssh_host=172.16.222.16
-    edge02 private_ipv4=172.16.222.17 ansible_ssh_host=172.16.222.17
+    edge-01 private_ipv4=172.16.222.16 ansible_ssh_host=172.16.222.16
+    edge-02 private_ipv4=172.16.222.17 ansible_ssh_host=172.16.222.17
 
     [role=edge:vars]
     consul_is_server=false
     lvm_physical_device=/dev/sda3
 
     [dc=dc1]
-    control01
-    control02
-    control03
-    resource01
-    resource02
-    resource03
-    edge01
-    edge02
+    control-01
+    control-02
+    control-03
+    worker-001
+    worker-002
+    worker-003
+    edge-01
+    edge-02
 
 I had to add the ``ansible_ssh_host`` line to run
 ``playbooks/reboot-hosts.yml`` and the ``private_ipv4`` is needed by several
