@@ -4,9 +4,9 @@ env:
      - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=sample.yml
      - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=sample.yml
      - TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=sample.yml
-    # - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=kubernetes.yml
-    # - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=kubernetes.yml
-    # - TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=kubernetes.yml
+     # TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=kubernetes.yml
+     # TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=kubernetes.yml
+     # TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=kubernetes.yml
 
 install: "pip install -r requirements.txt"
 
@@ -24,14 +24,15 @@ before_script:
 
 script: python2 testing/build-cluster.py
 
-# Just once doesn't always work
 after_script:
   - terraform destroy --force || true
   - terraform destroy --force
-
-after_success: echo "slack notification here"
 
 addons:
   apt:
     packages:
       - unzip
+
+notifications:
+  slack:
+    secure: eX3VgtKQ48rzKGdXpIZZVYINffI2wbqhqoJFUxHO1Zku6tXzbt0R+r3NVHo37wBID63bkXjYqjZuv+JRUtvf/XO51+QkTqCCZ6iC3lr6IEqRpzxXsmNYf+QPhuN2kvVTSyycHFXdwQLL7sCniFSmEcLdu6xMpobI4PUwi2OvHj4=
