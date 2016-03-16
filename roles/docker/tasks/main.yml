@@ -69,6 +69,7 @@
   with_items:
     - 10-options.conf
     - 12-network-options.conf
+    - 14-storage-options.conf
   notify:
     - reload docker
     - restart docker
