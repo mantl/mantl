@@ -15,14 +15,14 @@
 - name: install distributive, health check packages for current role
   become: yes
   yum:
-    state: latest
+    state: present
     name: "{{ item }}"
   tags:
     - distributive
     - bootstrap
   with_items:
     - "{{ distributive_package }}"
-    - "distributive-{{ current_role }}"
+    - "distributive-{{ current_role }}-{{ checklist_versions[current_role] }}"
 
 - name: create consul configuration directory
   become: yes

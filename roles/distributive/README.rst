@@ -20,3 +20,9 @@ You can use these variables to customize your Distributive installation.
 .. data:: distributive_timeout
 
    The timeout for running distributive checks. Default is "30s".
+
+.. data:: checklist_versions
+
+   The version of the checklist package to install for the specified role.
+   Defaults are different for each role, but are of the form e.g.
+   ``consul: 0.2.4-1``.
