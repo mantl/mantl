@@ -24,7 +24,7 @@
     dest: /etc/systemd/system/traefik.service.d/marathon.conf
     content: |
       [Service]
-      ExecStartPre=-/usr/bin/smlr {{ traefik_marathon_endpoint }}/v2/leader
+      ExecStartPre=-/usr/bin/smlr http {{ traefik_marathon_endpoint }}/v2/leader
   notify:
     - reload systemd
     - restart traefik
