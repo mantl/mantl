@@ -12,7 +12,7 @@
     - wait for marathon to listen
 
 - name: wait for marathon to listen
-  command: /usr/local/bin/marathon-wait-for-listen.sh
+  command: /usr/bin/smlr http "http://localhost:{{ marathon_port }}/ping"
 
 - name: reload consul
   sudo: yes

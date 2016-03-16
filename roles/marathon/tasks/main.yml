@@ -15,15 +15,6 @@
   tags:
     - marathon
 
-- name: install wait script
-  sudo: yes
-  template:
-    src: marathon-wait-for-listen.sh.j2
-    dest: /usr/local/bin/marathon-wait-for-listen.sh
-    mode: 0755
-  tags:
-    - marathon
-
 - include: conf.yml
 
 - name: configure marathon unit file
