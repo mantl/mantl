@@ -28,8 +28,8 @@ docker_network_options:
 # Used with docker-storage-setup
 docker_storage_driver: overlay
 
-## Settings for devicemapper thinprovider
-
+## Settings for devicemapper thinprovider (docker-storage-setup)
+## These are not used for overlay on lvm
 ## Refer to commentaries in ../templates/docker-storage-setup.conf.j2
 ## or `man lvcreate` for acceptable sizes, and their syntax
 docker_lvm_data_volume_size: 40%FREE
