@@ -14,16 +14,15 @@ install: "pip install -r requirements.txt"
 before_script: 
   - mv $TERRAFORM_FILE $TERRAFORM_FILE.tf
   - docker pull $DOCKER_IMAGE
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE python2 docker_setup.py
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_IMAGE "python2 docker.py setup"
 
 script: 
   - python2 testing/test-health-checks.py
-    # ssh-agent is getting evaluated in travis, not in the container
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE /bin/sh testing/start_build.sh
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-build"
 
 after_script:
   # Just once doesn't always work
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE /bin/sh testing/destroy_build.sh
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-destroy"
 
 after_success: echo "slack notification here"
 

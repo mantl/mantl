@@ -1,6 +1,6 @@
 FROM alpine:3.3
 
-RUN apk add --no-cache build-base git openssh openssl py-pip python python-dev unzip \
+RUN apk add --no-cache build-base curl git openssh openssl py-pip python python-dev unzip \
 	&& git clone https://github.com/CiscoCloud/mantl /mantl \
 	&& apk add --no-cache build-base python-dev py-pip \
 	&& pip install -r /mantl/requirements.txt \
