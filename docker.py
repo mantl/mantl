@@ -145,7 +145,7 @@ def ci_build():
 
     else:
         logging.info("Starting cloud provider test")
-        return call(split("python2 testing/build-cluster.py"))
+        exit(call(split("python2 testing/build-cluster.py")))
 
 
 def ci_destroy():
@@ -155,7 +155,7 @@ def ci_destroy():
     for i in range(2):
         returncode = call(split("terraform destroy --force"))
 
-    return returncode
+    exit(returncode)
 
 
 if __name__ == "__main__":
