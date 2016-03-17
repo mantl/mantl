@@ -95,20 +95,40 @@ def ansible():
 
 def ci_build():
     """Kick off a Continuous Integration job"""
-    if 'TRAVIS_REPO_SLUG' in os.environ: print(os.environ['TRAVIS_REPO_SLUG'])
     link_or_generate_ssh_keys()
 
-    commit_range_filter = 'git diff --name-only "$TRAVIS_COMMIT_RANGE" | grep -v -e \'^docs/\' -e \'md$\' -e \'rst$\''
-    commit_range = check_output(commit_range_filter)
+    # Filter out commits that are documentation changes.
+    if 'TRAVIS_COMMIT_RANGE' in os.environ:
+        commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
+    else:
+        commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT'])
+
+    commit_range_str = str(check_output(split(commit_range_cmd)))
+
+    commit_range = []
+    for commit in commit_range_str.split():
+        if commit.startswith('docs'): 
+            logging.info("Modified file in docs directory: %s", commit)
+        elif commit.endswith('md'): 
+            logging.info("Modified file has markdown extension: %s", commit)
+        elif commit.endswith('rst'): 
+            logging.info("Modified file has reST extension: %s", commit)
+        else:
+            logging.info("Modified file not marked as docfile: %s", commit)
+            commit_range.append(commit)
+
     if len(commit_range) < 1:
-        logging.info("All of the changes I found were in documentation files.")
+        logging.info("All of the changes I found were in documentation files. Skipping build")
         exit(0)
 
+    # Filter out commits that are pushes to non-master branches
     ci_branch = os.environ['TRAVIS_BRANCH']
     ci_is_pr = os.environ['TRAVIS_PULL_REQUEST']
     if ci_branch is not 'master' and ci_is_pr is False:
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
+
+    # TODO: add in check for forks
 
     return call(split("python2 testing/build-cluster.py"))
 

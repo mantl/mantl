@@ -4,7 +4,7 @@ RUN apk add --no-cache build-base curl git openssh openssl py-pip python python-
 	&& git clone https://github.com/CiscoCloud/mantl /mantl \
 	&& apk add --no-cache build-base python-dev py-pip \
 	&& pip install -r /mantl/requirements.txt \
-	&& apk del build-base git python-dev py-pip
+	&& apk del build-base python-dev py-pip
 
 VOLUME /local
 ENV MANTL_CONFIG_DIR /local
