@@ -98,10 +98,8 @@ def ci_build():
     link_or_generate_ssh_keys()
 
     # Filter out commits that are documentation changes.
-    if 'TRAVIS_COMMIT_RANGE' in os.environ:
-        commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
-    else:
-        commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT'])
+    logging.info(os.environ['TRAVIS_REPO_SLUG'])
+    commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
 
     commit_range_str = str(check_output(split(commit_range_cmd)))
 
@@ -128,9 +126,12 @@ def ci_build():
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
 
-    # TODO: add in check for forks
-
-    return call(split("python2 testing/build-cluster.py"))
+    # TODO: add in check for forks with TRAVIS_REPO_SLUG
+    if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
+        logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
+    else:
+        logging.info("Starting cloud provider test")
+        return call(split("python2 testing/build-cluster.py"))
 
 
 def ci_destroy():

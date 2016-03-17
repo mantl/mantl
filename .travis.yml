@@ -2,12 +2,13 @@ language: python
 env:
   global:
     - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
-    - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number'
+    - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number -e TRAVIS_COMMIT_RANGE -e TRAVIS_REPO_SLUG -e TRAVIS_BRANCH -e TRAVIS_PULL_REQUEST'
     - DOCKER_IMAGE=sehqlr/mantl:testing
   matrix:
     - TERRAFORM_FILE=testing/aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
     - TERRAFORM_FILE=testing/do DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
     - TERRAFORM_FILE=testing/gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
+    - TERRAFORM_FILE=OPENSTACK DOCKER_SECRETS='-e OS_KEY -e OS_IP'
 
 install: "pip install -r requirements.txt"
 
