@@ -34,8 +34,14 @@ def link_or_generate_ssh_keys():
     symlink_force(ssh_key, '/root/.ssh/id_rsa.pub')
 
 
-def link_terraform_files():
+def link_ci_terraform_file():
+    symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
+
+
+def link_user_defined_terraform_files():
     """Ensures that provided/chosen terraform files are symlinked"""
+
+    # Symlink tf files in the config dir
     cfg_d = os.environ['MANTL_CONFIG_DIR']
     tfs = [join(cfg_d, f) for f in os.listdir(cfg_d) if f.endswith('.tf')]
     if len(tfs):
@@ -43,6 +49,7 @@ def link_terraform_files():
             base = os.path.basename(tf)
             symlink_force(tf, base)
     else:
+        # Symlink tf files based on provider
         if 'MANTL_PROVIDER' not in os.environ:
             logging.critical("mantl.readthedocs.org for provider")
             exit(1)
@@ -70,11 +77,10 @@ def link_or_generate_security_file():
         symlink_force(security_file, 'security.yml')
 
 
-def setup():
+def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
     link_or_generate_ssh_keys()
     link_ansible_playbook()
-    link_terraform_files()
     link_or_generate_security_file()
 
 
@@ -96,6 +102,7 @@ def ansible():
 def ci_build():
     """Kick off a Continuous Integration job"""
     link_or_generate_ssh_keys()
+    link_ci_terraform_file()
 
     # Filter out commits that are documentation changes.
     logging.info(os.environ['TRAVIS_REPO_SLUG'])
@@ -129,6 +136,13 @@ def ci_build():
     # TODO: add in check for forks with TRAVIS_REPO_SLUG
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
         logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
+
+        ssh_cmd = 'ssh -i /root/.ssh/openstack -p {} shatfiel@{} "echo testing 123"'.format(os.environ['OS_PRT'], os.environ['OS_IP'])
+        with open('/root/.ssh/openstack', 'w') as key:
+            key.write(os.environ['OS_KEY'])
+
+        exit(call(split(ssh_cmd)))
+
     else:
         logging.info("Starting cloud provider test")
         return call(split("python2 testing/build-cluster.py"))
@@ -137,6 +151,7 @@ def ci_build():
 def ci_destroy():
     """Cleanup after ci_build"""
     link_or_generate_ssh_keys()
+    link_ci_terraform_file()
     for i in range(2):
         returncode = call(split("terraform destroy --force"))
 
@@ -154,8 +169,8 @@ if __name__ == "__main__":
 
     #TODO: replace this with either click or pypsi
     if len(argv) > 1:
-        if argv[1] == 'setup':
-            setup()
+        if argv[1] == 'ci-setup':
+            ci_setup()
         elif argv[1] == 'terraform':
             terraform()
         elif argv[1] == 'ansible':

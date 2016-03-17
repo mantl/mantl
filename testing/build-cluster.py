@@ -2,7 +2,7 @@
 from __future__ import print_function
 import subprocess
 from sys import exit
-from os import devnull
+from os import devnull, environ, symlink
 from time import sleep
 
 def run_cmd(cmd, attempts=1):
