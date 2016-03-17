@@ -26,11 +26,6 @@ after_script:
 
 after_success: echo "slack notification here"
 
-sudo: required
-
-services:
-  - docker
-
 addons:
   apt:
     packages:
