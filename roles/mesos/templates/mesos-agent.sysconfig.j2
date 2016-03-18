@@ -12,10 +12,10 @@ MESOS_LOGGING_LEVEL={{ mesos_logging_level }}
 MESOS_MASTER={{ mesos_zk }}
 
 # optional
-MESOS_ATTRIBUTES="node_id:{{ inventory_hostname }}"
+MESOS_ATTRIBUTES={{ mesos_attributes | join (";") }}
+MESOS_RESOURCES={{ mesos_resources | join (";") }}
 MESOS_CONTAINERIZERS=docker,mesos
 MESOS_EXECUTOR_REGISTRATION_TIMEOUT={{ mesos_executor_registration_timeout }}
-MESOS_RESOURCES={{ mesos_resources }}
 MESOS_WORK_DIR=/var/lib/mesos
 
 # authentication

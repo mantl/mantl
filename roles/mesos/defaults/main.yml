@@ -15,7 +15,13 @@ mesos_follower_port: 5051
 mesos_leader_cmd: mesos-master
 mesos_follower_cmd: mesos-slave
 mesos_executor_registration_timeout: 10mins
-mesos_resources: "ports(*):[4000-5000, 7000-8000, 9000-10000, 25000-26000, 31000-32000]"
+
+mesos_resources:
+  - "ports(*):[4000-5000, 7000-8000, 9000-10000, 25000-26000, 31000-32000]"
+
+mesos_attributes:
+  - "node_id:{{ inventory_hostname }}"
+
 mesos_cluster: mantl
 
 mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
