@@ -18,6 +18,13 @@
   tags:
     - common
 
+# make sure yum-utils is installed
+- name: add yum-utils
+  sudo: yes
+  yum:
+    name: yum-utils
+
+
 - name: increase timeouts in YUM
   sudo: yes
   shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
