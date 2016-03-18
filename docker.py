@@ -35,7 +35,9 @@ def link_or_generate_ssh_keys():
 
 
 def link_ci_terraform_file():
-    symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
+    tf_file = os.environ['TERRAFORM_FILE']
+    if exists(tf_file):
+        symlink_force(os.environ['TERRAFORM_FILE'], 'terraform.tf')
 
 
 def link_user_defined_terraform_files():
@@ -104,8 +106,13 @@ def ci_build():
     link_or_generate_ssh_keys()
     link_ci_terraform_file()
 
+    # Take different action for PRs from forks
+    if not os.environ['TRAVIS_REPO_SLUG'].startswith('CiscoCloud/'):
+        logging.warning("Because we can't unlock deploy keys for forks of the main project, we are going to make some prelim checks, then get back to you!")
+        logging.critical("Fork checks have not been implemented.")
+        exit(0)
+
     # Filter out commits that are documentation changes.
-    logging.info(os.environ['TRAVIS_REPO_SLUG'])
     commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
 
     commit_range_str = str(check_output(split(commit_range_cmd)))
@@ -133,13 +140,13 @@ def ci_build():
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
 
-    # TODO: add in check for forks with TRAVIS_REPO_SLUG
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
         logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
+        ssh_key_path = '/local/ci'
+        os.chmod(ssh_key_path, 0400)
 
-        ssh_cmd = 'ssh -i /root/.ssh/openstack -p {} shatfiel@{} "echo testing 123"'.format(os.environ['OS_PRT'], os.environ['OS_IP'])
-        with open('/root/.ssh/openstack', 'w') as key:
-            key.write(os.environ['OS_KEY'])
+        ssh_cmd = "cd mantl; git checkout --detach {}; python2 testing/build-cluster.py".format(os.environ['TRAVIS_COMMIT'])
+        ssh_cmd = 'ssh -i {} -p {} -o BatchMode=yes -o StrictHostKeyChecking=no travis@{} "{}"'.format(ssh_key_path, os.environ['OS_PRT'], os.environ['OS_IP'], ssh_cmd)
 
         exit(call(split(ssh_cmd)))
 
@@ -152,8 +159,13 @@ def ci_destroy():
     """Cleanup after ci_build"""
     link_or_generate_ssh_keys()
     link_ci_terraform_file()
+
+    destroy_cmd = "terraform destroy --force"
+    if os.environ['TERRAFORM_FILE'] == 'OPENSTACK': 
+        destroy_cmd = "ssh -i {} -p {} -o BatchMode=yes -o StrictHostKeyChecking=no travis@{} '{}'".format('/local/ci', os.environ['OS_PRT'], os.environ['OS_IP'], destroy_cmd)
+
     for i in range(2):
-        returncode = call(split("terraform destroy --force"))
+        returncode = call(split(destroy_cmd))
 
     exit(returncode)
 
