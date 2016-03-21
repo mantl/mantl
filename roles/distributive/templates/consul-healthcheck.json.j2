@@ -1,0 +1,14 @@
+{
+    "check": {
+        "id": "distributive-{{ current_role }}-checks",
+        "name": "{{ current_role }} Distributive Mantl Health Checks",
+        "script": "/bin/distributive -f /etc/distributive.d/distributive-{{ current_role }}.json -d '' --verbosity=info",
+        {% if current_role in ['chronos'] -%}
+        "service_id": "{{ current_role }}",
+        {%- elif current_role == "zookeeper" -%}
+        "service_id": "2181:zkid-{{ zookeeper_id }}",
+        {%- endif %}
+        "interval": "{{ distributive_interval }}",
+        "timeout": "{{ distributive_interval }}"
+    }
+}

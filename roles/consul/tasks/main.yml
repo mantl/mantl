@@ -104,6 +104,3 @@
     - consul
 
 - include: nginx_proxy.yml
-
-# symlink to distributive checklist, register check with Consul
-- include: distributive.yml
