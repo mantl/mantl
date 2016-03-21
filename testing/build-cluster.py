@@ -47,7 +47,6 @@ if __name__ == "__main__":
         "~/.ssh/id_rsa"
     ]
     setup = [
-        (["python2", "security-setup"], 1),
         (["terraform", "get"], 1),
         (["terraform", "plan"], 1),
         (["terraform", "apply"], 1),
