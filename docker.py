@@ -145,8 +145,23 @@ def ci_build():
         ssh_key_path = '/local/ci'
         os.chmod(ssh_key_path, 0400)
 
-        ssh_cmd = "cd mantl; git clone https://github.com/CiscoCloud/mantl.git {0}; cd {0}; git checkout --detach {0}; python2 testing/build-cluster.py".format(os.environ['TRAVIS_COMMIT'])
-        ssh_cmd = 'ssh -i {} -p {} -o BatchMode=yes -o StrictHostKeyChecking=no travis@{} /bin/sh -c "{}"'.format(ssh_key_path, os.environ['OS_PRT'], os.environ['OS_IP'], ssh_cmd)
+        # This string will be collapsed into one line
+        # I made this change for readability
+        ssh_cmd = '''
+ssh -i {keypath} -p {ssh_port} 
+-o BatchMode=yes -o StrictHostKeyChecking=no
+travis@{ssh_ip} /bin/sh -c "
+cd mantl;
+git clone https://github.com/CiscoCloud/mantl.git {commit};
+cd {commit}; 
+git checkout {commit}; 
+python2 testing/build-cluster.py"
+        '''
+        ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
+                keypath='/local/ci', 
+                ssh_port=os.environ['OS_PRT'], 
+                ssh_ip=os.environ['OS_IP'])
+        ssh_cmd = " ".join(ssh_cmd.splitlines())
 
         exit(call(split(ssh_cmd)))
 
@@ -160,9 +175,23 @@ def ci_destroy():
     link_or_generate_ssh_keys()
     link_ci_terraform_file()
 
-    destroy_cmd = "terraform destroy --force; terraform destroy --force; cd /mantl; rm -fr {}".format(os.environ['TRAVIS_COMMIT'])
+    destroy_cmd = "terraform destroy --force; terraform destroy --force"
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK': 
-        destroy_cmd = "ssh -i {} -p {} -o BatchMode=yes -o StrictHostKeyChecking=no travis@{} /bin/sh -c '{}'".format('/local/ci', os.environ['OS_PRT'], os.environ['OS_IP'], destroy_cmd)
+        destroy_cmd = '''
+ssh -i {keypath} -p {ssh_port} 
+-o BatchMode=yes -o StrictHostKeyChecking=no 
+travis@{ssh_ip} /bin/sh -c "
+cd mantl/{commit}; 
+{0}; 
+cd ..; 
+rm -fr {commit};"
+        '''
+        destroy_cmd = destroy_cmd.format(destroy_cmd, 
+                keypath='/local/ci', 
+                ssh_port=os.environ['OS_PRT'],
+                ssh_ip=os.environ['OS_IP'],
+                commit=os.environ['TRAVIS_COMMIT'])
+        destroy_cmd = " ".join(destroy_cmd.splitlines())
 
     for i in range(2):
         returncode = call(split(destroy_cmd))
