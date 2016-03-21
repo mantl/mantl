@@ -48,39 +48,29 @@ def mapper_device_name(dm_device):
     dm_name = check_output([DMSETUP_CMD, "info",  "-C", "--noheadings",  "-o", "name",  dm_device])
     return "/dev/mapper/{}".format(dm_name.rstrip())
 
+def query_lvm(mod, o="all", extra=None):
+    query = [mod, "--nameprefix", "--noheadings", "-o", o, "--separator", ";"]
+    if extra:
+        query.extend(extra)
+    output = check_output(query)
+    def chunk(ch):
+        k, v = ch.split("=")
+        return k.replace("LVM2_", "").lower(), v
+    for line in output.splitlines():
+        yield dict([chunk(each) for each in line.split(";")])
 
 def pvs():
-    output = check_output([PVS_CMD, "--noheadings", "-o", "pv_name,vg_name", "--separator", ";"])
-    for line in output.splitlines():
-        parts = line.strip().split(';')
-        if parts[0].startswith("/dev/dm-"):
-            parts[0] = find_mapper_device_name(parts[0])
-        yield {
-            'name': parts[0],
-            'vg_name': parts[1],
-        }
+    for each in query_lvm(PVS_CMD):
+        if each["pv_name"].startswith("/dev/dm-"):
+            each["pv_name"] = mapper_device_name(each["pv_name"])
+        yield each
 
 def vgs():
-    output = check_output([VGS_CMD, "--noheadings", "-o",  "vg_name,pv_count,lv_count", "--separator", ";"])
-    for line in output.splitlines():
-        parts = line.strip().split(';')
-        yield {
-            'vg_name': parts[0],
-            'pv_count': int(parts[1]),
-            'lv_count': int(parts[2]),
-        }
+    return query_lvm(VGS_CMD)
 
 
 def lvs(vg, units):
-    dp = re.compile(r"(\.|,)")
-    output = check_output([LVS_CMD, "--noheadings", "-o", "lv_name,size", "--units", units, "--separator", ";", vg])
-    for line in output.splitlines():
-        parts = line.strip().split(';')
-        yield {
-            'lv_name': parts[0],
-            'size': int(dp.split(parts[1])[0]),
-        }
-
+    return query_lvm(LVS_CMD, extra=["--units", units, vg])
 
 def process_vg(sec, params):
     name = params.get(sec, "name")
@@ -100,8 +90,8 @@ def process_vg(sec, params):
     # check pv for already used devices
     parsed_pvs = pvs()
     for each in parsed_pvs:
-        if each['name'] in dev_list and each['vg_name'] != name:
-            fail("Device {} is already in {} volume group.".format(each['name'],each['vg_name']))
+        if each['pv_name'] in dev_list and each['vg_name'] != name:
+            fail("Device {} is already in {} volume group.".format(each['pv_name'],each['vg_name']))
         if each['vg_name'] == name:
             current_devs.add(os.path.realpath(each['name']))
 
