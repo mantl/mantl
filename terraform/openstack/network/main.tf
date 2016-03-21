@@ -31,5 +31,5 @@ output "network_uuid" {
 }
 
 output "subnet_uuid" {
-  value = "${openstack_networking_subnet_v2.subnet.id}"
+  value = "${openstack_networking_router_interface_v2.router-interface.subnet_id}"
 }
