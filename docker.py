@@ -175,7 +175,7 @@ def ci_destroy():
     link_or_generate_ssh_keys()
     link_ci_terraform_file()
 
-    destroy_cmd = "terraform destroy --force; terraform destroy --force"
+    destroy_cmd = "terraform destroy --force"
     if os.environ['TERRAFORM_FILE'] == 'OPENSTACK': 
         destroy_cmd = '''
 ssh -i {keypath} -p {ssh_port} 

@@ -19,4 +19,5 @@ module "mantl-ci-dc" {
   control_count = 3
   worker_count = 3
   edge_count = 2
+  ssh_key = "/root/.ssh/id_rsa.pub"
 }
