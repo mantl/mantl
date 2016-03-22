@@ -4,6 +4,13 @@ dnsmasq
 The project uses `dnsmasq <http://www.thekelleys.org.uk/dnsmasq/doc.html>`_ to
 configure each host to use :doc:`consul` for DNS.
 
+This role also adds (as of Mantl 1.1) search paths for ``.consul`` and
+``.node.consul``. This means that you can address your nodes by their consul
+names directly: if you have a node named ``x``, you can address it there or at
+``x.node``, as well as the fully-qualified ``x.node.consul``. You can also
+address services using the shortened version (for example ``zookeeper.service``
+instead of the full ``zookeeper.service.consul``.)
+
 Changes
 -------
 
@@ -24,4 +31,4 @@ The dnsmasq role uses ``consul_dns_domain``, ``consul_servers_group``, and
 
    The version of ``mantl-dns`` to install.
 
-   Default: ``1.0.0``
+   Default: ``1.1.0``
