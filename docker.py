@@ -184,7 +184,7 @@ travis@{ssh_ip} /bin/sh -c "
 cd mantl/{commit}; 
 {0}; 
 cd ..; 
-rm -fr {commit};"
+rm -fr {commit}"
         '''
         destroy_cmd = destroy_cmd.format(destroy_cmd, 
                 keypath='/local/ci', 
