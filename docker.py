@@ -82,6 +82,7 @@ def link_or_generate_security_file():
 def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
     link_or_generate_ssh_keys()
+    call("ssh-add")
     link_ansible_playbook()
     link_or_generate_security_file()
 
@@ -104,6 +105,7 @@ def ansible():
 def ci_build():
     """Kick off a Continuous Integration job"""
     link_or_generate_ssh_keys()
+    call("ssh-add")
     link_ci_terraform_file()
 
     # Take different action for PRs from forks
@@ -173,6 +175,7 @@ python2 testing/build-cluster.py"
 def ci_destroy():
     """Cleanup after ci_build"""
     link_or_generate_ssh_keys()
+    call("ssh-add")
     link_ci_terraform_file()
 
     destroy_cmd = "terraform destroy --force"
