@@ -4,7 +4,6 @@ variable subnet_cidr { default = "10.0.0.0/24" }
 variable public_key { default = "~/.ssh/id_rsa.pub" }
 
 # resources will start with "travis-ci-"
-variable name { default = "travis-ci-${var.build_number}" }
 variable control_count { default = "3"} # mesos masters, zk leaders, consul servers
 variable worker_count { default = "5"}  # worker nodes
 variable edge_count { default = "2"}    # load balancer nodes
@@ -27,7 +26,7 @@ variable edge_flavor_name { default = "CO2-Medium" }
 module "ssh-key" {
   source = "./terraform/openstack/keypair_v2"
   public_key = "${var.public_key}"
-  keypair_name = "${var.name}-key"
+  keypair_name = "travis-ci-${var.build_number}-key"
 }
 
 #Create a network with an externally attached router
@@ -61,7 +60,7 @@ module "floating-ips-edge" {
 # Create instances for each of the roles
 module "instances-control" {
   source = "./terraform/openstack/instance"
-  name = "${var.name}"
+  name = "travis-ci-${var.build_number}"
   count = "${var.control_count}"
   role = "control"
   volume_size = "50"
@@ -74,7 +73,7 @@ module "instances-control" {
 
 module "instances-worker" {
   source = "./terraform/openstack/instance"
-  name = "${var.name}"
+  name = "travis-ci-${var.build_number}"
   count = "${var.worker_count}"
   volume_size = "100"
   count_format = "%03d"
@@ -88,7 +87,7 @@ module "instances-worker" {
 
 module "instances-edge" {
   source = "./terraform/openstack/instance"
-  name = "${var.name}"
+  name = "travis-ci-${var.build_number}"
   count = "${var.edge_count}"
   volume_size = "20"
   count_format = "%02d"
