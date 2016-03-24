@@ -1,9 +1,9 @@
+{% if docker_lvm_backed|bool and docker_storage_driver in ["btrfs", "overlay"] %}
 [volume:docker]
 group = {{ volume_group_name }}
 volume = {{ docker_volume_name }}
 size = {{ docker_volume_size }}
 
-{% if docker_lvm_backed|bool and docker_storage_driver in ["btrfs", "overlay"] %}
 [filesystem:docker]
 dev = {{ docker_volume_device }}
 fstype = {{ docker_volume_fs_type }}
@@ -13,4 +13,11 @@ required_by = docker-storage-setup.service docker.service
 [write:config]
 file = /etc/sysconfig/docker-storage
 content = DOCKER_STORAGE_OPTIONS=--storage-driver {{ docker_storage_driver }} 
+{% endif %}
+{%if docker_lvm_backed|bool and docker_storage_driver == "devicemapper" %}
+[thin:docker]
+group = {{ volume_group_name }}
+pool = {{ docker_volume_name }}
+size = {{ docker_lvm_data_volume_size }}
+
 {% endif %}
