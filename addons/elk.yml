@@ -1,0 +1,11 @@
+# Complete the ELK stack. Run this playbook after running the core playbook
+# (sample.yml)
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: role=control
+  roles:
+    - elk

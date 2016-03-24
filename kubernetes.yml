@@ -12,7 +12,6 @@
 
 - hosts: all
   vars:
-    consul_dns_domain: consul
     consul_servers_group: role=control
   roles:
     - common
@@ -36,21 +35,19 @@
   vars:
     haproxy_domain: mi-lb.example.com
   roles:
-    - {role: k8s-minion, tags: k8s} 
+    - {role: k8s-minion, tags: k8s}
 
 # GlusterFS has to be provisioned in reverse order from Mesos: servers then
 # clients.
 #- hosts: role=control
 #  gather_facts: no
 #  vars:
-#    consul_dns_domain: consul
 #    glusterfs_mode: server
 #  roles:
 #    - glusterfs
 #
 #- hosts: role=worker
 #  vars:
-#    consul_dns_domain: consul
 #    glusterfs_mode: client
 #  roles:
 #    - glusterfs

@@ -1,5 +1,5 @@
 ---
-marathon_version: 0.9.0
+marathon_version: 0.13.0
 marathon_package: "marathon-{{ marathon_version }}"
 
 marathon_zk_auth: "{% if zk_marathon_user_secret is defined %}{{ zk_marathon_user }}:{{ zk_marathon_user_secret }}@{% endif %}"
@@ -10,6 +10,7 @@ marathon_zk_connect: "zk://{{ marathon_zk_auth}}{{ marathon_zk_dns }}:{{ maratho
 
 marathon_zk_acl_world: "world:anyone:cdrwa"
 marathon_zk_acl: "{% if zk_marathon_user_secret is defined %}digest:{{ zk_marathon_user }}:{{ zk_marathon_user_secret_digest}}:cdraw{% endif  %}"
+marathon_mesos: "{{ mesos_zk }}"
 
 marathon_zk_acl_cmd: "zookeepercli -servers localhost:{{ marathon_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ marathon_zk_chroot }} '{{ marathon_zk_acl_world }},{{ marathon_zk_acl }}'"
 
@@ -20,15 +21,17 @@ marathon_keystore_password: ""
 marathon_port: 18080
 marathon_proxy_port: 8080
 
+marathon_log_level: warn
+
 # framework authentication
 marathon_principal: marathon
 marathon_secret: ""
 
 # jobs
 mesos_consul_image: ciscocloud/mesos-consul
-mesos_consul_image_tag: v0.3
+mesos_consul_image_tag: v0.3.2
 mesos_consul_refresh: "7s"
 marathon_consul_image: ciscocloud/marathon-consul
 marathon_consul_image_tag: 0.2
 mantl_api_image: ciscocloud/mantl-api
-mantl_api_image_tag: 0.1.1
+mantl_api_image_tag: 0.1.7

@@ -36,6 +36,18 @@ of them. You should keep the follower machines free of "heavier" services
 running outside Mesos, as this will cause inaccurate resource availability
 counts in the cluster.
 
+Upgrading
+---------
+
+.. versionadded:: 1.0
+
+If you are running Mantl 0.5.1, you'll need to run the
+``playbooks/upgrade-mesos-marathon.yml`` playbook before reprovisioning your
+cluster to 1.0. The packaging format changed in the 1.0 release, this will
+ensure a smooth upgrade.
+
+Upgrades from releases prior to Mantl 0.5.1 have not been tested.
+
 Variables
 ---------
 
@@ -83,7 +95,7 @@ You can use these variables to customize your Mesos installation.
 
 .. data:: mesos_cluster
 
-   default: ``cluster1``
+   default: ``mantl``
 
 .. data:: mesos_zk_dns
 
@@ -129,3 +141,9 @@ You can use these variables to customize your Mesos installation.
    The secret to use for follower authentication
 
    default: not set. Set this to enable follower authentication.
+
+.. data:: mesos_logging_level
+
+   The log level for Mesos. This is set for all components.
+
+   Default: ``WARNING``

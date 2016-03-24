@@ -1,0 +1,24 @@
+{
+	"cpus": 0.25, 
+	"mem": 128,
+	"id": "jupyter",
+	"instances": 1,
+	"labels": {"traefik.frontend.entryPoints":"http,https,ws"},
+	"container": {
+    		"type": "DOCKER",
+    		"docker": {
+      			"image": "jupyter/minimal-notebook",
+      			"network": "BRIDGE",
+			"portMappings": [{
+                    		"containerPort": 8888,
+                    		"hostPort": 0,
+                    		"protocol": "tcp"
+                	}]
+    		},
+		"volumes": [{
+                	"containerPath": "/home/jovyan/work",
+                	"hostPath": "/mnt/container-volumes/jupyter",
+                	"mode": "RW"
+            	}]
+	}
+}

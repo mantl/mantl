@@ -1,60 +1,25 @@
 ---
-- name: install packages
+- name: install mantl-dns
   sudo: yes
   yum:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - dnsmasq
-    - bind-utils
-    - NetworkManager
+    name: "mantl-dns-{{ mantl_dns_version }}"
+    state: installed
   tags:
     - dnsmasq
     - bootstrap
 
-- name: collect nameservers
+- name: remove consul from list of search domains
   sudo: yes
-  shell: "cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2"
-  register: nameservers_output
+  command: sed -i'' 's/consul *//g' /etc/resolv.conf.masq
   tags:
     - dnsmasq
 
-- name: collect dns search list
+- name: remove localhost from list of resolvers
   sudo: yes
-  shell: "cat /etc/resolv.conf | grep -i '^search' | cut -d ' ' -f2- | tr ' ' '\n'"
-  register: dns_search_list_output
-  tags:
-    - dnsmasq
-
-- name: set nameservers
-  set_fact:
-    nameservers: "{{ nameservers_output.stdout_lines }}"
-  tags:
-    - dnsmasq
-
-- name: set dns search list
-  set_fact:
-    domain_search_list: "{{ dns_search_list_output.stdout_lines }}"
-  tags:
-    - dnsmasq
-
-- name: ensure dnsmasq.d directory exists
-  sudo: yes
-  file:
-    path: /etc/NetworkManager/dnsmasq.d
-    state: directory
-  tags:
-    - dnsmasq
-
-- name: configure dnsmasq for consul
-  sudo: yes
-  template:
-    src: 10-consul
-    dest: /etc/dnsmasq.d/10-consul
-    mode: 0755
-  when: consul_dc_group is defined
-  notify:
-    - restart dnsmasq
+  lineinfile:
+    dest: /etc/resolv.conf.masq
+    regexp: nameserver 127.0.0.1
+    state: absent
   tags:
     - dnsmasq
 
@@ -70,52 +35,4 @@
   tags:
     - dnsmasq
 
-- name: enable dnsmasq
-  sudo: yes
-  service:
-    name: dnsmasq
-    state: started
-    enabled: yes
-  tags:
-    - dnsmasq
-
-- name: configure networkmanager for dnsmasq
-  sudo: yes
-  lineinfile:
-    dest: /etc/NetworkManager/NetworkManager.conf
-    line: "dns=none"
-    insertafter: "^\\[main\\]$"
-  notify:
-    - restart networkmanager
-  tags:
-    - dnsmasq
-
-- name: List network-scripts which need fixup
-  sudo: yes
-  shell: "find /etc/sysconfig/network-scripts -name 'ifcfg-*'"
-  register: list_of_network_scripts
-
-- name: fixing PEERDNS in network-scripts
-  sudo: yes
-  lineinfile:
-    dest: "{{ item }}"
-    line: "PEERDNS=no"
-    regexp: ^PEERDNS=.*'
-  with_items: list_of_network_scripts.stdout_lines  
-  notify:
-    - restart networkmanager
-  tags:
-    - dnsmasq
-
-- name: add dnsmasq to /etc/resolv.conf
-  sudo: yes
-  template:
-    src: resolv.conf.j2
-    dest: /etc/resolv.conf
-    mode: 0644
-  tags:
-    - dnsmasq
-
 - meta: flush_handlers
-
-- include: distributive.yml

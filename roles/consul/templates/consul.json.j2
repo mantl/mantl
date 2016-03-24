@@ -4,6 +4,7 @@
   "node_name": "{{ inventory_hostname }}",
   "rejoin_after_leave": true,
   "domain": "{{ consul_dns_domain }}",
+  "log_level": "{{ consul_log_level }}",
   "retry_join": [ {{ consul_retry_join }} ],
 {% if consul_is_server|bool %}
   "server": true,
@@ -27,7 +28,6 @@
 {% endif %}
   "data_dir": "/var/lib/consul",
   "ui_dir": "/usr/share/consul-ui",
-  "enable_syslog": true,
   "disable_remote_exec": {{ consul_disable_remote_exec|to_nice_json }},
   "http_api_response_headers": {
     "Access-Control-Allow-Origin": "*"

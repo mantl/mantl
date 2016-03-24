@@ -1,5 +1,5 @@
 ---
-# Workaround for https://github.com/CiscoCloud/microservices-infrastructure/issues/161
+# Workaround for https://github.com/CiscoCloud/mantl/161
 - name: install latest device-mapper-libs
   sudo: yes
   yum:
@@ -33,12 +33,15 @@
   sudo: yes
   command: vgscan
   register: volume_groups
+  tags:
+    - docker
+    - lvm
 
 - name: Create volume group
   sudo: yes
   lvg:
     vg: "{{ lvm_volume_group_name }}"
-    pvs: "{{ lvm_physical_device }}"  
+    pvs: "{{ lvm_physical_device }}"
   when: volume_groups.stdout.find(lvm_volume_group_name) == -1
   tags:
     - docker

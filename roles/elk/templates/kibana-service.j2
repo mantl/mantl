@@ -1,0 +1,28 @@
+[Unit]
+Description=kibana
+After=docker.service
+Requires=docker.service
+Requires=dnsmasq.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker rm kibana
+ExecStartPre=-/usr/bin/docker pull {{ kibana_image }}:{{ kibana_image_tag }}
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=kibana \
+    --volume=/etc/kibana/kibana.yml:/opt/kibana/config/kibana.yml \
+    -p 5601:5601 \
+    {{ kibana_image }}:{{ kibana_image_tag }}
+
+
+ExecStop=/bin/bash -c " \
+    /usr/bin/docker kill kibana && \
+    /usr/bin/docker rm kibana"
+
+[Install]
+WantedBy=multi-user.target

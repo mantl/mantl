@@ -19,64 +19,36 @@
   tags:
     - logrotate
 
-- name: configure mesos logrotate
-  sudo: yes
+- name: copy component logrotate configurations
+  become: yes
   copy:
-    src: mesos
-    dest: /etc/logrotate.d/mesos
+    src: "{{ item.0 }}"
+    dest: "/etc/logrotate.d/{{ item.0 }}"
     mode: 0644
     owner: root
     group: root
+  when: item.1
+  with_together:
+    - [ mesos, docker, zookeeper ]
+    - [ true, true, role == 'control' ]
   tags:
+    - docker
     - logrotate
+    - mesos
+    - zookeeper
 
-- name: create mesos archive
+- name: create component archives
   sudo: yes
   file:
-    path: /var/log/mesos/archive
+    path: "/var/log/{{ item.0 }}/archive"
     mode: 0755
     state: directory
+  when: item.1
+  with_together:
+    - [ mesos, docker, zookeeper ]
+    - [ true, true, role == 'control' ]
   tags:
+    - docker
     - logrotate
-
-- name: configure docker logrotate
-  sudo: yes
-  copy:
-    src: docker
-    dest: /etc/logrotate.d/docker
-    mode: 0644
-    owner: root
-    group: root
-  tags:
-    - logrotate
-
-- name: create docker archive
-  sudo: yes
-  file:
-    path: /var/log/docker/archive
-    mode: 0755
-    state: directory
-  tags:
-    - logrotate
-
-- name: configure zookeeper logrotate
-  sudo: yes
-  copy:
-    src: zookeeper
-    dest: /etc/logrotate.d/zookeeper
-    mode: 0644
-    owner: root
-    group: root
-  when: "'role=control' in group_names"
-  tags:
-    - logrotate
-
-- name: create zookeeper archive
-  sudo: yes
-  file:
-    path: /var/log/zookeeper/archive
-    mode: 0755
-    state: directory
-  when: "'role=control' in group_names"
-  tags:
-    - logrotate
+    - mesos
+    - zookeeper

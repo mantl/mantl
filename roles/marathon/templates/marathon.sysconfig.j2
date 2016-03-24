@@ -1,0 +1,15 @@
+MARATHON_ARTIFACT_STORE=file:///etc/marathon/store
+MARATHON_EVENT_SUBSCRIBER=http_callback
+MARATHON_HOSTNAME={{ inventory_hostname }}.node.{{ consul_dns_domain }}
+MARATHON_HTTP_PORT=18080
+MARATHON_LOGGING_LEVEL={{ marathon_log_level }}
+MARATHON_MASTER={{ marathon_mesos }}
+MARATHON_ZK={{ marathon_zk_connect }}
+
+# ssl keystore
+{% if marathon_keystore_password == "" %}# {% endif %}MARATHON_SSL_KEYSTORE_PASSWORD={{ marathon_keystore_password }}
+{% if marathon_keystore_path == "" %}# {% endif %}MARATHON_SSL_KEYSTORE_PATH=/etc/sysconfig/marathon-keystore.jks
+
+# authentication
+{% if not (do_mesos_framework_auth|bool) %}# {% endif %}MARATHON_MESOS_AUTHENTICATION_PRINCIPAL={{ marathon_principal }}
+{% if not (do_mesos_framework_auth|bool) %}# {% endif %}MARATHON_MESOS_AUTHENTICATION_SECRET_FILE=/etc/sysconfig/marathon-mesos-authentication-secret

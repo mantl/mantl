@@ -7,6 +7,7 @@
   register: vault_init_output
   tags:
     - vault
+    - skip_ansible_lint
 
 - name: extract keys
   sudo: yes
@@ -30,12 +31,13 @@
 
 - name: create unseal script
   sudo: yes
-  changed_when: no
   when: "'Vault is already initialized' not in vault_init_output.stdout"
   template:
     src: vault.unseal.j2
-    dest: /etc/vault/vault.unseal
+    dest: /usr/local/bin/vault-unseal.sh
     mode: 0700
+  notify:
+    - restart vault
   tags:
     - vault
 
@@ -44,7 +46,7 @@
   run_once: yes
   when: "'Vault is already initialized' not in vault_init_output.stdout"
   lineinfile:
-    dest: security.yml
+    dest: "{{ playbook_dir }}/security.yml"
     line: 'vault_root_token: {{ vault_token }}'
     regexp: '^vault_root_token:.*'
     insertbefore: "^zk_marathon_user:"

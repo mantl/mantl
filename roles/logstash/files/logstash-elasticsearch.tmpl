@@ -1,0 +1,7 @@
+{{$es := service "client_port.elasticsearch-executor" "any"}}{{with $es}}
+output {
+  elasticsearch {
+    host => [{{range $idx, $service := $es}}{{if ne $idx 0}},{{end}}"{{.Address}}:{{.Port}}"{{end}}]
+    protocol => "http"
+  }
+}{{end}}

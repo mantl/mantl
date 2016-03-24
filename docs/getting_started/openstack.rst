@@ -1,7 +1,7 @@
 OpenStack
 =========
 
-microservices-infrastructure uses Terraform to provision hosts in OpenStack. You
+Mantl uses Terraform to provision hosts in OpenStack. You
 can `download Terraform from terraform.io
 <http://www.terraform.io/downloads.html>`_.
 
@@ -14,22 +14,18 @@ Configuring OpenStack authentication
 
 Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
-the template located at ``terraform/openstack-floating.sample.tf``. It looks
+the template located at ``terraform/openstack-modules.sample.tf``. It looks
 like this:
 
 .. this is highlighted as javascript for convenience, but obviously that's not
    the *real* language.
 
-.. literalinclude:: ../../terraform/openstack-floating.sample.tf
+.. literalinclude:: ../../terraform/openstack-modules.sample.tf
    :language: javascript
 
 Copy that file in it's entirety to the root of the project to start
 customization. NOTE: All configuration entries needs to be completed.
 In the next sections, we'll explain how to obtain these settings.
-
-There is another sample called ``openstack.sample.tf`` in the
-``terraform`` directory. This sample assumes you are booting VMs directly
-on a public network.
 
 You can also use this file as a base for further customization. For example, you
 can change the names of the modules to be specific to your environment. While we
@@ -92,7 +88,7 @@ OpenStack Security Group
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order for terraform to apply correctly, you need to create a security group
-in openstack for microservices-infrastructure.
+in openstack for Mantl.
 
 You can either login to the Web UI to perform this task or use the openstack
 commmand line interface as below.
@@ -131,4 +127,4 @@ Once you're all set up there, run ``terraform get`` to prepare Terraform to
 provision your cluster, ``terraform plan`` to see what will be created, and
 ``terraform apply`` to provision the cluster. Afterwards, you can use the
 instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+Mantl on your new cluster.

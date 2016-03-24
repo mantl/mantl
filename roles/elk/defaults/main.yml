@@ -1,0 +1,18 @@
+---
+elasticsearch_ram: 1024
+elasticsearch_executor_ram: 1024
+elasticsearch_disk: 5120
+elasticsearch_cpu: 1.0
+elasticsearch_executor_cpu: 1.0
+elasticsearch_nodes: 3
+elasticsearch_cluster_name: "mantl"
+
+framework_version: "0.7.1"
+framework_name: "elasticsearch"
+framework_ui_port: 31100
+framework_use_docker: false
+framework_download_url: "https://github.com/mesos/elasticsearch/releases/download/{{ framework_version }}/scheduler-{{ framework_version }}.jar"
+
+kibana_image: kibana
+kibana_image_tag: 4.3.1
+kibana_build_num: 9517

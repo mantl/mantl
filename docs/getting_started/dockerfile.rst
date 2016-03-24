@@ -25,7 +25,7 @@ Setup
       aws.rst
 
 3. Finally, you need to create a custom ansible playbook for your cluster. You
-   can copy `terraform.sample.yml` to `terraform.yml` in your root directory to
+   can copy `sample.yml` to `mantl.yml` in your root directory to
    get started.
 
 Building a Docker Image

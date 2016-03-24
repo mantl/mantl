@@ -1,0 +1,88 @@
+---
+- include: "{{ playbook_dir }}/check-requirements.yml"
+
+- hosts: role=worker
+  serial: "{{ serial | default(1) }}"
+  vars:
+    mesos_mode: follower
+  handlers:
+    - include: ../roles/mesos/handlers/main.yml
+  tasks:
+    - name: set consul maintenance enable
+      command: consul maint -enable -reason "{{ lookup('env', 'USER') }} upgrading Mesos"
+
+    - name: stop and disable mesos-slave
+      sudo: yes
+      service:
+        name: mesos-slave
+        state: stopped
+        enabled: no
+
+    - name: remove mesos
+      sudo: yes
+      yum:
+        name: mesos
+        state: absent
+
+    - include_vars: ../roles/handlers/defaults/main.yml
+    - include_vars: ../roles/mesos/defaults/main.yml
+    - include: ../roles/mesos/tasks/main.yml
+
+    - name: set consul maintenance disable
+      command: consul maint -disable
+
+- hosts: role=control
+  serial: "{{ serial | default(1) }}"
+  vars:
+    mesos_mode: leader
+  handlers:
+    - include: ../roles/mesos/handlers/main.yml
+    - include: ../roles/marathon/handlers/main.yml
+  roles:
+    - mantlui
+  tasks:
+    - name: set consul maintenance enable
+      command: consul maint -enable -reason "{{ lookup('env', 'USER') }} upgrading Mesos and Marathon"
+
+    # mesos
+    - name: remove mesos
+      sudo: yes
+      yum:
+        name: mesos
+        state: absent
+
+    # marathon
+    - name: remove marathon
+      sudo: yes
+      yum:
+        name: mesos
+        state: absent
+
+    - name: remove marathon conf directory
+      sudo: yes
+      file:
+        dest: /etc/marathon/conf
+        state: absent
+
+    # include new software
+    - include_vars: ../roles/handlers/defaults/main.yml
+    - include_vars: ../roles/mesos/defaults/main.yml
+    - include_vars: ../roles/marathon/defaults/main.yml
+
+    - set_fact: mesos_mode=leader
+
+    - include: ../roles/mesos/tasks/main.yml
+    - include: ../roles/marathon/tasks/main.yml
+
+    - name: set consul maintenance disable
+      command: consul maint -disable
+
+- hosts: role=control
+  serial: "{{ serial | default(1) }}"
+  tasks:
+    # collectd gets confused after the mesos upgrade
+    - name: restart collectd
+      sudo: yes
+      service:
+        name: collectd
+        state: restarted

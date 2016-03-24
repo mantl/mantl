@@ -1,0 +1,38 @@
+language: python
+env:
+  matrix:
+     - TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=sample.yml
+     - TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=sample.yml
+     - TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=sample.yml
+     # TERRAFORM_FILE=testing/aws.tf ANSIBLE_PLAYBOOK=kubernetes.yml
+     # TERRAFORM_FILE=testing/do.tf  ANSIBLE_PLAYBOOK=kubernetes.yml
+     # TERRAFORM_FILE=testing/gce.tf ANSIBLE_PLAYBOOK=kubernetes.yml
+
+install: "pip install -r requirements.txt"
+
+before_script:
+  - python2 testing/test-health-checks.py
+  - ssh-keygen -N '' -f ~/.ssh/id_rsa && eval $(ssh-agent) && ssh-add ~/.ssh/id_rsa
+  - ln -sf $ANSIBLE_PLAYBOOK mantl.yml
+  - ln -sf $TERRAFORM_FILE terraform.tf
+  - mkdir $HOME/bin && export PATH=$PATH:$HOME/bin
+  - export TERRAFORM_VERSION=0.6.8
+  # GCE doesn't like . in resource.name, so replace "." with "-"
+  - export TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
+  - curl -SL -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+  - unzip -d $HOME/bin terraform.zip
+
+script: python2 testing/build-cluster.py
+
+after_script:
+  - terraform destroy --force || true
+  - terraform destroy --force
+
+addons:
+  apt:
+    packages:
+      - unzip
+
+notifications:
+  slack:
+    secure: eX3VgtKQ48rzKGdXpIZZVYINffI2wbqhqoJFUxHO1Zku6tXzbt0R+r3NVHo37wBID63bkXjYqjZuv+JRUtvf/XO51+QkTqCCZ6iC3lr6IEqRpzxXsmNYf+QPhuN2kvVTSyycHFXdwQLL7sCniFSmEcLdu6xMpobI4PUwi2OvHj4=

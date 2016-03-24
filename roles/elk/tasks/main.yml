@@ -1,0 +1,106 @@
+---
+# Include mesos vars so that we can access the zk information in the json file
+- include_vars: "{{ playbook_dir }}/../roles/mesos/defaults/main.yml"
+
+- name: create json files for jobs
+  sudo: yes
+  run_once: true
+  template:
+    src: '{{ item }}.json.j2'
+    dest: /etc/marathon/apps/{{ item }}.json
+  with_items:
+    - elasticsearch
+  tags:
+    - elk
+
+- name: install mesos elasticsearch framework
+  run_once: true
+  sudo: yes
+  command: 'curl -X PUT -d@/etc/marathon/apps/{{ item }}.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/{{ item }}'
+  changed_when: false
+  failed_when: "'deploymentId' not in result.stdout"
+  register: result
+  with_items:
+    - elasticsearch
+  tags:
+    - elk
+
+- name: ensure kibana docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ kibana_image }}:{{ kibana_image_tag }}
+  tags:
+    - elk
+
+- name: create kibana configuration directory
+  sudo: yes
+  file:
+    path: /etc/kibana
+    state: directory
+    mode: 0755
+  tags:
+    - elk
+
+- name: create kibana configuration file
+  sudo: yes
+  file:
+    path: /etc/kibana/kibana.yml
+    state: touch
+    mode: 0755
+  tags:
+    - elk
+
+- name: generate systemd service file
+  sudo: yes
+  template:
+    src: kibana-service.j2
+    dest: /usr/lib/systemd/system/kibana.service
+  notify:
+    - reload systemd daemon
+  tags:
+    - elk
+
+- name: deploy kibana consul-template configuration
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: kibana.cfg
+      dest: /etc/consul-template/config.d
+    - src: kibana.yml.tmpl
+      dest: /etc/consul-template/templates/kibana.yml.tmpl
+    - src: kibana-dashboard.cfg
+      dest: /etc/consul-template/config.d
+  notify:
+    - reload consul-template
+  tags:
+    - elk
+
+- name: deploy kibana create dashboard script
+  sudo: yes
+  template:
+    src: kibana-create-dashboard.sh.tmpl
+    dest: /etc/consul-template/templates/kibana-create-dashboard.sh.tmpl
+  notify:
+    - reload consul-template
+  tags:
+    - elk
+
+- name: generate kibana consul service
+  sudo: yes
+  copy:
+    src: 'kibana-consul.json'
+    dest: '/etc/consul/kibana.json'
+  notify:
+    - reload consul
+  tags:
+    - elk
+
+- name: enable and start kibana
+  sudo: yes
+  service:
+    name: kibana
+    enabled: yes
+    state: restarted
+  tags:
+    - elk

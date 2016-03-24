@@ -1,6 +1,87 @@
 Changelog
 =========
 
+1.0.3 (March 04, 2016)
+-------------------------
+
+Features and Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* All OS packages installed from central repositories #1193, #1204
+* Elasticsearch and Kibana UIs are now available in Mantl UI #1175
+* Default Kibana dashboard imported by default #1139
+* ELK improvements #1191
+* Addon: iptables role to restrict network traffic within the cluster #593
+* Improved documentation #1106, #1153, #1160, #1161, #1163, #1164, #1169, #1181, #1222, #1227
+* Update terraform.py #1105
+* Mantl rename: references to microservices-insfrastructure replaced with Mantl #1134
+* Pull request and issue templates #1137
+* Updated Vagrant box (CiscoCloud/mantl) #1138
+* Jupyter notebook example #1187
+
+Fixes
+^^^^^
+
+* Update mesos_cluster name to mantl! #963
+* untangle collectd and docker role and document custom selinux policy #1044
+* Fix vault root token persistence #1059
+* Changed terraform.sample.yml to sample.yml, and terraform.yml to mantl.yml #1119
+* mantl-api: run on security-disabled clusters #1145
+* GCE support for Terraform v0.6.11+ #1150
+* Fix collectd mesos-slave.py typo #1156
+* Add condition to check for definition of "provider" #1170
+* kong: update readme and use updated api endpoint #1171
+* Derive defaults for consul_is_server variable #1215
+* marathon: don't pull down docker images in advance #1218
+* marathon: generate consul service before iptables #1219
+
+1.0.0 (February 16, 2016)
+-------------------------
+
+Features and Improvements
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Mesos 0.25 and Marathon 0.13 #955, #998
+* Consul-template 0.12.2 #1012
+* Consul 0.6.3 #1000
+* Kong example #966, #1071
+* Use Overlayfs (backed by xfs) for Docker storage #922, #1032
+* Upgrade support (alpha) #1028
+* mantl-api 0.1.4 (support for additional frameworks like Elasticsearch) #1086
+* Multi-cloud integration testing with Travis CI #1076, #1009
+* Improved vault support #1045
+
+Fixes
+^^^^^
+
+* Updated mantlui nginx container tag #961
+* Update traefik for go 1.5.3 fix #1035
+* Tightening of permissions on Marathon configuration directories #1034, #1050
+* Unify notation for file system permissions #944
+* Consul ACLs #603
+* Refactored AWS terraform modules #937, #870, #1090, #1074
+* Refactored GCE terraform modules #964, #958
+* Refactored Openstack terraform modules #901, #945, #979
+* Improved documentation #906, #956, #1007, #975, #967, #1069
+* DNS configuration improvements #928
+* Multi-node Vagrant support #942, #1054, #1022, #977, #974
+* Validate ansible version when running provisioning playbook #1019
+* Require Centos 7.2 when running provisioning playbook #1020
+* Improve performance of collectd docker plugin #1001
+* Improved version of wait-for-hosts playbook #982
+* Fixed download button in Mesos UI #955
+* Updated distributive version #959
+* Updated terraform version #1036
+* Updated mantlui Traefik support #1075
+* Fix consul rolling restart script #1070
+* Cloudflare modules #902
+* Replace mesosphere repo with direct links on packages #1092
+* Simplify logrotate role with loops #965
+* Consul DNS domain is fully configurable #1031
+* Rolling and parallel versions of playbook to upgrade OS packages #1102
+* Consolidated requirement validation in single playbook #1040
+* PEP 0394 compatible ./security-setup #1037
+
 0.5.1 (December 22, 2015)
 -------------------------
 

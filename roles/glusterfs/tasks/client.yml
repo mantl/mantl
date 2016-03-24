@@ -36,7 +36,7 @@
 
 - name: wait for gluster service
   wait_for:
-    host: glusterfs.service.consul
+    host: glusterfs.service.{{ consul_dns_domain }}
     port: 24007
     state: present
   tags:

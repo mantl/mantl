@@ -1,9 +1,13 @@
 ---
-mesos_version: 0.23.0
-mesos_package: "mesos-{{ mesos_version }}"
+mesos_version: 0.25.0
 
-mesos_mode: follower 
+mesos_package: "mesos-{{ mesos_version }}"
+mesos_master_package: "mesos-master-{{ mesos_version }}"
+mesos_agent_package: "mesos-agent-{{ mesos_version }}"
+
+mesos_mode: follower
 mesos_log_dir: /var/log/mesos
+mesos_logging_level: WARNING
 mesos_work_dir: /var/run/mesos
 mesos_leader_port: 15050
 mesos_leader_proxy_port: 5050
@@ -12,12 +16,13 @@ mesos_leader_cmd: mesos-master
 mesos_follower_cmd: mesos-slave
 mesos_executor_registration_timeout: 10mins
 mesos_resources: "ports(*):[4000-5000, 7000-8000, 9000-10000, 25000-26000, 31000-32000]"
-mesos_cluster: cluster1
+mesos_cluster: mantl
 
 mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
 mesos_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
 mesos_zk_port: 2181
 mesos_zk_chroot: mesos
+mesos_zk: zk://{{ mesos_zk_auth }}{{ mesos_zk_dns }}:{{ mesos_zk_port }}/{{ mesos_zk_chroot }}
 mesos_leaders_group: role=control
 
 mesos_zk_acl_world: "world:anyone:r"

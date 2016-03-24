@@ -1,13 +1,4 @@
 ---
-- name: add mesosphere repository
-  sudo: yes
-  yum:
-    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
-    state: present
-  tags:
-    - marathon
-    - bootstrap
-
 - name: install marathon package
   sudo: yes
   yum:
@@ -16,6 +7,13 @@
   tags:
     - marathon
     - bootstrap
+
+- name: create consul acl for marathon
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Marathon ACL Token" --rule='key:marathon:write' {{ consul_acl_marathon_token }}
+  tags:
+    - marathon
 
 - name: install wait script
   sudo: yes
@@ -31,7 +29,7 @@
 - name: configure marathon unit file
   sudo: yes
   replace:
-    dest: /usr/lib/systemd/system/marathon.service
+    dest: /etc/systemd/system/marathon.service
     regexp: "=network.target"
     replace: '=mesos-master.service'
   notify:
@@ -43,13 +41,23 @@
 - name: configure marathon to wait for zookeeper before starting
   sudo: yes
   lineinfile:
-    dest: /usr/lib/systemd/system/marathon.service
+    dest: /etc/systemd/system/marathon.service
     line: "ExecStartPre=/usr/local/bin/zookeeper-wait-for-listen.sh {{ marathon_zk_dns }}"
     insertbefore: "^ExecStart="
     state: present
   notify:
     - reload marathon
     - restart marathon
+  tags:
+    - marathon
+
+- name: generate marathon consul service
+  sudo: yes
+  template:
+    src: marathon-consul.j2
+    dest: "{{ consul_dir }}/marathon.json"
+  notify:
+    - reload consul
   tags:
     - marathon
 
@@ -90,16 +98,4 @@
   tags:
     - marathon
 
-- name: generate marathon consul service
-  sudo: yes
-  template:
-    src: marathon-consul.j2
-    dest: "{{ consul_dir }}/marathon.json"
-  notify:
-    - reload consul
-  tags:
-    - marathon
-
 - include: jobs.yml
-
-- include: distributive.yml

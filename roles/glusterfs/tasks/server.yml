@@ -92,7 +92,6 @@
   file:
     state: directory
     name: "{{ glusterfs_brick_mount }}"
-    recurse: yes
     mode: 0755
   when: volume_group_name != ""
   tags:
@@ -176,7 +175,7 @@
 
 - name: wait for gluster service
   wait_for:
-    host: glusterfs.service.consul
+    host: glusterfs.service.{{ consul_dns_domain }}
     port: 24007
     state: present
   tags:

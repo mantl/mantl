@@ -1,0 +1,45 @@
+{
+  "id": "{{ framework_name }}",
+  "cpus": {{ elasticsearch_cpu }},
+  "mem": {{ elasticsearch_ram }},
+  "instances": 1,
+  "uris": [
+    "{{ framework_download_url }}"
+  ],
+  "args": [ "java", "-jar", "scheduler-{{ framework_version }}.jar",
+    "--zookeeperMesosUrl", "{{ mesos_zk }}",
+    "--elasticsearchNodes", "{{ elasticsearch_nodes }}",
+    "--elasticsearchCpu", "{{ elasticsearch_cpu }}",
+    "--elasticsearchRam", "{{ elasticsearch_ram }}",
+    "--elasticsearchExecutorRam", "{{ elasticsearch_executor_ram }}",
+    "--elasticsearchExecutorCpu", "{{ elasticsearch_executor_cpu }}",
+    "--elasticsearchDisk", "{{ elasticsearch_disk }}",
+    "--frameworkUseDocker", "{{ framework_use_docker }}",
+    "--elasticsearchClusterName", "{{ elasticsearch_cluster_name }}",
+    "--webUiPort", "{{ framework_ui_port }}",
+    "--frameworkName", "{{ framework_name }}"{% if do_mesos_auth %},
+    "--frameworkPrincipal", "{{ mantl_api_principal }}",
+    "--frameworkSecretPath", "/etc/sysconfig/mantl-api"{% endif %}
+  ],
+  "env": {
+    "JAVA_OPTS": "-Xms32m -Xmx256m"
+  },
+  "ports": [{{ framework_ui_port }}],
+  "requirePorts": true,
+  "labels": {
+    "traefik.enable": "false",
+    "check_script": "if [[ \"$(node=$(curl --silent --show-error --fail --retry 2 --connect-timeout 5 --max-time 5 http://{host}:{port}/v1/tasks/ | jq -r '.[0].http_address') && curl --silent --show-error --fail --retry 2 --connect-timeout 5 --max-time 5 http://$node/_cluster/health | jq -r .status)\" != \"green\" ]]; then echo The Elasticsearch cluster is not healthy.; exit 1; fi;",
+    "check_interval": "30s"
+  },
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 120,
+      "intervalSeconds": 10,
+      "maxConsecutiveFailures": 6,
+      "path": "/",
+      "portIndex": 0,
+      "protocol": "HTTP",
+      "timeoutSeconds": 5
+    }
+  ]
+}

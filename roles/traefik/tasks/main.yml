@@ -1,18 +1,8 @@
 ---
-- name: download traefik package
-  sudo: yes
-  get_url:
-    url: '{{ traefik_download }}'
-    sha256sum: '{{ traefik_sha256_checksum }}'
-    dest: /root/{{ traefik_filename }}
-  tags:
-    - traefik
-    - bootstrap
-
 - name: install traefik
   sudo: yes
   yum:
-    name: /root/{{ traefik_filename }}
+    name: "{{ traefik_package }}"
     state: present
   tags:
     - traefik

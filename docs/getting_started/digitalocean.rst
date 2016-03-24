@@ -32,8 +32,8 @@ at the API page of DigitalOcean UI.
    :alt: The DigitalOcean API UI
 
 To create a token, click "Generate New Token" in the "Personal Access Tokens"
-list. Name your token (``microservices-infrastructure`` could be a good name)
-and make sure that write access is granted.
+list. Name your token (``mantl`` could be a good name) and make sure that write
+access is granted.
 
 .. image:: /_static/digitalocean_new_token.png
    :alt: The token creation page, making sure write access is granted.
@@ -103,4 +103,4 @@ Once you're all set up with the provider, customize your modules (for
 Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+Mantl on your new cluster.

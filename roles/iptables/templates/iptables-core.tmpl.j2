@@ -1,0 +1,75 @@
+#!/bin/bash
+iptables -F CLUSTER
+iptables -D INPUT -j CLUSTER
+iptables -X CLUSTER
+iptables -N CLUSTER
+
+
+{% raw %}
+# Allow all connection within the cluster
+{{range nodes}}
+iptables -A CLUSTER -s {{.Address}} -j ACCEPT{{end}}
+{% endraw %}
+iptables -A INPUT -j CLUSTER
+
+iptables -F COMMON
+iptables -D INPUT -j COMMON
+iptables -X COMMON
+iptables -N COMMON
+
+# Allow from docker0
+iptables -A COMMON -i docker0 -j ACCEPT -m comment --comment "Incoming from docker0/containers"
+
+# Allow stateful connections
+iptables -A COMMON -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# Allow SSH from all IPs
+iptables -A COMMON -p tcp --dport 22 -j ACCEPT -m comment --comment "SSH access from everywhere"
+
+# Allow loopback
+iptables -I COMMON 1 -i lo -j ACCEPT -m comment --comment "Allow loopback"
+
+# IP address whitelist
+{% for allow_ip in iptables_allow_ips %}
+iptables -A COMMON -s {{ allow_ip }} -j ACCEPT -m comment --comment "Whitelisted IP"
+{% endfor %}
+
+# Allow Consul access (to let new hosts join) but rate limit the connections
+iptables -A COMMON -p tcp --dport 8300 -m limit --limit 5/s -j ACCEPT -m comment --comment "Consul (rate-limited)"
+iptables -A COMMON -p tcp --dport 8301 -m limit --limit 5/s -j ACCEPT -m comment --comment "Consul (rate-limited)"
+iptables -A COMMON -p tcp --dport 8302 -m limit --limit 5/s -j ACCEPT -m comment --comment "Consul (rate-limited)"
+iptables -A COMMON -p tcp --dport 8304 -m limit --limit 5/s -j ACCEPT -m comment --comment "Consul (rate-limited)"
+
+# Deny all other incoming packets
+iptables -A COMMON -j LOG
+iptables -A COMMON -j DROP
+
+iptables -A INPUT -j COMMON
+
+# Forwarding rules
+iptables -F CLUSTER_FORWARD
+iptables -D FORWARD -j CLUSTER_FORWARD
+iptables -X CLUSTER_FORWARD
+iptables -N CLUSTER_FORWARD
+
+# Allow traffic from docker containers
+iptables -A CLUSTER_FORWARD -i docker0 -j ACCEPT -m comment --comment "Traffic out from docker0/containers"
+
+# Allow all connection within the cluster
+{% raw %}
+{{range nodes}}
+iptables -A CLUSTER_FORWARD -s {{.Address}} -j ACCEPT{{end}}
+{% endraw %}
+
+# Allow stateful connections
+iptables -A CLUSTER_FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# IP address whitelist
+{% for allow_ip in iptables_allow_ips %}
+iptables -A CLUSTER_FORWARD -s {{ allow_ip }} -j ACCEPT -m comment --comment "Whitelisted IP"
+{% endfor %}
+
+iptables -A CLUSTER_FORWARD -j LOG
+iptables -A CLUSTER_FORWARD -j DROP
+
+iptables -I FORWARD -j CLUSTER_FORWARD

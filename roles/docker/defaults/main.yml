@@ -1,11 +1,13 @@
 do_private_docker_registry: false
-docker_lvm_backed_devicemapper: "{% if provider in ['gce', 'openstack', 'aws'] %} true {% else %} false {% endif %}"
+docker_lvm_backed: "{% if provider in ['gce', 'openstack', 'aws'] %}True{% else %}False{% endif %}"
 
-# Possible values: overlay, devicemapper
+# Possible values: overlay (default), devicemapper, btrfs (unsupported)
 # Used with docker-storage-setup
 docker_storage_driver: overlay
 
-## Refer to commentaries in ../templates/docker-storage-setup.conf.j2 
+## Settings for devicemapper thinprovider
+
+## Refer to commentaries in ../templates/docker-storage-setup.conf.j2
 ## or `man lvcreate` for acceptable sizes, and their syntax
 docker_lvm_data_volume_size: 40%FREE
 docker_lvm_data_volume_size_min: 2G
@@ -13,3 +15,13 @@ docker_lvm_data_volume_size_min: 2G
 docker_lvm_auto_extend_pool: yes
 
 docker_selinux_enabled: no
+
+# Settings for Overlayfs/Btrfs
+docker_volume_name: docker
+
+# Just propagate same size that thinprovider use
+docker_volume_size: "{{ docker_lvm_data_volume_size }}"
+docker_volume_mount: /var/lib/docker
+docker_volume_device: "/dev/{{ volume_group_name }}/{{ docker_volume_name }}"
+docker_volume_fs_type: "{% if docker_storage_driver == 'btrfs' %}btrfs{% else %}xfs{% endif %}"
+docker_volume_fs_opts: "{% if docker_volume_fs_type == 'xfs' %}-i size=512{% endif %}"

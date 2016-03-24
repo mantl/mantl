@@ -14,6 +14,8 @@
       command: rpm -qa
       register: packages_before
       changed_when: no
+      tags:
+        - skip_ansible_lint
 
     - name: install wireshark
       sudo: yes
@@ -25,6 +27,8 @@
       command: rpm -qa
       register: packages_after
       changed_when: no
+      tags:
+        - skip_ansible_lint
 
     - name: capture sniffer trace (for 2 minutes)
       sudo: yes

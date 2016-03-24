@@ -1,0 +1,22 @@
+# common configuration
+MESOS_PORT={{ mesos_leader_port }}
+MESOS_ADVERTISE_IP={{ private_ipv4 }}
+MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node." + consul_dns_domain) }}
+MESOS_LOG_DIR={{ mesos_log_dir }}
+MESOS_LOGGING_LEVEL={{ mesos_logging_level }}
+
+# master configuration
+
+# required
+MESOS_QUORUM={{ groups[mesos_leaders_group]|count // 2 + 1 }}
+MESOS_WORK_DIR={{ mesos_work_dir }}
+MESOS_ZK={{ mesos_zk }}
+
+# optional
+MESOS_CLUSTER={{ mesos_cluster }}
+MESOS_AUTHENTICATORS=crammd5
+
+# authentication
+{% if not (do_mesos_framework_auth|bool) %}# {% endif %}MESOS_AUTHENTICATE=true
+{% if not (do_mesos_follower_auth|bool) %}# {% endif %}MESOS_AUTHENTICATE_SLAVES=true
+{% if not (do_mesos_framework_auth|bool or do_mesos_follower_auth|bool) %}# {% endif %}MESOS_CREDENTIALS=file:///etc/sysconfig/mesos-credentials

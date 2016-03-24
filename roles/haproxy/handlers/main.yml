@@ -6,6 +6,6 @@
     - systemctl enable haproxy
     - systemctl daemon-reload
 
-- name: restart haproxy 
+- name: restart haproxy
   sudo: yes
   command: systemctl restart haproxy

@@ -1,0 +1,19 @@
+{
+  "services": [
+    {
+      "name": "kibana",
+      "id": "kibana",
+      "port": 5601,
+      "checks": [
+        {
+          "id": "kibana-status",
+          "name": "kibana status",
+          "script": "if [[ \"$(curl --silent --insecure --retry 2 --connect-timeout 5 --max-time 5 http://localhost:5601/api/status | jq -r .status.overall.state)\" != \"green\" ]]; then echo Kibana is not healthy.; exit 1; fi;",
+          "interval": "10s",
+          "timeout": "5s"
+        }
+      ]
+    }
+  ]
+}
+

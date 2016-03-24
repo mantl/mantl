@@ -1,0 +1,36 @@
+---
+# Dynamic iptables configuration. Run this playbook after running the core
+# playbook (sample.yml)
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: check for security
+      when: security_enabled is not defined or not security_enabled
+      fail:
+        msg: |
+          Security is not enabled. Please run `security-setup` in the root
+          directory and re-run this playbook with the `--extra-vars`/`-e` option
+          pointing to your `security.yml` (e.g., `-e @security.yml`)
+
+# CHECK CENTOS VERSION - another one you should leave in. Ensures we're using a
+# compatible and up-to-date version of Centos.
+- hosts: all
+  gather_facts: yes
+  tasks:
+    - name: check centos version
+      when: ansible_distribution_version | version_compare('7.2', '<')
+      fail:
+        msg: |
+          Your hosts don't appear to be running a compatible version of Centos.
+          Please run the playbook playbooks/upgrade-packages.yml before
+          continuing.
+
+- hosts: role=control
+  vars:
+    consul_dns_domain: consul
+  roles:
+    - iptables

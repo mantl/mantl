@@ -1,0 +1,23 @@
+# common configuration
+MESOS_PORT={{ mesos_follower_port }}
+MESOS_ADVERTISE_IP={{ private_ipv4 }}
+MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node." + consul_dns_domain) }}
+MESOS_LOG_DIR={{ mesos_log_dir }}
+MESOS_LOGGING_LEVEL={{ mesos_logging_level }}
+
+# agent configuration
+
+# required
+MESOS_MASTER={{ mesos_zk }}
+
+# optional
+MESOS_ATTRIBUTES="node_id:{{ inventory_hostname }}"
+MESOS_CONTAINERIZERS=docker,mesos
+MESOS_EXECUTOR_REGISTRATION_TIMEOUT={{ mesos_executor_registration_timeout }}
+MESOS_RESOURCES={{ mesos_resources }}
+MESOS_WORK_DIR=/var/lib/mesos
+
+# authentication
+{% if not (do_mesos_follower_auth|bool) %}# {% endif %}MESOS_CREDENTIAL=file:///etc/sysconfig/mesos-agent-credential
+
+EXTRA_OPTS=""

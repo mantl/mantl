@@ -1,3 +1,5 @@
+# WARNING: This module has been deprecated as of Mantl 1.0
+
 variable auth_url { }
 variable control_count {}
 variable control_flavor_name { }
@@ -12,11 +14,11 @@ variable floating_pool {}
 variable image_name { }
 variable ip_version { default = "4" }
 variable keypair_name { }
-variable long_name { default = "microservices-infrastructure" }
+variable long_name { default = "mantl" }
 variable worker_count {}
 variable worker_flavor_name { }
 variable security_groups { default = "default" }
-variable short_name { default = "mi" }
+variable short_name { default = "mantl" }
 variable ssh_user { default = "centos" }
 variable subnet_cidr { default = "10.10.10.0/24" }
 variable tenant_id { }

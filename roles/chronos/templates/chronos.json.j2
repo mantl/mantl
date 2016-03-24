@@ -1,0 +1,28 @@
+{
+  "name": "chronos",
+  "config": {
+    "cassandra-port": {{ chronos_cassandra_port }},
+    "cassandra-ttl": {{ chronos_cassandra_ttl }},
+    "cpus": {{ chronos_cpus }},
+    "instances": {{ chronos_instances }},
+    "decline-offer-duration": {{ chronos_decline_offer_duration }},
+    "disable-after-failures": {{ chronos_disable_after_failures }},
+    "failover-timeout": {{ chronos_failover_timeout }},
+    "failure-retry": {{ chronos_failure_retry }},
+    "framework-name": "{{ chronos_framework_name }}",
+    "graphite-reporting-interval": {{ chronos_graphite_reporting_interval }},
+    "hostname": "{{ chronos_hostname }}",
+    "id": "{{ chronos_id }}",
+    "mem": {{ chronos_mem }},
+    "mesos-task-cpu": {{ chronos_mesos_task_cpu }},
+    "mesos-task-disk": {{ chronos_mesos_task_disk }},
+    "mesos-task-mem": {{ chronos_mesos_task_mem }},
+    "min-revive-offers-interval": {{ chronos_min_revive_offers_interval }},
+    "reconciliation-interval": {{ chronos_reconciliation_interval }},
+    "revive-offers-for-new-jobs": {{ chronos_revive_offers_for_new_jobs|to_nice_json }},
+    "schedule-horizon": {{ chronos_schedule_horizon }},
+    "task-epsilon": {{ chronos_task_epsilon }},
+    "zk-hosts": "{{ chronos_zk_hosts }}",
+    "zk-timeout": {{ chronos_zk_timeout }}
+  }
+}

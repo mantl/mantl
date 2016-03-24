@@ -84,6 +84,6 @@ Once you're all set up with the provider, customize your module, run ``terraform
 
 Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster. 
+Mantl on your new cluster. 
 
 

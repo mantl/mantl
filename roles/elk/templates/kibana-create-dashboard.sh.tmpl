@@ -1,0 +1,28 @@
+{% raw %}
+{{range $idx, $service := service "kibana" "any"}}
+{{if ne .Status "passing"}}exit 0{{end}}{{if eq $idx 0}}
+kibana_url="http://{{.Address}}:{{.Port}}"
+{{end}}{{end}}
+
+{{$es := service "client_port.elasticsearch-executor"}}{{with $es}}
+{{range $idx, $service := $es}}{{if eq $idx 0}}
+elasticsearch_url="http://{{.Address}}:{{.Port}}"
+{{end}}{{end}}{{end}}
+{% endraw %}
+
+curl -XPOST -H 'kbn-version: {{ kibana_image_tag }}' $kibana_url/elasticsearch/.kibana/index-pattern/logstash-*?op_type=create -d '{"title":"logstash-*","timeFieldName":"@timestamp"}'
+
+curl -XPOST -H 'kbn-version: {{ kibana_image_tag }}' $kibana_url/elasticsearch/.kibana/config/{{ kibana_image_tag }}/_update -d '{"doc":{"buildNum":{{ kibana_build_num }},"defaultIndex":"logstash-*"}}'
+
+
+curl -XPUT "$elasticsearch_url/.kibana/_mapping/dashboard" -d '{"properties":{"description":{"type":"string"},"hits":{"type":"integer"},"kibanaSavedObjectMeta":{"properties":{"searchSourceJSON":{"type":"string"}}},"optionsJSON":{"type":"string"},"panelsJSON":{"type":"string"},"timeFrom":{"type":"string"},"timeRestore":{"type":"boolean"},"timeTo":{"type":"string"},"title":{"type":"string"},"uiStateJSON":{"type":"string"},"version":{"type":"integer"}}}'
+
+curl -XPUT "$elasticsearch_url/.kibana/visualization/date-histogram/_create" -d '{"title":"date-histogram","visState":"{\"type\":\"histogram\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"scale\":\"linear\",\"mode\":\"stacked\",\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false,\"yAxis\":{}},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"@timestamp\",\"interval\":\"auto\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}}],\"listeners\":{}}","uiStateJSON":"{}","description":"","version":1,"kibanaSavedObjectMeta":{"searchSourceJSON":"{\"index\":\"logstash-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"}}'
+
+curl -XPUT "$elasticsearch_url/.kibana/visualization/log-types/_create" -d '{"title":"log-types","visState":"{\"type\":\"pie\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"isDonut\":false},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"filters\",\"schema\":\"segment\",\"params\":{\"filters\":[{\"input\":{\"query\":{\"query_string\":{\"query\":\"INFO\",\"analyze_wildcard\":true}}},\"label\":\"\"},{\"input\":{\"query\":{\"query_string\":{\"query\":\"WARN\",\"analyze_wildcard\":true}}}},{\"input\":{\"query\":{\"query_string\":{\"query\":\"ERROR\",\"analyze_wildcard\":true}}}},{\"input\":{\"query\":{\"query_string\":{\"query\":\"DEBUG\",\"analyze_wildcard\":true}}}}]}}],\"listeners\":{}}","uiStateJSON":"{}","description":"","version":1,"kibanaSavedObjectMeta":{"searchSourceJSON":"{\"index\":\"logstash-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"}}'
+
+curl -XPUT "$elasticsearch_url/.kibana/visualization/total-docs/_create" -d '{"title":"total-docs","visState":"{\"type\":\"metric\",\"params\":{\"fontSize\":60},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}}],\"listeners\":{}}","uiStateJSON":"{}","description":"","version":1,"kibanaSavedObjectMeta":{"searchSourceJSON":"{\"index\":\"logstash-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"}}'
+
+curl -XPUT "$elasticsearch_url/.kibana/visualization/log-source/_create" -d '{"title":"log-source","visState":"{\"type\":\"pie\",\"params\":{\"shareYAxis\":true,\"addTooltip\":true,\"addLegend\":true,\"isDonut\":false},\"aggs\":[{\"id\":\"1\",\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"type\":\"filters\",\"schema\":\"segment\",\"params\":{\"filters\":[{\"input\":{\"query\":{\"query_string\":{\"query\":\"elasticsearch\",\"analyze_wildcard\":true}}},\"label\":\"\"},{\"input\":{\"query\":{\"query_string\":{\"query\":\"logstash\",\"analyze_wildcard\":true}}}},{\"input\":{\"query\":{\"query_string\":{\"query\":\"kibana\",\"analyze_wildcard\":true}}}},{\"input\":{\"query\":{\"query_string\":{\"query\":\"mesos\",\"analyze_wildcard\":true}}}}]}}],\"listeners\":{}}","uiStateJSON":"{}","description":"","version":1,"kibanaSavedObjectMeta":{"searchSourceJSON":"{\"index\":\"logstash-*\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"}}'
+
+curl -XPUT "$elasticsearch_url/.kibana/dashboard/default/_create" -d '{"title":"default","hits":0,"description":"","panelsJSON":"[{\"col\":1,\"id\":\"date-histogram\",\"panelIndex\":1,\"row\":1,\"size_x\":12,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"log-source\",\"panelIndex\":2,\"row\":5,\"size_x\":4,\"size_y\":5,\"type\":\"visualization\"},{\"col\":5,\"id\":\"log-types\",\"panelIndex\":3,\"row\":5,\"size_x\":5,\"size_y\":5,\"type\":\"visualization\"},{\"col\":10,\"id\":\"total-docs\",\"panelIndex\":4,\"row\":5,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"}]","optionsJSON":"{\"darkTheme\":false}","uiStateJSON":"{}","version":1,"timeRestore":true,"timeTo":"now","timeFrom":"now-4h","kibanaSavedObjectMeta":{"searchSourceJSON":"{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"}}'

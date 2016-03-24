@@ -1,6 +1,6 @@
 FROM centos:7
 
-ENV TERRAFORM_VERSION 0.6.8
+ENV TERRAFORM_VERSION 0.6.10
 ENV TERRAFORM_STATE_ROOT /state
 
 RUN mkdir -p /tmp/terraform/ && \
@@ -25,7 +25,7 @@ COPY . /mi/
 # load user custom setup
 ONBUILD COPY ssl/ /mi/ssl/
 ONBUILD COPY security.yml /mi/security.yml
-ONBUILD COPY terraform.yml /mi/terraform.yml
+ONBUILD COPY mantl.yml /mi/mantl.yml
 ONBUILD COPY *.tf /mi/
 
 RUN mkdir -p /state

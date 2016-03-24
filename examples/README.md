@@ -1,37 +1,39 @@
-
 # Examples
 
-The examples in this directory are applications that can be run against your cluster.
+The examples in this directory are applications that can be run on your Mantl
+cluster.
 
-In each example directory is a README.md that provides the short and sweet instructions. Below we go through
-the examples in more detail and provide more of an introduction to what is going on.
+In each example directory is a README.md that provides the short and sweet
+instructions. Below we go through the examples in more detail and provide more
+of an introduction to what is going on.
 
 ## Getting a Cluster Up
 
-#### Vagrant Cluster
+#### Vagrant
 
-Getting the vagrant cluster up and running on your laptop is the easiest way to get a cluster going
-for the examples.
+Getting the vagrant cluster up and running on your computer is the easiest way
+to get a cluster going for the examples. To do this, see Getting Started in the
+[README.md](../README.md) at root of this project.
 
-To do this, see Getting Started in the [README.md](../README.md) at root of this project.
-
-If you have not done so yet, go ahead get vagrant up now. It will take a couple of minutes and you can read
-on while you wait.
+If you have not done so yet, go ahead get vagrant up now. It will take a couple
+of minutes and you can read on while you wait.
 
 To run these examples you will need to know:
 
 1. The url for marathon:
-Marathon runs on port 8080 and if you look in the Vagrantfile in the root of this project there is a line:
-
-        VAGRANT_PRIVATE_IP = "192.168.242.55"
+Marathon runs on port 8080 or at the /marathon endpoint, and if you look in
+[the Vagrant README](../vagrant/README.rst), you will see that your control node
+will by default have the IP "192.168.100.101" and your worker will have the IP
+"192.168.100.201".
 
 2. User name and password for marathon:
-After you have run`./security-setup` in the root of this project, there will be a file `security.yml`.
-Inside this file is the line:
+After you have run`./security-setup` in the root of this project, there will be
+a file `security.yml`.  Inside this file is the line:
 
         marathon_http_credentials: admin:hardpass
 
-During my run of `./security-setup` I was asked:
+During your run of `./security-setup` you will be asked to set an admin
+password:
 
     $ ./security-setup
     ============= Certificates =============
@@ -48,20 +50,20 @@ During my run of `./security-setup` I was asked:
     ----> admin password
     Admin Password:
 
-
-At that point I had entered 'hardpass'
+which is the password used for Marathon.
 
 ### Other Clusters
 
-If you want to dive right into a cloud or an openstack cluster go through
-[Getting Started](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html)
-at the Documetation site.   You can then change the relevant parts of the following instructions.
+If you want to dive right into a cloud cluster go through
+[Getting Started](https://docs.mantl.io/en/latest/getting_started/index.html)
+at the Documentation site. You can then change the relevant parts of the
+following instructions.
 
 ### Submitting Applications to The Marathon API
 
-While in a terminal, in this examples, directory enter:
+While in a terminal, in this examples directory enter:
 
-    curl -k -X POST -H "Content-Type: application/json" "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"hello-world/hello-world.json"
+    $ curl -k -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
 
 You should get back something like:
 
@@ -69,10 +71,10 @@ You should get back something like:
 
 If not perhaps you messed up an option. Here is what they do:
 
-Option -k turns off ssl certificate verification.  If you are using he Vagrantfile then you are getting a self
-signed cert. If you forgot the -k you get this message:
+Option -k turns off ssl certificate verification. Mantl, by default, uses
+self-signed certificates. If you forgot the -k you get this message:
 
-    $ curl -X POST -H "Content-Type: application/json"  "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"hello-world/hello-world.json"
+    $ curl -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
     curl: (60) SSL certificate problem: Invalid certificate chain
     More details here: http://curl.haxx.se/docs/sslcerts.html
 
@@ -87,11 +89,12 @@ signed cert. If you forgot the -k you get this message:
     If you'd like to turn off curl's verification of the certificate, use
      the -k (or --insecure) option.
 
-Option -X allows you to specify a HTTP verb other than the default GET.. In this case we want to POST.  The following
-error happens if we forget the -X or if the -d@"file.json" is not found. Perhaps because you are submiting the command from
-the wrong directory.
+Option -X allows you to specify a HTTP verb other than the default GET. In this
+case we want to POST.  The following error happens if we forget the -X or the
+`-d@"file.json"`, or possibly because you are submiting the command from the
+wrong directory (i.e. you should change the path to `file.json`).
 
-    $ curl -k -H "Content-Type: application/json"  "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"hello-world/hello-world.json"
+    $ curl -k -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
     <html>
     <head>
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
@@ -106,146 +109,142 @@ the wrong directory.
 Option -H specifies a header argument. In this case we want to set the content type to json.  If you leave this off
 you will get:
 
-    $ curl -k -X POST   "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"hello-world/hello-world.json"
+    $ curl -k -X POST -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
     curl: (6) Could not resolve host:  
     {"message":"Unsupported Media Type"}
 
 ### The Marathon API and the Application JSON
 
-In the curl call we went to the following path `/v2/apps`. This is the api call for creating and starting new apps.
-See [Marathon REST API](https://mesosphere.github.io/marathon/docs/rest-api.html) for further calls. Two handy ones
-for our purposes are:
+In the curl call we went to the following path `/v2/apps`. This is the API call
+for creating and starting new apps.
+See [Marathon REST API](https://mesosphere.github.io/marathon/docs/rest-api.html) for further calls. Two handy ones for our purposes are:
 
 ##### Current Status
 
 From this REST API, get current status with:
 
-    curl -k  "https://admin:hardpass@192.168.242.55:8080/v2/apps/hello-world"
+    curl -k -u "admin:hardpass" "https://192.168.100.101/marathon/v2/apps/hello-world"
 
 which returns a big blob of json.  If you want this cleaned up a bit try adding `| python -m json.tool` :
 
-    curl -k  "https://admin:hardpass@192.168.242.55:8080/v2/apps/hello-world" | python -m json.tool
+    curl -k -u "admin:hardpass" "https://192.168.100.101/marathon/v2/apps/hello-world" | python -m json.tool
 
 That should give you a nicely formated output of the current state of the app.
 
-Notice that we didn't need headers `-h` and the http verb was the default GET so we didn't need `-X`. We
-still needed the -k to get around our self signed ssl certificate.
+Notice that we didn't need headers `-H` and the http verb was the default GET,
+so we didn't need `-X`. We still needed the -k to get around our self signed ssl
+certificate.
 
 ##### Delete App
 
 From this REST API, the call to destroy the application is:
 
-    curl -k  "https://admin:hardpass@192.168.242.55:8080/v2/apps/hello-world" -X DELETE
+    curl -k -X DELETE -u "admin:hardpass" "https://192.168.100.101/marathon/v2/apps/hello-world"
 
-which is the same as the current status path but with the HTTP DELETE verb instead of the default GET.  If successful you
-will get something like:
+which is the same as the current status path but with the HTTP DELETE verb
+instead of the default GET. If the call is successful you will get something
+like:
 
     {"version":"2015-12-14T06:44:37.378Z","deploymentId":"e7680e8e-d073-4c57-9f64-e73d8b634398"}
 
-you could check the status again, per the previous section. It should give you `{"message":"App '/hello-world' does not exist"}`
+Now you can check the status again, as per the previous section. It should give
+you `{"message":"App '/hello-world' does not exist"}`.
 
 
-## Where is my Application
+## Where is my Application?
 
-In version 0.5.0 the vagrant build does not have traefik in it and so service discovery is a bit convoluted but not too
-bad.
+In a browser, go to the IP of one of your vagrant control nodes. (Some browsers,
+like Firefox, will outright reject the SSL certificate, so you may need to use
+another for this step). This will be the value in your Vagrantfile as described
+earlier.
 
-In a browser, go to the IP of your vagrant cluster. This will be the value in your Vagrantfile as described earlier.
+![mantlui 192.168.100.101/ui](./images/mantlui.png)
 
-![mantlui 192.168.242.55/ui](./images/mantlui.png)
-
-Choose the Marathon "web UI" button and you should see:
+Choose the Marathon "Web UI" button and you should see something like this:
 
 ![marathonui](./images/marathonui.png)
 
-Click on your application, hello-world (Note: if its not there. you probably deleted it working through the steps above.
-Just start it again. ) and you should see:
+Click on your application, hello-world (if its not there, you probably deleted
+it while working through the steps above, but you can just start it again.)
+and you should see:
 
 ![marathonui at application](./images/marathonapp.png)
 
-You'll notice that there are two instances.  Each one has a line under it in gray `default:<####>` where <####> is some
-port number. In the picture above, ports 9061 and 25312.
+You'll notice that there are two instances. Each one has a line under it in
+gray `default:<####>` where <####> is some port number. In the picture above,
+these are ports 9061 and 25312.
 
-One note.. there are two here becasue the hello-world.json file you submitted asks for two instances to be created.
-This is two seperate hello-world applications.
+If there aren't two instances, see step 2 under "Destroy the Vagrant Cluster and
+Build on for Minecraft" to add more memory to your VMs.
 
-If I click on the `default:9061` it will open my browser to default:9061 and get a `webpage is not avaiable` error.
-This is because I don't have default mapped to 192.168.242.55 in my hosts file.  Rather than mess with that.  Lets just
-take the port information and add it to the IP of where we know the vagrant "cluster" is located.   Open the browser to
- 192.168.242.55:9061 (in this example) and we see:
+There are two instances here becasue the hello-world.json file you submitted
+specifies for two instances to be created. This is two seperate hello-world
+applications, possibly running on different hosts.
+
+If you click on the `worker-001:9061` it will open your browser to
+`worker-001:9061` and get a `webpage is not avaiable` error. This is because you
+don't have `worker-001` mapped to the Vagrant VM's IP address in your hosts
+file. Rather than mess with that, you can just take the port information and add
+it to the IP of where we know the Vagrant machine is located. Open the browser
+to `<VM-IP>:9061` and you'll see:
 
  ![hello world application](./images/helloworld.png)
 
+Note that it has the container number in it. If you go back and look at
+Marathon, you can navigate to the other port and find the other container.
+If you look into the json file for [hello world](hello-world/hello-world.json)
+you will see that you are submiting a call to create two instances of a docker
+image: `"image": "keithchambers/docker-hello-world"`. You can see the the [php code running in this container](https://github.com/keithchambers/docker-hello-world/blob/master/index.php).
 
-Note that it has the container # in it.  If you go back and look at marathon and get the other Port. This will take you
-to the other container.  if you look into the json file for [hello world](hello-world/hello-world.json) you will see that
-you are submiting a call to create two instances of a docker image. `"image": "keithchambers/docker-hello-world",`.  Google that
-and you get to the [php code running in this container](https://github.com/keithchambers/docker-hello-world/blob/master/index.php).
+## Destroy the Vagrant Cluster and Build on for Minecraft
 
-## Destory the Vagrant Cluster and Build on for MineCraft
+If you want to use the vagrant cluster for the Minecraft example you have to
+make a worker VM with more resources. Minecraft requires 2GB of RAM free for
+good performance.
 
-If you want to use the vagrant cluster for the Minecraft example you have to make it a bigger VM.  Minecraft requires
-2 Gigs free for itself.
-
-Easy enough!
+Easy enough! If you have the resources on your computer, you can
 
 1. Destroy your vagrant server. Go to the project root and type:
 
         vagrant destroy
 
-2. Edit the vagrant file.
+2. Create a `vagrant-config.yml` file in the root directory, and add
 
-Change `Vagrantfile` lines near the bottom from
+```
+---
+worker_memory: 3072
+```
 
-          config.vm.provider :virtualbox do |vb|
-            vb.customize ['modifyvm', :id, '--cpus', 1]
-            vb.customize ['modifyvm', :id, '--memory', 1536]
-          end
+as documented in the [Vagrant README](../vagrant/README.rst).
 
-to
-
-          config.vm.provider :virtualbox do |vb|
-            vb.customize ['modifyvm', :id, '--cpus', 2]
-            vb.customize ['modifyvm', :id, '--memory', 3536]
-          end
-
-
-and then do:
+3. Run
 
         vagrant up
 
-
-Once its up and happy..
-
-    curl -k -X POST -H "Content-Type: application/json" "https://admin:hardpass@192.168.242.55:8080/v2/apps" -d@"minecraft/minecraft.json"
-
-If you didn't add the memory.  The above would submit and you would get the json back. You could then go look at the marathon web
-interface and you would see it Deploying but never getting anywhere.
+Once your cluster comes up, you can post the application to Marathon like in the
+previous example, but with the data option changed to
+`-d@"minecraft/minecraft.json"`. If your VMs don't have enough resources, the
+app will be stuck "deploying" in the Marathon UI:
 
 ![marathon stuck](images/marathonstuck.png)
 
-Notice the /minecraft app has a Memory(MB) column value of 2048.  This app is requesting 2GB of RAM.  This value is from
-the [json file you submitted](minecraft/minecraft.json) .
+Notice the /minecraft app has a Memory(MB) value of 2048, which indicates that
+it is requesting 2GB of RAM.  This value is from the
+[json file you submitted](minecraft/minecraft.json).
 
-To investigate, go back to the mantlui (https://192.168.242.55) and then go to the Mesos "Web UI" button.
+To investigate, go back to the Mantl UI and then navigate to the Mesos "Web UI".
 
 ![mesos stuck](images/mesosstuck.png)
 
-you see that no minecraft is running.  Then looking down the side you see that the total offered is 0 and there are
-238 MB idle.   The request on the Marathon page above is for 2048 MB, there isn't enough and so the system just waits
-for resources.
+You might see that no Minecraft task is running. If you look down the side
+you'll see that the "total offered" is 0 and there is some quantity of memory
+idle. The request on the Marathon page above is for 2048 MB, there might not be
+enough, so Marathon will wait until the requested resources are available.
 
-That is why we said to increase the RAM for minecraft and definitely something to keep in mind when you
-see things getting stuck like that as you work with Mantl.  Marathon will take your request and wait patiently for Mesos
-to have what you are asking for.  Make sure Mesos has what you are asking for.
-
-
-With the right amount of memory and the minecraft successfully running, you can go back and look at the ports on the
-marathon page as described above but you can also check the status:
-
-    curl -k  "https://admin:hardpass@192.168.242.55:8080/v2/apps/minecraft" | python -m json.tool
-
-Near the bottom of the listing there is a item for tasks. And there you will find:
+With the right amount of memory and the Minecraft successfully running, you can
+can check the status of the application as described above using the Marathon
+API, and near the bottom of the listing there should be a list of tasks. It
+should look like this:
 
     "tasks": [
                 {
@@ -271,32 +270,6 @@ Near the bottom of the listing there is a item for tasks. And there you will fin
                 }
             ],
 
-The task with appId "/minecraft"  on host "default" is listening on port 9199.
-
-With that you can open your minecraft client, create a new server.  Set the "Server Address" to 192/168.242.55:9199.
-
-You are now.. talking to an App, in a Docker Container submitted to a Mesos cluster by Marathon framework and all
-running on a VM in Virtualbox.  Progress!  Happy mining.
-
-One more way to get the the port would be to ssh to the vm, and look at docker ps.  So cd to the root of the project.
-
-    vagrant ssh
-    sudo docker ps
-
-and in the list you will see.
-
-    CONTAINER ID        IMAGE                            COMMAND                  CREATED             STATUS              PORTS                                                                                              NAMES
-    c0c6347a7ed4        kitematic/minecraft              "/bin/sh -c 'echo eul"   11 minutes ago      Up 11 minutes       0.0.0.0:9199->25565/tcp                                                                            mesos-20151214-082111-938649792-15050-7100-S0.5554ed92-e22c-4d26-94c9-2556dab6621b
-
-this container has expose 25565 (the standard minecraft port) as 9199.
-
-
-
-
-
-
-
-
-
-
-
+In this example, the task with appId "/minecraft"  on host "default" is
+listening on port 9199. With that information, you can open your Minecraft
+client and connect to `<VM-IP>:<minecraft-port>`. Happy mining!

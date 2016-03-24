@@ -1,0 +1,23 @@
+---
+- hosts: all
+  serial: "{{ serial | default(1) }}"
+  tasks:
+    - include_vars: ../roles/common/defaults/main.yml
+    - name: remove obsolete distributive checks
+      sudo: yes
+      file:
+        name: "/etc/consul/{{ item }}"
+        state: absent
+      with_items:
+        - distributive-marathon-check.json
+        - distributive-nginx-check.json
+        - distributive-vault-check.json
+
+    - name: install distributive
+      sudo: yes
+      yum:
+        name: "{{ distributive_rpm_url }}"
+        state: present
+
+- include: ./upgrade-consul.yml
+- include: ./upgrade-mesos-marathon.yml

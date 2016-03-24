@@ -1,44 +1,10 @@
 ---
-- name: copy nginx configuration
-  sudo: yes
-  template:
-    src: mantlui.nginx.j2
-    dest: /etc/mantlui.nginx
-  tags:
-    - mantlui
-
-- name: configure nginx
-  sudo: yes
-  command: consul-cli kv-write service/nginx/templates/mantlui @/etc/mantlui.nginx
-  tags:
-    - mantlui
-
 - name: ensure nginx-mantlui docker image is present
   sudo: yes
   command: /usr/bin/docker pull {{ mantlui_nginx_image }}:{{ mantlui_nginx_image_tag }}
   tags:
     - mantlui
     - bootstrap
-
-- name: update mesos ui
-  sudo: yes
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: 0644
-  with_items:
-    - src: mesos/controllers.js
-      dest: /usr/share/mesos/webui/master/static/js
-    - src: mesos/services.js
-      dest: /usr/share/mesos/webui/master/static/js
-    - src: mesos/app.js
-      dest: /usr/share/mesos/webui/master/static/js
-    - src: mesos/index.html
-      dest: /usr/share/mesos/webui/master/static
-    - src: mesos/pailer.html
-      dest: /usr/share/mesos/webui/master/static
-  tags:
-    - mantlui
 
 - name: configure nginx-mantlui
   sudo: yes

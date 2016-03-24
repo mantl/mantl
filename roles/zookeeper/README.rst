@@ -27,7 +27,7 @@ You can use these variables to customize your ZooKepeer installation.
 
 .. data:: zookeeper_ensemble
 
-   default: ``cluster1``
+   default: ``mantl``
 
 .. data:: zookeeper_container_name
 
@@ -59,3 +59,9 @@ You can use these variables to customize your ZooKepeer installation.
 .. data:: zookeeper_docker_env
 
    default: ``"/etc/default/{{ zookeeper_service }}"``
+
+.. data:: zookeeper_log_threshold
+
+   Log level for ZooKeeper
+
+   default: ``WARN``
