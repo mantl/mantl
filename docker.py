@@ -81,11 +81,36 @@ def link_or_generate_security_file():
 
 def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
+    ssh_key_path = '/local/ci'
+    os.chmod(ssh_key_path, 0400)
+
     link_or_generate_ssh_keys()
     call("ssh-add")
     link_ansible_playbook()
     link_or_generate_security_file()
 
+    if 'OS_KEY' in os.environ:
+        # This string will be collapsed into one line
+        # I made this change for readability
+        ssh_cmd = '''
+ssh -i {keypath} -p {ssh_port} 
+-o BatchMode=yes -o StrictHostKeyChecking=no
+travis@{ssh_ip} /bin/sh -c "
+cd mantl;
+git clone https://github.com/CiscoCloud/mantl.git {commit};
+cd {commit}; 
+git checkout {commit}; 
+ln -sf {tf_file} terraform.tf"
+        '''
+        ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
+                keypath='/local/ci', 
+                ssh_port=os.environ['OS_PRT'], 
+                ssh_ip=os.environ['OS_IP'],
+                tf_file=os.environ['TERRAFORM_FILE'])
+        ssh_cmd = " ".join(ssh_cmd.splitlines())
+        logging.info(ssh_cmd)
+
+        exit(call(split(ssh_cmd)))
 
 def terraform():
     """Run terraform commands. Assumes that setup has been run"""
@@ -142,21 +167,12 @@ def ci_build():
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
 
-    if os.environ['TERRAFORM_FILE'] == 'OPENSTACK':
-        logging.critical("SSHing into jump host to test OpenStack is currently being implemented")
-        ssh_key_path = '/local/ci'
-        os.chmod(ssh_key_path, 0400)
-
-        # This string will be collapsed into one line
-        # I made this change for readability
+    if 'OS_KEY' in os.environ:
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
-cd mantl;
-git clone https://github.com/CiscoCloud/mantl.git {commit};
-cd {commit}; 
-git checkout {commit}; 
+cd mantl/{commit};
 python2 testing/build-cluster.py"
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
@@ -164,6 +180,7 @@ python2 testing/build-cluster.py"
                 ssh_port=os.environ['OS_PRT'], 
                 ssh_ip=os.environ['OS_IP'])
         ssh_cmd = " ".join(ssh_cmd.splitlines())
+        logging.info(ssh_cmd)
 
         exit(call(split(ssh_cmd)))
 
@@ -185,16 +202,17 @@ ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no 
 travis@{ssh_ip} /bin/sh -c "
 cd mantl/{commit}; 
-{0}; 
+{destroy}; 
 cd ..; 
 rm -fr {commit}"
         '''
-        destroy_cmd = destroy_cmd.format(destroy_cmd, 
+        destroy_cmd = destroy_cmd.format(destroy=destroy_cmd, 
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'],
                 commit=os.environ['TRAVIS_COMMIT'])
         destroy_cmd = " ".join(destroy_cmd.splitlines())
+        logging.info(destroy_cmd)
 
     for i in range(2):
         returncode = call(split(destroy_cmd))
@@ -204,11 +222,10 @@ rm -fr {commit}"
 
 if __name__ == "__main__":
 
-    logfmt = "%(levelname)s\t%(asctime)s\t%(message)s"
+    logfmt = "%(asctime)s\t%(levelname)s\t%(message)s"
     logging.basicConfig(format=logfmt, level=logging.INFO)
 
     if 'MANTL_CONFIG_DIR' not in os.environ:
-        logging.critical('mantl.readthedocs.org for mantl config dir')
         exit(1)
 
     #TODO: replace this with either click or pypsi
