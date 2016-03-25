@@ -108,7 +108,6 @@ ln -sf {tf_file} terraform.tf"
                 ssh_ip=os.environ['OS_IP'],
                 tf_file=os.environ['TERRAFORM_FILE'])
         ssh_cmd = " ".join(ssh_cmd.splitlines())
-        logging.info(ssh_cmd)
 
         exit(call(split(ssh_cmd)))
 
@@ -180,7 +179,6 @@ python2 testing/build-cluster.py"
                 ssh_port=os.environ['OS_PRT'], 
                 ssh_ip=os.environ['OS_IP'])
         ssh_cmd = " ".join(ssh_cmd.splitlines())
-        logging.info(ssh_cmd)
 
         exit(call(split(ssh_cmd)))
 
