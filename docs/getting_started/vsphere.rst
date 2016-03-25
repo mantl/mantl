@@ -1,7 +1,7 @@
 VMware vSphere
 ================
 
-You can bring up VMware vSphere environment using Terraform with third-party vSphere provider.
+You can bring up VMware vSphere environment using Terraform with builtin vSphere provider.
 
 Prerequisites
 ---------------
@@ -11,11 +11,6 @@ Terraform
 
 Install Terraform according to the `guide <https://www.terraform.io/intro/getting-started/install.html>`_. 
 
-vSphere plugin
-^^^^^^^^^^^^^^^^
-
-Download `vSphere plugin <https://github.com/mkuzmin/terraform-vsphere/releases>`_ for Terraform. `Install <https://terraform.io/docs/plugins/basics.html>`_ it, or put into a directory with Terraform binaries or configuration files.
-The detailed information about this plugin you can find `here <https://github.com/mkuzmin/terraform-vsphere>`_
 
 VMware template
 ^^^^^^^^^^^^^^^^^
@@ -30,8 +25,8 @@ Configuring vSphere for Terraform
 
 Provider settings
 ^^^^^^^^^^^^^^^^^^^
-``vcenter_server``, ``user`` and ``password`` are the required parameters needed by Terraform to interact with resources in your vSphere.
-``insecure_connection`` parameter is reponsible for checking SSL certificates of the vCenter. If you have self-signed certificates it is necessary to set this parameter to ``false``.
+``vsphere_server``, ``user`` and ``password`` are the required parameters needed by Terraform to interact with resources in your vSphere.
+``allow_unverified_ssl`` parameter is reponsible for checking SSL certificates of the vCenter. If you have self-signed certificates it is necessary to set this parameter to ``true``.
 
 .. envvar:: VSPHERE_USER
 
@@ -46,11 +41,13 @@ Basic settings
 
 ``datacenter`` is the name of datacenter in your vSphere environment. It is required if the vSphere has several datacenters.
 
-``host`` is the hostname or IP address of ESXi host in the selected datacenter.
+``cluster`` is the name of the cluster in the selected datacenter. It's an optional parameter.
 
 ``pool`` is the name of resource pool in vSphere. It's an optional parameter.
 
 ``template`` is the name of a base VM or template you will deploy you machines from. Should include a path in VM folder hierarchy: ``folder/subfolder/vm-name``
+
+``network_label`` is the label of the network assigned to the machines.
 
 ``short_name`` is the prefix that will be used for the new virtual machines.
 
@@ -81,6 +78,7 @@ Provisioning
 --------------
 
 Once you're all set up with the provider, customize your module, run ``terraform get`` to prepare Terraform to provision your cluster, ``terraform plan`` to see what will be created, and ``terraform apply`` to provision the cluster. At the end of provisioning Terraform will perform commands to change hostnames for correct service work. You can change this behavior in the ``provisioner`` section for each resource in the ``terraform/vsphere/main.tf`` file. 
+Due to a timing condition when requesting a MAC address from the vsphere server (``ethernet0.addressType = "vpx"``) you may have to apply without the provisioner for a first time and issue ``terraform apply`` (with provisioner) afterwards. This will allow the guest tools to provide the IP addresses.
 
 Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
