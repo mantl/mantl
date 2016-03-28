@@ -18,6 +18,7 @@
   tags:
     - common
 
+# add yum-utils if not already installed
 - name: add yum-config-manager
   sudo: yes
   yum:
