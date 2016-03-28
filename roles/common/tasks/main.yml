@@ -18,6 +18,14 @@
   tags:
     - common
 
+# add yum-utils if not already installed
+- name: add yum-config-manager
+  sudo: yes
+  yum:
+    name: yum-utils
+  tags:
+    - bootstrap
+
 - name: increase timeouts in YUM
   sudo: yes
   shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
