@@ -141,3 +141,9 @@ You can use these variables to customize your Mesos installation.
    The secret to use for follower authentication
 
    default: not set. Set this to enable follower authentication.
+
+.. data:: mesos_logging_level
+
+   The log level for Mesos. This is set for all components.
+
+   Default: ``WARNING``

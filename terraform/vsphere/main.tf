@@ -12,6 +12,9 @@ variable "long_name" {default = "mantl"}
 variable "control_count" {default = 3}
 variable "worker_count" {default = 2}
 variable "edge_count" {default = 2}
+variable "control_volume_size" {default = 20}
+variable "worker_volume_size" {default = 20}
+variable "edge_volume_size" {default = 20}
 variable "control_cpu" { default = 1 }
 variable "worker_cpu" { default = 1 }
 variable "edge_cpu" { default = 1 }
@@ -30,7 +33,11 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
   cpus = "${var.control_cpu}"
   memory = "${var.control_ram}"
 
-  configuration_parameters = {
+  disk {
+    size = "${var.control_volume_size}"
+  }
+
+  custom_configuration_parameters = {
     role = "control"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
@@ -60,7 +67,11 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   cpus = "${var.worker_cpu}"
   memory = "${var.worker_ram}"
 
-  configuration_parameters = {
+  disk {
+    size = "${var.worker_volume_size}"
+  }
+
+  custom_configuration_parameters = {
     role = "worker"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
@@ -90,7 +101,11 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   cpus = "${var.edge_cpu}"
   memory = "${var.edge_ram}"
 
-  configuration_parameters = {
+  disk {
+    size = "${var.edge_volume_size}"
+  }
+
+  custom_configuration_parameters = {
     role = "edge"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"

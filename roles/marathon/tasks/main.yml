@@ -51,6 +51,16 @@
   tags:
     - marathon
 
+- name: generate marathon consul service
+  sudo: yes
+  template:
+    src: marathon-consul.j2
+    dest: "{{ consul_dir }}/marathon.json"
+  notify:
+    - reload consul
+  tags:
+    - marathon
+
 - meta: flush_handlers
 
 - include: nginx-proxy.yml
@@ -85,16 +95,6 @@
   file:
     path: "{{ consul_dir }}"
     state: directory
-  tags:
-    - marathon
-
-- name: generate marathon consul service
-  sudo: yes
-  template:
-    src: marathon-consul.j2
-    dest: "{{ consul_dir }}/marathon.json"
-  notify:
-    - reload consul
   tags:
     - marathon
 

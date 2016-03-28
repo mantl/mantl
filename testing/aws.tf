@@ -8,7 +8,7 @@ module "aws-mantl-testing" {
   source = "./terraform/aws"
   availability_zone = "us-west-1b"
   ssh_username = "centos"
-  source_ami = "ami-f77fbeb3"
+  source_ami = "ami-af4333cf"
   short_name = "mantl-ci-${var.build_number}"
   long_name = "ciscocloud-mantl-ci-${var.build_number}"
 

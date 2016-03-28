@@ -80,7 +80,7 @@ class ImplicitBool(object):
             return cls(False, True)
         else:
             raise argparse.ArgumentTypeError(
-                '"%s" is not allowed. Try "true" or "false"' % raw_opt)
+                '"%s" is not allowed. Try "true" or "false"' % opt)
 
 # disables
 broad_opts = parser.add_argument_group(

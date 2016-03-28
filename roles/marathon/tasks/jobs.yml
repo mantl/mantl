@@ -1,15 +1,4 @@
 ---
-- name: ensure job docker images are present
-  when: provider == "vagrant"
-  sudo: yes
-  command: /usr/bin/docker pull {{ item }}
-  with_items:
-    - "{{ mesos_consul_image }}:{{ mesos_consul_image_tag }}"
-    - "{{ mantl_api_image }}:{{ mantl_api_image_tag }}"
-  tags:
-    - marathon
-    - bootstrap
-
 - name: create json files for jobs
   sudo: yes
   template:

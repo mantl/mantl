@@ -5,6 +5,7 @@ security.yml
 ssl/**/*.pem
 ssl/index.txt*
 ssl/serial*
+ssl/.rnd
 
 # terraform
 **/*.tfstate*

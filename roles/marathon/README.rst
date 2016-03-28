@@ -85,3 +85,9 @@ Variables
    <https://github.com/CiscoCloud/marathon-consul>`_ bridge
 
    Default: ``latest``
+
+.. data:: marathon_logging_level
+
+   Log level for Marathon
+
+   Default: ``warn``
