@@ -96,17 +96,20 @@ def ci_setup():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
-cd mantl;
-git clone https://github.com/CiscoCloud/mantl.git {commit};
-cd {commit}; 
+mkdir -p mantl/{commit};
+git clone https://github.com/CiscoCloud/mantl.git mantl/{commit};
+cd mantl/{commit}; 
 git checkout {commit}; 
-ln -sf {tf_file} terraform.tf"
+ln -sf {tf_file} terraform.tf;
+echo 'build_number = \\"{build}\\"' > terraform.tfvars"
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'], 
                 ssh_ip=os.environ['OS_IP'],
-                tf_file=os.environ['TERRAFORM_FILE'])
+                tf_file=os.environ['TERRAFORM_FILE'],
+                build=os.environ['TF_VAR_build_number'])
+        print(ssh_cmd)
         ssh_cmd = " ".join(ssh_cmd.splitlines())
 
         exit(call(split(ssh_cmd)))
@@ -171,8 +174,9 @@ def ci_build():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
-cd mantl/{commit};
-python2 testing/build-cluster.py"
+touch TESTING;
+cd ./mantl/{commit};
+python2 ./testing/build-cluster.py"
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
                 keypath='/local/ci', 
@@ -199,6 +203,7 @@ def ci_destroy():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no 
 travis@{ssh_ip} /bin/sh -c "
+rm TESTING;
 cd mantl/{commit}; 
 {destroy}; 
 cd ..; 
