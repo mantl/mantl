@@ -198,7 +198,7 @@ def ci_destroy():
     link_ci_terraform_file()
 
     destroy_cmd = "terraform destroy --force"
-    if os.environ['TERRAFORM_FILE'] == 'OPENSTACK': 
+    if 'OS_IP' in os.environ:
         destroy_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no 
