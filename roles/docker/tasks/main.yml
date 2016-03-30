@@ -18,6 +18,18 @@
     - docker
   when: docker_package_source is defined and docker_package_source == "docker" 
 
+- name: remove old docker package
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ docker_package_to_remove }}"
+    - "{{ docker_package_to_remove }}-selinux"
+  tags:
+    - docker
+    - bootstrap
+
 - name: install docker packages
   sudo: yes
   yum:
