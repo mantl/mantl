@@ -84,7 +84,7 @@
     - 12-network-options.conf
     - 14-storage-options.conf
   notify:
-    - reload docker
+    - reload systemd
   tags:
     - docker
 
@@ -95,7 +95,7 @@
     src: 20-ExecStart.conf.j2
     dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
   notify: 
-    - reload docker
+    - reload systemd
   tags: 
     - docker
 

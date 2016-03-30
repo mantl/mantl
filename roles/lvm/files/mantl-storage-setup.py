@@ -262,10 +262,12 @@ def process_thin(sec, params):
     with closing(open(dm_name, "r")) as f:
         mapper_device = f.readline().strip()
     
-    DOCKER_STORAGE_CONF = "/etc/sysconfig/docker-storage"
-    print "--> Write {}".format(DOCKER_STORAGE_CONF)
-    with closing(open(DOCKER_STORAGE_CONF, "w")) as f:
-        f.write("""DOCKER_STORAGE_OPTIONS=--storage-driver devicemapper --storage-opt dm.thinpooldev=/dev/mapper/{mapper} {extra}""".format(mapper=mapper_device, extra=extra))
+    DOCKER_STORAGE_CONF = "/etc/sysconfig/mantl-storage"
+    conf = optional(params.get, sec, "config", DOCKER_STORAGE_CONF)
+    print "--> Write {}".format(conf)
+    with closing(open(conf, "w")) as f:
+        f.write("""MANTL_STORAGE_OPTIONS=--storage-driver devicemapper --storage-opt dm.thinpooldev=/dev/mapper/{mapper} {extra}""".format(mapper=mapper_device, extra=extra))
+    check_call(["systemctl", "daemon-reload"])
 
 
 
