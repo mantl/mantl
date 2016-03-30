@@ -17,7 +17,8 @@ content = DOCKER_STORAGE_OPTIONS=--storage-driver {{ docker_storage_driver }}
 {%if docker_lvm_backed|bool and docker_storage_driver == "devicemapper" %}
 [thin:docker]
 group = {{ volume_group_name }}
-pool = {{ docker_volume_name }}
+# Fixed volume name, to be compatible with docker-storage-setup
+pool = docker-pool
 size = {{ docker_lvm_data_volume_size }}
 
 {% endif %}
