@@ -89,7 +89,7 @@ def ci_setup():
     link_ansible_playbook()
     link_or_generate_security_file()
 
-    if 'OS_KEY' in os.environ:
+    if 'OS_IP' in os.environ:
         # This string will be collapsed into one line
         # I made this change for readability
         ssh_cmd = '''
@@ -169,7 +169,7 @@ def ci_build():
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
 
-    if 'OS_KEY' in os.environ:
+    if 'OS_IP' in os.environ:
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no

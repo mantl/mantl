@@ -8,7 +8,7 @@ env:
   - TERRAFORM_FILE=testing/aws.tf DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
   - TERRAFORM_FILE=testing/do.tf DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
   - TERRAFORM_FILE=testing/gce.tf DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
-  - TERRAFORM_FILE=testing/cisco-os.tf DOCKER_SECRETS='-e OS_KEY -e OS_IP -e OS_PRT'
+  - TERRAFORM_FILE=testing/cisco-os.tf DOCKER_SECRETS='-e OS_IP -e OS_PRT'
 install: pip install -r requirements.txt
 before_script:
   - docker pull $DOCKER_IMAGE
