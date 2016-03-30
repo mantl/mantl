@@ -21,3 +21,13 @@
   tags:
     - docker
     - lvm
+
+- name: enable partitioner service
+  sudo: yes
+  service:
+    name: mantl-storage-setup.service
+    enabled: yes
+  when: debug_storage_setup
+  tags:
+    - docker
+    - lvm
