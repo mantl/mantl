@@ -92,14 +92,12 @@ def ci_setup():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
-mkdir -p mantl/{commit};
 git clone https://github.com/CiscoCloud/mantl.git mantl/{commit};
 cd mantl/{commit}; 
 git checkout {commit}; 
 ln -sf {tf_file} terraform.tf;
 ln -sf sample.yml mantl.yml;
 echo 'build_number = \\"{build}\\"' > terraform.tfvars"
-
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'], 
                 keypath='/local/ci', 
