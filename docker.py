@@ -81,15 +81,16 @@ def link_or_generate_security_file():
 
 def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
-    ssh_key_path = '/local/ci'
-    os.chmod(ssh_key_path, 0400)
-
-    link_or_generate_ssh_keys()
-    call("ssh-add")
-    link_ansible_playbook()
-    link_or_generate_security_file()
 
     if 'OS_IP' in os.environ:
+        ssh_key_path = '/local/ci'
+        os.chmod(ssh_key_path, 0400)
+
+        # get head commit, TRAVIS_COMMIT is merge commit sometimes
+        head_commit = check_output(split("git rev-parse HEAD"))
+        logging.info(head_commit)
+        os.environ['CI_HEAD_COMMIT'] = head_commit
+
         # This string will be collapsed into one line
         # I made this change for readability
         ssh_cmd = '''
@@ -101,9 +102,11 @@ git clone https://github.com/CiscoCloud/mantl.git mantl/{commit};
 cd mantl/{commit}; 
 git checkout {commit}; 
 ln -sf {tf_file} terraform.tf;
+ln -sf sample.yml mantl.yml;
 echo 'build_number = \\"{build}\\"' > terraform.tfvars"
+
         '''
-        ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
+        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'], 
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'], 
                 ssh_ip=os.environ['OS_IP'],
@@ -113,20 +116,12 @@ echo 'build_number = \\"{build}\\"' > terraform.tfvars"
         ssh_cmd = " ".join(ssh_cmd.splitlines())
 
         exit(call(split(ssh_cmd)))
-
-def terraform():
-    """Run terraform commands. Assumes that setup has been run"""
-    link_or_generate_ssh_keys()
-    call(split("ssh-add"))
-    call(split("terraform get"))
-    call(split("terraform apply -state=$TERRAFORM_STATE"))
-
-def ansible():
-    """Run ansible playbooks. Assumes that setup and terraform have been run"""
-    link_or_generate_ssh_keys()
-    call(split("ssh-add"))
-    call(split("ansible-playbook playbooks/upgrade-packages.yml -e @security.yml"))
-    call(split("ansible-playbook mantl.yml -e @security.yml"))
+    else:
+        logging.info("Running setup for cloud-providers")
+        link_or_generate_ssh_keys()
+        call("ssh-add")
+        link_ansible_playbook()
+        link_or_generate_security_file()
 
 
 def ci_build():
@@ -174,11 +169,11 @@ def ci_build():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
-touch TESTING;
+ssh-add;
 cd ./mantl/{commit};
 python2 ./testing/build-cluster.py"
         '''
-        ssh_cmd = ssh_cmd.format(commit=os.environ['TRAVIS_COMMIT'], 
+        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'], 
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'], 
                 ssh_ip=os.environ['OS_IP'])
@@ -193,9 +188,6 @@ python2 ./testing/build-cluster.py"
 
 def ci_destroy():
     """Cleanup after ci_build"""
-    link_or_generate_ssh_keys()
-    call("ssh-add")
-    link_ci_terraform_file()
 
     destroy_cmd = "terraform destroy --force"
     if 'OS_IP' in os.environ:
@@ -203,7 +195,7 @@ def ci_destroy():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no 
 travis@{ssh_ip} /bin/sh -c "
-rm TESTING;
+kill ${{SSH_AGENT_PID}};
 cd mantl/{commit}; 
 {destroy}; 
 cd ..; 
@@ -213,14 +205,19 @@ rm -fr {commit}"
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'],
-                commit=os.environ['TRAVIS_COMMIT'])
+                commit=os.environ['CI_HEAD_COMMIT'])
         destroy_cmd = " ".join(destroy_cmd.splitlines())
-        logging.info(destroy_cmd)
+    else:
+        logging.info("Destroying cloud provider resources")
+        link_or_generate_ssh_keys()
+        call("ssh-add")
+        link_ci_terraform_file()
 
-    for i in range(2):
-        returncode = call(split(destroy_cmd))
 
-    exit(returncode)
+        for i in range(2):
+            returncode = call(split(destroy_cmd))
+
+        exit(returncode)
 
 
 if __name__ == "__main__":
@@ -235,14 +232,6 @@ if __name__ == "__main__":
     if len(argv) > 1:
         if argv[1] == 'ci-setup':
             ci_setup()
-        elif argv[1] == 'terraform':
-            terraform()
-        elif argv[1] == 'ansible':
-            ansible()
-        elif argv[1] == 'deploy':
-            setup()
-            terraform()
-            ansible()
         elif argv[1] == 'ci-build':
             ci_build()
         elif argv[1] == 'ci-destroy':
