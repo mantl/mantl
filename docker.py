@@ -105,7 +105,6 @@ echo 'build_number = \\"{build}\\"' > terraform.tfvars"
                 ssh_ip=os.environ['OS_IP'],
                 tf_file=os.environ['TERRAFORM_FILE'],
                 build=os.environ['TF_VAR_build_number'])
-        print(ssh_cmd)
         ssh_cmd = " ".join(ssh_cmd.splitlines())
 
         exit(call(split(ssh_cmd)))
@@ -162,6 +161,7 @@ def ci_build():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
+eval $(ssh-agent);
 ssh-add;
 cd ./mantl/{commit};
 python2 ./testing/build-cluster.py"
