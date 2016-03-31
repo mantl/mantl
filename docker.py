@@ -86,11 +86,6 @@ def ci_setup():
         ssh_key_path = '/local/ci'
         os.chmod(ssh_key_path, 0400)
 
-        # get head commit, TRAVIS_COMMIT is merge commit sometimes
-        head_commit = check_output(split("git rev-parse HEAD"))
-        logging.info(head_commit)
-        os.environ['CI_HEAD_COMMIT'] = head_commit
-
         # This string will be collapsed into one line
         # I made this change for readability
         ssh_cmd = '''
