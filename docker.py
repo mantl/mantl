@@ -92,6 +92,7 @@ def ci_setup():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
+mkdir --parents mantl/{commit};
 git clone https://github.com/CiscoCloud/mantl.git mantl/{commit};
 cd mantl/{commit}; 
 git checkout {commit}; 
