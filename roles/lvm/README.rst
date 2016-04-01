@@ -23,7 +23,7 @@ Variables
 
    Device name for attach as volume group.
 
-   Default vaule can vary depending from used cloud.
+   Default value can vary depending from used cloud.
 
    - For Openstack: /dev/vdb
    - For GCE: /dev/disk/by-id/google-lvm 
