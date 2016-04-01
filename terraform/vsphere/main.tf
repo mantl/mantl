@@ -1,10 +1,12 @@
 variable "datacenter" {}
-variable "host" {}
+variable "cluster" {}
 variable "pool" {}
 variable "template" {}
 variable "ssh_user" {}
 variable "ssh_key" {}
 variable "consul_dc" {}
+variable "datastore" {}
+variable "network_label" {}
 
 variable "short_name" {default = "mantl"}
 variable "long_name" {default = "mantl"}
@@ -27,19 +29,22 @@ variable "linked_clone" {default = false}
 
 resource "vsphere_virtual_machine" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
-  image = "${var.template}"
-  linked_clone = "${var.linked_clone}"
-
   datacenter = "${var.datacenter}"
   folder = "${var.folder}"
-  host = "${var.host}"
+  cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
-  cpus = "${var.control_cpu}"
+  vcpu = "${var.control_cpu}"
   memory = "${var.control_ram}"
 
   disk {
     size = "${var.control_volume_size}"
+    template = "${var.template}"
+    datastore = "${var.datastore}"
+  }
+
+  network_interface {
+    label = "${var.network_label}"
   }
 
   custom_configuration_parameters = {
@@ -63,19 +68,22 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
 
 resource "vsphere_virtual_machine" "mi-worker-nodes" {
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
-  image = "${var.template}"
-  linked_clone = "${var.linked_clone}"
-
   datacenter = "${var.datacenter}"
   folder = "${var.folder}"
-  host = "${var.host}"
+  cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
-  cpus = "${var.worker_cpu}"
+  vcpu = "${var.worker_cpu}"
   memory = "${var.worker_ram}"
 
   disk {
     size = "${var.worker_volume_size}"
+    template = "${var.template}"
+    datastore = "${var.datastore}"
+  }
+
+  network_interface {
+    label = "${var.network_label}"
   }
 
   custom_configuration_parameters = {
@@ -99,19 +107,22 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 
 resource "vsphere_virtual_machine" "mi-edge-nodes" {
   name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
-  image = "${var.template}"
-  linked_clone = "${var.linked_clone}"
-
   datacenter = "${var.datacenter}"
   folder = "${var.folder}"
-  host = "${var.host}"
+  cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
-  cpus = "${var.edge_cpu}"
+  vcpu = "${var.edge_cpu}"
   memory = "${var.edge_ram}"
 
   disk {
     size = "${var.edge_volume_size}"
+    template = "${var.template}"
+    datastore = "${var.datastore}"
+  }
+
+  network_interface {
+    label = "${var.network_label}"
   }
 
   custom_configuration_parameters = {

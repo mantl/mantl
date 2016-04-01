@@ -18,6 +18,14 @@
   tags:
     - common
 
+# add yum-utils if not already installed
+- name: add yum-config-manager
+  sudo: yes
+  yum:
+    name: yum-utils
+  tags:
+    - bootstrap
+
 - name: increase timeouts in YUM
   sudo: yes
   shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
@@ -35,6 +43,15 @@
   tags:
     - bootstrap
 
+- name: enable yum repos
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item }}"
+  with_items:
+    - asteris-mantl-rpm.repo
+    - ciscocloud-rpm.repo
+
 - name: install system utilities
   sudo: yes
   yum:
@@ -49,6 +66,7 @@
     - jq
     - java-1.8.0-openjdk
     - chrony
+    - smlr
   tags:
     - bootstrap
 
@@ -99,15 +117,6 @@
   tags:
     - security
     - bootstrap
-
-- name: enable yum repos
-  sudo: yes
-  copy:
-    src: "{{ item }}"
-    dest: "/etc/yum.repos.d/{{ item }}"
-  with_items:
-    - asteris-mantl-rpm.repo
-    - ciscocloud-rpm.repo
 
 - include: users.yml
 - include: ssl.yml

@@ -1,8 +1,8 @@
 provider "vsphere" {
-  vcenter_server = ""
+  vsphere_server = ""
   user = ""
   password = ""
-  insecure_connection = ""
+  allow_unverified_ssl = "false"
 }
 
 module "vsphere-dc" {
@@ -10,9 +10,11 @@ module "vsphere-dc" {
   long_name = ""
   short_name = ""
   datacenter = ""
-  host = ""
+  cluster = ""
   pool = ""
   template = ""
+  network_label = ""
+  datastore = ""
   control_count = 3
   worker_count = 4
   edge_count = 2
