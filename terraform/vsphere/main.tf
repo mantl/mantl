@@ -6,11 +6,13 @@ variable "ssh_user" {}
 variable "ssh_key" {}
 variable "consul_dc" {}
 variable "datastore" {}
+variable "disk_type" { default = "thin" } 
 variable "network_label" {}
 
 variable "short_name" {default = "mantl"}
 variable "long_name" {default = "mantl"}
 
+variable "folder" {default = ""}
 variable "control_count" {default = 3}
 variable "worker_count" {default = 2}
 variable "edge_count" {default = 2}
@@ -26,8 +28,8 @@ variable "edge_ram" { default = 4096 }
 
 resource "vsphere_virtual_machine" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
-
   datacenter = "${var.datacenter}"
+  folder = "${var.folder}"
   cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
@@ -37,6 +39,7 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
   disk {
     size = "${var.control_volume_size}"
     template = "${var.template}"
+    type = "${var.disk_type}"
     datastore = "${var.datastore}"
   }
 
@@ -53,7 +56,7 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
   connection = {
       user = "${var.ssh_user}"
       key_file = "${var.ssh_key}"
-      host = "${self.ip_address}"
+      host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -65,8 +68,8 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
 
 resource "vsphere_virtual_machine" "mi-worker-nodes" {
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
-
   datacenter = "${var.datacenter}"
+  folder = "${var.folder}"
   cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
@@ -76,6 +79,7 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   disk {
     size = "${var.worker_volume_size}"
     template = "${var.template}"
+    type = "${var.disk_type}"
     datastore = "${var.datastore}"
   }
 
@@ -92,7 +96,7 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   connection = {
       user = "${var.ssh_user}"
       key_file = "${var.ssh_key}"
-      host = "${self.ip_address}"
+      host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -104,8 +108,8 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 
 resource "vsphere_virtual_machine" "mi-edge-nodes" {
   name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
-
   datacenter = "${var.datacenter}"
+  folder = "${var.folder}"
   cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
@@ -115,6 +119,7 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   disk {
     size = "${var.edge_volume_size}"
     template = "${var.template}"
+    type = "${var.disk_type}"
     datastore = "${var.datastore}"
   }
 
@@ -131,7 +136,7 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   connection = {
     user = "${var.ssh_user}"
     key_file = "${var.ssh_key}"
-    host = "${self.ip_address}"
+    host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -142,13 +147,13 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.ip_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.ip_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.ip_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.0.ipv4_address)}"
 }
