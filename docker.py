@@ -189,7 +189,7 @@ def ci_destroy():
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no 
 travis@{ssh_ip} /bin/sh -c "
-kill ${{SSH_AGENT_PID}};
+kill $SSH_AGENT_PID;
 cd mantl/{commit}; 
 {destroy}; 
 cd ..; 
