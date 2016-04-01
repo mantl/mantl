@@ -56,7 +56,7 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
   connection = {
       user = "${var.ssh_user}"
       key_file = "${var.ssh_key}"
-      host = "${self.ipv4_address}"
+      host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -96,7 +96,7 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   connection = {
       user = "${var.ssh_user}"
       key_file = "${var.ssh_key}"
-      host = "${self.ipv4_address}"
+      host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -136,7 +136,7 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   connection = {
     user = "${var.ssh_user}"
     key_file = "${var.ssh_key}"
-    host = "${self.ipv4_address}"
+    host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -147,13 +147,13 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.ipv4_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.ipv4_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.ipv4_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.0.ipv4_address)}"
 }
