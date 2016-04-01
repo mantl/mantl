@@ -12,6 +12,7 @@ env:
   - TERRAFORM_FILE=testing/cisco-os.tf DOCKER_SECRETS='-e OS_IP -e OS_PRT'
 install: pip install -r requirements.txt
 before_script:
+  - echo $CI_HEAD_COMMIT
   - docker pull $DOCKER_IMAGE
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 docker.py ci-setup"
 
