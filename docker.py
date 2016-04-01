@@ -161,11 +161,11 @@ def ci_build():
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no
-travis@{ssh_ip} /bin/sh -c "
+travis@{ssh_ip} /bin/sh -c '
 eval $(ssh-agent);
 ssh-add;
 cd ./mantl/{commit};
-python2 ./testing/build-cluster.py"
+python2 ./testing/build-cluster.py'
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'], 
                 keypath='/local/ci', 
@@ -208,15 +208,15 @@ rm -fr {commit}"
         link_ci_terraform_file()
 
 
-        for i in range(2):
-            returncode = call(split(destroy_cmd))
+    for i in range(2):
+        returncode = call(split(destroy_cmd))
 
-        exit(returncode)
+    exit(returncode)
 
 
 if __name__ == "__main__":
 
-    logfmt = "%(asctime)s\t%(levelname)s\t%(message)s"
+    logfmt = "%(asctime)s  %(levelname)s  %(message)s"
     logging.basicConfig(format=logfmt, level=logging.INFO)
 
     if 'MANTL_CONFIG_DIR' not in os.environ:
