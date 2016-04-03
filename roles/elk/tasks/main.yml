@@ -1,106 +1,64 @@
 ---
-# Include mesos vars so that we can access the zk information in the json file
-- include_vars: "{{ playbook_dir }}/../roles/mesos/defaults/main.yml"
+- include_vars: ../../marathon/defaults/main.yml
 
-- name: create json files for jobs
+- name: update mantl-universe repository
   sudo: yes
-  run_once: true
-  template:
-    src: '{{ item }}.json.j2'
-    dest: /etc/marathon/apps/{{ item }}.json
-  with_items:
-    - elasticsearch
+  shell: docker run --rm --net=host -it {{ mantl_api_image }}:{{ mantl_api_image_tag}} sync
+  run_once: yes
   tags:
     - elk
 
-- name: install mesos elasticsearch framework
-  run_once: true
+- name: create packages json
   sudo: yes
-  command: 'curl -X PUT -d@/etc/marathon/apps/{{ item }}.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/{{ item }}'
+  template:
+    src: "{{ item.value.template }}"
+    dest: /etc/marathon/apps/{{ item.value.dest }}
+  with_dict: elk_packages
+  tags:
+    - elk
+
+- name: check if services are registered
+  sudo: yes
+  run_once: yes
+  shell: "consul-cli catalog-service {{ item.value.service_name }} | jq '.|length'"
+  register: elk_service_count
   changed_when: false
-  failed_when: "'deploymentId' not in result.stdout"
-  register: result
-  with_items:
-    - elasticsearch
+  with_dict: elk_packages
   tags:
     - elk
 
-- name: ensure kibana docker image is present
+- name: install elasticsearch
   sudo: yes
-  command: /usr/bin/docker pull {{ kibana_image }}:{{ kibana_image_tag }}
+  run_once: yes
+  command: consul-cli kv-write mantl-install/apps/elasticsearch @/etc/marathon/apps/{{ elk_packages.elasticsearch.dest }}
+  when: "{{ item.stdout|int == 0 and item.item.key == 'elasticsearch' }}"
+  with_items: elk_service_count.results
   tags:
     - elk
 
-- name: create kibana configuration directory
+- name: install elasticsearch-client
+  sudo: yes
+  run_once: yes
+  command: consul-cli kv-write mantl-install/apps/elasticsearch-client @/etc/marathon/apps/{{ elk_packages['elasticsearch-client'].dest }}
+  when: "{{ item.stdout|int == 0 and item.item.key == 'elasticsearch-client' }}"
+  with_items: elk_service_count.results
+  tags:
+    - elk
+
+- name: install kibana
+  sudo: yes
+  run_once: yes
+  command: consul-cli kv-write mantl-install/apps/kibana @/etc/marathon/apps/{{ elk_packages.kibana.dest }}
+  when: "{{ item.stdout|int == 0 and item.item.key == 'kibana' }}"
+  with_items: elk_service_count.results
+  tags:
+    - elk
+
+- name: remove packages json
   sudo: yes
   file:
-    path: /etc/kibana
-    state: directory
-    mode: 0755
-  tags:
-    - elk
-
-- name: create kibana configuration file
-  sudo: yes
-  file:
-    path: /etc/kibana/kibana.yml
-    state: touch
-    mode: 0755
-  tags:
-    - elk
-
-- name: generate systemd service file
-  sudo: yes
-  template:
-    src: kibana-service.j2
-    dest: /usr/lib/systemd/system/kibana.service
-  notify:
-    - reload systemd daemon
-  tags:
-    - elk
-
-- name: deploy kibana consul-template configuration
-  sudo: yes
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: kibana.cfg
-      dest: /etc/consul-template/config.d
-    - src: kibana.yml.tmpl
-      dest: /etc/consul-template/templates/kibana.yml.tmpl
-    - src: kibana-dashboard.cfg
-      dest: /etc/consul-template/config.d
-  notify:
-    - reload consul-template
-  tags:
-    - elk
-
-- name: deploy kibana create dashboard script
-  sudo: yes
-  template:
-    src: kibana-create-dashboard.sh.tmpl
-    dest: /etc/consul-template/templates/kibana-create-dashboard.sh.tmpl
-  notify:
-    - reload consul-template
-  tags:
-    - elk
-
-- name: generate kibana consul service
-  sudo: yes
-  copy:
-    src: 'kibana-consul.json'
-    dest: '/etc/consul/kibana.json'
-  notify:
-    - reload consul
-  tags:
-    - elk
-
-- name: enable and start kibana
-  sudo: yes
-  service:
-    name: kibana
-    enabled: yes
-    state: restarted
+    dest: /etc/marathon/apps/{{ item.value.dest }}
+    state: absent
+  with_dict: elk_packages
   tags:
     - elk

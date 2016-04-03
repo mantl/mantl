@@ -1,0 +1,43 @@
+# Remove the ELK stack. 
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: role=worker
+
+  vars:
+    elasticsearch_remove_data: false
+
+  tasks:
+
+    - include_vars: ../roles/elk/defaults/main.yml
+
+    - name: discover mantl-api url
+      sudo: no
+      run_once: yes
+      register: mantl_api_url
+      shell: consul-cli catalog-service mantl-api | jq -r '.[] | .ServiceAddress + ":" + (.ServicePort|tostring)'
+      tags:
+        - elk
+
+    - name: remove packages
+      sudo: no
+      run_once: yes
+      shell: "curl -XDELETE -d '{\"name\": \"{{ item|quote }}\"}' http://{{ mantl_api_url.stdout }}/1/install"
+      with_items:
+        - "{{ kibana_package }}"
+        - elasticsearch-client
+        - elasticsearch
+      tags:
+        - elk
+
+    - name: remove elasticsearch data
+      sudo: yes
+      file: 
+        path: /var/lib/mesos/slave/elasticsearch/{{ elasticsearch_cluster_name }}
+        state: absent
+      when: elasticsearch_remove_data
+      tags:
+        - elk
