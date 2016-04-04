@@ -1,7 +1,6 @@
 language: python
 env:
   global:
-  - CI_HEAD_COMMIT
   - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
   - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number -e CI_HEAD_COMMIT -e TRAVIS_COMMIT_RANGE -e TRAVIS_REPO_SLUG -e TRAVIS_BRANCH -e TRAVIS_PULL_REQUEST -e TERRAFORM_FILE'
   - DOCKER_IMAGE=sehqlr/mantl:testing
@@ -12,7 +11,7 @@ env:
   - TERRAFORM_FILE=testing/cisco-os.tf DOCKER_SECRETS='-e OS_IP -e OS_PRT'
 install: pip install -r requirements.txt
 before_script:
-  - CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
+  - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
   - echo $CI_HEAD_COMMIT
   - docker pull $DOCKER_IMAGE
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 docker.py ci-setup"
