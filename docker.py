@@ -185,7 +185,7 @@ def ci_destroy():
 
     destroy_cmd = "terraform destroy --force"
     if 'OS_IP' in os.environ:
-        destroy_cmd = '''
+        ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port} 
 -o BatchMode=yes -o StrictHostKeyChecking=no 
 travis@{ssh_ip} /bin/sh -c "
@@ -195,7 +195,7 @@ cd mantl/{commit};
 cd ..; 
 rm -fr {commit}"
         '''
-        destroy_cmd = destroy_cmd.format(destroy=destroy_cmd, 
+        destroy_cmd = ssh_cmd.format(destroy=destroy_cmd, 
                 keypath='/local/ci', 
                 ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'],
