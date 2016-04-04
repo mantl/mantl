@@ -10,7 +10,7 @@ variable edge_count { default = "2"}    # load balancer nodes
 
 # Run 'nova network-list' to get these names and values
 # Floating ips are optional
-variable external_network_uuid { default = "uuid-of-your-external-network" }
+variable external_network_uuid { default = "56e3d1ac-44d6-43d7-bea3-e2f334aa8f86" }
 variable floating_ip_pool { default = "public-floating-601" }
 
 # Run 'nova image-list' to get your image name
