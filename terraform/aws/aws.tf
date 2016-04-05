@@ -1,5 +1,7 @@
 variable "availability_zone" {}
 variable "control_count" {default = "3"}
+variable "count_format" {default = "%02d"}
+variable "worker_count_format" {default = "%03d"}
 variable "control_iam_profile" {default = "" }
 variable "control_type" {default = "m3.medium"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
@@ -149,7 +151,7 @@ resource "aws_instance" "mi-worker-nodes" {
   }
 
   tags {
-    Name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
+    Name = "${var.short_name}-worker-${format(var.worker_count_format, count.index+1)}"
     sshUser = "${var.ssh_username}"
     role = "worker"
     dc = "${var.datacenter}"

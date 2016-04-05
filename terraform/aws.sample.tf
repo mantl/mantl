@@ -112,6 +112,7 @@ module "edge-nodes" {
 module "worker-nodes" {
   source = "./terraform/aws/instance"
   count = "${var.worker_count}"
+  count_format = "%03d"
   datacenter = "${var.datacenter}"
   data_ebs_volume_size = "100"
   role = "worker"
