@@ -23,6 +23,10 @@ You can use these variables to customize your Logstash installations:
    <https://www.elastic.co/guide/en/logstash/1.5/plugins-outputs-elasticsearch.html>`_
    settings.
 
+   This is not needed if you are planning to use the Mantl ELK addon. Use this
+   if you want to send Logstash data to an Elasticsearch cluster that is not
+   managed by Mantl.
+
    Default: n/a
 
    Example:
