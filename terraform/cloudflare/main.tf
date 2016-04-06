@@ -10,7 +10,7 @@ variable subdomain { default = "" }
 variable worker_count {}
 variable worker_ips {}
 variable kube_worker_count { default = "0" }
-variable kube_worker_ips {}
+variable kube_worker_ips { default = "" }
 
 # individual records
 resource "cloudflare_record" "dns-control" {
