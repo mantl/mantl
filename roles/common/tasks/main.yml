@@ -100,7 +100,6 @@
   with_items:
     - asteris-mantl-rpm.repo
     - ciscocloud-rpm.repo
-    - docker-io.repo
 
 - include: users.yml
 - include: ssl.yml
