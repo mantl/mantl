@@ -18,6 +18,7 @@ ExecStart=/usr/bin/docker run \
     --name=nginx-mesos-leader \
     --env-file=/etc/default/nginx-mesos-leader.env \
     -p 5050:5050 \
+    -v /etc/pki/tls/certs:/etc/pki/tls/certs:ro \
     -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  

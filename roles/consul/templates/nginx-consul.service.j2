@@ -18,7 +18,7 @@ ExecStart=/usr/bin/docker run \
     --name=nginx-consul \
     --net=host \
     --privileged=true \
-    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
+    -v /etc/pki/tls:/etc/pki/tls:ro \
     --env-file=/etc/default/nginx-consul.env \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
 

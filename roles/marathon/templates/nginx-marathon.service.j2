@@ -16,7 +16,7 @@ ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_imag
 ExecStart=/usr/bin/docker run \
     --rm \
     --name=nginx-marathon \
-    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
+    -v /etc/pki/tls:/etc/pki/tls:ro \
     -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
     --env-file=/etc/default/nginx-marathon.env \
     -p 8080:8080 \

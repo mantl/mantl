@@ -15,8 +15,8 @@ http {
 		listen {{ marathon_proxy_port }} {% if do_marathon_ssl|bool %}ssl{% endif %};
 
 {% if do_marathon_ssl|bool -%}
-		ssl_certificate		/etc/nginx/ssl/nginx.cert;
-		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
+		ssl_certificate		/etc/pki/tls/certs/host.cert;
+		ssl_certificate_key	/etc/pki/tls/private/key;
 
 		ssl on;
 		ssl_session_cache	builtin:1000 shared:SSL:10m;

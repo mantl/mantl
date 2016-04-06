@@ -4,8 +4,8 @@ logLevel = "ERROR"
 
 [web]
 address = ":8081"
-CertFile = "/etc/traefik/certs/traefik-admin.cert.pem"
-KeyFile = "/etc/traefik/certs/traefik-admin.key.pem"
+CertFile = "/etc/pki/tls/certs/host.cert"
+KeyFile = "/etc/pki/tls/private/host.key"
 
 [marathon]
 endpoint = "{{ traefik_marathon_endpoint }}"

@@ -15,8 +15,8 @@ http {
 		listen {% raw %}{{ env "NGINX_PUBLIC_IP" }}{% endraw %}:8500 {% if do_consul_ssl|bool %}ssl{% endif %};
 
 {% if do_consul_ssl|bool %}
-		ssl_certificate		/etc/nginx/ssl/nginx.cert;
-		ssl_certificate_key	/etc/nginx/ssl/nginx.key;
+		ssl_certificate		/etc/pki/tls/certs/host.cert;
+		ssl_certificate_key	/etc/pki/tls/private/host.key;
 
 		ssl on;
 		ssl_session_cache	builtin:1000 shared:SSL:10m;
