@@ -1,5 +1,0 @@
----
-dependencies:
-  - { role: common }
-  - { role: k8s-master }
-  - { role: kubernetes }

@@ -1,0 +1,20 @@
+---
+- include: skydns.yml
+  when: dns_setup and 'first_master' in group_names
+  tags:
+    - kubernetes
+
+- include: kube-ui.yml
+  when: enable_ui and 'first_master' in group_names
+  tags:
+    - kubernetes
+
+- include: logging.yml
+  when: enable_logging and 'first_master' in group_names
+  tags:
+    - kubernetes
+
+- include: monitoring.yml
+  when: enable_monitoring and 'first_master' in group_names
+  tags:
+    - kubernetes

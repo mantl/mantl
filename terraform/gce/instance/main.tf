@@ -26,7 +26,7 @@ resource "google_compute_instance" "instance" {
   description = "${var.short_name} ${var.role} node #${format("%02d", count.index+1)}"
   machine_type = "${var.machine_type}"
   zone = "${element(split(",", var.zones), count.index)}"
-  can_ip_forward = false
+  can_ip_forward = true
   tags = ["${var.short_name}", "${var.role}"]
 
   disk {
