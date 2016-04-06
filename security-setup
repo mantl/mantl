@@ -465,7 +465,7 @@ class Component(object):
         with self.modify_security() as config:
 	    consul_dns_domain = config['consul_dns_domain']
 
-	common = "%s.service.%s" % (name, consul_dns_domain)
+	common = "server.%s" % consul_dns_domain
 	san = dict(SAN='DNS:localhost,DNS:*.node.' + consul_dns_domain + ',DNS:*.service.' + consul_dns_domain + ',IP:127.0.0.1')
 
         with self.chdir(CERT_PATH):
@@ -518,7 +518,7 @@ class Component(object):
 
 class Certificates(Component):
     def check(self):
-        return [self.domain, self.ca]
+        return [self.domain, self.ca, self.host_cert]
 
     def domain(self):
 	with self.modify_security() as config:
@@ -560,14 +560,14 @@ class Certificates(Component):
                 os.chmod(ROOT_CERT, stat.S_IRUSR | stat.S_IWUSR)
                 print('generated root CA')
 
+    def host_cert(self):
+        "SSL certificate"
+        self.generate_certificate("host")
+
 
 class Nginx(Component):
     def check(self):
-        return [self.cert, self.password]
-
-    def cert(self):
-        "SSL certificate"
-        self.generate_certificate("nginx")
+        return [self.password]
 
     def password(self):
         "admin password"
@@ -584,7 +584,7 @@ class Nginx(Component):
 class Consul(Component):
     def check(self):
         return [self.check_security, self.gossip_key, self.master_acl_token,
-		self.agent_acl_token, self.secure_acl_token, self.cert]
+		self.agent_acl_token, self.secure_acl_token]
 
     def check_security(self):
         "check security"
@@ -630,22 +630,6 @@ class Consul(Component):
                 print('set acl secure token')
             else:
                 print('acl secure token already set')
-
-    def cert(self):
-        "SSL certificate"
-        self.generate_certificate("consul")
-
-class Traefik(Component):
-    def check(self):
-        return [self.admin_cert]
-
-    def admin_cert(self):
-        "admin SSL certificate"
-        self.generate_certificate("traefik-admin")
-
-    def cert(self):
-        "SSL certificate"
-        self.generate_certificate("consul")
 
 class Marathon(Component):
     def check(self):
