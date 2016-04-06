@@ -14,6 +14,7 @@ variable keypair_name { }
 variable long_name { default = "mantl" }
 variable net_id { }
 variable worker_count {}
+variable kube_worker_count { default = "0" }
 variable worker_flavor_name { }
 variable security_groups { default = "default" }
 variable short_name { default = "mantl" }
@@ -45,6 +46,16 @@ resource "openstack_blockstorage_volume_v1" "mi-worker-lvm" {
     usage = "container-volumes"
   }
   count = "${ var.worker_count }"
+}
+
+resource "openstack_blockstorage_volume_v1" "mi-kube-worker-lvm" {
+  name = "${ var.short_name }-kube-worker-lvm-${format("%02d", count.index+1) }"
+  description = "${ var.short_name }-kube-worker-lvm-${format("%02d", count.index+1) }"
+  size = "${ var.worker_data_volume_size }"
+  metadata = {
+    usage = "container-volumes"
+  }
+  count = "${ var.kube_worker_count }"
 }
 
 resource "openstack_blockstorage_volume_v1" "mi-edge-lvm" {
@@ -95,6 +106,25 @@ resource "openstack_compute_instance_v2" "worker" {
   count = "${ var.worker_count }"
 }
 
+resource "openstack_compute_instance_v2" "kube-worker" {
+  name = "${ var.short_name}-kube-worker-${format("%03d", count.index+1) }"
+  key_pair = "${ var.keypair_name }"
+  image_name = "${ var.image_name }"
+  flavor_name = "${ var.worker_flavor_name }"
+  security_groups = [ "${ var.security_groups }" ]
+  network = { uuid = "${ var.net_id }" }
+  volume = {
+    volume_id = "${element(openstack_blockstorage_volume_v1.mi-kube-worker-lvm.*.id, count.index)}"
+    device = "/dev/vdb"
+  }
+  metadata = {
+    dc = "${var.datacenter}"
+    role = "kubeworker"
+    ssh_user = "${ var.ssh_user }"
+  }
+  count = "${ var.kube_worker_count }"
+}
+
 resource "openstack_compute_instance_v2" "edge" {
   name = "${ var.short_name}-edge-${format("%02d", count.index+1) }"
   key_pair = "${ var.keypair_name }"
@@ -120,6 +150,10 @@ output "control_ips" {
 
 output "worker_ips" {
   value = "${join(\",\", openstack_compute_instance_v2.worker.*.access_ip_v4)}"
+}
+
+output "kube_worker_ips" {
+  value = "${join(\",\", openstack_compute_instance_v2.kube-worker.*.access_ip_v4)}"
 }
 
 output "edge_ips" {

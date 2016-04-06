@@ -9,6 +9,8 @@ variable short_name {}
 variable subdomain { default = "" }
 variable worker_count {}
 variable worker_ips {}
+variable kube_worker_count { default = "0" }
+variable kube_worker_ips {}
 
 # individual records
 resource "cloudflare_record" "dns-control" {
@@ -25,6 +27,15 @@ resource "cloudflare_record" "dns-worker" {
   domain = "${var.domain}"
   value = "${element(split(",", var.worker_ips), count.index)}"
   name = "${var.short_name}-worker-${format("%03d", count.index+1)}.node${var.subdomain}"
+  type = "A"
+  ttl = 1 # automatic
+}
+
+resource "cloudflare_record" "dns-kube-worker" {
+  count = "${var.kube_worker_count}"
+  domain = "${var.domain}"
+  value = "${element(split(",", var.kube_worker_ips), count.index)}"
+  name = "${var.short_name}-kube-worker-${format("%03d", count.index+1)}.node${var.subdomain}"
   type = "A"
   ttl = 1 # automatic
 }

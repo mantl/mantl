@@ -11,6 +11,8 @@ variable short_name {}
 variable subdomain { default = "" }
 variable worker_count {}
 variable worker_ips {}
+variable kubeworker_count {}
+variable kubeworker_ips {}
 
 # individual records
 resource "google_dns_record_set" "dns-control" {
@@ -38,6 +40,15 @@ resource "google_dns_record_set" "dns-worker" {
   type = "A"
   ttl = 60
   rrdatas = ["${element(split(",", var.worker_ips), count.index)}"]
+}
+
+resource "google_dns_record_set" "dns-kubeworker" {
+  count = "${var.kubeworker_count}"
+  managed_zone = "${var.managed_zone}"
+  name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}.node${var.subdomain}.${var.domain}."
+  type = "A"
+  ttl = 60
+  rrdatas = ["${element(split(",", var.kubeworker_ips), count.index)}"]
 }
 
 # group records
