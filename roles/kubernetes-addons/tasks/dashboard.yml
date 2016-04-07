@@ -1,0 +1,27 @@
+---
+- name: write pod file
+  sudo: yes
+  copy:
+    src: kubernetes-dashboard.yaml
+    dest: "{{ kube_manifest_dir }}/kubernetes-dashboard.yaml"
+  register: kubernetes_dashboard_rc_def
+  run_once: true
+  tags:
+    - addons
+    - dashboard
+    - kubernetes
+
+- name: create or update dashboard
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: kubernetes-dashboard
+    filename: "{{ kube_manifest_dir }}/kubernetes-dashboard.yaml"
+    state: "{{ kubernetes_dashboard_rc_def.changed | ternary('latest','present') }}"
+    server: "http://localhost:8085/"
+  run_once: true
+  tags:
+    - addons
+    - dashboard
+    - kubernetes
