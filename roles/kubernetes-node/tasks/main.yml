@@ -71,6 +71,17 @@
     - node
     - kubernetes
 
+- name: generate consul config for NodePort services
+  sudo: yes
+  template:
+    src: nodeport.json.j2
+    dest: /etc/consul/nodeport.json
+  notify:
+    - reload consul
+  tags:
+    - node
+    - kubernetes
+
 - name: create fluentd pod
   sudo: yes
   copy:
