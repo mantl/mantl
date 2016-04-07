@@ -5,7 +5,7 @@
     src: skydns-rc.yaml.j2
     dest: "{{ kube_manifest_dir }}/skydns-rc.yaml"
   register: dns_rc_def
-  when: dns_setup
+  run_once: true
   tags:
     - addons
     - skydns
@@ -20,7 +20,7 @@
     filename: "{{ kube_manifest_dir }}/skydns-rc.yaml"
     state: "{{ dns_rc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: dns_setup
+  run_once: true
   tags:
     - addons
     - skydns

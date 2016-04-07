@@ -5,7 +5,7 @@
     src: kube-ui-rc.yaml
     dest: "{{ kube_manifest_dir }}/kube-ui-rc.yaml"
   register: kube_ui_rc_def
-  when: enable_ui
+  run_once: true
   tags:
     - addons
     - kube-ui
@@ -17,7 +17,7 @@
     src: kube-ui-svc.yaml
     dest: "{{ kube_manifest_dir }}/kube-ui-svc.yaml"
   register: kube_ui_svc_def
-  when: enable_ui
+  run_once: true
   tags:
     - addons
     - kube-ui
@@ -32,7 +32,7 @@
     filename: "{{ kube_manifest_dir }}/kube-ui-rc.yaml"
     state: "{{ kube_ui_rc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_ui
+  run_once: true
   tags:
     - addons
     - kube-ui
@@ -47,7 +47,7 @@
     filename: "{{ kube_manifest_dir }}/kube-ui-svc.yaml"
     state: "{{ kube_ui_svc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_ui
+  run_once: true
   tags:
     - addons
     - kube-ui
