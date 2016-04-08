@@ -89,20 +89,21 @@ def ci_setup():
         # This string will be collapsed into one line
         # I made this change for readability
         ssh_cmd = '''
-ssh -i {keypath} -p {ssh_port} 
+ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
 mkdir --parents mantl/{commit};
 git clone https://github.com/CiscoCloud/mantl.git mantl/{commit};
-cd mantl/{commit}; 
-git checkout {commit}; 
+cd mantl/{commit};
+git checkout {commit};
 ln -sf {tf_file} terraform.tf;
 ln -sf sample.yml mantl.yml;
+./security-setup;
 echo 'build_number = \\"{build}\\"' > terraform.tfvars"
         '''
-        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'], 
-                keypath='/local/ci', 
-                ssh_port=os.environ['OS_PRT'], 
+        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'],
+                keypath='/local/ci',
+                ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'],
                 tf_file=os.environ['TERRAFORM_FILE'],
                 build=os.environ['TF_VAR_build_number'])
@@ -136,11 +137,11 @@ def ci_build():
 
     commit_range = []
     for commit in commit_range_str.split():
-        if commit.startswith('docs'): 
+        if commit.startswith('docs'):
             logging.info("Modified file in docs directory: %s", commit)
-        elif commit.endswith('md'): 
+        elif commit.endswith('md'):
             logging.info("Modified file has markdown extension: %s", commit)
-        elif commit.endswith('rst'): 
+        elif commit.endswith('rst'):
             logging.info("Modified file has reST extension: %s", commit)
         else:
             logging.info("Modified file not marked as docfile: %s", commit)
@@ -159,7 +160,7 @@ def ci_build():
 
     if 'OS_IP' in os.environ:
         ssh_cmd = '''
-ssh -i {keypath} -p {ssh_port} 
+ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c '
 eval $(ssh-agent);
@@ -167,9 +168,9 @@ ssh-add;
 cd ./mantl/{commit};
 python2 ./testing/build-cluster.py'
         '''
-        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'], 
-                keypath='/local/ci', 
-                ssh_port=os.environ['OS_PRT'], 
+        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'],
+                keypath='/local/ci',
+                ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'])
         ssh_cmd = " ".join(ssh_cmd.splitlines())
 
@@ -186,17 +187,17 @@ def ci_destroy():
     destroy_cmd = "terraform destroy --force"
     if 'OS_IP' in os.environ:
         ssh_cmd = '''
-ssh -i {keypath} -p {ssh_port} 
--o BatchMode=yes -o StrictHostKeyChecking=no 
+ssh -i {keypath} -p {ssh_port}
+-o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
 kill $SSH_AGENT_PID;
-cd mantl/{commit}; 
-{destroy}; 
-cd ..; 
+cd mantl/{commit};
+{destroy};
+cd ..;
 rm -fr {commit}"
         '''
-        destroy_cmd = ssh_cmd.format(destroy=destroy_cmd, 
-                keypath='/local/ci', 
+        destroy_cmd = ssh_cmd.format(destroy=destroy_cmd,
+                keypath='/local/ci',
                 ssh_port=os.environ['OS_PRT'],
                 ssh_ip=os.environ['OS_IP'],
                 commit=os.environ['CI_HEAD_COMMIT'])
@@ -233,7 +234,7 @@ if __name__ == "__main__":
         else:
             logging.critical("Usage: docker.py [CMD]")
             exit(1)
-            
+
     else:
         logging.critical("Usage: docker.py [CMD]")
         exit(1)

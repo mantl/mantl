@@ -21,7 +21,7 @@ variable image_name  { default = "CentOS-7" }
 #  Below are typical settings for mantl
 variable control_flavor_name { default = "CO2-Medium" }
 variable worker_flavor_name { default = "CO2-Medium" }
-variable edge_flavor_name { default = "CO2-Medium" }
+variable edge_flavor_name { default = "Micro-Small" }
 
 module "ssh-key" {
   source = "./terraform/openstack/keypair_v2"
