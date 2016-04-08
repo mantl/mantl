@@ -88,6 +88,12 @@ Variables
 
    default: 4096
 
+.. data:: kafka_broker_port
+
+   The port to bind to for the Kafka brokers.
+
+   default: 9092
+
 .. data:: kafka_broker_options
 
    The Kafka options to pass to the brokers.
