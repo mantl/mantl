@@ -3,7 +3,6 @@ variable build_number {}
 variable subnet_cidr { default = "10.0.0.0/24" }
 variable public_key { default = "~/.ssh/id_rsa.pub" }
 
-# resources will start with "travis-ci-"
 variable control_count { default = "3"} # mesos masters, zk leaders, consul servers
 variable worker_count { default = "5"}  # worker nodes
 variable edge_count { default = "2"}    # load balancer nodes
@@ -34,6 +33,7 @@ module "network" {
   source = "./terraform/openstack/network"
   external_net_uuid = "${var.external_network_uuid}"
   subnet_cidr = "${var.subnet_cidr}"
+  name = "mantl-ci-${var.build_number}"
 }
 
 
