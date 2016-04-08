@@ -184,13 +184,13 @@ python2 ./testing/build-cluster.py'
 def ci_destroy():
     """Cleanup after ci_build"""
 
-    destroy_cmd = "terraform destroy --force"
+    destroy_cmd = "terraform destroy --force; terraform destroy --force"
     if 'OS_IP' in os.environ:
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c "
-kill $SSH_AGENT_PID;
+kill -s SIGTERM $SSH_AGENT_PID;
 cd mantl/{commit};
 {destroy};
 cd ..;
@@ -209,10 +209,7 @@ rm -fr {commit}"
         link_ci_terraform_file()
 
 
-    for i in range(2):
-        returncode = call(split(destroy_cmd))
-
-    exit(returncode)
+    exit(call(split(destroy_cmd)))
 
 
 if __name__ == "__main__":

@@ -4,8 +4,8 @@ variable subnet_cidr { default = "10.0.0.0/24" }
 variable public_key { default = "~/.ssh/id_rsa.pub" }
 
 variable control_count { default = "3"} # mesos masters, zk leaders, consul servers
-variable worker_count { default = "5"}  # worker nodes
-variable edge_count { default = "2"}    # load balancer nodes
+variable worker_count { default = "1"}  # worker nodes
+variable edge_count { default = "1"}    # load balancer nodes
 
 # Run 'nova network-list' to get these names and values
 # Floating ips are optional
