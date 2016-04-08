@@ -189,12 +189,12 @@ def ci_destroy():
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no
-travis@{ssh_ip} /bin/sh -c "
+travis@{ssh_ip} /bin/sh -c '
 kill -s SIGTERM $SSH_AGENT_PID;
 cd mantl/{commit};
 {destroy};
 cd ..;
-rm -fr {commit}"
+rm -fr {commit}'
         '''
         destroy_cmd = ssh_cmd.format(destroy=destroy_cmd,
                 keypath='/local/ci',
