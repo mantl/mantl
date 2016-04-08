@@ -36,20 +36,6 @@ module "network" {
   subnet_cidr = "${var.subnet_cidr}"
 }
 
-# Create floating IPs for each of the roles
-# These are not required if your network is exposed to the internet
-# or you don't want floating ips for the instances.
-module "floating-ips-control" {
-  source = "./terraform/openstack/floating-ip"
-  count = "${var.control_count}"
-  floating_pool = "${var.floating_ip_pool}"
-}
-
-module "floating-ips-worker" {
-  source = "./terraform/openstack/floating-ip"
-  count = "${var.worker_count}"
-  floating_pool = "${var.floating_ip_pool}"
-}
 
 module "floating-ips-edge" {
   source = "./terraform/openstack/floating-ip"
