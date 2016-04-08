@@ -1,0 +1,20 @@
+{ 
+    "schedule" : "R0/2030-01-01T12:00:00Z/PT1H",  
+    "cpus": "0.5",
+    "mem": "512",  
+    "epsilon" : "PT30M",  
+    "name" : "spark-pi",
+    "container": {
+        "type": "DOCKER",
+        "image": "mcapuccini/spark:1.6.0",
+	"volumes": [
+		{
+        		"hostPath": "/mnt/container-volumes/spark-conf",
+            		"containerPath": "/opt/spark/dist/conf",
+        		"mode": "RO"
+        	}
+        ]
+    },
+    "command" : "MASTER_PORT=$(dig +short spark.service.consul SRV | awk '{print $3}' | sort | head -1) && bin/spark-submit --class org.apache.spark.examples.SparkPi --master mesos://spark.service.consul:$MASTER_PORT --deploy-mode cluster http://central.maven.org/maven2/org/apache/spark/spark-examples_2.10/1.1.1/spark-examples_2.10-1.1.1.jar 1000",
+    "owner" : "user@example.com"
+}

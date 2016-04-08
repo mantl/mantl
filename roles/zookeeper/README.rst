@@ -65,3 +65,15 @@ You can use these variables to customize your ZooKepeer installation.
    Log level for ZooKeeper
 
    default: ``WARN``
+
+.. data::  zookeeper_log_retain_count 
+   
+   Number of zookeeper transaction logs and snapshots to keep.
+
+   default: ``3``
+
+.. data:: zookeeper_log_purge_interval
+
+   Interval in hours that zookeeper waits to purge transacton logs and snapshots. 
+
+   default: ``12``

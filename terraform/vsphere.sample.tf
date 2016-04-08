@@ -1,8 +1,8 @@
 provider "vsphere" {
-  vcenter_server = ""
+  vsphere_server = ""
   user = ""
   password = ""
-  insecure_connection = ""
+  allow_unverified_ssl = "false"
 }
 
 module "vsphere-dc" {
@@ -10,9 +10,11 @@ module "vsphere-dc" {
   long_name = ""
   short_name = ""
   datacenter = ""
-  host = ""
-  pool = ""
+  cluster = ""
+  pool = "" # format is cluster_name/Resources/pool_name
   template = ""
+  network_label = ""
+  datastore = ""
   control_count = 3
   worker_count = 4
   edge_count = 2
@@ -22,4 +24,14 @@ module "vsphere-dc" {
   ssh_user = ""
   ssh_key = ""
   consul_dc = ""
+
+  #Optional Parameters
+  #folder = ""  
+  #control_cpu = ""
+  #worker_cpu = ""
+  #edge_cpu = ""
+  #control_ram = ""
+  #worker_ram = ""
+  #edge_ram = ""
+  #disk_type = "" thin or eager_zeored, default is thin
 }

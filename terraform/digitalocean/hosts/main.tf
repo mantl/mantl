@@ -9,6 +9,7 @@ variable region_name { default = "nyc3" }
 variable short_name { default = "mi" }
 variable ssh_key { }
 variable worker_count { default = 3 }
+variable kube_worker_count { default = 0 }
 variable worker_size { default = "4gb" }
 
 # create resources
@@ -32,6 +33,16 @@ resource "digitalocean_droplet" "worker" {
   user_data = "{\"role\":\"worker\",\"dc\":\"${var.datacenter}\"}"
 }
 
+resource "digitalocean_droplet" "kube-worker" {
+  count = "${var.kube_worker_count}"
+  name = "${var.short_name}-kube-worker-${format("%03d", count.index+1)}"
+  image = "${var.image_name}"
+  region = "${var.region_name}"
+  size = "${var.worker_size}"
+  ssh_keys = ["${var.ssh_key}"]
+  user_data = "{\"role\":\"kubeworker\",\"dc\":\"${var.datacenter}\"}"
+}
+
 resource "digitalocean_droplet" "edge" {
   count = "${var.edge_count}"
   name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
@@ -48,6 +59,10 @@ output "control_ips" {
 
 output "worker_ips" {
   value = "${join(\",\", digitalocean_droplet.worker.*.ipv4_address)}"
+}
+
+output "kube_worker_ips" {
+  value = "${join(\",\", digitalocean_droplet.kube-worker.*.ipv4_address)}"
 }
 
 output "edge_ips" {

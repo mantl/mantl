@@ -45,8 +45,8 @@
     state: directory
   when: item.1
   with_together:
-    - [ mesos, docker, zookeeper ]
-    - [ true, true, role == 'control' ]
+    - [ docker, zookeeper ]
+    - [ true, role == 'control' ]
   tags:
     - docker
     - logrotate

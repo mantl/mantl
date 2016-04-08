@@ -3,7 +3,7 @@
   sudo: yes
   yum:
     name: "mantl-dns-{{ mantl_dns_version }}"
-    state: latest
+    state: installed
   tags:
     - dnsmasq
     - bootstrap
