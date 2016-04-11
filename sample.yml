@@ -21,7 +21,6 @@
     - common
     - lvm
     - docker
-    - collectd
     - logrotate
     - consul-template
     - nginx

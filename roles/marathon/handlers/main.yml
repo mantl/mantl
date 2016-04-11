@@ -25,9 +25,3 @@
 - name: reload nginx-marathon
   sudo: yes
   command: systemctl daemon-reload
-
-- name: restart collectd
-  sudo: yes
-  service:
-    name: collectd
-    state: restarted

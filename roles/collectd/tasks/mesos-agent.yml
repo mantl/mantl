@@ -1,0 +1,28 @@
+---
+- name: check if mesos agent is present
+  stat:
+    path: /etc/sysconfig/mesos-agent
+  tags:
+    - mesos
+    - collectd
+
+- name: install collectd mesos-agent plugin
+  sudo: yes
+  copy:
+    src: mesos-agent.py
+    dest: /usr/share/collectd/plugins
+    mode: 0444
+  tags:
+    - mesos
+    - collectd
+
+- name: configure collectd mesos-agent plugin
+  sudo: yes
+  template:
+    src: mesos-agent.conf.j2
+    dest: /etc/collectd.d/mesos-agent.conf
+  notify:
+    - restart collectd
+  tags:
+    - mesos
+    - collectd

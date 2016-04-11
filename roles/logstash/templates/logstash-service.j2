@@ -36,7 +36,6 @@ ExecStart=/usr/bin/docker run \
 {% if "'role=control' in group_names" %}
     --volume=/var/log/zookeeper:/logs/zookeeper:ro \
 {% endif %}
-    --volume=/usr/share/collectd:/collectd:ro \
     {{ logstash_image }}:{{ logstash_image_tag }} \
     logstash -f /config-dir/
 

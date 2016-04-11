@@ -27,12 +27,6 @@
   sudo: yes
   command: systemctl daemon-reload
 
-- name: restart collectd
-  sudo: yes
-  service:
-    name: collectd
-    state: restarted
-
 - name: restart rsyslog
   sudo: yes
   service:
