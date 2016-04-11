@@ -17,6 +17,7 @@ module "mantl-ci-dc" {
   region = "us-central1"
   zone = "us-central1-a"
   control_count = 3
-  worker_count = 3
-  edge_count = 2
+  worker_count = 2
+  edge_count = 1
+  kube_worker_count = 2
 }

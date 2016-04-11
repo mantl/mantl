@@ -1,26 +1,37 @@
 ---
-- name: create kubernetes config directory
-  sudo: yes
-  file: path={{ kube_config_dir }} state=directory
+- name: evaluate first_master
+  add_host:
+    name: "{{ groups[master_group_name][0] }}"
+    groups: first_master
+    when: "master in groups and groups[master_group_name] | length > 1"
+  tags:
+    - common
+    - kubernetes
 
-- name: create kubernetes script directory
+- name: create kubernetes config directories
   sudo: yes
-  file: path={{ kube_script_dir }} state=directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "/etc/kubernetes"
+    - "/srv/kubernetes"
+    - "{{ kube_manifest_dir }}"
+    - "{{ kube_podmaster_dir }}"
+    - "{{ kube_cert_dir }}"
+    - "{{ kube_users_dir }}"
+  tags:
+    - kubernetes
 
-- name: Make sure manifest directory exists
+- name: pull hyperkube docker image
   sudo: yes
-  file: path={{ kube_manifest_dir }} state=directory
-
-- name: write the global config file
-  sudo: yes
-  template:
-    src: config.j2
-    dest: "{{ kube_config_dir }}/config"
-  notify:
-    - restart daemons
+  command: "docker pull gcr.io/google_containers/hyperkube:{{ kube_version }}"
+  register: docker_pull_result
+  changed_when: docker_pull_result.stdout.find('newer') > -1
   tags:
     - kubernetes
 
 - include: secrets.yml
   tags:
     - secrets
+    - kubernetes

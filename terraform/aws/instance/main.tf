@@ -1,4 +1,5 @@
 variable "count" {default = "4"}
+variable "count_format" {default = "%02d"}
 variable "iam_profile" {default = "" }
 variable "ec2_type" {default = "m3.medium"}
 variable "ebs_volume_size" {default = "20"} # size is in gigabytes
@@ -21,9 +22,10 @@ resource "aws_ebs_volume" "ebs" {
   type = "gp2"
 
   tags {
-    Name = "${var.short_name}-${var.role}-lvm-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-${var.role}-lvm-${format(var.count_format, count.index+1)}"
   }
 }
+
 
 resource "aws_instance" "instance" {
   ami = "${var.source_ami}"
@@ -39,13 +41,15 @@ resource "aws_instance" "instance" {
     volume_size = "${var.ebs_volume_size}"
   }
 
+
   tags {
-    Name = "${var.short_name}-${var.role}-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-${var.role}-${format(var.count_format, count.index+1)}"
     sshUser = "${var.ssh_username}"
     role = "${var.role}"
     dc = "${var.datacenter}"
   }
 }
+
 
 resource "aws_volume_attachment" "instance-lvm-attachment" {
   count = "${var.count}"

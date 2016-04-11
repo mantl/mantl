@@ -2,6 +2,7 @@
   "service": {
     "name": "etcd",
     "tags": [ "etcd" ],
+    "port": 2379,
     "checks": [
       {
         "name": "service-active",

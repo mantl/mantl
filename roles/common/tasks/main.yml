@@ -43,15 +43,6 @@
   tags:
     - bootstrap
 
-- name: enable yum repos
-  sudo: yes
-  copy:
-    src: "{{ item }}"
-    dest: "/etc/yum.repos.d/{{ item }}"
-  with_items:
-    - asteris-mantl-rpm.repo
-    - ciscocloud-rpm.repo
-
 - name: install system utilities
   sudo: yes
   yum:
