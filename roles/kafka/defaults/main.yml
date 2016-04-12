@@ -7,7 +7,7 @@ kafka_scheduler_mem: 512
 # Configuration for kafka brokers
 kafka_broker_count: 3
 kafka_brokers: "1..{{ kafka_broker_count }}"
-kafka_broker_cpu: 4
+kafka_broker_cpu: 1
 kafka_broker_mem: 4096
 kafka_broker_heap: 4096
 kafka_broker_port: 9092
