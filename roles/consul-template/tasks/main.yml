@@ -10,9 +10,9 @@
 
 - name: configure consul-template
   sudo: yes
-  copy:
-    src: consul.hcl
-    dest: /etc/consul-template/config.d
+  template:
+    src: consul.cfg.j2
+    dest: /etc/consul-template/config.d/consul.hcl
   notify:
     - reload consul-template
   tags:
