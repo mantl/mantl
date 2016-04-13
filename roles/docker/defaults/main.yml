@@ -7,6 +7,9 @@ docker_package: '{% if docker_package_source == "docker" %}docker-engine{% else 
 # inversion of docker_package for upgrade/transition code path
 docker_package_to_remove: '{% if docker_package_source == "docker" %}docker{% else %}docker-engine{% endif %}'
 
+# Install the docker_gc package (prunes docker containers, images, and volumes)
+docker_gc_install: true
+
 do_private_docker_registry: false
 docker_lvm_backed: "{% if provider in ['gce', 'openstack', 'aws'] %}True{% else %}False{% endif %}"
 

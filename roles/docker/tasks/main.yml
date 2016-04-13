@@ -42,6 +42,17 @@
     - docker
     - bootstrap
 
+- name: install docker-gc
+  sudo: yes
+  yum:
+    name: docker-gc
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+  when: docker_gc_install is defined and docker_gc_install|bool
+
+
 - name: create rsyslog.d
   sudo: yes
   file:
