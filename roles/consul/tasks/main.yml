@@ -7,7 +7,7 @@
   with_items:
     - "{{ consul_package }}"
     - "{{ consul_ui_package }}"
-    - "{{ consul_cli_package }}"
+    - https://bintray.com/artifact/download/chrisaubuchon/rpm/consul-cli-0.2.0-1.x86_64.rpm
   tags:
     - consul
     - bootstrap

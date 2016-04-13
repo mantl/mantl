@@ -1,5 +1,5 @@
 [Unit]
-Description=nginx-mesos-leader
+Description=nginx-consul
 After=docker.service
 After=consul.service
 Requires=docker.service
@@ -10,19 +10,22 @@ Restart=on-failure
 RestartSec=20
 TimeoutStartSec=0
 
-ExecStartPre=-/usr/bin/docker rm nginx-mesos-leader
+ExecStartPre=-/usr/bin/docker rm nginx-consul
 ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }} 
 
 ExecStart=/usr/bin/docker run \
     --rm \
-    --name=nginx-mesos-leader \
-    --env-file=/etc/default/nginx-mesos-leader.env \
-    -p 5050:5050 \
+    --name=nginx-consul \
+    --net=host \
+    --privileged=true \
+    -v /etc/nginx/templates:/etc/nginx/templates:ro \
     -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
-    -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
+    --env-file=/etc/default/nginx-consul.env \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
 
-ExecStop=/usr/bin/docker kill nginx-mesos-leader
+ExecStop=/usr/bin/docker kill nginx-consul
+
+ExecReload=/usr/bin/docker kill -s SIGHUP nginx-consul
 
 [Install]
 WantedBy=multi-user.target
