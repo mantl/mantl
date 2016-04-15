@@ -40,3 +40,12 @@ You can use these variables to customize your Traefik installation.
    <https://github.com/emilevauge/traefik/blob/master/docs/index.md#marathon>`_)
 
    default: ``marathon.localhost``
+
+.. data:: traefik_marathon_expose_by_default
+
+   Automatically expose Marathon applications in traefik.
+
+   The traefik default is ``false``, or not forward traffic.
+  
+   The mantl default is set to ``true``.
+ 
