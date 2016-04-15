@@ -68,8 +68,7 @@ Credential Generation
 ^^^^^^^^^^^^^^^^^^^^^
 
 A ``security-setup`` script has been created to automate the creation of
-credentials. Please refer to `the security-setup documentation
-<security_setup.html>`__
+credentials. Please refer to :doc:`security_setup` documentation.
 
 Component Security
 ~~~~~~~~~~~~~~~~~~
