@@ -2,7 +2,7 @@ Packer
 ======
 
 The Mantl Vagrant image is built using `Packer
-<https://packer.io>`_. To build it for yourself, run ``packer build
+<https://www.packer.io>`_. To build it for yourself, run ``packer build
 packer/vagrant.json``. If you want to build with `Atlas
 <https://atlas.hashicorp.com>`_, use ``packer push packer/vagrant.json``.
 

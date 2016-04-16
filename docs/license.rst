@@ -64,7 +64,7 @@ roles/mesos: `Apache 2.0 <https://github.com/apache/mesos/blob/master/LICENSE>`_
 
 roles/nginx: `MIT <https://github.com/ANXS/nginx>`__
 
-roles/traefik: `MIT <https://github.com/emilevauge/traefik/blob/master/LICENSE.md>`__
+roles/traefik: `MIT <https://github.com/containous/traefik/blob/master/LICENSE.md>`__
 
 roles/vault: `MLP 2.0 <https://github.com/hashicorp/vault/blob/master/LICENSE>`__
 
@@ -72,7 +72,7 @@ roles/zookeeper: `Apache 2.0 <https://github.com/apache/zookeeper/blob/trunk/LIC
 
 terraform: `MLP 2.0 <https://github.com/hashicorp/terraform/blob/master/LICENSE>`__
 
-Vagrant: `MIT <license_url: https://github.com/mitchellh/vagrant/blob/master/LICENSE>`__
+Vagrant: `MIT <https://github.com/mitchellh/vagrant/blob/master/LICENSE>`__
 
 security-setup: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`__
 

@@ -36,7 +36,7 @@ Create a bootable USB drive with Centos 7. This can be a bit confusing, we
 recommend the following two tutorials for OSX:
 
  * http://www.myiphoneadventure.com/os-x/create-a-bootable-centos-usb-drive-with-a-mac-os-x
- * http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-os
+ * http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx
 
 Mantl.io requires the latest build of Centos 7.
 
