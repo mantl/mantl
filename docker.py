@@ -184,7 +184,7 @@ python2 ./testing/build-cluster.py'
 def ci_destroy():
     """Cleanup after ci_build"""
 
-    destroy_cmd = "terraform destroy -force; terraform destroy -force"
+    destroy_cmd = "terraform destroy -force || terraform destroy -force"
     if 'OS_IP' in os.environ:
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port}
