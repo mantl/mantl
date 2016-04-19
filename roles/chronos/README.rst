@@ -236,12 +236,6 @@ Variables
 
    default: 60
 
-.. data:: chronos_zk_hosts
-
-   The list of ZooKeeper servers for storing state.
-
-   default: "zookeeper.service.consul:2181"
-
 .. data:: chronos_zk_timeout
 
    The timeout for ZooKeeper in milliseconds.
