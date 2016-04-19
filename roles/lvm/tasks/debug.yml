@@ -4,7 +4,7 @@
   sudo: yes
   copy:
     src: mantl-storage-setup.py
-    dest: /usr/local/bin/mantl-storage-setup
+    dest: /usr/bin/mantl-storage-setup
     mode: 0755
   when: debug_storage_setup
   tags:
@@ -15,7 +15,7 @@
   sudo: yes
   copy:
     src: mantl-storage-setup.service
-    dest: /etc/systemd/system/mantl-storage-setup.service
+    dest: /usr/lib/systemd/system/mantl-storage-setup.service
     mode: 0644
   when: debug_storage_setup
   tags:
