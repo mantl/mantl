@@ -11,6 +11,7 @@ using Ansible variables.
    chronos.rst
    collectd.rst
    consul.rst
+   distributive.rst
    dnsmasq.rst
    docker.rst
    elk.rst

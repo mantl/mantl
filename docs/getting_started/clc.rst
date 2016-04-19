@@ -5,7 +5,7 @@ CenturyLinkCloud
 
 Terraform can use CLC to provision hosts for your cluster. You
 can `download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`_.
+<https://www.terraform.io/downloads.html>`_.
 
 Documentation on using the CLC driver with terraform is `available here
 <https://www.terraform.io/docs/providers/clc/index.html>`_.

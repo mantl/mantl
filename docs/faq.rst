@@ -1,14 +1,14 @@
 FAQs
 ====
 
-How does Mantl compare to `OpenStack Magnum <http://wiki.openstack.org/wiki/Magnum>`_?
---------------------------------------------------------------------------------------
+How does Mantl compare to `OpenStack Magnum <https://wiki.openstack.org/wiki/Magnum>`_?
+---------------------------------------------------------------------------------------
 
 Mantl and Magnum are currently not integrated. However, the projects could
 compliment one other. Magnum provides an OpenStack API to instantiate a
 containerized environment within an OpenStack cloud. Magnum supports a range
 of container clustering implementations and Operating System distributions.
-Please refer to the `Magnum wiki <http://wiki.openstack.org/wiki/Magnum>`_
+Please refer to the `Magnum wiki <https://wiki.openstack.org/wiki/Magnum>`_
 for additional Magnum details.
 
 Mantl is an end-to-end solution for deploying and managing a microservices
