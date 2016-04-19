@@ -4,15 +4,19 @@ require "yaml"
 
 config_hash = {
   "worker_count" => 1,
+  "kubeworker_count" => 1,
   "control_count" => 1,
-  "edge_count" => 0,
+  "edge_count" => 1,
+  "kubeworker_ip_start" => "192.168.100.15",
   "worker_ip_start" => "192.168.100.20",
   "control_ip_start" => "192.168.100.10",
   "edge_ip_start" => "192.168.100.25",
+  "kubeworker_memory" => 1024,
   "worker_memory" => 1024,
   "control_memory" => 1024,
   "edge_memory" => 512,
   "worker_cpus" => 1,
+  "kubeworker_cpus" => 1,
   "control_cpus" => 1,
   "edge_cpus" => 1,
   "network" => "private",
@@ -24,6 +28,36 @@ if !File.exist? config_path
   puts "No vagrant-config.yml found, using defaults"
 else
  config_hash = config_hash.merge(YAML.load(File.read(config_path)))
+end
+
+def spin_up(config_hash:, config:, server_array:, hostvars:, hosts:, server_type:)
+  (1..config_hash["#{server_type}_count"]).each do |w|
+    hostname = "#{server_type}-00#{w}"
+    ip = config_hash["#{server_type}_ip_start"] + "#{w}"
+
+    config.vm.define hostname do |server|
+      # Tested with 2 workers w/ 512mb, and a single one w/ 1024mb memory.
+      server.vm.provider :virtualbox do |vb|
+        vb.customize ["modifyvm", :id, "--cpus", config_hash["#{server_type}_cpus"]]
+        vb.customize ["modifyvm", :id, "--memory", config_hash["#{server_type}_memory"]]
+      end
+      server.vm.hostname = hostname
+      server.vm.network "#{config_hash['network']}_network", :ip => ip
+
+      hosts += "#{ip}    #{hostname}\n"
+      # Update Ansible variables
+      server_array << hostname
+      server_hostvars = {
+        hostname => {
+          "ansible_ssh_host" => ip,
+          "private_ipv4" => ip,
+          "public_ipv4" => ip,
+          "role" => server_type
+        }
+      }
+      hostvars.merge!(server_hostvars)
+    end
+  end
 end
 
 Vagrant.require_version ">= 1.8"
@@ -44,59 +78,9 @@ Vagrant.configure(2) do |config|
   # This variable will be appended to the /etc/hosts file on the provisioner
   hosts = ""
 
-  (1..config_hash["worker_count"]).each do |w|
-    hostname = "worker-00#{w}"
-    ip = config_hash["worker_ip_start"] + "#{w}"
-
-    config.vm.define hostname do |worker|
-      # Tested with 2 workers w/ 512mb, and a single one w/ 1024mb memory.
-      worker.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--cpus", config_hash["worker_cpus"]]
-        vb.customize ["modifyvm", :id, "--memory", config_hash["worker_memory"]]
-      end
-      worker.vm.hostname = hostname
-      worker.vm.network "#{config_hash['network']}_network", :ip => ip
-
-      hosts += "#{ip}    #{hostname}\n"
-      # Update Ansible variables
-      workers << hostname
-      worker_hostvars = {
-        hostname => {
-          "ansible_ssh_host" => ip,
-          "private_ipv4" => ip,
-          "public_ipv4" => ip,
-          "role" => "worker"
-        }
-      }
-      hostvars.merge!(worker_hostvars)
-    end
-  end
-
-  (1..config_hash["edge_count"]).each do |e|
-    hostname = "edge-0#{e}"
-    ip = config_hash["edge_ip_start"] + "#{e}"
-
-    config.vm.define hostname do |edge|
-      edge.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--cpus", config_hash["edge_cpus"]]
-        vb.customize ["modifyvm", :id, "--memory", config_hash["edge_memory"]]
-      end
-      edge.vm.hostname = hostname
-      edge.vm.network "#{config_hash['network']}_network", :ip => ip
-
-      hosts += "#{ip}    #{hostname}\n"
-      edges << hostname
-      edge_hostvars = {
-        hostname => {
-          "ansible_ssh_host" => ip,
-          "private_ipv4" => ip,
-          "public_ipv4" => ip,
-          "role" => "edge"
-        }
-      }
-      hostvars.merge!(edge_hostvars)
-    end
-  end
+  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, server_array: workers, hosts: hosts, server_type: 'worker')
+  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, server_array: workers, hosts: hosts, server_type: 'kubeworker')
+  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, server_array: edges, hosts: hosts, server_type: 'edge')
 
   (1..config_hash["control_count"]).each do |c|
     hostname = "control-0#{c}"
