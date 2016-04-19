@@ -8,3 +8,7 @@
   service:
     name: kubelet
     state: restarted
+
+- name: reload consul
+  sudo: yes
+  command: systemctl reload consul

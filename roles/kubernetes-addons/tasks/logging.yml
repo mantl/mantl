@@ -5,7 +5,7 @@
     src: kibana-rc.yaml
     dest: "{{ kube_manifest_dir }}/kibana-rc.yaml"
   register: kibana_rc_def
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -17,7 +17,7 @@
     src: kibana-svc.yaml
     dest: "{{ kube_manifest_dir }}/kibana-svc.yaml"
   register: kibana_svc_def
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -29,7 +29,7 @@
     src: es-rc.yaml
     dest: "{{ kube_manifest_dir }}/es-rc.yaml"
   register: es_rc_def
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -41,7 +41,7 @@
     src: es-svc.yaml
     dest: "{{ kube_manifest_dir }}/es-svc.yaml"
   register: es_svc_def
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -56,7 +56,7 @@
     filename: "{{ kube_manifest_dir }}/es-rc.yaml"
     state: "{{ es_rc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -71,7 +71,7 @@
     filename: "{{ kube_manifest_dir }}/es-svc.yaml"
     state: "{{ es_svc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -86,7 +86,7 @@
     filename: "{{ kube_manifest_dir }}/kibana-rc.yaml"
     state: "{{ kibana_rc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging
@@ -101,7 +101,7 @@
     filename: "{{ kube_manifest_dir }}/kibana-svc.yaml"
     state: "{{ kibana_svc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_logging
+  run_once: true
   tags:
     - addons
     - logging

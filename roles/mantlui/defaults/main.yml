@@ -1,4 +1,4 @@
 mantlui_nginx_image: ciscocloud/nginx-mantlui
-mantlui_nginx_image_tag: 0.6.6
+mantlui_nginx_image_tag: 0.6.7
 do_mantlui_ssl: false
 do_mantlui_auth: false

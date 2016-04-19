@@ -5,7 +5,7 @@
     src: influxdb-grafana-controller.yaml
     dest: "{{ kube_manifest_dir }}/influxdb-grafana-controller.yaml"
   register: influxdb_rc_def
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -17,7 +17,7 @@
     src: influxdb-service.yaml
     dest: "{{ kube_manifest_dir }}/influxdb-service.yaml"
   register: influxdb_svc_def
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -29,7 +29,7 @@
     src: grafana-service.yaml
     dest: "{{ kube_manifest_dir }}/grafana-service.yaml"
   register: grafana_svc_def
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -41,7 +41,7 @@
     src: heapster-controller.yaml
     dest: "{{ kube_manifest_dir }}/heapster-controller.yaml"
   register: heapster_rc_def
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -53,7 +53,7 @@
     src: heapster-service.yaml
     dest: "{{ kube_manifest_dir }}/heapster-service.yaml"
   register: heapster_svc_def
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -68,7 +68,7 @@
     filename: "{{ kube_manifest_dir }}/influxdb-grafana-controller.yaml"
     state: "{{ influxdb_rc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -83,7 +83,7 @@
     filename: "{{ kube_manifest_dir }}/influxdb-service.yaml"
     state: "{{ influxdb_svc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -98,7 +98,7 @@
     filename: "{{ kube_manifest_dir }}/grafana-service.yaml"
     state: "{{ grafana_svc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -113,7 +113,7 @@
     filename: "{{ kube_manifest_dir }}/heapster-controller.yaml"
     state: "{{ heapster_rc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
@@ -128,7 +128,7 @@
     filename: "{{ kube_manifest_dir }}/heapster-service.yaml"
     state: "{{ heapster_svc_def.changed | ternary('latest','present') }}"
     server: "http://localhost:8085/"
-  when: enable_monitoring
+  run_once: true
   tags:
     - addons
     - monitoring
