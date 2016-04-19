@@ -4,9 +4,12 @@ marathon_package: "marathon-{{ marathon_version }}"
 
 marathon_zk_auth: "{% if zk_marathon_user_secret is defined %}{{ zk_marathon_user }}:{{ zk_marathon_user_secret }}@{% endif %}"
 marathon_zk_dns: "zookeeper.service.{{ consul_dns_domain }}"
+marathon_zk_hosts: "{% for host in groups[zookeeper_server_group] %}{{ host }}:{{mesos_zk_port}}{% if not loop.last %},{% endif %}{% endfor %}"
+
+
 marathon_zk_port: 2181
 marathon_zk_chroot: marathon
-marathon_zk_connect: "zk://{{ marathon_zk_auth}}{{ marathon_zk_dns }}:{{ marathon_zk_port }}/{{ marathon_zk_chroot }}"
+marathon_zk_connect: "zk://{{ marathon_zk_auth}}{{ marathon_zk_hosts }}/{{ marathon_zk_chroot }}"
 
 marathon_zk_acl_world: "world:anyone:cdrwa"
 marathon_zk_acl: "{% if zk_marathon_user_secret is defined %}digest:{{ zk_marathon_user }}:{{ zk_marathon_user_secret_digest}}:cdraw{% endif  %}"
@@ -34,4 +37,4 @@ mesos_consul_refresh: "7s"
 marathon_consul_image: ciscocloud/marathon-consul
 marathon_consul_image_tag: 0.2
 mantl_api_image: ciscocloud/mantl-api
-mantl_api_image_tag: 0.1.8
+mantl_api_image_tag: 0.2.0

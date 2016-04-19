@@ -97,7 +97,13 @@ You can use these variables to customize your Mesos installation.
 
    default: ``mantl``
 
+.. data:: mesos_zk_hosts
+   
+   A ZooKeeper connection string in the the ``host:mesos_zk_port`` format, generated from the hosts in ``zookeeper_server_group``. 
+
 .. data:: mesos_zk_dns
+
+   Consul DNS entries for ZooKeeper hosts.  
 
    default: ``zookeeper.service.consul``
 
@@ -106,6 +112,8 @@ You can use these variables to customize your Mesos installation.
    default: ``2181``
 
 .. data:: mesos_zk_chroot
+
+   ZooKeeper znode to use as a base for mesos data.
 
    default: ``mesos``
 
