@@ -30,29 +30,30 @@ else
  config_hash = config_hash.merge(YAML.load(File.read(config_path)))
 end
 
-def spin_up(config_hash:, config:, server_array:, hostvars:, hosts:, server_type:)
-  (1..config_hash["#{server_type}_count"]).each do |w|
-    hostname = "#{server_type}-00#{w}"
-    ip = config_hash["#{server_type}_ip_start"] + "#{w}"
+# This method is used to spin up the workers, kubeworkers and edge nodes.
+def spin_up(config_hash:, config:, host_array:, hostvars:, hosts:, role:)
+  (1..config_hash["#{role}_count"]).each do |w|
+    hostname = "#{role}-00#{w}"
+    ip = config_hash["#{role}_ip_start"] + "#{w}"
 
     config.vm.define hostname do |server|
       # Tested with 2 workers w/ 512mb, and a single one w/ 1024mb memory.
       server.vm.provider :virtualbox do |vb|
-        vb.customize ["modifyvm", :id, "--cpus", config_hash["#{server_type}_cpus"]]
-        vb.customize ["modifyvm", :id, "--memory", config_hash["#{server_type}_memory"]]
+        vb.customize ["modifyvm", :id, "--cpus", config_hash["#{role}_cpus"]]
+        vb.customize ["modifyvm", :id, "--memory", config_hash["#{role}_memory"]]
       end
       server.vm.hostname = hostname
       server.vm.network "#{config_hash['network']}_network", :ip => ip
 
       hosts += "#{ip}    #{hostname}\n"
       # Update Ansible variables
-      server_array << hostname
+      host_array << hostname
       server_hostvars = {
         hostname => {
           "ansible_ssh_host" => ip,
           "private_ipv4" => ip,
           "public_ipv4" => ip,
-          "role" => server_type
+          "role" => role
         }
       }
       hostvars.merge!(server_hostvars)
@@ -74,13 +75,14 @@ Vagrant.configure(2) do |config|
 
   # All hostvars will be stored in this hash, progressively as the VMs are made
   # and configured. These lists will hold hostnames that belong to these groups.
-  hostvars, workers, controls, edges = {}, [], [], []
+  hostvars, workers, controls, edges, kubeworkers = {}, [], [], [], []
   # This variable will be appended to the /etc/hosts file on the provisioner
   hosts = ""
 
-  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, server_array: workers, hosts: hosts, server_type: 'worker')
-  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, server_array: workers, hosts: hosts, server_type: 'kubeworker')
-  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, server_array: edges, hosts: hosts, server_type: 'edge')
+  # Spin up all the worker and edge nodes based on your config or default config.
+  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, host_array: workers, hosts: hosts, role: 'worker')
+  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, host_array: kubeworkers, hosts: hosts, role: 'kubeworker')
+  spin_up(config_hash: config_hash, config: config, hostvars: hostvars, host_array: edges, hosts: hosts, role: 'edge')
 
   (1..config_hash["control_count"]).each do |c|
     hostname = "control-0#{c}"
@@ -125,8 +127,10 @@ Vagrant.configure(2) do |config|
           "role=worker" => workers,
           "role=worker:vars" => { "consul_is_server" => false },
           "role=edge" => edges,
+          "role=kubeworker" => kubeworkers,
+          "role=kubeworker:vars" => { "consul_is_server" => false },
           "role=edge:vars" => { "consul_is_server" => false },
-          "dc=vagrantdc" => workers + controls + edges,
+          "dc=vagrantdc" => workers + kubeworkers + controls + edges,
           "dc=vagrantdc:vars" => {
             # Ansible 2.0 depreciates the 'ssh' in these vars
             "ansible_ssh_user" => "vagrant",
