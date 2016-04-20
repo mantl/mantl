@@ -119,6 +119,6 @@ module "cloud-dns" {
   subdomain = ".service"
   worker_count = "${var.worker_count}"
   worker_ips = "${module.worker-nodes.gce_ips}"
-  kubeworker_count = "${var.kubeworker_count}"
+  kubeworker_count = "${var.kube_worker_count}"
   kubeworker_ips = "${module.kube-worker-nodes.gce_ips}"
 }
