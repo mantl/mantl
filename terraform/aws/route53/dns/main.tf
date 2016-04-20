@@ -13,8 +13,8 @@ variable traefik_elb_fqdn {}
 variable traefik_zone_id {}
 variable worker_count {}
 variable worker_ips {}
-variable kubeworker_count {}
-variable kubeworker_ips {}
+variable kubeworker_count { default = "0" }
+variable kubeworker_ips { default = "" }
 
 # individual records
 resource "aws_route53_record" "dns-control" {
