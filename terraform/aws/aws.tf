@@ -21,7 +21,7 @@ variable "source_ami" {}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_username"  {default = "centos"}
 variable "worker_count" {default = "1"}
-variable "kube_worker_count" {default = "0"}
+variable "kubeworker_count" {default = "0"}
 variable "worker_iam_profile" {default = "" }
 variable "worker_type" {default = "m3.medium"}
 variable "worker_volume_size" {default = "20"} # size is in gigabytes
@@ -167,22 +167,22 @@ resource "aws_volume_attachment" "mi-worker-nodes-lvm-attachment" {
   force_detach = true
 }
 
-resource "aws_ebs_volume" "mi-kube-worker-lvm" {
+resource "aws_ebs_volume" "mi-kubeworker-lvm" {
   availability_zone = "${var.availability_zone}"
-  count = "${var.kube_worker_count}"
+  count = "${var.kubeworker_count}"
   size = "${var.worker_data_volume_size}"
   type = "gp2"
 
   tags {
-    Name = "${var.short_name}-kube-worker-lvm-${format("%02d", count.index+1)}"
+    Name = "${var.short_name}-kubeworker-lvm-${format("%02d", count.index+1)}"
   }
 }
 
-resource "aws_instance" "mi-kube-worker-nodes" {
+resource "aws_instance" "mi-kubeworker-nodes" {
   ami = "${var.source_ami}"
   availability_zone = "${var.availability_zone}"
   instance_type = "${var.worker_type}"
-  count = "${var.kube_worker_count}"
+  count = "${var.kubeworker_count}"
 
   vpc_security_group_ids = ["${aws_security_group.worker.id}",
     "${aws_vpc.main.default_security_group_id}"]
@@ -202,18 +202,18 @@ resource "aws_instance" "mi-kube-worker-nodes" {
   }
 
   tags {
-    Name = "${var.short_name}-kube-worker-${format("%03d", count.index+1)}"
+    Name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}"
     sshUser = "${var.ssh_username}"
     role = "kubeworker"
     dc = "${var.datacenter}"
   }
 }
 
-resource "aws_volume_attachment" "mi-kube-worker-nodes-lvm-attachment" {
-  count = "${var.kube_worker_count}"
+resource "aws_volume_attachment" "mi-kubeworker-nodes-lvm-attachment" {
+  count = "${var.kubeworker_count}"
   device_name = "xvdh"
-  instance_id = "${element(aws_instance.mi-kube-worker-nodes.*.id, count.index)}"
-  volume_id = "${element(aws_ebs_volume.mi-kube-worker-lvm.*.id, count.index)}"
+  instance_id = "${element(aws_instance.mi-kubeworker-nodes.*.id, count.index)}"
+  volume_id = "${element(aws_ebs_volume.mi-kubeworker-lvm.*.id, count.index)}"
   force_detach = true
 }
 
@@ -461,8 +461,8 @@ output "worker_ips" {
   value = "${join(\",\", aws_instance.mi-worker-nodes.*.public_ip)}"
 }
 
-output "kube_worker_ips" {
-  value = "${join(\",\", aws_instance.mi-kube-worker-nodes.*.public_ip)}"
+output "kubeworker_ips" {
+  value = "${join(\",\", aws_instance.mi-kubeworker-nodes.*.public_ip)}"
 }
 
 output "edge_ips" {
