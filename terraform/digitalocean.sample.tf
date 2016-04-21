@@ -14,5 +14,6 @@ module "do-hosts" {
 
   control_count = 3
   worker_count = 4
+  kubeworker_count = 2
   edge_count = 2
 }
