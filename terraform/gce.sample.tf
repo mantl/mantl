@@ -4,7 +4,7 @@ variable "datacenter" {default = "gce"}
 variable "edge_count" { default = 1}
 variable "edge_type" { default = "n1-standard-1" }
 variable "image" {default = "centos-7-v20160119"}
-variable "kube_worker_count" {default = 0}
+variable "kubeworker_count" {default = 0}
 variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mi"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
@@ -85,9 +85,9 @@ module "worker-nodes" {
   zones = "${var.zones}"
 }
 
-module "kube-worker-nodes" {
+module "kubeworker-nodes" {
   source = "./terraform/gce/instance"
-  count = "${var.kube_worker_count}"
+  count = "${var.kubeworker_count}"
   datacenter = "${var.datacenter}"
   image = "${var.image}"
   machine_type = "n1-highmem-2"
@@ -119,6 +119,6 @@ module "cloud-dns" {
   subdomain = ".service"
   worker_count = "${var.worker_count}"
   worker_ips = "${module.worker-nodes.gce_ips}"
-  kubeworker_count = "${var.kube_worker_count}"
-  kubeworker_ips = "${module.kube-worker-nodes.gce_ips}"
+  kubeworker_count = "${var.kubeworker_count}"
+  kubeworker_ips = "${module.kubeworker-nodes.gce_ips}"
 }
