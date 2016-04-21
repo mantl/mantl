@@ -15,7 +15,7 @@ variable "long_name" {default = "mantl"}
 variable "folder" {default = ""}
 variable "control_count" {default = 3}
 variable "worker_count" {default = 2}
-variable "kube_worker_count" {default = 0}
+variable "kubeworker_count" {default = 0}
 variable "edge_count" {default = 2}
 variable "control_volume_size" {default = 20}
 variable "worker_volume_size" {default = 20}
@@ -107,8 +107,10 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   count = "${var.worker_count}"
 }
 
-resource "vsphere_virtual_machine" "mi-kube-worker-nodes" {
-  name = "${var.short_name}-kube-worker-${format("%03d", count.index+1)}"
+resource "vsphere_virtual_machine" "mi-kubeworker-nodes" {
+  name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}"
+  image = "${var.template}"
+
   datacenter = "${var.datacenter}"
   folder = "${var.folder}"
   cluster = "${var.cluster}"
@@ -128,6 +130,21 @@ resource "vsphere_virtual_machine" "mi-kube-worker-nodes" {
     label = "${var.network_label}"
   }
 
+  count = "${var.kubeworker_count}"
+}
+
+resource "vsphere_virtual_machine" "mi-edge-nodes" {
+  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
+  image = "${var.template}"
+
+  datacenter = "${var.datacenter}"
+  host = "${var.host}"
+  resource_pool = "${var.pool}"
+
+  cpus = "${var.worker_cpu}"
+  memory = "${var.worker_ram}"
+
+>>>>>>> ff271fe... k8s: vsphere var names
   configuration_parameters = {
     role = "kubeworker"
     ssh_user = "${var.ssh_user}"
@@ -144,7 +161,7 @@ resource "vsphere_virtual_machine" "mi-kube-worker-nodes" {
     inline = [ "sudo hostnamectl --static set-hostname ${self.name}" ]
   }
 
-  count = "${var.kube_worker_count}"
+  count = "${var.kubeworker_count}"
 }
 
 resource "vsphere_virtual_machine" "mi-edge-nodes" {
@@ -195,8 +212,12 @@ output "worker_ips" {
   value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
 }
 
-output "kube_worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-kube-worker-nodes.*.network_interface.0.ipv4_address)}"
+output "kubeworker_ips" {
+  value = "${join(\",\", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ip_address)}"
+}
+
+output "kubeworker_ips" {
+  value = "${join(\",\", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ip_address)}"
 }
 
 output "edge_ips" {
