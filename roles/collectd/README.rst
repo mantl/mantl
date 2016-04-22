@@ -19,7 +19,7 @@ This role has the following global settings:
 
    Hostname to append to metrics                    
    
-   Default: ``{{ ansible_hostname }}``
+   Default: ``{{ inventory_hostname }}``
 
 .. data ::  Interval  
 
