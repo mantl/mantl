@@ -18,6 +18,33 @@
   tags:
     - common
 
+- name: preserve hostname
+  sudo: yes
+  lineinfile:
+    dest: /etc/cloud/cloud.cfg
+    create: yes
+    line: "preserve_hostname: true"
+    insertbefore: BOF
+    state: present
+    owner: root
+    group: root
+    mode: 0664
+  when: provider!="bare-metal"
+  tags:
+    - common
+
+- name: set persistent hostname
+  sudo: yes
+  copy:
+    dest: /etc/hostname
+    content: "{{ inventory_hostname }}"
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - common
+
 # add yum-utils if not already installed
 - name: add yum-config-manager
   sudo: yes
