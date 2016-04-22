@@ -3,7 +3,8 @@
         "atlas_username": "{{env `ATLAS_USERNAME`}}",
         "atlas_name": "{{env `ATLAS_NAME`}}",
         "root": "{{template_dir}}/..",
-        "scripts": "{{template_dir}}/scripts"
+        "scripts": "{{template_dir}}/scripts",
+        "staging": "/tmp/packer-provisioner-ansible-local"
     },
     "provisioners": [
         {
@@ -25,32 +26,40 @@
             "playbook_file": "{{user `root`}}/playbooks/rolling-upgrade-packages.yml"
         },
         {
+            "type": "shell",
+            "inline": [
+                "mkdir -p {{user `staging`}}"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/group_vars",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/library",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/playbooks",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/plugins",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/roles",
+            "destination": "{{user `staging`}}/playbooks"
+        },
+        {
             "type": "ansible-local",
             "playbook_file": "{{user `root`}}/sample.yml",
-            "role_paths": [
-                "{{user `root`}}/roles/calico",
-                "{{user `root`}}/roles/chronos",
-                "{{user `root`}}/roles/collectd",
-                "{{user `root`}}/roles/common",
-                "{{user `root`}}/roles/consul",
-                "{{user `root`}}/roles/consul-template",
-                "{{user `root`}}/roles/dnsmasq",
-                "{{user `root`}}/roles/docker",
-                "{{user `root`}}/roles/etcd",
-                "{{user `root`}}/roles/glusterfs",
-                "{{user `root`}}/roles/handlers",
-                "{{user `root`}}/roles/haproxy",
-                "{{user `root`}}/roles/logrotate",
-                "{{user `root`}}/roles/logstash",
-                "{{user `root`}}/roles/lvm",
-                "{{user `root`}}/roles/mantlui",
-                "{{user `root`}}/roles/marathon",
-                "{{user `root`}}/roles/mesos",
-                "{{user `root`}}/roles/nginx",
-                "{{user `root`}}/roles/traefik",
-                "{{user `root`}}/roles/vault",
-                "{{user `root`}}/roles/zookeeper"
-            ],
+            "staging_directory": "{{user `staging`}}",
             "extra_arguments": [ "--tags", "bootstrap", "--extra-vars=\"provider=vagrant\"" ],
             "inventory_groups": "role=control,role=worker"
         },
@@ -108,7 +117,14 @@
                     "created_at": "{{timestamp}}",
                     "provider": "virtualbox"
                 }
+            },
+            {
+                "type": "shell-local",
+                "inline": [
+                    "mv builds/VirtualBox-mantl.box builds/mantl-bootstrap-$(git describe --tags --always --dirty).box"
+                ]
             }
+
         ]
     ],
     "push": {
