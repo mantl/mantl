@@ -77,7 +77,8 @@ def node_health_check(node_address):
 
     for check in health_checks:
         if check['Status'] != "passing":
-            print(check['Name'], ":", check['Status'], "\n", check['Output'])
+            output = check['Name'] + ":" + check['Status'] + "\n" + check['Output']
+            print(output.encode('utf8'))
             return False
 
     return True
