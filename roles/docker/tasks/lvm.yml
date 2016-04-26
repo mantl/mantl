@@ -19,3 +19,7 @@
   tags:
     - docker
     - disk
+
+- name: process with mantl storage setup
+  sudo: yes
+  shell: "/usr/bin/mantl-storage-setup"
