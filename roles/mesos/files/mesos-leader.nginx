@@ -1,5 +1,5 @@
-{{ $mesosProxyPort := key_or_default "secure/mesos/nginx/proxy_port" "5050" }}
-{{ $mesosPort := key_or_default "secure/mesos/nginx/port" "15050" }}
+{{ $mesosProxyPort := key_or_default "secure/mesos/leader/proxy_port" "5050" }}
+{{ $mesosPort := key_or_default "secure/mesos/leader/port" "15050" }}
 {{ $mesosSsl := eq (toLower (key_or_default "secure/mesos/nginx/do_ssl" "false")) "true"}}
 {{ $mesosAuth := eq (toLower (key_or_default "secure/mesos/nginx/do_auth" "false")) "true"}}
 server {

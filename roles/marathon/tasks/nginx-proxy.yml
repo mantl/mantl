@@ -23,12 +23,12 @@
 
 - name: write nginx config vars
   run_once: yes
-  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/nginx/proxy_port {{ marathon_proxy_port }}
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/proxy_port {{ marathon_proxy_port }}
   tags:
     - marathon
 
 - name: write nginx config vars
   run_once: yes
-  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/nginx/port {{ marathon_port }}
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/port {{ marathon_port }}
   tags:
     - marathon

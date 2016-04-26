@@ -1,7 +1,7 @@
 {{ $marathonSsl := eq (toLower (key_or_default "secure/marathon/nginx/do_ssl" "false")) "true"}}
 {{ $marathonAuth := eq (toLower (key_or_default "secure/marathon/nginx/do_auth" "false")) "true"}}
-{{ $marathonPort := key_or_default "secure/marathon/nginx/port" "18080" }}
-{{ $marathonProxyPort := key_or_default "secure/marathon/nginx/proxy_port" "8080" }}
+{{ $marathonPort := key_or_default "secure/marathon/port" "18080" }}
+{{ $marathonProxyPort := key_or_default "secure/marathon/proxy_port" "8080" }}
 server {
 	listen {{ $marathonProxyPort }} {{if $marathonSsl}}ssl{{end}};
 {{if $marathonSsl}}
