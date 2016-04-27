@@ -6,6 +6,10 @@
 # in your cluster!
 - include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
 
+- hosts: all
+  roles:
+    - logstash
+
 - hosts: role=control
   roles:
     - elk

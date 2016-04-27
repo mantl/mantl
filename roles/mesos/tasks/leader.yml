@@ -102,25 +102,4 @@
   tags:
     - mesos
 
-- name: install collectd mesos-master plugin
-  sudo: yes
-  copy:
-    src: mesos-master.py
-    dest: /usr/share/collectd/plugins
-    mode: 0444
-  tags:
-    - mesos
-    - collectd
-
-- name: configure collectd mesos-master plugin
-  sudo: yes
-  template:
-    src: mesos-master.conf.j2
-    dest: /etc/collectd.d/mesos-master.conf
-  notify:
-    - restart collectd
-  tags:
-    - mesos
-    - collectd
-
 - include: nginx-proxy.yml

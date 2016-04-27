@@ -10,7 +10,7 @@ checklist_versions:
   collectd-docker: 0.2.4-1
   collectd-marathon: 0.2.4-1
   collectd-zookeeper: 0.2.4-1
-  common: 0.2.4-1
+  common: 0.2.5-1
   consul: 0.2.4-1
   consul-template: 0.2.4-1
   dnsmasq: 0.2.5-1

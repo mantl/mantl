@@ -270,7 +270,7 @@ Fixes
 Deprecations
 ^^^^^^^^^^^^
 
-* Mantl now uses `Terraform <https://terraform.io>`_ for
+* Mantl now uses `Terraform <https://www.terraform.io/>`_ for
   provisioning hosts, and `terraform.py
   <https://github.com/CiscoCloud/terraform.py>`_ instead of inventory files.
   Because of this change, you will need to use the new :doc:`Terraform-based

@@ -54,7 +54,7 @@ container is to mount your ``~/.ssh`` folder in the container. You will see an
 example of this later in the document.
 
 Another important thing to understand is how Terraform manages `state
-<https://terraform.io/docs/state/index.html>`_. Terraform uses a `JSON`
+<https://www.terraform.io/docs/state/index.html>`_. Terraform uses a `JSON`
 formatted file to store the state of your managed infrastructure. This state
 file is important as it will allow you to use Terraform to plan, inspect, modify
 and destroy resources in your infrastructure. By default, Terraform writes state

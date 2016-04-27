@@ -13,7 +13,7 @@ TimeoutStartSec=20m
 ExecStartPre=-/usr/bin/docker rm -f calico-node
 EnvironmentFile=/etc/default/calico
 ExecStart=/usr/bin/calicoctl node --ip={{ private_ipv4 }} \
-                                  --node-image={{ calico_image }}:{{ calico_image_tag }} {% if kube_build is defined %}--kubernetes{% endif %}
+                                  --node-image={{ calico_image }}:{{ calico_image_tag }} {% if hostvars[inventory_hostname]['role'] == 'kubeworker' %}--kubernetes{% endif %}
 
 ExecStop=/usr/bin/calicoctl node stop
 ExecStopPost=-/usr/bin/docker rm -f calico-node

@@ -6,7 +6,7 @@ Google Compute Engine
 As of Mantl 0.3 you can bring up Google Compute Engine environments using
 Terraform. Mantl uses Terraform to provision hosts. You
 can `download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`_.
+<https://www.terraform.io/downloads.html>`_.
 
 Configuring Google Compute Engine for Terraform
 -----------------------------------------------
@@ -134,9 +134,9 @@ Mantl on your new cluster.
 Terraform State
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Terraform stores the `state <https://terraform.io/docs/state/index.html>`_ of your 
+Terraform stores the `state <https://www.terraform.io/docs/state/index.html>`_ of your
 infrastructure in a file called "terraform.tfstate". This file can be stored locally 
-or in a `remote <https://terraform.io/docs/state/index.html>`_ location such as `consul <https://github.com/hashicorp/terraform/blob/master/state/remote/remote.go#L38>`_. 
+or in a `remote <https://www.terraform.io/docs/state/index.html>`_ location such as `consul <https://github.com/hashicorp/terraform/blob/master/state/remote/remote.go#L38>`_. 
 If you use the ``gce.sample.tf`` that is provided, by default the state of all the modules 
 are stored in local terraform.tfstate file at the root of this project.
 

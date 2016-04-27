@@ -11,7 +11,7 @@ module "vsphere-dc" {
   short_name = ""
   datacenter = ""
   cluster = ""
-  pool = ""
+  pool = "" # format is cluster_name/Resources/pool_name
   template = ""
   network_label = ""
   datastore = ""
@@ -24,4 +24,14 @@ module "vsphere-dc" {
   ssh_user = ""
   ssh_key = ""
   consul_dc = ""
+
+  #Optional Parameters
+  #folder = ""  
+  #control_cpu = ""
+  #worker_cpu = ""
+  #edge_cpu = ""
+  #control_ram = ""
+  #worker_ram = ""
+  #edge_ram = ""
+  #disk_type = "" thin or eager_zeored, default is thin
 }

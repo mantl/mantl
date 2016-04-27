@@ -3,7 +3,7 @@ Vagrant
 
 .. versionadded:: 1.0
 
-`Vagrant <https://vagrantup.com/>`_ is used to "Create and configure
+`Vagrant <https://www.vagrantup.com/>`_ is used to "Create and configure
 lightweight, reproducible, and portable development environments." We use it
 to test Mantl locally before deploying to a cloud provider.
 Our current setup creates a configurable number of virtual machines, and you can
@@ -48,7 +48,7 @@ in the provided Vagrantfile.
 .. data:: network
 
    Default: private. Which type of Vagrant network to provision. See
-   https://docs.vagrantup.com/v2/networking/index.html
+   https://www.vagrantup.com/docs/networking/index.html
 
 .. data:: playbooks
 

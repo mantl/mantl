@@ -1,0 +1,31 @@
+---
+- name: check if zookeeper is present
+  stat:
+    path: /usr/lib/systemd/system/zookeeper.service
+  register: zookeeper_present
+  tags:
+    - zookeeper
+    - collectd
+
+- name: install collectd zookeeper plugin
+  sudo: yes
+  copy:
+    src: zookeeper-collectd-plugin.py
+    dest: /usr/share/collectd/plugins/zookeeper.py
+    mode: 0444
+  when: zookeeper_present is defined
+  tags:
+    - zookeeper
+    - collectd
+
+- name: configure collectd zookeeper plugin
+  sudo: yes
+  template:
+    src: zookeeper-collectd-plugin.conf.j2
+    dest: /etc/collectd.d/zookeeper.conf
+  notify:
+    - restart collectd
+  when: zookeeper_present is defined
+  tags:
+    - zookeeper
+    - collectd

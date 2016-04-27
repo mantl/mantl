@@ -1,7 +1,8 @@
 Logstash
 ========
 
-Logging role for deploying and managing `Logstash <http://logstash.net>`_ 1.5 with Docker and systemd.
+Logging role for deploying and managing `Logstash <http://logstash.net>`_
+with Docker and systemd as a part of the ELK stack.
 
 Variables
 ---------
@@ -21,6 +22,10 @@ You can use these variables to customize your Logstash installations:
    Elasticsearch output
    <https://www.elastic.co/guide/en/logstash/1.5/plugins-outputs-elasticsearch.html>`_
    settings.
+
+   This is not needed if you are planning to use the Mantl ELK addon. Use this
+   if you want to send Logstash data to an Elasticsearch cluster that is not
+   managed by Mantl.
 
    Default: n/a
 
@@ -52,10 +57,10 @@ You can use these variables to customize your Logstash installations:
 .. data :: logstash_input_log4j
 
    Read events over a TCP socket from a Log4j SocketAppender
-   
+
    Default: false
 
-.. data :: logstsh_log4j_port 
+.. data :: logstsh_log4j_port
 
     TCP port
 

@@ -40,8 +40,8 @@ Provisioning
 
 Provisioning security involves setting up a secure cloud environment, basic
 server security, and securing secrets on the provisioning systems. `Ansible
-<http://ansible.com>`__ is the primary provisioning tool with a migration of
-cloud provisioning to `Terraform <http://terraform.io>`__ starting in 0.3.
+<https://www.ansible.com>`__ is the primary provisioning tool with a migration of
+cloud provisioning to `Terraform <https://www.terraform.io>`__ starting in 0.3.
 
 The following security features are implemented or on the roadmap:
 
@@ -68,8 +68,7 @@ Credential Generation
 ^^^^^^^^^^^^^^^^^^^^^
 
 A ``security-setup`` script has been created to automate the creation of
-credentials. Please refer to `the security-setup documentation
-<security_setup.html>`__
+credentials. Please refer to :doc:`security_setup` documentation.
 
 Component Security
 ~~~~~~~~~~~~~~~~~~
@@ -115,15 +114,15 @@ Consul
   used to authenticate POST/PUT/DELETE requests and act as an TLS endpoint.
   (version 0.2)
 - `Verify incoming TLS connections
-  <http://www.consul.io/docs/agent/options.html#verify_incoming>`__ (version
+  <https://www.consul.io/docs/agent/options.html#verify_incoming>`__ (version
   0.2)
 - `Verify outgoing TLS connections
-  <http://www.consul.io/docs/agent/options.html#verify_outgoing>`__ (version
+  <https://www.consul.io/docs/agent/options.html#verify_outgoing>`__ (version
   0.2)
 - Configure an `acl\_datacenter
-  <http://www.consul.io/docs/agent/options.html#acl_datacenter>`__ (version 0.2)
+  <https://www.consul.io/docs/agent/options.html#acl_datacenter>`__ (version 0.2)
 - Keep `acl\_down\_policy
-  <http://www.consul.io/docs/agent/options.html#acl_down_policy>`__ at
+  <https://www.consul.io/docs/agent/options.html#acl_down_policy>`__ at
   "extend-cache" (version 0.2)
 - Create master ACL token (version 0.2)
 - Create ACL token for agents (version 0.2)
@@ -131,7 +130,7 @@ Consul
  
 Future roadmap items:
 
-- Set `acl_default_policy <http://www.consul.io/docs/agent/options.html#acl_default_policy>`_ to "deny"
+- Set `acl_default_policy <https://www.consul.io/docs/agent/options.html#acl_default_policy>`_ to "deny"
    (version 0.3+)
 - Create ACL policies on K/V store and service endpoints
 

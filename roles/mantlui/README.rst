@@ -24,13 +24,13 @@ You can use these variables to customize your Mantlui installation.
 
    nginx-mantlui docker container image name
 
-   default: ``ryane/nginx-mantl``
+   default: ``ciscocloud/nginx-mantlui``
 
 .. data:: mantlui_nginx_image_tag
 
    nginx-mantlui docker container image tag
 
-   default: ``0.1``
+   default: ``0.6.6``
 
 .. data:: do_mantlui_ssl
 

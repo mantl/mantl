@@ -1,0 +1,31 @@
+---
+- name: check if marathon directory exists
+  stat:
+    path: /etc/marathon
+  register: marathon_present
+  tags:
+    - marathon
+    - collectd
+    
+- name: install collectd marathon plugin
+  sudo: yes
+  copy:
+    src: marathon-collectd-plugin.py
+    dest: /usr/share/collectd/plugins/marathon.py
+    mode: 0444
+  when: marathon_present is defined
+  tags:
+    - marathon
+    - collectd
+
+- name: configure collectd marathon plugin
+  sudo: yes
+  template:
+    src: marathon-collectd-plugin.conf.j2
+    dest: /etc/collectd.d/marathon.conf
+  notify:
+    - restart collectd
+  when: marathon_present is defined
+  tags:
+    - marathon
+    - collectd

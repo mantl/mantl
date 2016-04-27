@@ -29,13 +29,6 @@ input {
     type => syslog
   }
   udp {
-    port => 25826
-    type => collectd
-    codec => collectd {
-      typesdb => ["/collectd/types.db", "/collectd/plugins/dockerplugin.db"]
-    }
-  }
-  udp {
     port => 8125
     type => statsd
   }

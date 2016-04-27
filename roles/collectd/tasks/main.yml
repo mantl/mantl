@@ -110,3 +110,8 @@
     state: started
   tags:
     - collectd
+
+- include: marathon.yml
+- include: mesos-master.yml
+- include: mesos-agent.yml
+- include: zookeeper.yml
