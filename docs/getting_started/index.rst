@@ -34,6 +34,11 @@ Your hosts will have to be accessible with your SSH key. If you're unfamiliar
 with SSH keys, please read `DigitalOcean's guide to setting up SSH keys
 <https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2>`_.
 
+Here are some guides specific to each of the platforms that Mantl supports:
+
+.. toctree::
+   :maxdepth: 1
+
    openstack.rst
    gce.rst
    aws.rst
@@ -42,6 +47,7 @@ with SSH keys, please read `DigitalOcean's guide to setting up SSH keys
    softlayer.rst
    clc.rst
    bare-metal.rst
+   vagrant.rst
 
 There are several preparatory steps to provisioning the cloud hosts that are
 common to all providers:
@@ -65,26 +71,14 @@ Step 2: Run security-setup
 --------------------------
 
 Running the ``security-setup`` script in the root directory will set
-up passwords, authentication, and certificates. For more information, see the
-`security-setup`_ documentation.
+up passwords, authentication, and certificates. For more information, see
+:doc:`/security/security_setup` documentation.
 
 Step 3: Set up DNS records
 --------------------------
 
-You can set up your DNS records with Terraform: `dns.rst`_
+You can set up your DNS records with Terraform. See :doc:`dns`.
 
-Provisioning Cloud Hosts
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-Here are some guides specific to each of the platforms that Mantl supports:
-
-- `openstack.rst`_
-- `gce.rst`_
-- `aws.rst`_
-- `digitalocean.rst`_
-- `vsphere.rst`_
-- `softlayer.rst`_
-- `clc.rst`_
 
 Deploying software via Ansible
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -201,9 +195,12 @@ Customizing your deployment
 
 Below are guides customizing your deployment:
 
-- `ssh_users.rst`_
-- `playbook.rst`_
-- `dockerfile.rst`_
+.. toctree::
+   :maxdepth: 1
+
+   ssh_users.rst
+   playbook.rst
+   dockerfile.rst
 
 .. _Mantl README: https://github.com/CiscoCloud/mantl/blob/master/README.md
 .. _working Ansible installation: http://docs.ansible.com/intro_installation.html#installing-the-control-machine
@@ -217,20 +214,9 @@ Below are guides customizing your deployment:
 .. _generating ssh-keys: https://www.centos.org/docs/5/html/5.2/Deployment_Guide/s3-openssh-rsa-keys-v2.html
 .. _secure copying: https://www.centos.org/docs/5/html/5.2/Deployment_Guide/s2-openssh-using-scp.html
 .. _mantl/terraform/: https://github.com/CiscoCloud/mantl/tree/master/terraform
-.. _openstack.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/openstack.rst
-.. _gce.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/gce.rst
-.. _aws.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/aws.rst
-.. _digitalocean.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/digitalocean.rst
-.. _vsphere.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/vsphere.rst
-.. _softlayer.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/softlayer.rst
-.. _dns.rst: https://github.com/CiscoCloud/mantl/blob/e53b7da545c1bdc71a5ceff7278ace5705117b41/docs/getting_started/dns.rst
 .. _playbook: http://docs.ansible.com/playbooks.html
 .. _GitHub project: https://github.com/CiscoCloud/nginx-mantlui
-.. _security-setup: https://github.com/CiscoCloud/mantl/blob/master/docs/security/security_setup.rst
 .. _Consul docs: https://www.consul.io/docs/guides/datacenters.html
-.. _ssh_users.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/ssh_users.rst
-.. _playbook.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/playbook.rst
-.. _dockerfile.rst: https://github.com/CiscoCloud/mantl/blob/master/docs/getting_started/dockerfile.rst
 .. _907: https://github.com/CiscoCloud/mantl/issues/907
 .. _927: https://github.com/CiscoCloud/mantl/issues/927
 
@@ -249,4 +235,4 @@ Using a Docker Container to Provision your Cluster
 ---------------------------------------------------
 
 You can also provision your cluster by running a docker container. See
-`dockerfile.rst`_ for more information.
+:doc:`dockerfile` for more information.

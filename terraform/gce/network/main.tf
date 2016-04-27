@@ -46,6 +46,10 @@ resource "google_compute_firewall" "mantl-firewall-internal" {
     protocol = "udp"
     ports = ["1-65535"]
   }
+
+  allow {
+    protocol = "4"
+  }
 }
 
 

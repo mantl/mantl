@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-apiserver
+    image: gcr.io/google_containers/hyperkube:{{ kube_version }}
+    command:
+    - /hyperkube
+    - apiserver
+    - --bind-address={{ private_ipv4 }}
+    - --etcd-servers={{ etcd_url_scheme }}://etcd.service.consul:{{ etcd_client_port }}/
+    - --allow-privileged=true
+    - --service-cluster-ip-range={{ kube_service_addresses }}
+    - --secure_port={{ kube_master_port }}
+    - --insecure_port={{ kube_insecure_port }}
+    - --advertise-address={{ ansible_default_ipv4.address }}
+    - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+    - --tls-cert-file={{ kube_cert_dir }}/server.crt
+    - --tls-private-key-file={{ kube_cert_dir }}/server.key
+    - --client-ca-file={{ kube_cert_dir }}/ca.crt
+    - --service-account-key-file={{ kube_cert_dir }}/server.key
+    - --basic-auth-file={{ kube_users_dir }}/known_users.csv
+    - --v=3
+    ports:
+    - containerPort: {{ kube_master_port }}
+      hostPort: {{ kube_master_port }}
+      protocol: TCP
+      name: https
+    - containerPort: {{ kube_insecure_port }}
+      hostPort: {{ kube_insecure_port }}
+      protocol: TCP
+      name: local
+    volumeMounts:
+    - mountPath: /etc/kubernetes
+      name: etc-kubernetes
+      readOnly: true
+  volumes:
+  - hostPath:
+      path: /etc/kubernetes
+    name: etc-kubernetes

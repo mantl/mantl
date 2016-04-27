@@ -9,10 +9,10 @@
     - flannel
 
 - include: stable.yml
-  when: kube_build == "stable"
+  when: package_channel == "stable"
 
 - include: testing.yml
-  when: kube_build == "testing"
+  when: package_channel == "testing"
 
 - name: install flannel sysconfig file
   sudo: yes

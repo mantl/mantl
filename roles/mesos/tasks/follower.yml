@@ -13,7 +13,7 @@
   template:
     src: mesos-agent.sysconfig.j2
     dest: /etc/sysconfig/mesos-agent
-  notify: restart mesos follower
+  notify: remove mesos follower metadata
   tags:
     - mesos
 
@@ -56,24 +56,3 @@
     state: absent
   tags:
     - mesos
-
-- name: install collectd mesos-slave plugin
-  sudo: yes
-  copy:
-    src: mesos-slave.py
-    dest: /usr/share/collectd/plugins
-    mode: 0444
-  tags:
-    - mesos
-    - collectd
-
-- name: configure collectd mesos-slave plugin
-  sudo: yes
-  template:
-    src: mesos-slave.conf.j2
-    dest: /etc/collectd.d/mesos-slave.conf
-  notify:
-    - restart collectd
-  tags:
-    - mesos
-    - collectd

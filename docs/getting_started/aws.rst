@@ -5,7 +5,7 @@ Amazon Web Services
 
 As of Mantl 0.3 you can bring up Amazon Web Services
 environments using Terraform. You can `download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`_.
+<https://www.terraform.io/downloads.html>`_.
 
 Configuring Amazon Web Services for Terraform
 -----------------------------------------------
@@ -42,7 +42,7 @@ Before running Terraform, we need to supply it with valid AWS credentials. While
 you could use the credentials for your AWS root account, it is `not recommended
 <http://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html>`_.
 In this section, we'll cover creating an `IAM User
-<http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html>`_
+<http://docs.aws.amazon.com/IAM/latest/UserGuide/id.html>`_
 that has the necessary permissions to build your cluster with Terraform.
 
 .. note:: You'll need to have an existing AWS account with sufficient IAM
@@ -202,9 +202,9 @@ Mantl on your new AWS VM's
 Terraform State
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Terraform stores the `state <https://terraform.io/docs/state/index.html>`_ of your
+Terraform stores the `state <https://www.terraform.io/docs/state/index.html>`_ of your
 infrastructure in a file called "terraform.tfstate". This file can be stored locally
-or in a `remote <https://terraform.io/docs/state/index.html>`_ location such as S3.
+or in a `remote <https://www.terraform.io/docs/state/index.html>`_ location such as S3.
 If you use the ``aws.sample.tf`` that is provided, by default the state of all the modules
 are stored in local terraform.tfstate file at the root of this project.
 

@@ -3,7 +3,7 @@ Calico
 
 .. versionadded:: 0.4
 
-`Calico <http://www.projectcalico.org>`_ is used in the project to add the IP
+`Calico <https://www.projectcalico.org>`_ is used in the project to add the IP
 per container functionality. Calico connects Docker containers through IP no matter
 which worker node they are on. Calico uses :doc:`etcd` to distribute information
 about workloads, endpoints, and policy to each worker node. Endpoints are

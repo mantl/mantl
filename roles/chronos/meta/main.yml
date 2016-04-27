@@ -1,0 +1,5 @@
+---
+allow_duplicates: yes
+dependencies:
+  - role: distributive
+    current_role: chronos

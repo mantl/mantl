@@ -2,7 +2,7 @@
 from __future__ import print_function
 import subprocess
 from sys import exit
-from os import devnull
+from os import devnull, environ, symlink
 from time import sleep
 
 def run_cmd(cmd, attempts=1):
@@ -47,7 +47,6 @@ if __name__ == "__main__":
         "~/.ssh/id_rsa"
     ]
     setup = [
-        (["python2", "security-setup"], 1),
         (["terraform", "get"], 1),
         (["terraform", "plan"], 1),
         (["terraform", "apply"], 1),

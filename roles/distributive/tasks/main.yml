@@ -13,7 +13,7 @@
     - distributive
     - docker
 
-# Needed for upgrade from Mantl <1.0
+# Needed for upgrade from Mantl <1.1
 - name: remove symlink to deprecated distributive checklist
   become: yes
   file:
@@ -23,11 +23,11 @@
     - bootstrap
     - distributive
 
-# Needed for upgrade from Mantl <1.0
+# Needed for upgrade from Mantl <1.1
 - name: de-register deprecated distributive tests with consul
   become: yes
   file:
-    path: "/etc/consul/distributive-{{ current_role }}-check.json"
+    path: "/etc/consul/distributive-{{ item }}-check.json"
     state: absent
   notify:
     - reload consul
@@ -35,6 +35,9 @@
     - bootstrap
     - consul
     - distributive
+  with_items:
+    - "{{ current_role }}"
+    - chronos
 
 - name: install distributive, health check packages for current role
   become: yes

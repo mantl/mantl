@@ -17,9 +17,3 @@
 
 - name: wait for zookeeper to listen
   command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
-
-- name: restart collectd
-  sudo: yes
-  service:
-    name: collectd
-    state: restarted
