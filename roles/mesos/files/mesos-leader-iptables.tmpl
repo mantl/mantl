@@ -9,7 +9,7 @@ iptables -X MESOSLEADER
 
 {{ if not $mesosLeaderIpTables }}exit 0{{ end }}
 
-{{ if eq 0 (len (service "master.mesos" "any")) }}exit 0
+{{ if or (eq 0 (len (service "master.mesos" "any"))) (eq 0 (len (service "follower.mesos" "any"))) }}exit 0
 {{ end }}
 
 iptables -N MESOSLEADER
