@@ -1,0 +1,27 @@
+#!/bin/bash
+
+{{ $mesosLeaderPort := key_or_default "secure/mesos/leader/port" "15050" }}
+{{ $mesosLeaderIpTables := eq (toLower (key_or_default "secure/mesos/leader/ip_tables" "false")) "true"}}
+
+iptables -F MESOSLEADER
+iptables -D INPUT -p tcp --dport {{ $mesosLeaderPort }} -j MESOSLEADER
+iptables -X MESOSLEADER
+
+{{ if not $mesosLeaderIpTables }}exit 0{{ end }}
+
+{{ if or (eq 0 (len (service "master.mesos" "any"))) (eq 0 (len (service "follower.mesos" "any"))) }}exit 0
+{{ end }}
+
+iptables -N MESOSLEADER
+
+{{ range service "master.mesos" "any" }}
+iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -s {{ .Address }} -j ACCEPT
+{{ end }}
+{{ range service "follower.mesos" "any" }}
+iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -s {{ .Address }} -j ACCEPT
+{{ end }}
+iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -d 127.0.0.1 -j ACCEPT
+iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -i docker0 -j ACCEPT
+iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -j DROP
+
+iptables -A INPUT -p tcp --dport {{ $mesosLeaderPort }} -j MESOSLEADER

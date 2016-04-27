@@ -56,6 +56,12 @@
 
 - include: nginx-proxy.yml
 
+- name: write iptables configuration
+  run_once: true
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/marathon/ip_tables {{ do_marathon_iptables }}
+  tags:
+    - marathon
+
 - name: deploy iptables configuration
   sudo: yes
   copy:
@@ -64,16 +70,8 @@
   with_items:
     - src: marathon-consul.cfg
       dest: /etc/consul-template/config.d
-  notify:
-    - reload consul-template
-  tags:
-    - marathon
-
-- name: deploy iptables template
-  sudo: yes
-  template:
-    src: marathon-iptables.tmpl.j2
-    dest: /etc/consul-template/templates/marathon-iptables.tmpl
+    - src: marathon-iptables.tmpl
+      dest: /etc/consul-template/templates
   notify:
     - reload consul-template
   tags:
