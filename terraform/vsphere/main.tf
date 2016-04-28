@@ -6,7 +6,7 @@ variable "ssh_user" {}
 variable "ssh_key" {}
 variable "consul_dc" {}
 variable "datastore" {}
-variable "disk_type" { default = "thin" } 
+variable "disk_type" { default = "thin" }
 variable "network_label" {}
 
 variable "short_name" {default = "mantl"}
@@ -109,14 +109,24 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 
 resource "vsphere_virtual_machine" "mi-kube-worker-nodes" {
   name = "${var.short_name}-kube-worker-${format("%03d", count.index+1)}"
-  image = "${var.template}"
-
   datacenter = "${var.datacenter}"
-  host = "${var.host}"
+  folder = "${var.folder}"
+  cluster = "${var.cluster}"
   resource_pool = "${var.pool}"
 
-  cpus = "${var.worker_cpu}"
+  vcpu = "${var.worker_cpu}"
   memory = "${var.worker_ram}"
+
+  disk {
+    size = "${var.worker_volume_size}"
+    template = "${var.template}"
+    type = "${var.disk_type}"
+    datastore = "${var.datastore}"
+  }
+
+  network_interface {
+    label = "${var.network_label}"
+  }
 
   configuration_parameters = {
     role = "kubeworker"
@@ -127,37 +137,7 @@ resource "vsphere_virtual_machine" "mi-kube-worker-nodes" {
   connection = {
       user = "${var.ssh_user}"
       key_file = "${var.ssh_key}"
-      host = "${self.ip_address}"
-  }
-
-  provisioner "remote-exec" {
-    inline = [ "sudo hostnamectl --static set-hostname ${self.name}" ]
-  }
-
-  count = "${var.kube_worker_count}"
-}
-
-resource "vsphere_virtual_machine" "mi-edge-nodes" {
-  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
-  image = "${var.template}"
-
-  datacenter = "${var.datacenter}"
-  host = "${var.host}"
-  resource_pool = "${var.pool}"
-
-  cpus = "${var.worker_cpu}"
-  memory = "${var.worker_ram}"
-
-  configuration_parameters = {
-    role = "kubeworker"
-    ssh_user = "${var.ssh_user}"
-    consul_dc = "${var.consul_dc}"
-  }
-
-  connection = {
-      user = "${var.ssh_user}"
-      key_file = "${var.ssh_key}"
-      host = "${self.ip_address}"
+      host = "${self.network_interface.0.ipv4_address}"
   }
 
   provisioner "remote-exec" {
@@ -216,11 +196,7 @@ output "worker_ips" {
 }
 
 output "kube_worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-kube-worker-nodes.*.network_interface.ip_address)}"
-}
-
-output "kube_worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-kube-worker-nodes.*.network_interface.ip_address)}"
+  value = "${join(\",\", vsphere_virtual_machine.mi-kube-worker-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "edge_ips" {

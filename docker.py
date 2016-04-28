@@ -74,7 +74,7 @@ def link_or_generate_security_file():
     security_file = join(os.environ['MANTL_CONFIG_DIR'], 'security.yml')
     if not exists(security_file):
         logging.info("Generating {} via security-setup".format(security_file))
-        call(split('./security-setup --enable=false'))
+        call(split('./security-setup'))
     else:
         symlink_force(security_file, 'security.yml')
 

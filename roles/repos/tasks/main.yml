@@ -6,3 +6,5 @@
   with_items:
     - asteris-mantl-rpm.repo
     - ciscocloud-rpm.repo
+  tags:
+    bootstrap
