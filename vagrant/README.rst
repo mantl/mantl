@@ -35,7 +35,7 @@ in the provided Vagrantfile.
    have the IP address 192.168.100.101, the second will have 192.168.100.102,
    etc.
 
-.. data:: worker_memory, control_memory, edge_memory, kubeworker_memeory
+.. data:: worker_memory, control_memory, edge_memory, kubeworker_memory
 
    The amount of memory in MB to allocate for each kind of VM. This setting is
    only valid for the virtualbox provider.
