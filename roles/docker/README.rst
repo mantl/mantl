@@ -10,6 +10,17 @@ dependencies into a standardized unit for software development." Their site has
 Mantl to ship units of work around the cluster, combined
 with :doc:`marathon`'s scheduling.
 
+Variables
+---------
+
+.. data :: docker_source
+
+  Specify origin of docker packages.
+
+  Possible values:  ``docker``, ``redhat``.
+
+  Default: ``docker` -- using packages from ``Docker, inc``.
+
 Using a private Docker registry
 -------------------------------
 

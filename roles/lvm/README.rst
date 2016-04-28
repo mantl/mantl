@@ -29,6 +29,14 @@ Variables
    - For GCE: /dev/disk/by-id/google-lvm 
    - For AWS: /dev/xvdh
 
+.. debug_storage_setup:
+
+   Define source of partitioner script. If set to ``True`` then
+   ``mantl-storage-setup`` script and associated files deployed from ansible tree,
+   otherwise it come with ``mantl-storage-setup`` package from Mantl repository.
+
+   default: ``False``
+
 Facts
 -----
 
