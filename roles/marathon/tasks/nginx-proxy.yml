@@ -1,50 +1,34 @@
 ---
 - name: copy nginx configuration
   sudo: yes
-  template:
-    src: marathon.nginx.j2
-    dest: /etc/marathon/marathon.nginx
+  copy:
+    src: marathon.nginx
+    dest: /etc/nginx/templates
   notify:
-    - restart nginx-marathon
+    - reload nginx
   tags:
     - marathon
 
-- name: configure nginx
-  sudo: yes
-  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/templates/marathon @/etc/marathon/marathon.nginx
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/nginx/do_ssl {{do_marathon_ssl}}
   tags:
     - marathon
 
-- name: ensure consul-nginx docker image is present
-  sudo: yes
-  command: /usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
-  tags:
-    - marathon
-    - bootstrap
-
-- name: configure nginx-marathon
-  sudo: yes
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: nginx-marathon.service.j2
-      dest: /usr/lib/systemd/system/nginx-marathon.service
-    - src: nginx-marathon.env.j2
-      dest: /etc/default/nginx-marathon.env
-  notify:
-    - reload nginx-marathon
-    - restart nginx-marathon
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/nginx/do_auth {{do_marathon_auth}}
   tags:
     - marathon
 
-- name: enable nginx-marathon
-  sudo: yes
-  service:
-    name: nginx-marathon
-    enabled: yes
-    state: started
-  notify:
-    - restart nginx-marathon
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/proxy_port {{ marathon_proxy_port }}
+  tags:
+    - marathon
+
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/port {{ marathon_port }}
   tags:
     - marathon

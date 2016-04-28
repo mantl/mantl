@@ -1,31 +1,23 @@
 ---
 - name: deploy nginx template
   sudo: yes
-  template:
-    src: consul.nginx.j2
-    dest: /etc/consul/consul.nginx
-  tags:
-    - consul
-
-- name: deploy nginx service
-  sudo: yes
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: nginx-consul.service.j2
-      dest: /usr/lib/systemd/system/nginx-consul.service
-    - src: nginx-consul.env.j2
-      dest: /etc/default/nginx-consul.env
+  copy:
+    src: consul.nginx
+    dest: /etc/nginx/templates
   notify:
-    - restart nginx-consul
+    - reload nginx
   tags:
     - consul
 
-- name: install nginx template
-  sudo: yes
+- name: write nginx config vars
   run_once: yes
-  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/templates/consul @/etc/consul/consul.nginx
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/consul/nginx/do_ssl {{do_consul_ssl}}
+  tags:
+    - consul
+
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/consul/nginx/do_auth {{do_consul_auth}}
   tags:
     - consul
 
