@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: check host connectivity
+      command: ping -c 1 {{hostvars[item].private_ipv4}}
+      with_items: groups["all"]
