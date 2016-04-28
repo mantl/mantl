@@ -15,3 +15,7 @@
 - name: reload consul-template
   sudo: yes
   command: systemctl reload consul-template
+
+- name: reload nginx
+  sudo: yes
+  command: systemctl reload nginx-consul

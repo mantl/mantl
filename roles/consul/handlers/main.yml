@@ -4,7 +4,3 @@
   command: /usr/local/bin/consul-rolling-restart.sh {{ consul_acl_master_token }}
   notify:
     - wait for consul to listen
-
-- name: restart nginx-consul
-  sudo: yes
-  command: systemctl restart nginx-consul
