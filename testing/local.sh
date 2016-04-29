@@ -3,6 +3,13 @@
 # this script is to emulate the CI testing suite locally
 # because the meat of the code is executed in a docker container
 # the main job of this script is to call docker run with the proper config
+#
+# Examples:
+# ./testing/local.sh ci-setup aws
+# ./testing/local.sh ci-build gce
+# ./testing/local.sh ci-destroy do
+# ./testing/local.sh sh
+
 
 if [ "$#" -lt 1 ]; then
 	echo -e "USAGE: testing/local.sh CMD PROVIDER\te.g. testing/local.sh build aws\ntesting/local.sh sh (to interact with container)"
@@ -28,6 +35,7 @@ esac
 export PROVIDER=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 
 
+# You will likely need to export env vars to make this work
 case $PROVIDER in
 "aws")
 	export TERRAFORM_FILE=testing/aws.tf
