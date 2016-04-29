@@ -33,8 +33,17 @@ Basic Settings
 ^^^^^^^^^^^^^^
 
 First, we'll need an account. This is the username you use to log into Triton.
-You can set the ``SDC_ACCOUNT`` environment variable, or set ``account`` in the
-provider (see sample below.)
+You can create an account at `joyent.com <https://www.joyent.com>`_; refer to
+their `getting started documentation
+<https://docs.joyent.com/public-cloud/getting-started>`_ for more information.
+Use the ``SDC_ACCOUNT`` environment variable, or set ``account`` in the provider
+(see sample below.)
+
+.. note::
+
+   new Joyent accounts may be subject to provisioning limits. `Contact Joyent
+   support <https://docs.joyent.com/public-cloud/getting-started>`_ to have
+   those limits raised.
 
 We'll also need your key material and ID. Key material is the material of the
 public key used to authenticate requests. You can set ``SDC_KEY_MATERIAL`` with
@@ -46,7 +55,9 @@ or ``SDC_KEY_ID`` in the environment.
 Last, you'll need to specify the datacenter you want to operate in (key:
 ``url``.) The default is ``us-east-1``, and the general format is
 ``https://{datacenter-slug}.api.joyentcloud.com``. If unset, this will be pulled
-from ``SDC_URL``.
+from ``SDC_URL``. You can select from any of `Joyent's public data centers
+<https://docs.joyent.com/public-cloud/data-centers>`_, or enter a custom URL for
+`a private data center <https://github.com/joyent/sdc>`_.
 
 Finally, here's an example with the variables set:
 
@@ -67,7 +78,7 @@ Provisioning
 Once your provider is set up, customize your modules (mainly for the variables
 ending in ``_count`` to control scaling.) Run ``terraform get`` to prepare the
 modules, ``terraform plan`` to see what will be created, and ``terraform apply``
-to provision the clsuter. Afterwards, you can use the instructions in
+to provision the cluster. Afterwards, you can use the instructions in
 :doc:`getting started <index>` to install Mantl on your new cluster.
 
 Configuring DNS
