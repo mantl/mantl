@@ -48,6 +48,7 @@ Here are some guides specific to each of the platforms that Mantl supports:
    clc.rst
    bare-metal.rst
    vagrant.rst
+   triton.rst
 
 There are several preparatory steps to provisioning the cloud hosts that are
 common to all providers:
