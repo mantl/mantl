@@ -9,7 +9,7 @@
     - src: ssl/cacert.pem
       dest: /etc/pki/CA/ca.cert
     - src: ssl/cacert.pem
-      dest: /etc/pki/ca-trust/source/anchors/ca.cert
+      dest: /etc/pki/ca-trust/source/anchors/cacert.pem
     - src: ssl/private/cakey.pem
       dest: /etc/pki/CA/ca.key
     - src: ssl/certs/host.cert.pem
