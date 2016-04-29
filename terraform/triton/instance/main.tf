@@ -25,3 +25,7 @@ resource "triton_machine" "instance" {
     "${var.private_network}"
   ]
 }
+
+output "ips" {
+  value = "${join(\",\", triton_machine.instance.*.primaryip)}"
+}
