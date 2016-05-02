@@ -154,7 +154,7 @@ def ci_build():
     # Filter out commits that are pushes to non-master branches
     ci_branch = os.environ['TRAVIS_BRANCH']
     ci_is_pr = os.environ['TRAVIS_PULL_REQUEST']
-    if ci_branch is not 'master' and ci_is_pr is False:
+    if ci_branch != 'master' and ci_is_pr != "1":
         logging.info("We don't want to build on pushes to branches that aren't master.")
         exit(0)
 
