@@ -20,5 +20,4 @@ chronos_reconciliation_interval: 600
 chronos_revive_offers_for_new_jobs: false
 chronos_schedule_horizon: 60
 chronos_task_epsilon: 60
-chronos_zk_hosts: "zookeeper.service.consul:2181"
 chronos_zk_timeout: 10000
