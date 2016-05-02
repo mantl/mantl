@@ -32,25 +32,6 @@
   tags:
     - traefik
 
-- name: make certificate directory
-  sudo: yes
-  file:
-    dest: /etc/traefik/certs
-    state: directory
-  tags:
-    - traefik
-
-- name: deploy certs
-  sudo: yes
-  copy:
-    src: '{{ item }}'
-    dest: /etc/traefik/certs/
-  with_items:
-    - ssl/certs/traefik-admin.cert.pem
-    - ssl/private/traefik-admin.key.pem
-  tags:
-    - traefik
-
 - name: configure traefik
   sudo: yes
   template:

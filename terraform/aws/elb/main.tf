@@ -1,5 +1,5 @@
-variable ssl_cert_file { default = "./ssl/certs/nginx.cert.pem" }
-variable ssl_key_file { default = "./ssl/private/nginx.key.pem" }
+variable ssl_cert_file { default = "./ssl/certs/host.cert.pem" }
+variable ssl_key_file { default = "./ssl/private/host.key.pem" }
 variable short_name {}
 variable instances {}
 variable subnets {}
