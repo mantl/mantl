@@ -42,8 +42,8 @@ Use the ``SDC_ACCOUNT`` environment variable, or set ``account`` in the provider
 .. note::
 
    new Joyent accounts may be subject to provisioning limits. `Contact Joyent
-   support <https://docs.joyent.com/public-cloud/getting-started>`_ to have
-   those limits raised.
+   support <https://docs.joyent.com/public-cloud/getting-started/limits>`_ to
+   have those limits raised.
 
 We'll also need your key material and ID. Key material is the material of the
 public key used to authenticate requests. You can set ``SDC_KEY_MATERIAL`` with
