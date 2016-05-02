@@ -6,7 +6,7 @@ Requires=docker.service
 Wants=consul.service
 
 [Service]
-Restart=always
+Restart=on-failure
 RestartSec=20
 TimeoutStartSec=0
 
@@ -18,11 +18,14 @@ ExecStart=/usr/bin/docker run \
     --name=nginx-consul \
     --net=host \
     --privileged=true \
+    -v /etc/nginx/templates:/etc/nginx/templates:ro \
     -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     --env-file=/etc/default/nginx-consul.env \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
 
 ExecStop=/usr/bin/docker kill nginx-consul
+
+ExecReload=/usr/bin/docker kill -s SIGHUP nginx-consul
 
 [Install]
 WantedBy=multi-user.target

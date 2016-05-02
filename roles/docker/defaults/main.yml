@@ -1,12 +1,41 @@
+# Where do we get docker packages from?
+# values are redhat or docker
+docker_package_source: docker
+
+docker_package: '{% if docker_package_source == "docker" %}docker-engine{% else %}docker{% endif %}'
+
+# inversion of docker_package for upgrade/transition code path
+docker_package_to_remove: '{% if docker_package_source == "docker" %}docker{% else %}docker-engine{% endif %}'
+
+# Install the docker_gc package (prunes docker containers, images, and volumes)
+docker_gc_install: true
+
 do_private_docker_registry: false
 docker_lvm_backed: "{% if provider in ['gce', 'openstack', 'aws'] %}True{% else %}False{% endif %}"
+
+# Docker log options: See https://docs.docker.com/engine/admin/logging/overview/
+docker_log_driver: journald
+
+# Docker options
+docker_options:
+  - "--dns {{ private_ipv4 }}"
+  - "--log-driver={{ docker_log_driver }}"
+  - "{% if docker_selinux_enabled %}--selinux-enabled {% endif %}"
+  - "{% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %}"
+
+# Docker network options can be provided as a list
+docker_network_options:
+  - "-H unix:///var/run/docker.sock"
+# If you want to open the docker API, uncomment the line below.
+# Please note this is insecure
+#  - "-H tcp://0.0.0.0:2375"
 
 # Possible values: overlay (default), devicemapper, btrfs (unsupported)
 # Used with docker-storage-setup
 docker_storage_driver: overlay
 
-## Settings for devicemapper thinprovider
-
+## Settings for devicemapper thinprovider (docker-storage-setup)
+## These are not used for overlay on lvm
 ## Refer to commentaries in ../templates/docker-storage-setup.conf.j2
 ## or `man lvcreate` for acceptable sizes, and their syntax
 docker_lvm_data_volume_size: 40%FREE

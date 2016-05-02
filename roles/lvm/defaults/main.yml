@@ -6,3 +6,5 @@ lvm_physical_device: >
   {%- elif provider == 'aws' -%}/dev/xvdh
   {%- elif provider == 'openstack' -%}/dev/vdb
   {%- endif -%}{%- endif -%}
+
+debug_storage_setup: False

@@ -15,5 +15,5 @@ module "aws-mantl-testing" {
   control_count = 3
   worker_count = 2
   edge_count = 1
-  kube_worker_count = 2
+  kubeworker_count = 2
 }

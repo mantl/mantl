@@ -1,0 +1,10 @@
+[Unit]
+Before=local-fs.target docker.service docker-storage-setup.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/mantl-storage-setup
+
+[Install]
+RequiredBy=local-fs.target docker.service docker-storage-setup.service

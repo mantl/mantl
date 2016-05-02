@@ -1,0 +1,32 @@
+{{ $marathonSsl := eq (toLower (key_or_default "secure/marathon/nginx/do_ssl" "false")) "true"}}
+{{ $marathonAuth := eq (toLower (key_or_default "secure/marathon/nginx/do_auth" "false")) "true"}}
+{{ $marathonPort := key_or_default "secure/marathon/port" "18080" }}
+{{ $marathonProxyPort := key_or_default "secure/marathon/proxy_port" "8080" }}
+server {
+	listen {{ $marathonProxyPort }} {{if $marathonSsl}}ssl{{end}};
+{{if $marathonSsl}}
+	ssl_certificate		/etc/nginx/ssl/nginx.cert;
+	ssl_certificate_key	/etc/nginx/ssl/nginx.key;
+
+	ssl on;
+	ssl_session_cache	builtin:1000 shared:SSL:10m;
+	ssl_protocols		TLSv1 TLSv1.1 TLSv1.2;
+	ssl_ciphers		HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;
+	ssl_prefer_server_ciphers	on;
+
+	error_page 497 https://$host:$server_port$request_uri;
+
+{{end}}
+	location / {
+		proxy_connect_timeout	600;
+		proxy_send_timeout	600;
+		proxy_read_timeout	600;
+		send_timeout		600;
+
+{{if $marathonAuth}}
+		auth_basic on;
+		auth_basic_user_file /etc/nginx/nginx-auth.conf;
+{{end}}
+		proxy_pass http://{{with node}}{{.Node.Address}}{{end}}:{{ $marathonPort }}/;
+	}
+}

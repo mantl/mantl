@@ -9,3 +9,17 @@
   tags:
     - docker
     - bootstrap
+
+- name: configure lvm for docker
+  sudo: yes
+  template:
+    src: docker-volume.conf.j2
+    dest: /etc/mantl/filesystems.d/20-docker-volume.conf
+    mode: 0644
+  tags:
+    - docker
+    - disk
+
+- name: process with mantl storage setup
+  sudo: yes
+  shell: "/usr/bin/mantl-storage-setup"
