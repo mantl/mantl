@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+max_wait=300
+svc={{ kafka_service_name }}
+
+while :; do
+    if [[ $(consul-cli health-checks $svc | jq -r '.[].Status') == 'passing' ]]; then
+        echo "Kafka scheduler is up and running"
+
+        api=$(consul-cli catalog-service $svc | jq -r '.[]|.ServiceAddress + ":" + (.ServicePort|tostring)')
+
+        # add brokers
+        curl -d "{{ kafka_brokers_configuration }}" http://$api/api/broker/add
+
+        # start brokers
+        curl -d "{{ kafka_brokers_start }}" http://$api/api/broker/start
+
+        exit 0
+    fi
+
+    if [ $SECONDS -gt $max_wait ]; then
+        echo "No healthy Kafka scheduler found in $max_wait seconds"
+        exit 1
+    fi
+
+    sleep 5
+done

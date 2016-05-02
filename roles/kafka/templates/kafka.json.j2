@@ -1,0 +1,12 @@
+{
+  "name": "kafka",
+  "config": {
+    "kafka": {
+      "app": {
+        "cpus": {{ kafka_scheduler_cpu }},
+        "mem": {{ kafka_scheduler_mem }}
+      },
+      "framework-name": "{{ kafka_scheduler_name }}"
+    }
+  }
+}
