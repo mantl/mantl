@@ -109,7 +109,6 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 
 resource "vsphere_virtual_machine" "mi-kubeworker-nodes" {
   name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}"
-  image = "${var.template}"
 
   datacenter = "${var.datacenter}"
   folder = "${var.folder}"
@@ -130,21 +129,6 @@ resource "vsphere_virtual_machine" "mi-kubeworker-nodes" {
     label = "${var.network_label}"
   }
 
-  count = "${var.kubeworker_count}"
-}
-
-resource "vsphere_virtual_machine" "mi-edge-nodes" {
-  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
-  image = "${var.template}"
-
-  datacenter = "${var.datacenter}"
-  host = "${var.host}"
-  resource_pool = "${var.pool}"
-
-  cpus = "${var.worker_cpu}"
-  memory = "${var.worker_ram}"
-
->>>>>>> ff271fe... k8s: vsphere var names
   configuration_parameters = {
     role = "kubeworker"
     ssh_user = "${var.ssh_user}"
@@ -210,10 +194,6 @@ output "control_ips" {
 
 output "worker_ips" {
   value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
-}
-
-output "kubeworker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ip_address)}"
 }
 
 output "kubeworker_ips" {
