@@ -6,6 +6,7 @@ ssl/**/*.pem
 ssl/index.txt*
 ssl/serial*
 ssl/.rnd
+.syncdir/
 
 # terraform
 /*.tf
