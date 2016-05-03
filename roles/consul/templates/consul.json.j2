@@ -13,9 +13,9 @@
 {% if consul_gossip_key is defined %}
   "encrypt": "{{ consul_gossip_key }}",
 {% endif %}
-  "ca_file": "/etc/consul/ssl/{{ consul_ca_file }}",
-  "cert_file": "/etc/consul/ssl/{{ consul_cert_file }}",
-  "key_file": "/etc/consul/ssl/{{ consul_key_file }}",
+  "ca_file": "/etc/pki/CA/ca.cert",
+  "cert_file": "/etc/pki/tls/certs/host.cert",
+  "key_file": "/etc/pki/tls/private/host.key",
 {% if provider == "virtualbox" or provider == "vmware_fusion" %}
   {# Used to fix a bad certificate error #}
   "verify_incoming": false,

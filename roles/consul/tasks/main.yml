@@ -39,25 +39,6 @@
   tags:
     - consul
 
-- name: deploy tls files
-  sudo: yes
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: consul
-    group: consul
-  with_items:
-    - src: ssl/cacert.pem
-      dest: /etc/consul/ssl/{{ consul_ca_file }}
-    - src: ssl/certs/consul.cert.pem
-      dest: /etc/consul/ssl/{{ consul_cert_file }}
-    - src: ssl/private/consul.key.pem
-      dest: /etc/consul/ssl/{{ consul_key_file }}
-  notify:
-    - restart consul
-  tags:
-    - consul
-
 - name: install scripts
   sudo: yes
   copy:
