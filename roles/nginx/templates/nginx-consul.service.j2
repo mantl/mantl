@@ -10,7 +10,7 @@ Restart=on-failure
 RestartSec=20
 TimeoutStartSec=0
 
-ExecStartPre=-/usr/bin/docker rm nginx-consul
+ExecStartPre=-/usr/bin/docker rm -f nginx-consul
 ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }} 
 
 ExecStart=/usr/bin/docker run \
@@ -18,8 +18,8 @@ ExecStart=/usr/bin/docker run \
     --name=nginx-consul \
     --net=host \
     --privileged=true \
+    -v /etc/pki/tls:/etc/pki/tls:ro \
     -v /etc/nginx/templates:/etc/nginx/templates:ro \
-    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     --env-file=/etc/default/nginx-consul.env \
     {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
 

@@ -29,3 +29,11 @@
   service:
     name: docker
     state: started
+  notify:
+    - start nginx-consul
+
+- name: start nginx-consul
+  sudo: yes
+  service:
+    name: nginx-consul
+    state: started

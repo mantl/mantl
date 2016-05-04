@@ -10,7 +10,7 @@ From `Kubernetes.io <http://kubernetes.io>`_:
     and scaling of containerized applications.
 
 Since version 1.1, Mantl ships Kubernetes by default. All you need to do is set
-the ``kube_worker_count`` variable in your Terraform configuration (see the
+the ``kubeworker_count`` variable in your Terraform configuration (see the
 example Terraform configurations for where this variable integrates into the
 workflow.)
 

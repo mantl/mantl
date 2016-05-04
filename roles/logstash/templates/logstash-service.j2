@@ -9,7 +9,7 @@ Restart=always
 RestartSec=20
 TimeoutStartSec=20m
 
-ExecStartPre=-/usr/bin/docker rm logstash
+ExecStartPre=-/usr/bin/docker rm -f logstash
 ExecStartPre=-/usr/bin/docker pull {{ logstash_image }}:{{ logstash_image_tag }}
 
 ExecStart=/usr/bin/docker run \
@@ -41,7 +41,7 @@ ExecStart=/usr/bin/docker run \
 
 ExecStop=/bin/bash -c " \
     /usr/bin/docker kill logstash && \
-    /usr/bin/docker rm logstash"
+    /usr/bin/docker rm -f logstash"
 
 [Install]
 WantedBy=multi-user.target

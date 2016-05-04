@@ -62,14 +62,24 @@ def node_health_check(node_address):
 
     try:
         f = urllib2.urlopen(request, None, 30, context=ctx)
-        health_checks = json.loads(f.read().decode('utf8'))
-        for check in health_checks:
-            if check['Status'] != "passing":
-                print(check['Name'], ":", check['Status'], "\n", check['Output'])
-                return False
-    except Exception as e:
-        print("Check at IP ", node_address, " exited with this error\n", e)
+    except urllib2.URLError as e:
+        print("Could not open ", url, "\n", e)
         return False
+
+    try:
+        health_checks = json.loads(f.read().decode('utf8'))
+    except TypeError as e:
+        print("Invalid JSON input string", e)
+        return False
+    except IOError as e:
+        print("Could not load JSON from ", url, "\n", e)
+        return False
+
+    for check in health_checks:
+        if check['Status'] != "passing":
+            output = check['Name'] + ":" + check['Status'] + "\n" + check['Output']
+            print(output.encode('utf8'))
+            return False
 
     return True
 

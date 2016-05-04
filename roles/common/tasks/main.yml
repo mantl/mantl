@@ -18,6 +18,33 @@
   tags:
     - common
 
+- name: preserve hostname
+  sudo: yes
+  copy:
+    src: 02_hostname.cfg
+    dest: /etc/cloud/cloud.cfg.d/02_hostname.cfg
+    owner: root
+    group: root
+    mode: 0644
+  when: >
+    provider != "bare-metal" and
+    provider != "virtualbox" and
+    provider != "packer"
+  tags:
+    - common
+
+- name: set persistent hostname
+  sudo: yes
+  copy:
+    dest: /etc/hostname
+    content: "{{ inventory_hostname }}"
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - common
+
 # add yum-utils if not already installed
 - name: add yum-config-manager
   sudo: yes
