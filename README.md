@@ -27,7 +27,6 @@ distributed services
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
     - [Documentation](#documentation)
     - [Roadmap](#roadmap)
-        - [Core Components and Features](#core-components-and-features)
         - [Mesos Frameworks](#mesos-frameworks)
         - [Security](#security)
         - [Operations](#operations)
@@ -46,6 +45,8 @@ distributed services
   isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of
   long running containerized services
+* [Kubernetes](http://kubernetes.io/) for managing, organizing, and scheduling
+  containers
 * [Terraform](https://terraform.io) deployment to multiple cloud providers
 * [Docker](http://docker.io) container runtime
 * [Traefik](https://traefik.github.io/) for proxying external traffic
@@ -175,7 +176,6 @@ make html
 ### Mesos Frameworks
 
 - [x] Marathon
-- [ ] Kubernetes
 - [x] Kafka
 - [ ] Riak
 - [x] Cassandra
