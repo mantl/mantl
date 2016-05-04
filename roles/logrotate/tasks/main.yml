@@ -22,15 +22,21 @@
 - name: copy component logrotate configurations
   become: yes
   copy:
-    src: "{{ item.0 }}"
-    dest: "/etc/logrotate.d/{{ item.0 }}"
+    src: "{{ item.component }}"
+    dest: "/etc/logrotate.d/{{ item.component }}"
     mode: 0644
     owner: root
     group: root
-  when: item.1
-  with_together:
-    - [ mesos, docker, vault-ssh-helper, zookeeper ]
-    - [ true, true, role == 'control', role == 'control' ]
+  when: item.when
+  with_items:
+    - component: mesos
+      when: true
+    - component: docker
+      when: true
+    - component: vault-ssh-helper
+      when: role == 'control'
+    - component: zookeeper
+      when: role == 'control'
   tags:
     - docker
     - logrotate
@@ -40,13 +46,19 @@
 - name: create component archives
   sudo: yes
   file:
-    path: "/var/log/{{ item.0 }}/archive"
+    path: "/var/log/{{ item.component }}/archive"
     mode: 0755
     state: directory
-  when: item.1
-  with_together:
-    - [ mesos, docker, vault-ssh-helper, zookeeper ]
-    - [ true, true, role == 'control', role == 'control' ]
+  when: item.when
+  with_items:
+    - component: mesos
+      when: true
+    - component: docker
+      when: true
+    - component: vault-ssh-helper
+      when: role == 'control'
+    - component: zookeeper
+      when: role == 'control'
   tags:
     - docker
     - logrotate
