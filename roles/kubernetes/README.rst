@@ -10,8 +10,8 @@ From `Kubernetes.io <http://kubernetes.io>`_:
     and scaling of containerized applications.
 
 Since version 1.1, Mantl ships Kubernetes by default. All you need to do is set
-the ``kubeworker_count`` variable in your Terraform configuration (see the
-example Terraform configurations for where this variable integrates into the
+the ``kubeworker_count`` and ``kubeworker_type`` variables in your Terraform 
+configuration (see the example Terraform configurations for where this variable integrates into the
 workflow.)
 
 `kubectl` is installed and configured for the default SSH user on the control
