@@ -73,3 +73,7 @@ output "ec2_ids" {
 output "ec2_ips" {
   value = "${join(\",\", aws_instance.instance.*.public_ip)}"
 }
+
+output "ec2_private_ips" {
+  value = "${join(\",\", aws_instance.instance.*.private_ip)}"
+}
