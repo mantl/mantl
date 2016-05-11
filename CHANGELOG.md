@@ -1,15 +1,12 @@
-Changelog
-=========
+# Changelog
 
-1.1 (March 13, 2016)
--------------------------
+## 1.1 (March 13, 2016)
 
-Features and Improvements
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features and Improvements
 
 * Kubernetes Support
   * Feature/k8s by default [#1302](https://github.com/CiscoCloud/mantl/pull/1302)
-  * Required variable kube_worker_ips is not set [#1329](https://github.com/CiscoCloud/mantl/pull/1329)
+  * Required variable `kube_worker_ips` is not set [#1329](https://github.com/CiscoCloud/mantl/pull/1329)
   * Expose Kubernetes dashboard in Mantl UI [#1335](https://github.com/CiscoCloud/mantl/pull/1335)
   * Feature/k8s aws [#1370](https://github.com/CiscoCloud/mantl/pull/1370)
   * nginx-consul not running on kube workers [#1346](https://github.com/CiscoCloud/mantl/pull/1346)
@@ -161,8 +158,7 @@ Features and Improvements
   * Examples/spark [#1267](https://github.com/CiscoCloud/mantl/pull/1267)
   * Examples/spark fix [#1380](https://github.com/CiscoCloud/mantl/pull/1380)
 
-Fixes
-^^^^^
+### Fixes
 
 * error installing cloud-utils-growpart [#1257](https://github.com/CiscoCloud/mantl/pull/1257)
 * docker: fix cloud-utils-growpart install [#1258](https://github.com/CiscoCloud/mantl/pull/1258)
@@ -194,11 +190,9 @@ Fixes
 * use zookeepercli package from mantl-rpm [#1431](https://github.com/CiscoCloud/mantl/pull/1431)
 * make dns and route53 names consistent with /etc/hosts [#1306](https://github.com/CiscoCloud/mantl/pull/1306)
 
-1.0.3 (March 04, 2016)
--------------------------
+## 1.0.3 (March 04, 2016)
 
-Features and Improvements
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features and Improvements
 
 * All OS packages installed from central repositories #1193, #1204
 * Elasticsearch and Kibana UIs are now available in Mantl UI #1175
@@ -212,8 +206,7 @@ Features and Improvements
 * Updated Vagrant box (CiscoCloud/mantl) #1138
 * Jupyter notebook example #1187
 
-Fixes
-^^^^^
+### Fixes
 
 * Update mesos_cluster name to mantl! #963
 * untangle collectd and docker role and document custom selinux policy #1044
@@ -224,15 +217,13 @@ Fixes
 * Fix collectd mesos-slave.py typo #1156
 * Add condition to check for definition of "provider" #1170
 * kong: update readme and use updated api endpoint #1171
-* Derive defaults for consul_is_server variable #1215
+* Derive defaults for `consul_is_server` variable #1215
 * marathon: don't pull down docker images in advance #1218
 * marathon: generate consul service before iptables #1219
 
-1.0.0 (February 16, 2016)
--------------------------
+## 1.0.0 (February 16, 2016)
 
-Features and Improvements
-^^^^^^^^^^^^^^^^^^^^^^^^^
+### Features and Improvements
 
 * Mesos 0.25 and Marathon 0.13 #955, #998
 * Consul-template 0.12.2 #1012
@@ -244,8 +235,7 @@ Features and Improvements
 * Multi-cloud integration testing with Travis CI #1076, #1009
 * Improved vault support #1045
 
-Fixes
-^^^^^
+### Fixes
 
 * Updated mantlui nginx container tag #961
 * Update traefik for go 1.5.3 fix #1035
@@ -275,18 +265,15 @@ Fixes
 * Consolidated requirement validation in single playbook #1040
 * PEP 0394 compatible ./security-setup #1037
 
-0.5.1 (December 22, 2015)
--------------------------
+## 0.5.1 (December 22, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * Improved GlusterFS experience #849, #867, #868, #880, #898, #904
 * Improved Zookeeper setup, configuration, and upgrade path #873, #896, #917
 * Traefik UI integration #878
 
-Fixes
-^^^^^
+### Fixes
 
 * Selinux is set to permissive mode by default #895
 * Tasks using the docker containerizer can write to the Mesos sandbox #613
@@ -294,11 +281,9 @@ Fixes
 * Logstash configuration is now correctly configured on Mesos master and agent nodes #920, #921
 * Documentation updates #839, #848, #885, #893, #936
 
-0.5.0 (November 23, 2015)
--------------------------
+## 0.5.0 (November 23, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * All-new MantlUI interface #826
 * Mantl-API Integration #812
@@ -311,8 +296,7 @@ Features
 * Kubernetes Tech Preview #794
 * Optional Docker cleanup add-on
 
-Fixes
-^^^^^
+### Fixes
 
 * Use Centos-provided Docker package #803
 * Configurable root volume size on AWS and GCE #724, #725
@@ -324,48 +308,42 @@ Fixes
 * Improved Ansible change detection for Docker private registries #804
 * Consistent role names across cloud providers (control, worker, edge roles)
 
-0.4.0 (October 29, 2015)
--------------------------
+## 0.4.0 (October 29, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * Add MantlUI proxy for Mesos/Marathon/Chronos/Consul
-* Add `Mantl API <http://aster.is/blog/2015/10/29/announcing-mantl-api/>`_ support
+* Add [Mantl API](http://aster.is/blog/2015/10/29/announcing-mantl-api/) support
 * Add GlusterFS shared filesystem support
 * Add Calico IP per container networking (tech preview)
 * Add support for DNSimple DNS registration
 
-Fixes
-^^^^^
+### Fixes
 
 * mesos-consul and marathon-consul updates to improve service discovery consistency
 * terraform.py improvements with support for SoftLayer and Microsoft Azure
 
-0.3.2 (June 30, 2015)
----------------------
+## 0.3.2 (June 30, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * Add Minecraft sample app #506
 * Add documentation for all components that were missing it #520
-* Add ElasticSearch output for Logstash #524 (see ``logstash_output_elasticsearch`` in :doc:`components/logstash`)
+* Add ElasticSearch output for Logstash #524 (see
+  `logstash_output_elasticsearch` in the
+  [logstash component documentation](http://docs.mantl.io/en/latest/components/logstash.html))
 * Add filesystem-backed Marathon artifact store #525
 
-Fixes
-^^^^^
+### Fixes
 
 * Update docs to clarify required Python version #515
 * Fix typo in the Nginx proxy setup for Mesos #521
-* Explicitly specify PyYAML version in ``requirements.txt``
+* Explicitly specify PyYAML version in `requirements.txt`
 * Support SSH key passphrase and any key name in the Docker builder #517
 
-0.3.1 (June 17, 2015)
----------------------
+## 0.3.1 (June 17, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * Add Distributive system checker #434
 * Add Chronos role  #437
@@ -373,19 +351,16 @@ Features
 * Add VMware vSphere terraform provider #471
 * Support for terraform in Dockerfile #481
 
-Fixes
-^^^^^
+### Fixes
 
 * Use default security group in OpenStack #477
-* Allow ``terraform.py`` to use configurable usernames #491
-* Change "disable security" to "check security" in ``security-setup`` #494
+* Allow `terraform.py` to use configurable usernames #491
+* Change "disable security" to "check security" in `security-setup` #494
 * Stop logstash variables from showing up as a top-level component in docs #482
 
-0.3.0 (June 8, 2015)
---------------------
+## 0.3.0 (June 8, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * Performance + usage metrics Linux + Mesos + Marathon + Containers #53
 * Multi OpenStack region support in Atlas (TF) #61
@@ -398,7 +373,7 @@ Features
 * Generate SHA256 signed CA/certs by default #213
 * Add support for Hashicorp Vault #225
 * Add coarse-grained options to security-setup #247
-* Improve readability of ``security-setup --help`` #248
+* Improve readability of `security-setup --help` #248
 * Add mesos-consul support #251
 * Remove registrator for mesos-consul #263
 * Create a local host file #146
@@ -430,11 +405,10 @@ Features
 * Remove ansible OpenStack playbook dependency #414
 * Make logstash grab logs from ZooKeeper data volume #435
 * Include collectd, logstash role in terraform sample playbook #438
-* Use ``ciscocloud/logstash:0.2`` for logstash container #443
-* Add command line argument for hostname to ``zookeeper-wait-for-listen.sh`` #416
+* Use `ciscocloud/logstash:0.2` for logstash container #443
+* Add command line argument for hostname to `zookeeper-wait-for-listen.sh` #416
 
-Fixes
-^^^^^
+### Fixes
 
 * Note Vagrant provider requirement #170
 * Fix dnsmasq host #188
@@ -444,7 +418,7 @@ Fixes
 * serialize Consul restarts #262
 * Remove use of sudo for local file modification #272
 * Use CiscoCloud data volume for zookeeper container #282
-* Consul requires restart on ``acl_master_token`` change #283
+* Consul requires restart on `acl_master_token` change #283
 * Fix Vault restart #231
 * Fix issue with Consul restart #293
 * Fix Marathon race #305
@@ -460,20 +434,16 @@ Fixes
 * Bug in ansible collectd role #431
 * authorize logstash syslog port when selinux enforcing #459
 
-Deprecations
-^^^^^^^^^^^^
+### Deprecations
 
-* Mantl now uses `Terraform <https://www.terraform.io/>`_ for
-  provisioning hosts, and `terraform.py
-  <https://github.com/CiscoCloud/terraform.py>`_ instead of inventory files.
-  Because of this change, you will need to use the new :doc:`Terraform-based
-  Getting Started Guide </getting_started/index>`.
+* Mantl now uses [Terraform](https://www.terraform.io/) for provisioning hosts,
+  and [terraform.py](https://github.com/CiscoCloud/terraform.py) instead of
+  inventory files. Because of this change, you will need to use the new
+  [Terraform-based Getting Started Guide](http://docs.mantl.io/en/latest/getting_started/index.html).
 
-0.2.0 (April 10, 2015)
-----------------------
+## 0.2.0 (April 10, 2015)
 
-Features
-^^^^^^^^
+### Features
 
 * Security added across the board
 * Moved Consul out of docker #66
@@ -497,8 +467,8 @@ Features
 * Use Centos docker package #141
 * Move openstack security group to a variable #155
 
-Fixes
-^^^^^
+### Fixes
+
 * Mesos & Marathon Consul registration do not survive reboot #16
 * Set preference for virtualbox provider for owners of vmware_fusion #73
 * Fix Consul clients #30
@@ -518,13 +488,11 @@ Fixes
 * Security-setup script hangs on low entropy linux hosts due to /dev/random bug #153
 
 
-0.1.0 (March 2, 2015)
----------------------
+## 0.1.0 (March 2, 2015)
 
-- Initial release.
+* Initial release.
 
-Ansible Roles
-^^^^^^^^^^^^^
+### Ansible Roles
 
 * Add common role for timezones, users and resolv.conf
 * Add consul role
@@ -536,8 +504,7 @@ Ansible Roles
 * Add zookeeper role
 * Add documentation
 
-Ansible Playbooks
-^^^^^^^^^^^^^^^^^
+### Ansible Playbooks
 
 * Add consul-join-wan
 * Add destroy-hosts
