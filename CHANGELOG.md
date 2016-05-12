@@ -107,6 +107,8 @@
 
 * AWS Provider Enhancements
   * Adds an output for hostnames [#1234](https://github.com/CiscoCloud/mantl/pull/1234)
+  * Question: Why are the aws root volumes standard not gp2 ? [#1414](https://github.com/CiscoCloud/mantl/issues/1414)
+  * aws: gp2 volume type for root device [#1416](https://github.com/CiscoCloud/mantl/pull/1416)
 
 * Openstack Provider Enhancements
   * Openstack terraform changes: Add (optional) dns_nameservers, add volu… [#1196](https://github.com/CiscoCloud/mantl/pull/1196)
