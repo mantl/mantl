@@ -407,6 +407,10 @@ def aws_host(resource, module_name):
         attrs['ansible_ssh_user'] = raw_attrs['tags.sshUser']
     if 'tags.sshPrivateIp' in raw_attrs:
         attrs['ansible_ssh_host'] = raw_attrs['private_ip']
+    if not attrs['ansible_ssh_host']:
+        attrs['ansible_ssh_host'] = raw_attrs['private_ip']
+    if 'tags.sshCommonArgs' in raw_attrs and raw_attrs['tags.sshCommonArgs']:
+        attrs['ansible_ssh_common_args'] = raw_attrs['tags.sshCommonArgs']
 
     # attrs specific to Mantl
     attrs.update({
