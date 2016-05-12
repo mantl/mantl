@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1 (March 13, 2016)
+## 1.1 (May 13, 2016)
 
 ### Features and Improvements
 
@@ -108,7 +108,7 @@
 * AWS Provider Enhancements
   * Adds an output for hostnames [#1234](https://github.com/CiscoCloud/mantl/pull/1234)
 
-* AWS Provider Enhancements
+* Openstack Provider Enhancements
   * Openstack terraform changes: Add (optional) dns_nameservers, add volu… [#1196](https://github.com/CiscoCloud/mantl/pull/1196)
 
 * Moved collectd out of core and into an addon
