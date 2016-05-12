@@ -84,22 +84,3 @@ This role enables the following Collectd plugins and settings:
    Type: write 
    Description: write collectd logs to syslog                               
    Default: ``LogLevel "err"``
-
-SELinux Policy
---------------
-
-If your cluster is built with SELinux enabled and enforcing, a custom SELinux
-policy will be installed to support the collectd docker plugin. The TE file
-looks like this:
-
-.. literalinclude:: ../../roles/collectd/files/collectd_docker_plugin.te
-   :language: shell
-
-and is included in ``roles/collectd/files/collectd_docker_plugin.te``.
-
-It was built with the following commands:
-
-.. code-block:: shell
-
-   checkmodule -M -m -o collectd_docker_plugin.mod collectd_docker_plugin.te
-   semodule_package -o collectd_docker_plugin.pp -m collectd_docker_plugin.mod
