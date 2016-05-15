@@ -17,7 +17,7 @@ distributed services
     - [Features](#features)
         - [Core Components](#core-components)
         - [Addons](#addons)
-        - [Goals](#Goals)
+        - [Goals](#goals)
         - [Architecture](#architecture)
         - [Control Nodes](#control-nodes)
         - [Resource Nodes](#resource-nodes)
