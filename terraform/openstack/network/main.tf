@@ -16,6 +16,7 @@ resource "openstack_networking_subnet_v2" "subnet" {
   cidr = "${var.subnet_cidr}"
   ip_version = "${var.ip_version}"
   dns_nameservers = ["${compact(split(\",\", var.dns_nameservers))}"]
+  enable_dhcp = true
 }
 
 resource "openstack_networking_router_v2" "router" {
