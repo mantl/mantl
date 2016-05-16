@@ -125,9 +125,8 @@ def ci_build():
     link_ci_terraform_file()
 
     # Take different action for PRs from forks
-    if not os.environ['TRAVIS_REPO_SLUG'].startswith('CiscoCloud/'):
-        logging.warning("Because we can't unlock deploy keys for forks of the main project, we are going to make some prelim checks, then get back to you!")
-        logging.critical("Fork checks have not been implemented.")
+    if os.environ['MANTL_CI_FORK_CHECK'] == "1":
+        logging.warning("Currently, we can't unlock deploy keys for forks of Mantl, so we are skipping the build")
         exit(0)
 
     # Filter out commits that are documentation changes.
