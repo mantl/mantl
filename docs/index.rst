@@ -25,9 +25,10 @@ Contents:
    security/index.rst
    upgrading/index.rst
    packer.rst
-   changelog.rst
    faq.rst
    license.rst
+
+* `Changelog <https://github.com/CiscoCloud/mantl/blob/master/CHANGELOG.md>`_
 
 .. only:: html
 
