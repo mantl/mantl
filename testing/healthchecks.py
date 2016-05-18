@@ -94,7 +94,7 @@ def cluster_health_check(ip_addresses):
 
 if __name__ == "__main__":
     print("Waiting for cluster to finalize init before starting health checks")
-    sleep(60*2)  # two minutes
+    sleep(60*5)  # five minutes
 
     # Get IP addresses of hosts from a dynamic inventory script
     cmd = ["python2", "plugins/inventory/terraform.py", "--list"]

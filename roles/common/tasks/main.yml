@@ -86,6 +86,7 @@
     - java-1.8.0-openjdk
     - chrony
     - smlr
+    - zookeepercli
   tags:
     - bootstrap
 

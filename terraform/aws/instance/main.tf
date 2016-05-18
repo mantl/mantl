@@ -3,7 +3,9 @@ variable "count_format" {default = "%02d"}
 variable "iam_profile" {default = "" }
 variable "ec2_type" {default = "m3.medium"}
 variable "ebs_volume_size" {default = "20"} # size is in gigabytes
+variable "ebs_volume_type" {default = "gp2"}
 variable "data_ebs_volume_size" {default = "20"} # size is in gigabytes
+variable "data_ebs_volume_type" {default = "gp2"}
 variable "role" {}
 variable "short_name" {default = "mantl"}
 variable "availability_zones" {}
@@ -19,7 +21,7 @@ resource "aws_ebs_volume" "ebs" {
   availability_zone = "${element(split(",", var.availability_zones), count.index)}"
   count = "${var.count}"
   size = "${var.data_ebs_volume_size}"
-  type = "gp2"
+  type = "${var.data_ebs_volume_type}"
 
   tags {
     Name = "${var.short_name}-${var.role}-lvm-${format(var.count_format, count.index+1)}"
@@ -39,6 +41,7 @@ resource "aws_instance" "instance" {
   root_block_device {
     delete_on_termination = true
     volume_size = "${var.ebs_volume_size}"
+    volume_type = "${var.ebs_volume_type}"
   }
 
 

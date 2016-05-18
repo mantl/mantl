@@ -1,8 +1,4 @@
 ---
-- name: reload consul
-  sudo: yes
-  command: systemctl reload consul
-
 - name: reload systemd
   sudo: yes
   command: systemctl daemon-reload
