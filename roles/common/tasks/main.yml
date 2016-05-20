@@ -18,10 +18,6 @@
   tags:
     - common
 
-- name: ensure cloud.cfg.d directory exists
-  sudo: yes
-  file: path=/etc/cloud/cloud.cfg.d state=directory recurse=yes owner=root group=root mode=0644
-
 - name: preserve hostname
   sudo: yes
   copy:
@@ -33,7 +29,8 @@
   when: >
     provider != "bare-metal" and
     provider != "virtualbox" and
-    provider != "packer"
+    provider != "packer" and 
+    provider != "vsphere" 
   tags:
     - common
 
