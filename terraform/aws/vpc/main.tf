@@ -1,5 +1,5 @@
 variable "availability_zones"  {
-  default = "a,b,c" 
+  default = "a,b,c"
 }
 variable "cidr_blocks" {
   default = {
@@ -9,7 +9,7 @@ variable "cidr_blocks" {
   }
 }
 variable "datacenter" {default = "aws"}
-variable "long_name" {default = "microservices-infastructure"}
+variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mantl"}
 variable "vpc_cidr" {default = "10.1.0.0/21"}
 variable "region" {}
