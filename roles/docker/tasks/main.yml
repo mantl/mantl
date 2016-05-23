@@ -25,6 +25,7 @@
     state: absent
   with_items:
     - "{{ docker_package_to_remove }}"
+    - "{{ docker_package_to_remove }}-common"
     - "{{ docker_package_to_remove }}-selinux"
   tags:
     - docker
