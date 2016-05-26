@@ -4,7 +4,7 @@
 
 ### Features and Improvements
 
-* Kubernetes Support
+* Kubernetes (Technical Preview) Support
   * Feature/k8s by default [#1302](https://github.com/CiscoCloud/mantl/pull/1302)
   * Required variable `kube_worker_ips` is not set [#1329](https://github.com/CiscoCloud/mantl/pull/1329)
   * Expose Kubernetes dashboard in Mantl UI [#1335](https://github.com/CiscoCloud/mantl/pull/1335)
@@ -33,6 +33,8 @@
   * Testing/local script [#1382](https://github.com/CiscoCloud/mantl/pull/1382)
   * Enable security for CI testing [#1379](https://github.com/CiscoCloud/mantl/pull/1379)
   * TRAVIS rm install step, containers have deps [#1423](https://github.com/CiscoCloud/mantl/pull/1423)
+  * Wrap OS ssh key decryption w/ check for fork [#1415](https://github.com/CiscoCloud/mantl/pull/1415)
+  * TRAVIS remove badge from README #1442 [#1442](https://github.com/CiscoCloud/mantl/pull/1442)
 
 * Enhanced Docker image for mantl deployments
   * Docker image-only deployments [#1261](https://github.com/CiscoCloud/mantl/pull/1261)
@@ -45,6 +47,7 @@
   * vSphere Provider Fixes including linked clones, folders, and private_… [#985](https://github.com/CiscoCloud/mantl/pull/985)
   * patch use builtin vsphere provider [#1297](https://github.com/CiscoCloud/mantl/pull/1297)
   * Updating vSphere Terraform Build to Support Kubernetes Worker Addition [#1340](https://github.com/CiscoCloud/mantl/pull/1340)
+  * Updated vSphere Support to Master and add Kubernetes [#1469](https://github.com/CiscoCloud/mantl/pull/1469)
 
 * CenturyLinkCloud support
   * terraform assets and support for CenturyLinkCloud [#1095](https://github.com/CiscoCloud/mantl/pull/1095)
@@ -76,6 +79,7 @@
   * Remove mentions of terraform.sample.yml [#1162](https://github.com/CiscoCloud/mantl/pull/1162)
   * Fixed typo in roles/lvm/README.rst [#1313](https://github.com/CiscoCloud/mantl/pull/1313)
   * A few documentation fixes, mostly in getting-started [#1357](https://github.com/CiscoCloud/mantl/pull/1357)
+  * Fixed hyperlink reference for Goals at TOC [#1452](https://github.com/CiscoCloud/mantl/pull/1452)
 
 * NTP: chronyd is enabled by default
   * common: add chrony [#1213](https://github.com/CiscoCloud/mantl/pull/1213)
@@ -144,6 +148,7 @@
 * Docker upgraded to 1.11.1
   * Add new partitioner script, which can do job on first boot [#1239](https://github.com/CiscoCloud/mantl/pull/1239)
   * Fix docker removal of nginx-consul [#1390](https://github.com/CiscoCloud/mantl/pull/1390)
+  * Fix/docker upgrade 1.1 [#1477](https://github.com/CiscoCloud/mantl/pull/1477)
 
 * Use a single certificate for Vault, Consul, and nginx
   * Feature/single cert [#1325](https://github.com/CiscoCloud/mantl/pull/1325)
@@ -191,6 +196,7 @@
 * Fix typo in gce.sample.tf [#1345](https://github.com/CiscoCloud/mantl/pull/1345)
 * use zookeepercli package from mantl-rpm [#1431](https://github.com/CiscoCloud/mantl/pull/1431)
 * make dns and route53 names consistent with /etc/hosts [#1306](https://github.com/CiscoCloud/mantl/pull/1306)
+* Eliminate a race where a mesos agent could not connect to the master [#1465](https://github.com/CiscoCloud/mantl/pull/1465)
 
 ## 1.0.3 (March 04, 2016)
 
