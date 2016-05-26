@@ -29,7 +29,8 @@
   when: >
     provider != "bare-metal" and
     provider != "virtualbox" and
-    provider != "packer"
+    provider != "packer" and 
+    provider != "vsphere" 
   tags:
     - common
 

@@ -314,7 +314,7 @@ you need to set for your run.
     ansible-playbook -u centos -i inventory \
             -e provider=bare-metal \
             -e consul_dc=dc1 \
-            -e docker-lvm-backed=true \
+            -e docker_lvm_backed=true \
             -e docker_lvm_data_volume_size="80%FREE" \
             -e @security.yml  sample.yml >& bare-metal.log
 
@@ -336,7 +336,7 @@ The meaning of the parts of this command are as follows:
 ``-e consul_dc=dc1``
     This is the name found in your ./inventory file for your datacenter.
 
-``-e docker-lvm-backed=true``
+``-e docker_lvm_backed=true``
     LVM-backed docker is a really good idea in centos. This is why you craeted
     the extra partion during installation.
 
