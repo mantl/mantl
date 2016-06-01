@@ -32,6 +32,21 @@
     - master
     - kubernetes
 
+- name: generate kubelet kubeconfig
+  sudo: yes
+  template:
+    src: master.kubeconfig.j2
+    dest: "/etc/kubernetes/master.kubeconfig"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - master
+    - kubernetes
+
 - name: enable and start kubelet service
   sudo: yes
   service:
