@@ -1,0 +1,23 @@
+---
+contiv_master_public_ipv4: groups['kubemaster'][0].public_ipv4
+contiv_master_private_ipv4: groups['kubemaster'][0].private_ipv4
+# This is the IP where the contiv netmaster can be accessed.
+# Usually, comes via environment or command line
+# contiv_service_vip: 10.6.3.101
+
+# Specifies fabric mode (aci | default)
+contiv_fabric_mode: aci
+
+# Specifies routed mode vs bridged mode for networking (bridge | routing)
+# if you are using an external router for all routing, you should select bridge here
+contiv_fwd_mode: routing
+
+# The following are aci specific parameters. These must be set only if aci integration
+# is desired. Otherwise, you can ignore these.
+apic_url: ""
+apic_username: ""
+apic_password: ""
+apic_leaf_nodes: ""
+apic_phys_dom: ""
+apic_contracts_unrestricted_mode: no
+apic_epg_bridge_domain: not_specified

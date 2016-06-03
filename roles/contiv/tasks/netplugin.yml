@@ -1,0 +1,77 @@
+- name: ensure pluginDir exists
+  file: path={{ kube_script_dir }}/kubelet-plugins/net/exec recurse=yes state=directory
+
+- name: copy contiv cni conf file
+  copy: src=contiv_cni.conf dest={{ kube_script_dir }}/kubelet-plugins/net/exec/contiv_cni.conf
+
+- name: ensure cni bin dir exists
+  file: path=/opt/cni/bin recurse=yes state=directory
+
+- name: copy contiv cni exec file
+  copy: src={{ contiv_bin_path }}/contivk8s dest=/opt/cni/bin/contivk8s.bin mode=0755
+
+- name: ensure contiv config directory exists
+  file: path=/opt/contiv/config recurse=yes state=directory
+
+- name: setup config for the contiv cni plugin
+  template: src=contiv.cfg.j2 dest=/opt/contiv/config/contiv.json
+
+- name: get openstack kilo rpm
+  get_url:
+    url: https://repos.fedorapeople.org/repos/openstack/openstack-kilo/rdo-release-kilo-1.noarch.rpm
+    dest: /tmp/rdo-release-kilo-1.noarch.rpm
+    validate_certs: False
+  environment:
+    http_proxy: "{{ http_proxy|default('') }}"
+    https_proxy: "{{ https_proxy|default('') }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+       - ovs_install
+
+- name: install openstack kilo
+  yum: name=/tmp/rdo-release-kilo-1.noarch.rpm state=present
+  when: ansible_os_family == "RedHat"
+  tags:
+       - ovs_install
+
+- name: install ovs
+  environment:
+    http_proxy: "{{ http_proxy|default('') }}"
+    https_proxy: "{{ https_proxy|default('') }}"
+  yum: name=openvswitch state=present
+  when: ansible_os_family == "RedHat"
+  tags:
+       - ovs_install
+
+- name: install ntp
+  yum: name=ntp state=present
+  when: ansible_os_family == "RedHat"
+
+- name: start ntp
+  shell: systemctl enable ntpd
+  when: ansible_os_family == "RedHat"
+
+- name: start ovs service
+  service: "name=openvswitch enabled=yes state=started"
+  when: ansible_os_family == "RedHat"
+
+- name: setup ovs
+  shell: "ovs-vsctl set-manager {{ item }}"
+  with_items:
+    - "tcp:127.0.0.1:6640"
+    - "ptcp:6640"
+
+- name: copy environment file for netplugin
+  template: src=netplugin.j2 dest=/etc/default/netplugin mode=0644
+
+- name: copy systemd units for netplugin
+  copy: src=netplugin.service dest=/etc/systemd/system/netplugin.service
+
+- name: setup netmaster host alias
+  lineinfile: dest=/etc/hosts line="{{ contiv_service_vip }} netmaster"
+
+- name: restart netplugin
+  service: name=netplugin state=restarted
+
+- name: restart kubelet
+  service: name=kubelet state=restarted

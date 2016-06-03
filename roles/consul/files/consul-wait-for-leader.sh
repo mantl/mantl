@@ -7,7 +7,7 @@ if [ -n "${token}" ]; then
 fi
 
 max_wait=30
-
+#Could this result in a problem.
 while :; do
   if [[ $(consul-cli status-leader ${ccargs}) =~ [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*:[0-9]* ]]; then
     exit 0

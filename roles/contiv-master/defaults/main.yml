@@ -1,0 +1,23 @@
+---
+contiv_master_public_ipv4: groups['kubemaster'][0].public_ipv4
+contiv_master_private_ipv4: groups['kubemaster'][0].private_ipv4
+networking=contiv
+localBuildOutput=/home/k8master/k8s-v1.1.4/kubernetes/server/bin
+contiv_bin_path=/home/k8master/k8s/contiv_bin
+etcd_peers_group=masters
+
+# The port that the Kubernetes apiserver component listens on.
+kube_master_api_port: 443
+
+# This directory is where all the additional config stuff goes
+# the kubernetes normally puts in /srv/kubernets.
+# This puts them in a sane location.
+# Editting this value will almost surely break something. Don't
+# change it. Things like the systemd scripts are hard coded to
+# look in here. Don't do it.
+kube_config_dir: /etc/kubernetes
+
+# This is where all the cert scripts and certs will be located
+kube_cert_dir: "{{ kube_config_dir }}/certs"
+
+kube_master_insecure_port: 8080

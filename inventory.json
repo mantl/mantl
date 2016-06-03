@@ -1,0 +1,1046 @@
+{
+    "_meta": {
+        "hostvars": {
+            "da-control-01": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "146.148.57.243",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": true,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-control-lvm-01",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-1",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "control",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "146.148.57.243",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.7",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.7",
+                "provider": "gce",
+                "public_ipv4": "146.148.57.243",
+                "publicly_routable": true,
+                "role": "control",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-control-01",
+                "service_account": [],
+                "tags": [
+                    "control",
+                    "da"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-control-02": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.197.223.184",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": true,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-control-lvm-02",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-1",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "control",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.197.223.184",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.6",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.6",
+                "provider": "gce",
+                "public_ipv4": "104.197.223.184",
+                "publicly_routable": true,
+                "role": "control",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-b/instances/da-control-02",
+                "service_account": [],
+                "tags": [
+                    "control",
+                    "da"
+                ],
+                "zone": "us-central1-b"
+            },
+            "da-control-03": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.154.241.89",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": true,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-control-lvm-03",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-1",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "control",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.154.241.89",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.9",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.9",
+                "provider": "gce",
+                "public_ipv4": "104.154.241.89",
+                "publicly_routable": true,
+                "role": "control",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-control-03",
+                "service_account": [],
+                "tags": [
+                    "control",
+                    "da"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-edge-01": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.154.55.234",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-edge-lvm-01",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-1",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "edge",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.154.55.234",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.12",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.12",
+                "provider": "gce",
+                "public_ipv4": "104.154.55.234",
+                "publicly_routable": true,
+                "role": "edge",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-edge-01",
+                "service_account": [],
+                "tags": [
+                    "edge",
+                    "da"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-kubemaster-01": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.154.227.254",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-kubemaster-lvm-01",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-highmem-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "kubemaster",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.154.227.254",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.11",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.11",
+                "provider": "gce",
+                "public_ipv4": "104.154.227.254",
+                "publicly_routable": true,
+                "role": "kubemaster",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-kubemaster-01",
+                "service_account": [],
+                "tags": [
+                    "kubemaster",
+                    "da"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-kubeworker-01": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "130.211.191.18",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-kubeworker-lvm-01",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-highmem-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "kubeworker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "130.211.191.18",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.13",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.13",
+                "provider": "gce",
+                "public_ipv4": "130.211.191.18",
+                "publicly_routable": true,
+                "role": "kubeworker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-kubeworker-01",
+                "service_account": [],
+                "tags": [
+                    "kubeworker",
+                    "da"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-kubeworker-02": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.154.246.171",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-kubeworker-lvm-02",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-highmem-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "kubeworker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.154.246.171",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.10",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.10",
+                "provider": "gce",
+                "public_ipv4": "104.154.246.171",
+                "publicly_routable": true,
+                "role": "kubeworker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-b/instances/da-kubeworker-02",
+                "service_account": [],
+                "tags": [
+                    "kubeworker",
+                    "da"
+                ],
+                "zone": "us-central1-b"
+            },
+            "da-kubeworker-03": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.197.104.248",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-kubeworker-lvm-03",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-highmem-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "kubeworker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.197.104.248",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.8",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.8",
+                "provider": "gce",
+                "public_ipv4": "104.197.104.248",
+                "publicly_routable": true,
+                "role": "kubeworker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-kubeworker-03",
+                "service_account": [],
+                "tags": [
+                    "kubeworker",
+                    "da"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-worker-01": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.154.233.125",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-worker-lvm-01",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "worker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.154.233.125",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.4",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.4",
+                "provider": "gce",
+                "public_ipv4": "104.154.233.125",
+                "publicly_routable": true,
+                "role": "worker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-worker-01",
+                "service_account": [],
+                "tags": [
+                    "da",
+                    "worker"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-worker-02": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.197.122.108",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-worker-lvm-02",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "worker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.197.122.108",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.3",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.3",
+                "provider": "gce",
+                "public_ipv4": "104.197.122.108",
+                "publicly_routable": true,
+                "role": "worker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-b/instances/da-worker-02",
+                "service_account": [],
+                "tags": [
+                    "da",
+                    "worker"
+                ],
+                "zone": "us-central1-b"
+            },
+            "da-worker-03": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "104.154.97.101",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-worker-lvm-03",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "worker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "104.154.97.101",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.5",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.5",
+                "provider": "gce",
+                "public_ipv4": "104.154.97.101",
+                "publicly_routable": true,
+                "role": "worker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-a/instances/da-worker-03",
+                "service_account": [],
+                "tags": [
+                    "da",
+                    "worker"
+                ],
+                "zone": "us-central1-a"
+            },
+            "da-worker-04": {
+                "ansible_python_interpreter": "python",
+                "ansible_ssh_host": "23.251.146.100",
+                "ansible_ssh_port": 22,
+                "ansible_ssh_user": "centos",
+                "can_ip_forward": true,
+                "consul_dc": "gce",
+                "consul_is_server": false,
+                "disks": [
+                    {
+                        "auto_delete": "false",
+                        "device_name": "lvm",
+                        "disk": "da-worker-lvm-04",
+                        "image": "",
+                        "scratch": "false",
+                        "size": "0",
+                        "type": ""
+                    },
+                    {
+                        "auto_delete": "true",
+                        "device_name": "",
+                        "disk": "",
+                        "image": "centos-7-v20160119",
+                        "scratch": "false",
+                        "size": "20",
+                        "type": ""
+                    }
+                ],
+                "machine_type": "n1-standard-2",
+                "metadata": {
+                    "dc": "gce",
+                    "role": "worker",
+                    "sshKeys": "centos:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHWRp8TLSPJA5giyJZi+65z9UTMCBrH3OG+Tkx87MHUeu+dPf39vs+gJH0J4uWRqJc7WTPvOEQk/eWcQODqUlvS6BwZ3MVOKqY8HJav9n80TvWRLgzqvC0TSYET7z8Ihg0xkVOfjX5bvA3MPBarchIXOWM2HljF9y7qUgn276f6dIslom24mL0W84bqcI8H9mSA2VUS6CfBSth3QUeQgj3P8aw4Vzprjf1xpX3fH9cWwS/d8llDmpdBj0XecHJai9TIXToC8gtypLq2qwNsJ3FAP3PJnvAckeh/ARAQ+rQFfG2jxG6unLK9/W8Ij8VYZToGhnxtt4LouIjnaxbmtDj david@yogata\n centos",
+                    "ssh_user": "centos"
+                },
+                "network": [],
+                "network_interface": [
+                    {
+                        "access_config": [
+                            {
+                                "assigned_nat_ip": "23.251.146.100",
+                                "nat_ip": ""
+                            }
+                        ],
+                        "address": "10.0.0.2",
+                        "name": "nic0",
+                        "network": "david",
+                        "subnetwork": ""
+                    }
+                ],
+                "private_ipv4": "10.0.0.2",
+                "provider": "gce",
+                "public_ipv4": "23.251.146.100",
+                "publicly_routable": true,
+                "role": "worker",
+                "self_link": "https://www.googleapis.com/compute/v1/projects/asteris-mi/zones/us-central1-b/instances/da-worker-04",
+                "service_account": [],
+                "tags": [
+                    "da",
+                    "worker"
+                ],
+                "zone": "us-central1-b"
+            }
+        }
+    },
+    "dc=gce": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_image=": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_image=centos-7-v20160119": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_ip_forward": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_machine_type=n1-highmem-2": {
+        "hosts": [
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02"
+        ]
+    },
+    "gce_machine_type=n1-standard-1": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01"
+        ]
+    },
+    "gce_machine_type=n1-standard-2": {
+        "hosts": [
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_metadata_dc=gce": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_metadata_role=control": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02"
+        ]
+    },
+    "gce_metadata_role=edge": {
+        "hosts": [
+            "da-edge-01"
+        ]
+    },
+    "gce_metadata_role=kubemaster": {
+        "hosts": [
+            "da-kubemaster-01"
+        ]
+    },
+    "gce_metadata_role=kubeworker": {
+        "hosts": [
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02"
+        ]
+    },
+    "gce_metadata_role=worker": {
+        "hosts": [
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_metadata_ssh_user=centos": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_publicly_routable": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_tag=control": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02"
+        ]
+    },
+    "gce_tag=da": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_tag=edge": {
+        "hosts": [
+            "da-edge-01"
+        ]
+    },
+    "gce_tag=kubemaster": {
+        "hosts": [
+            "da-kubemaster-01"
+        ]
+    },
+    "gce_tag=kubeworker": {
+        "hosts": [
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02"
+        ]
+    },
+    "gce_tag=worker": {
+        "hosts": [
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "gce_zone=us-central1-a": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-worker-03",
+            "da-worker-01"
+        ]
+    },
+    "gce_zone=us-central1-b": {
+        "hosts": [
+            "da-control-02",
+            "da-kubeworker-02",
+            "da-worker-04",
+            "da-worker-02"
+        ]
+    },
+    "publicly_routable": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02",
+            "da-edge-01",
+            "da-kubemaster-01",
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02",
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    },
+    "role=control": {
+        "hosts": [
+            "da-control-03",
+            "da-control-01",
+            "da-control-02"
+        ]
+    },
+    "role=edge": {
+        "hosts": [
+            "da-edge-01"
+        ]
+    },
+    "role=kubemaster": {
+        "hosts": [
+            "da-kubemaster-01"
+        ]
+    },
+    "role=kubeworker": {
+        "hosts": [
+            "da-kubeworker-03",
+            "da-kubeworker-01",
+            "da-kubeworker-02"
+        ]
+    },
+    "role=worker": {
+        "hosts": [
+            "da-worker-03",
+            "da-worker-04",
+            "da-worker-01",
+            "da-worker-02"
+        ]
+    }
+}

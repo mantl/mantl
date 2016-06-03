@@ -1,0 +1,35 @@
+---
+# This playbook prepares a machine for cluster setup
+# initial set up of netmaster
+- include: netmaster.yml
+  when: contiv_role == "netmaster"
+
+# clean restart of netmaster
+- include: restart_netmaster.yml tags=contiv_restart
+  when: contiv_role == "netmaster"
+
+# initial set up of netplugin
+- include: netplugin.yml
+  when: contiv_role == "netplugin"
+
+- name: copy contiv cni conf file
+  copy: src=contiv_cni.conf dest={{ kube_script_dir }}/kubelet-plugins/net/exec/contiv_cni.conf
+
+- name: ensure cni bin dir exists
+  file: path=/opt/cni/bin recurse=yes state=directory
+
+- name: copy contiv cni exec file
+  copy: src={{ contiv_bin_path }}/contivk8s dest=/opt/cni/bin/contivk8s.bin mode=0755
+
+- name: ensure contiv config directory exists
+  file: path=/opt/contiv/config recurse=yes state=directory
+
+- name: setup config for the contiv cni plugin
+  template: src=contiv.cfg.j2 dest=/opt/contiv/config/contiv.json
+
+- name: copy netplugin exec file
+  copy: src={{ contiv_bin_path }}/netplugin dest=/usr/bin/netplugin mode=0755
+
+# copy/load images used for demo
+- include: copy_demo.yml tags=contiv_demo
+  when: contiv_role == "netplugin"

@@ -1,0 +1,8 @@
+[Unit]
+Description=Netmaster
+After=auditd.service systemd-user-sessions.service time-sync.target etcd.service
+
+[Service]
+EnvironmentFile=/etc/default/netmaster
+ExecStart=/usr/bin/netmaster $NETMASTER_ARGS
+KillMode=control-group

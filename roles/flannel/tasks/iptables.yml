@@ -24,3 +24,14 @@
   when: iptablesrules.stdout.find("flannel_nat") == -1
   tags:
     - flannel
+
+- name: Open vxlan port with iptables
+  command: /sbin/iptables -I INPUT 1 -p udp --dport 8472
+           -j ACCEPT -m comment --comment "vxlan"
+
+- name: Allow flanneld subnet traffic with iptables
+  command: /sbin/iptables -I FORWARD 1 -i flannel.1 -o docker0
+           -j ACCEPT -m comment --comment "flannel subnet"
+
+- name: Save iptables rules
+  command: service iptables save

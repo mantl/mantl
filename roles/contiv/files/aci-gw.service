@@ -1,0 +1,10 @@
+[Unit]
+Description=Contiv ACI gw
+After=auditd.service systemd-user-sessions.service time-sync.target docker.service
+
+[Service]
+ExecStart=/usr/bin/aci_gw.sh start
+ExecStop=/usr/bin/aci_gw.sh stop
+KillMode=control-group
+Restart=on-failure
+RestartSec=10

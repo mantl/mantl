@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "asteris-mi",
+  "private_key_id": "7670e593a0f03c2905fdecc95f0882130bceee9b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkv6y/xY1Qx7aI\nN0AxDhpv6PyAbXlPqWLEgyYETSg1IgIsr3i7Mn/cMsm3TVECtIl4J8ImldiM/VTv\nStweKWr7W6u1PMf16T0lrOGj/MN2tD9dS0mphMtKvZSqpcdwv4db2xRLwtidGKi6\nbFs8ucA7N6mzO+nzPpL29/vdL3Mqm0hrh8lIo/MI+b5TZ8+fEfsegq3beoNa4VC6\nFAX4iWRmJrmEL55yfxMUkNz3dHuFfcsYgL4WuwWoCkfp6zGSmSI7xVlpzBCzcPL9\nc6QlLVqHN7LpQdY2DXXqH0O1DZaAS00aC8Jzmojum05hORn5n5oQVA5wCxvz47pP\ntZDrXavbAgMBAAECggEAFkwy70mnlLVTCSChOYJ1JYxdEGzArH16dqphbNech4Rw\n0ud06bEuCPl+v6ZhPoJ80Jxg9KP3SS3IXxK8tABbEGYZ2U++qJPGyOCbMXy2X8yJ\nfvD/qUfl09nQ0z/YvHPPuCjwmEho1OpPe9vKhW+Giv0/pJiJU3i2n2J03jzb03o1\nFCHKod+WHNrmxdX8IwG4T3dz19Ib9AatVY4HjGTGqGtQ1qxdypyTVQyt37k14O14\nPXr40GaBf9oRFFASBDzAHwPTwjAVp5qAhHiZDviXKqhMkTFEW9XuVXsCE4EOOGpH\ndZDBflvzQGJ27ZFnJVkG7wZke4B94m2sGb37IGFCIQKBgQDdrmcaqAWkREq4PzPW\nrV0DL3mq7ACoJD+3wrkF8+XHdhoFVpKAWJTEoyezPzCYyXntTx4qVg56p8zBf6Fl\nqXGxBaIwIOx1GImZQyg3w7xvWEcPg6OH+ifNtJhy37oUn5WhNJLaIVJtr5iYy4aV\nF2H4ftCg23ly92x7EjufVWpFmQKBgQC+QPDsZnxAcLnFWbypFcmnJT5d/C0mP7u0\n5bXwa7jwqKW/ffyT08WJ6H4IK9o0/Di05D+0RMNYqA15Ef9EXntrGYImg3dsSBEy\nKNvqsLRVtBBZsyULEhj3tc4se2ta0JcykV06UCl3iPYlRvQ+nRWBeR28JNj3HboT\nGWW3N7x9kwKBgQCoX1u+WloWnywlbxO/fWOFFN0TXjdNfmLK/uIrTEl9Sw2OemfB\nhgZQqB9yPI97rKOoBAzEWSKcNLEHUxpSLfXFX6MFbSxL7/wq5WA5oriP1Xv7o59k\nmzL6Qa38qkMagO9URqs3dFG4L8P2YbdxrBXkeOWbF7fSA21ouLuCVIzoGQKBgBVe\nc/EJfdE7GBKLhr4zHUgxzbR+u499PxcNagcMAmS9fIhqnTD5a0mXHHjMfCDRZ4kh\nzenwg0R087ZyiApk1lXsMosi3woBejT5E+JjYI3zwJZiobmBmd5QxEyIvEEiBql+\nXEtNb6rmbkc3lf1mZWD6epWESf5Pj3PPuXX/w6MTAoGAAdCXBpiCU1hwiWBDFo2N\nQV9ToXaJzdduiKF2oS473znuGsLm1tnR16Yzf+OShX6cl2Eo+1DJrgKbcuDB79Ch\n5qa1yUhDbYltv10zs7+FOG/2a+7iffa9VuX+SPIzAEf0wNwIHtVLTCoVAk/dj8Gy\nmOCy5bi2cBLdHtOIlt2UPBc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "david-aster-is@asteris-mi.iam.gserviceaccount.com",
+  "client_id": "105453629191407812159",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/david-aster-is%40asteris-mi.iam.gserviceaccount.com"
+}

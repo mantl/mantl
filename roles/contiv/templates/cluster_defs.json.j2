@@ -1,0 +1,26 @@
+{
+    "master": [
+        {
+            "contiv_control_if": "eth0",
+            "contiv_control_ip": "{{ contiv_master_public_ipv4 }}",
+            "contiv_network_if": "eth0",
+            "contiv_network_ip": "{{ contiv_master_private_ipv4 }}",
+            "management_ip": "{{ contiv_master_public_ipv4 }}",
+            "name": "k8master"
+        }
+    ],
+    "nodes": [
+    {% for host in groups['role=kubeworker'] %}
+        {
+            "contiv_control_if": "eth0",
+            "contiv_control_ip": "{{ hostvars[host]['public_ipv4'] }}",
+            "contiv_network_if": "<eth0>",
+            "contiv_network_ip": "{{ hostvars[host]['private_ipv4'] }}",
+            "management_ip": "{{ contiv_master_public_ipv4 }}",
+            "max_pods": "40",
+            "name": "k8{{ host }}"
+        },
+        {% endfor %}
+
+    ]
+}

@@ -1,0 +1,9 @@
+#- name: copy redis image
+#  copy: src=/home/ladmin/Backup/redis.tar dest=/tmp/redis.tar
+
+#- name: load redis image
+#  shell: docker load --input /tmp/redis.tar
+
+- name: pull busybox+netcat image
+  shell: docker pull contiv/nc-busybox
+

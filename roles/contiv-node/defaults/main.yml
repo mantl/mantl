@@ -1,0 +1,3 @@
+---
+contiv_master_public_ipv4: groups['kubemaster'][0].public_ipv4
+contiv_master_private_ipv4: groups['kubemaster'][0].private_ipv4

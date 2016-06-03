@@ -1,0 +1,11 @@
+---
+# This playbook prepares a machine for cluster setup
+
+- name: create k8master user
+  sudo: yes
+  user:
+    name=k8master
+    password=test
+    createhome=yes
+  tags:
+    - contiv-node

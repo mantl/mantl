@@ -2,7 +2,7 @@
 - name: Calico directory for plugins
   sudo: yes
   file:
-    path: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/
+    path: {{ kube_script_dir }}/kubelet-plugins/net/exec/calico/
     state: directory
   tags:
     - calico
@@ -11,9 +11,7 @@
   sudo: yes
   get_url:
     url: https://github.com/projectcalico/calico-docker/releases/download/v0.5.4/calico_kubernetes
-    dest: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/calico
+    dest: {{ kube_script_dir }}/kubelet-plugins/net/exec/calico/calico
     mode: 0755
   tags:
     - calico
-
-

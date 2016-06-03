@@ -25,6 +25,11 @@ kube_manifest_dir: "/etc/kubernetes/manifests"
 # This is where manifests for podmaster will be stored
 kube_podmaster_dir: "/srv/kubernetes/manifests"
 
+
+#####################
+##Contiv Support
+#####################
+
 dns_domain: "{{ cluster_name }}"
 
 # IP address of the DNS server. Kubernetes will create a pod with several
@@ -33,3 +38,8 @@ dns_domain: "{{ cluster_name }}"
 # magic will actually pick the 10th ip address in the kube_service_addresses
 # range and use that.
 dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
+
+# This directory is where all the additional scripts go
+# that Kubernetes normally puts in /srv/kubernetes.
+# This puts them in a sane location
+kube_script_dir: /srv/kubernetes

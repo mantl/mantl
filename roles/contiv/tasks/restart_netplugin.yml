@@ -1,0 +1,41 @@
+# stop services
+- name: stop kubelet
+  service: name=kubelet state=stopped
+
+- name: stop docker
+  service: name=docker state=stopped
+
+- name: stop netplugin
+  service: name=netplugin state=stopped
+
+# perform clean up
+- name: delete contivk8s log file
+  file: path=/var/log/contivk8s.log state=absent
+
+- name: copy clean up script
+  copy: src=netplugin_clean.sh dest=/usr/bin/netplugin_clean.sh mode=0755
+
+- name: clean up
+  shell: netplugin_clean.sh || true
+
+# set up services
+- name: ensure pluginDir exists
+  file: path={{ kube_script_dir }}/kubelet-plugins/net/exec recurse=yes state=directory
+
+- name: setup ovs
+  shell: "ovs-vsctl set-manager {{ item }}"
+  with_items:
+    - "tcp:127.0.0.1:6640"
+    - "ptcp:6640"
+
+- name: start docker
+  service: name=docker state=started
+
+- name: start netplugin
+  service: name=netplugin state=started
+
+- name: wait for netplugin
+  pause: seconds=45
+
+- name: start kubelet
+  service: name=kubelet state=started

@@ -1,0 +1,40 @@
+- name: stop netmaster
+  service: name=netmaster state=stopped
+
+- name: stop aci-gw
+  service: name=aci-gw state=stopped
+  ignore_errors: yes
+
+- name: clean netmaster state
+  shell: etcdctl rm --recursive /contiv.io || true
+
+- name: copy netmaster exec file
+  copy: src={{ contiv_bin_path }}/netmaster dest=/usr/bin/netmaster mode=0755
+
+- name: copy netctl exec file
+  copy: src={{ contiv_bin_path }}/netctl dest=/usr/bin/netctl mode=0755
+
+- name: copy n/w setup script
+  copy: src=nw_setup.sh dest=/usr/bin/nw_setup.sh mode=0755
+
+- name: copy environment file for netmaster
+  copy: src=netmaster.env dest=/etc/default/netmaster
+
+- name: copy systemd units for netmaster
+  copy: src=netmaster.service dest=/etc/systemd/system/netmaster.service
+
+- name: start netmaster
+  service: name=netmaster state=started
+
+- name: wait for netmaster
+  action: shell netctl tenant ls
+  register: netctl_res
+  until: netctl_res.stdout.find("default") != -1
+  retries: 7
+  delay: 10
+
+- include: aci.yml
+  when: contiv_fabric_mode == "aci"
+
+- name: setup network
+  shell: nw_setup.sh  
