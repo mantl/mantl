@@ -19,6 +19,7 @@ variable "datacenter" {default = "aws-us-west-2"}
 variable "edge_count" { default = 2 }
 variable "region" {default = "us-west-2"}
 variable "short_name" {default = "mantl"}
+variable "long_name" {default = "mantl"}
 variable "ssh_username" {default = "centos"}
 variable "worker_count" { default = 4 }
 variable "kubeworker_count" { default = 2 }
@@ -57,6 +58,7 @@ module "vpc" {
   source ="./terraform/aws/vpc"
   availability_zones = "${var.availability_zones}"
   short_name = "${var.short_name}"
+  long_name = "${var.long_name}"
   region = "${var.region}"
 }
 
