@@ -21,7 +21,7 @@ Variables
 
    Extra options to pass to Vault at startup
 
-   default: ``-insecure``
+   default: ``--ca-cert=/etc/pki/CA/ca.cert``
 
 .. data:: vault_init_json
 
