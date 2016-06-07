@@ -1,0 +1,6 @@
+---
+- include: install.yml
+  when: "(not (kibana_uninstall|bool)) and (inventory_hostname == groups['role=control'][0])"
+
+- include: uninstall.yml
+  when: kibana_uninstall|bool
