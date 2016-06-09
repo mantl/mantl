@@ -1,8 +1,8 @@
 ---
-- name: install calico 
+- name: install calico
   sudo: yes
   yum:
-    name: "{{ calico_binary }}"
+    name: calico-{{ calico_version}}
     state: present
   tags:
     - calico
@@ -67,7 +67,7 @@
 
 - name: calico etc directory
   sudo: yes
-  file: 
+  file:
     path: /etc/calico
     state: directory
   tags:
@@ -121,4 +121,3 @@
   changed_when: false
 
 - meta: flush_handlers
-
