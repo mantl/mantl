@@ -1,5 +1,5 @@
 ---
-mesos_version: 0.27.0
+mesos_version: 0.28.2
 
 mesos_package: "mesos-{{ mesos_version }}"
 mesos_master_package: "mesos-master-{{ mesos_version }}"
