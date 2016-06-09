@@ -1,5 +1,5 @@
 ---
-marathon_version: 0.13.0
+marathon_version: 1.0.0_RC1
 marathon_package: "marathon-{{ marathon_version }}"
 
 marathon_zk_auth: "{% if zk_marathon_user_secret is defined %}{{ zk_marathon_user }}:{{ zk_marathon_user_secret }}@{% endif %}"

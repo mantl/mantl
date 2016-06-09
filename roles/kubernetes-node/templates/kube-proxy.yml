@@ -14,6 +14,7 @@ spec:
     - --master=https://kubernetes.service.consul:{{ kube_master_port }}
     - --kubeconfig=/etc/kubernetes/node.kubeconfig
     - --proxy-mode=iptables
+    - --v={{kube_log_level}}
     securityContext:
       privileged: true
     volumeMounts:

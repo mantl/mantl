@@ -1,13 +1,4 @@
 ---
-- name: evaluate first_master
-  add_host:
-    name: "{{ groups[master_group_name][0] }}"
-    groups: first_master
-    when: "master in groups and groups[master_group_name] | length > 1"
-  tags:
-    - common
-    - kubernetes
-
 - name: create kubernetes config directories
   sudo: yes
   file:

@@ -12,6 +12,7 @@ spec:
     - /hyperkube
     - scheduler
     - --master=http://127.0.0.1:{{ kube_insecure_port }}
+    - --v={{kube_log_level}}
     livenessProbe:
       httpGet:
         host: 127.0.0.1
