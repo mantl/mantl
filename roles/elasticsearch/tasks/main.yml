@@ -1,0 +1,6 @@
+---
+- include: install.yml
+  when: "(not (elasticsearch_uninstall|bool)) and (inventory_hostname == groups['role=control'][0])"
+
+- include: uninstall.yml
+  when: elasticsearch_uninstall|bool

@@ -3,9 +3,9 @@ ELK
 
 .. versionadded:: 1.0
 
-The ELK role combines Elasticsearch, Logstash, and Kibana to provide automatic
-log shipping and metrics collection from all Mantl nodes to an Elasticsearch
-cluster. Kibana is available to visualize and analyze this data.
+The ELK role is a meta role that combines Elasticsearch, Logstash, and Kibana to
+provide automatic log shipping from all Mantl nodes to an Elasticsearch cluster.
+Kibana is available to visualize and analyze this data.
 
 This role runs an Elasticsearch cluster via the `Elasticsearch Mesos Framework
 <https://github.com/mesos/elasticsearch>`_. It also configures Logstash on all
@@ -86,21 +86,21 @@ possible to run Kibana on Marathon. You can control this by setting the
 Uninstalling the ELK Addon
 --------------------------
 
-As of 1.1, we now distribute a playbook that can be used to uninstall the addon:
+You can uninstall the ELK stack with the following command:
 
 .. code-block:: shell
 
-   ansible-playbook -e @security.yml addons/elk-uninstall.yml
+   ansible-playbook -e @security.yml -e 'elk_uninstall=true' addons/elk.yml
 
 This will remove the Elasticsearch framework, the Elasticsearch client node, and
 Kibana from your cluster. By default, the Elasticsearch data directories will
 not be removed. If you do not need to preserve your Elasticsearch data, you can
 set the ``elasticsearch_remove_data`` variable to true when you run the
-uninstall playbook:
+uninstall:
 
 .. code-block:: shell
 
-   ansible-playbook -e @security.yml -e 'elasticsearch_remove_data=true' addons/elk-uninstall.yml
+   ansible-playbook -e @security.yml -e 'elk_uninstall=true elasticsearch_remove_data=true' addons/elk.yml
 
 Upgrading
 ---------
@@ -166,6 +166,12 @@ Variables
    (MB).
 
    default: 1024
+
+.. data:: elasticsearch_java_opts
+
+   The JAVA_OPTS value that should be set in the environment.
+
+   default: -Xms1g -Xmx1g
 
 .. data:: elasticsearch_executor_ram
 
@@ -249,7 +255,7 @@ Variables
 
    The name of the service that is registered in Consul when the Elasticsearch
    client node is deployed. This needs to match what would be derived via
-   mesos-consul. For example, when ``elasticseach_client_id`` is set to
+   mesos-consul. For example, when ``elasticsearch_client_id`` is set to
    ``mantl/elasticsearch-client``, the service name should be
    ``elasticsearch-client-mantl``.
 
@@ -285,6 +291,12 @@ Variables
    The amount of memory to allocate to the Elasticsearch client node (MB).
 
    default: 512
+
+.. data:: elasticsearch_client_java_opts
+
+   The JAVA_OPTS value that should be set in the environment.
+
+   default: -Xms1g -Xmx1g
 
 .. data:: kibana_package
 

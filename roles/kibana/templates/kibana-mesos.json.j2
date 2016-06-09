@@ -13,7 +13,7 @@
         "cpu": {{ kibana_mesos_executor_cpu }},
         "ram": {{ kibana_mesos_executor_ram }},
         "instances": {{ kibana_mesos_instances }},
-        "command": "export ELASTICSEARCH_SERVICE={{ kibana_mesos_elasticsearch_service }}; export KIBANA_SERVICE={{ kibana_mesos_kibana_service }}; export CONSUL_SSL={{ do_consul_ssl|to_nice_json }}; export CONSUL_SSL_VERIFY=false; tini -s -- /launch.sh"
+        "command": "export ELASTICSEARCH_SERVICE={{ kibana_mesos_elasticsearch_service }}; export KIBANA_SERVICE={{ kibana_mesos_kibana_service }}; export KIBANA_LOGSTASH_CONFIG={{ kibana_logstash_config|to_nice_json }}; {% if do_consul_ssl|bool %}export CONSUL_SSL=true; export CONSUL_SSL_VERIFY=false; {% endif %}tini -s -- /launch.sh"
       }
     }
   }

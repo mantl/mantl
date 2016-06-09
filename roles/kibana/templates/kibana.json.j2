@@ -9,6 +9,7 @@
       "ram": {{ kibana_ram }},
       "instances": {{ kibana_instances }},
       "elasticsearch-service": "{{ kibana_elasticsearch_service }}",
+      "logstash-config": "{{ kibana_logstash_config|to_nice_json }}",
       "consul-ssl": {{ do_consul_ssl|to_nice_json }},
       "consul-ssl-verify": false
     }

@@ -55,6 +55,7 @@
       file:
         path: /etc/collectd.d/docker.conf
         state: absent
+      notify: restart collectd
 
     - name: install mantl-dns
       sudo: yes
@@ -67,14 +68,19 @@
       shell: stat /etc/dnsmasq.d/10-consul.rpmnew && mv /etc/dnsmasq.d/10-consul.rpmnew /etc/dnsmasq.d/10-consul
       failed_when: false
 
-    - name: restart services
+    - name: restart nginx-consul
       become: yes
       service:
-        name: "{{ item }}"
+        name: nginx-consul
         state: restarted
-      with_items:
-        - nginx-consul
-        - collectd
+
+  handlers:
+
+    - name: restart collectd
+      become: yes
+      service:
+        name: collectd
+        state: restarted
 
 - hosts: role=control
   serial: "{{ serial | default(1) }}"
