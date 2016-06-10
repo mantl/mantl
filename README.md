@@ -214,6 +214,7 @@ repo](https://github.com/CiscoCloud/mantl-universe).
 ### Supported Platforms
 
 - [x] [Amazon Web Services](https://aws.amazon.com/)
+- [x] [CenturyLinkCloud](https://www.ctl.io)
 - [x] [Cisco Cloud Services](http://www.cisco.com/c/en/us/solutions/cloud/overview.html)
 - [x] [Cisco MetaCloud](http://www.cisco.com/c/en/us/products/cloud-systems-management/metapod/index.html)
 - [x] [DigitalOcean](https://www.digitalocean.com/)
