@@ -1,4 +1,4 @@
-/var/log/mesos/* {
+/var/log/mesos/*.log {
         daily
         rotate 7
         copytruncate
