@@ -3,7 +3,7 @@
   "advertise_addr": "{{ consul_advertise }}",
   "node_name": "{{ inventory_hostname }}",
   "rejoin_after_leave": true,
-  "domain": "{{ consul_dns_domain }}",
+  "domain": "consul",
   "log_level": "{{ consul_log_level }}",
   "retry_join": [ {{ consul_retry_join }} ],
 {% if consul_is_server|bool %}

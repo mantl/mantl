@@ -1,6 +1,6 @@
 # common configuration
 MESOS_PORT={{ mesos_follower_port }}
-MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node." + consul_dns_domain) }}
+MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node.consul") }}
 MESOS_LOG_DIR={{ mesos_log_dir }}
 MESOS_EXTERNAL_LOG_FILE=/var/log/mesos/mesos-agent.log
 MESOS_LOGGING_LEVEL={{ mesos_logging_level }}

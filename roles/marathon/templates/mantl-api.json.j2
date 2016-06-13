@@ -24,8 +24,8 @@
   "env": { {% if do_consul_ssl %}
     "CONSUL_HTTP_SSL_VERIFY": "false",{% endif %}
     "MANTL_API_LOG_LEVEL": "debug",
-    "MANTL_API_CONSUL": "{% if do_consul_ssl %}https{% else %}http{% endif %}://consul.service.{{ consul_dns_domain }}:8500",
-    "MANTL_API_MARATHON": "{% if do_marathon_ssl %}https{% else %}http{% endif %}://marathon.service.{{ consul_dns_domain }}:8080"{% if do_marathon_auth %},
+    "MANTL_API_CONSUL": "{% if do_consul_ssl %}https{% else %}http{% endif %}://consul.service.consul:8500",
+    "MANTL_API_MARATHON": "{% if do_marathon_ssl %}https{% else %}http{% endif %}://marathon.service.consul:8080"{% if do_marathon_auth %},
     "MANTL_API_MARATHON_USER": "{{ marathon_http_credentials.split(':')[0] }}",
     "MANTL_API_MARATHON_PASSWORD": "{{ marathon_http_credentials.split(':')[1] }}"{% endif %}{% if do_marathon_ssl %},
     "MANTL_API_MARATHON_NO_VERIFY_SSL": "true"{% endif %}{% if do_mesos_auth %},

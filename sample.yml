@@ -51,8 +51,6 @@
 
 - hosts: role=kubeworker
   gather_facts: yes
-  vars:
-    consul_dns_domain: consul
   roles:
     - calico
     - kubernetes
