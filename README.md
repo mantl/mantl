@@ -1,5 +1,4 @@
-
-![image](./mantl-logo-1.png)
+![image](./docs/_static/mantl-logo.png)
 
 # Overview
 

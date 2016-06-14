@@ -114,7 +114,7 @@ extensions += ['alabaster']
 html_theme_options = {
     'github_user': 'ciscocloud',
     'github_repo': 'mantl',
-    'logo': 'cisco.png',
+    'logo': 'mantl-logo.png',
     'logo_name': True,
 }
 
