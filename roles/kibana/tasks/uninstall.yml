@@ -3,7 +3,7 @@
   sudo: no
   run_once: yes
   register: mantl_api_url
-  shell: consul-cli catalog-service mantl-api | jq -r '.[] | .ServiceAddress + ":" + (.ServicePort|tostring)'
+  shell: consul-cli catalog-service mantl-api | jq -r '.[0] | .ServiceAddress + ":" + (.ServicePort|tostring)'
   tags:
     - kibana
 
