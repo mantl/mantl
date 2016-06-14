@@ -3,7 +3,7 @@
 	"mem": 128,
 	"id": "jupyter",
 	"instances": 1,
-	"labels": {"traefik.frontend.entryPoints":"http,https,ws"},
+	"labels": {"traefik.frontend.entryPoints":"http,https"},
 	"container": {
     		"type": "DOCKER",
     		"docker": {
