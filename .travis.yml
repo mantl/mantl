@@ -1,4 +1,5 @@
 language: python
+
 env:
   global:
   - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
@@ -9,6 +10,10 @@ env:
   - TERRAFORM_FILE=testing/aws.tf DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
   - TERRAFORM_FILE=testing/do.tf DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
   - TERRAFORM_FILE=testing/gce.tf DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
+
+branches:
+  only:
+    - master
 
 before_script:
   - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
