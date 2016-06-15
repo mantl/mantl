@@ -1,5 +1,5 @@
 ---
-traefik_package: traefik-0.0.0
+traefik_package: traefik-1.0.0
 traefik_marathon_endpoint: http://marathon.service.consul:18080
 traefik_marathon_domain: marathon.localhost
 
