@@ -89,7 +89,7 @@ uninstall:
 
 .. code-block:: shell
 
-   ansible-playbook -e @security.yml -e 'elasticsearch_uninstall=true elasticsearch_remove_data=true' addons/elk-uninstall.yml
+   ansible-playbook -e @security.yml -e 'elasticsearch_uninstall=true elasticsearch_remove_data=true' addons/elasticsearch.yml
 
 Uninstalling the Elasticsearch Framework (1.0.3)
 ------------------------------------------------
