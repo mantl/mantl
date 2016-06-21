@@ -19,7 +19,7 @@
 
 - name: install elasticsearch
   sudo: yes
-  command: consul-cli kv-write mantl-install/apps/elasticsearch @/etc/marathon/apps/{{ es_packages.elasticsearch.dest }}
+  command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/elasticsearch @/etc/marathon/apps/{{ es_packages.elasticsearch.dest }}
   when: "{{ item.stdout|int == 0 and item.item.key == 'elasticsearch' }}"
   with_items: elasticsearch_service_count.results
   tags:
@@ -27,7 +27,7 @@
 
 - name: install elasticsearch-client
   sudo: yes
-  command: consul-cli kv-write mantl-install/apps/elasticsearch-client @/etc/marathon/apps/{{ es_packages['elasticsearch-client'].dest }}
+  command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/elasticsearch-client @/etc/marathon/apps/{{ es_packages['elasticsearch-client'].dest }}
   when: "{{ item.stdout|int == 0 and item.item.key == 'elasticsearch-client' }}"
   with_items: elasticsearch_service_count.results
   tags:
