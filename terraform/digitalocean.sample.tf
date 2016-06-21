@@ -2,6 +2,10 @@ provider "digitalocean" {
   token = ""
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "do-keypair" {
   source = "./terraform/digitalocean/keypair"
   public_key_filename = "~/.ssh/id_rsa.pub"

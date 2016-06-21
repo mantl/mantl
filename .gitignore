@@ -13,6 +13,9 @@ ssl/.rnd
 **/*.tfstate*
 **/.terraform
 
+# downloaded by terraform
+plugins/inventory/terraform.py
+
 # downloaded by playbook
 addons/library/
 library/lvg.py

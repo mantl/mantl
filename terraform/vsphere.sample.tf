@@ -5,6 +5,10 @@ provider "vsphere" {
   allow_unverified_ssl = "false"
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "vsphere-dc" {
   source = "./terraform/vsphere"
   long_name = ""
@@ -30,7 +34,7 @@ module "vsphere-dc" {
   consul_dc = ""
 
   #Optional Parameters
-  #folder = ""  
+  #folder = ""
   #control_cpu = ""
   #worker_cpu = ""
   #edge_cpu = ""
@@ -38,5 +42,5 @@ module "vsphere-dc" {
   #worker_ram = ""
   #edge_ram = ""
   #disk_type = "" # thin or eager_zeored, default is thin
-  #linked_clone = "" # true or false, default is false.  If using linked_clones and have problems installing Mantl, revert to full clones 
+  #linked_clone = "" # true or false, default is false.  If using linked_clones and have problems installing Mantl, revert to full clones
 }

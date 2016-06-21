@@ -8,6 +8,9 @@ variable ssh_key { default = "~/.ssh/id_rsa.pub" }
 provider "clc" {
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
 
 # server group
 resource "clc_group" "mantl" {
@@ -48,7 +51,3 @@ module "worker-nodes" {
   ssh_pass = "${var.ssh_pass}"
   ssh_key = "${var.ssh_key}"
 }
-
-
-
-

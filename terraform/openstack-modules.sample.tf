@@ -32,6 +32,10 @@ variable control_volume_size { default = "50" }
 variable worker_volume_size { default = "100" }
 variable edge_volume_size { default = "20" }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "ssh-key" {
   source = "./terraform/openstack/keypair_v2"
   public_key = "${var.public_key}"
@@ -133,4 +137,3 @@ module "instances-edge" {
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
 }
-

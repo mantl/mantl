@@ -35,6 +35,10 @@ provider "aws" {
   region = "${var.region}"
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 # _local is for development only s3 or something else should be used
 # https://github.com/hashicorp/terraform/blob/master/state/remote/remote.go#L47
 # https://www.terraform.io/docs/state/remote.html

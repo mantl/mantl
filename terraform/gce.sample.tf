@@ -21,6 +21,10 @@ provider "google" {
   region = "us-central1"
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "gce-network" {
   source = "./terraform/gce/network"
   network_ipv4 = "10.0.0.0/16"

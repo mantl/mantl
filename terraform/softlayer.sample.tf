@@ -1,6 +1,10 @@
 provider "softlayer" {
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "softlayer-keypair" {
   source = "./terraform/softlayer/keypair"
   public_key_filename = "~/.ssh/id_rsa.pub"
