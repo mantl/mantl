@@ -1,0 +1,5 @@
+[asteris-mantl-rpm]
+name=asteris-mantl-rpm
+baseurl=https://dl.bintray.com/shippedrepos/mantl-{{ mantl_version }}
+gpgcheck=0
+enabled=1

@@ -1,8 +1,7 @@
 FROM alpine:3.3
 
-RUN apk add --no-cache build-base curl git openssh openssl py-pip python python-dev unzip \
+RUN apk add --no-cache bash build-base curl git libffi-dev openssh openssl-dev py-pip python python-dev unzip \
 	&& git clone https://github.com/CiscoCloud/mantl /mantl \
-	&& apk add --no-cache build-base python-dev py-pip \
 	&& pip install -r /mantl/requirements.txt \
 	&& apk del build-base python-dev py-pip
 
@@ -11,7 +10,7 @@ ENV MANTL_CONFIG_DIR /local
 
 VOLUME /root/.ssh
 
-ENV TERRAFORM_VERSION 0.6.12
+ENV TERRAFORM_VERSION 0.6.16
 RUN mkdir -p /tmp/terraform/ && \
     cd /tmp/terraform/ && \
     curl -SLO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \

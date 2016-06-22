@@ -7,7 +7,8 @@
       "port": {{ elasticsearch_framework_ui_port }},
       "scheduler": {
         "cpu": {{ elasticsearch_cpu }},
-        "ram": {{ elasticsearch_ram }}
+        "ram": {{ elasticsearch_ram }},
+        "java-heap": "{{ elasticsearch_java_opts }}"
       },
       "executor": {
         "cluster-name": "{{ elasticsearch_cluster_name }}",

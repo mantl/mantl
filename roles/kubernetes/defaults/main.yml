@@ -33,3 +33,11 @@ dns_domain: "{{ cluster_name }}"
 # magic will actually pick the 10th ip address in the kube_service_addresses
 # range and use that.
 dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
+
+# OpenStack cloud provider authentication variables.
+os_auth_url: "{{ lookup('env','OS_AUTH_URL') }}"
+os_username: "{{ lookup('env','OS_USERNAME') }}"
+os_password: "{{ lookup('env','OS_PASSWORD') }}"
+os_region_name: "{{ lookup('env','OS_REGION_NAME') }}"
+os_tenant_id: "{{ lookup('env','OS_TENANT_ID') }}"
+

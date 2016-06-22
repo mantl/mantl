@@ -126,6 +126,7 @@ module "instances-kubeworker" {
   flavor_name = "${var.kubeworker_flavor_name}"
   image_name = "${var.image_name}"
   security_groups = "${ module.secgroup.secgroup_common }"
+  ssh_user = "${var.ssh_user}"
 }
 
 module "instances-edge" {

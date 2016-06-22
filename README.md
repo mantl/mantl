@@ -1,5 +1,4 @@
-
-![image](./mantl-logo-1.png)
+![image](./docs/_static/mantl-logo.png)
 
 # Overview
 
@@ -10,7 +9,7 @@
 Mantl is a modern, batteries included platform for rapidly deploying globally
 distributed services
 
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
 
 - [Overview](#overview)
@@ -21,6 +20,7 @@ distributed services
         - [Architecture](#architecture)
         - [Control Nodes](#control-nodes)
         - [Resource Nodes](#resource-nodes)
+        - [Edge Nodes](#edge-nodes)
     - [Getting Started](#getting-started)
         - [Software Requirements](#software-requirements)
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
@@ -29,11 +29,14 @@ distributed services
         - [Mesos Frameworks](#mesos-frameworks)
         - [Security](#security)
         - [Operations](#operations)
-        - [Platform Support](#platform-support)
+        - [Supported Platforms](#supported-platforms)
+            - [Community Supported Platforms](#community-supported-platforms)
     - [Development](#development)
+    - [Getting Support](#getting-support)
     - [License](#license)
 
 <!-- markdown-toc end -->
+
 
 ## Features
 
@@ -207,21 +210,27 @@ repo](https://github.com/CiscoCloud/mantl-universe).
 - [ ] Self maintaining system (log rotation, etc)
 - [ ] Self healing system (automatic failed instance replacement, etc)
 
-### Platform Support
+### Supported Platforms
 
-- [x] Vagrant (Mac OSX + VirtualBox)
-- [x] Vagrant (Linux + VirtualBox)
+- [x] [Amazon Web Services](https://aws.amazon.com/)
+- [x] [CenturyLinkCloud](https://www.ctl.io)
+- [x] [Cisco Cloud Services](http://www.cisco.com/c/en/us/solutions/cloud/overview.html)
+- [x] [Cisco MetaCloud](http://www.cisco.com/c/en/us/products/cloud-systems-management/metapod/index.html)
+- [x] [DigitalOcean](https://www.digitalocean.com/)
+- [x] [Joyent Triton](https://www.joyent.com/)
+- [x] [Google Compute Engine](https://cloud.google.com/compute/)
+- [x] [OpenStack](http://www.openstack.org/)
+- [x] [Vagrant](https://www.vagrantup.com/) (Linux/OSX + VirtualBox)
+- [ ] [Apache CloudStack](https://cloudstack.apache.org/)
+- [ ] [Cisco Unified Computing System](http://www.cisco.com/c/en/us/products/servers-unified-computing/index.html)
+- [ ] [Microsoft Azure](https://azure.microsoft.com/en-us/?b=16.17)
 - [ ] Vagrant (Windows + VirtualBox)
-- [x] OpenStack
-- [x] Cisco Cloud Services
-- [x] Cisco MetaCloud
-- [ ] Cisco Unified Computing System
-- [x] Amazon Web Services
-- [ ] Microsoft Azure
-- [x] Google Compute Engine
-- [ ] VMware vSphere
-- [ ] Apache CloudStack
-- [x] Digital Ocean
+
+#### Community Supported Platforms
+
+- [x] Bare Metal
+- [x] [IBM Softlayer](http://www.softlayer.com/)
+- [x] [VMware vSphere](http://www.vmware.com/products/vsphere/)
 
 Please see [milestones](https://github.com/CiscoCloud/mantl/milestones) for
 more details on the roadmap.

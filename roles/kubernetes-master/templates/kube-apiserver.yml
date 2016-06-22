@@ -24,7 +24,8 @@ spec:
     - --client-ca-file={{ kube_cert_dir }}/ca.crt
     - --service-account-key-file={{ kube_cert_dir }}/server.key
     - --basic-auth-file={{ kube_users_dir }}/known_users.csv
-    - --v=3
+    - --runtime-config=extensions/v1beta1/daemonsets=true
+    - --v={{kube_log_level}}
     ports:
     - containerPort: {{ kube_master_port }}
       hostPort: {{ kube_master_port }}

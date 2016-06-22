@@ -29,7 +29,6 @@ spec:
         args:
         - -domain={{ dns_domain }}
         - -etcd-server=http://{{ private_ipv4 }}:{{ etcd_client_port }}
-        - -kubecfg_file=/etc/kubernetes/node.kubeconfig
         volumeMounts:
           - mountPath: /etc/kubernetes/
             name: kube-etc
@@ -50,4 +49,3 @@ spec:
       - name: kube-etc
         hostPath:
           path: /etc/kubernetes
-

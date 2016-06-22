@@ -64,6 +64,15 @@ standard provisioning playbook:
 
   ansible-playbook -e @security.yml mantl.yml
 
+If you already have a pre-1.1 mantl.yml, you will want to incorporate the 1.1
+changes (see ``sample.yml``). Also, if you customized variables with
+``-e`` when building your 1.0.3 cluster, you will likely want to include the
+same variables when running the 1.1 version of the playbook. For example:
+
+.. code-block:: shell
+
+  ansible-playbook -e @security.yml -e consul_dc=mydc mantl.yml
+
 Upgrading from 0.5.1 to 1.0
 ---------------------------
 
@@ -119,3 +128,11 @@ standard provisioning playbook:
 .. code-block:: shell
 
   ansible-playbook -e @security.yml mantl.yml
+
+Upgrading from 1.1 to 1.2
+-------------------------
+
+Mantl 1.2 removed the ``consul_dns_domain`` variable. Services are reachable via
+``<service-name>.service.consul`` and nodes via ``<hostname>.node.consul``,
+instead of ``<service-name>.service.<consul-dns-domain>`` and
+``<hostname>.node.<consul-dns-domain>`` respectively.

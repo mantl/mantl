@@ -24,8 +24,8 @@ DNSMasq will look to load resolvers after a name is not found in Consul.
 Variables
 ---------
 
-The dnsmasq role uses ``consul_dns_domain``, ``consul_servers_group``, and
-``consul_dc_group`` defined in :doc:`consul`.
+The dnsmasq role uses ``consul_servers_group`` and ``consul_dc_group`` defined
+in :doc:`consul`.
 
 .. data:: mantl_dns_version
 

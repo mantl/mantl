@@ -18,7 +18,6 @@ consul_acl_master_token: "89ff9d38-534a-41aa-a3a6-e4985bcd11c0"
 consul_acl_datacenter: "{{ consul_dc }}"
 consul_acl_default_policy: "deny"
 consul_acl_down_policy: "allow"
-consul_dns_domain: consul
 consul_verify_incoming: true
 consul_verify_outgoing: true
 consul_allow_stale: true
