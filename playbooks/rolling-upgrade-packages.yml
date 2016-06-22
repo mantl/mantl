@@ -10,12 +10,6 @@
     tags:
       - skip_ansible_lint
 
-  - name: refresh yum cache
-    sudo: yes
-    command: yum makecache
-    tags:
-      - skip_ansible_lint
-
   - name: upgrade kernel package
     sudo: yes
     yum:
