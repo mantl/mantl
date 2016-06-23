@@ -11,9 +11,10 @@ RestartSec=20
 TimeoutStartSec=0
 
 ExecStartPre=-/usr/bin/docker rm -f nginx-consul
-ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }} 
+ExecStartPre=-/usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
 
 ExecStart=/usr/bin/docker run \
+    --memory=80M \
     --rm \
     --name=nginx-consul \
     --net=host \
@@ -21,7 +22,7 @@ ExecStart=/usr/bin/docker run \
     -v /etc/pki/tls:/etc/pki/tls:ro \
     -v /etc/nginx/templates:/etc/nginx/templates:ro \
     --env-file=/etc/default/nginx-consul.env \
-    {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}  
+    {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
 
 ExecStop=/usr/bin/docker kill nginx-consul
 

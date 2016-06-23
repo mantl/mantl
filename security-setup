@@ -718,7 +718,7 @@ class Chronos(Component):
 
 class MantlApi(Component):
     def check(self):
-        return [self.check_security, self.mesos_auth]
+        return [self.check_security, self.mesos_auth, self.consul_acl_token]
 
     def check_security(self):
         "check security"
@@ -735,6 +735,15 @@ class MantlApi(Component):
                 print('set Mantl API framework secret')
             else:
                 print('Mantl API secret already set')
+
+    def consul_acl_token(self):
+        "mantl-api acl token"
+        with self.modify_security() as config:
+            if 'consul_acl_mantl_api_token' not in config:
+                config['consul_acl_mantl_api_token'] = str(uuid.uuid4())
+                print('set acl mantl-api token')
+            else:
+                print('acl mantl-api token already set')
 
 
 class DockerRegistry(Component):

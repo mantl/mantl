@@ -53,6 +53,7 @@ module "control-nodes" {
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
+  volume_type = "pd-ssd"
 }
 
 module "edge-nodes" {

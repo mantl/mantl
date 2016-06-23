@@ -24,23 +24,23 @@ Variables
 You can find the default values for all these variables in the ``config_hash``
 in the provided Vagrantfile.
 
-.. data:: worker_count, control_count, edge_count
+.. data:: worker_count, control_count, edge_count, kubeworker_count
 
    The number of nodes with this role.
 
-.. data:: worker_ip_start, control_ip_start, edge_ip_start
+.. data:: worker_ip_start, control_ip_start, edge_ip_start, kubeworker_ip_start
 
    A base IP address which will have its last digit appended. For example, if
    ``worker_ip_start`` is set to "192.168.100.10", the first worker node will
    have the IP address 192.168.100.101, the second will have 192.168.100.102,
    etc.
 
-.. data:: worker_memory, control_memory, edge_memory
+.. data:: worker_memory, control_memory, edge_memory, kubeworker_memory
 
    The amount of memory in MB to allocate for each kind of VM. This setting is
    only valid for the virtualbox provider.
 
-.. data:: worker_cpus, control_cpus, edge_cpus
+.. data:: worker_cpus, control_cpus, edge_cpus, kubeworker_cpus
 
    The number of CPUs to allocate for each kind of VM. This setting is only
    valid for the virtualbox provider.

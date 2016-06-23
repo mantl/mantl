@@ -1,5 +1,74 @@
 # Changelog
 
+## 1.2 (June 21, 2016)
+
+* Mesos and Marathon improvements
+  * Upgrade Mesos to 0.28.2 and Marathon to 1.1.1 #1524 (https://github.com/CiscoCloud/mantl/issues/1524)
+  * Upgrade Mesos and Marathon #1514 (https://github.com/CiscoCloud/mantl/issues/1514)
+  * rotate only the actual log files for mesos #1529 (https://github.com/CiscoCloud/mantl/issues/1529)
+  * mesos logroate issues  #1511 (https://github.com/CiscoCloud/mantl/issues/1511)
+
+* Packaging improvements
+  * Mantl has a dedicated rpm repository per release #1466 (https://github.com/CiscoCloud/mantl/issues/1466)
+  * Mantl has a dedicated rpm repository per release #1555 (https://github.com/CiscoCloud/mantl/issues/1555)
+
+* Traefik Upgrade
+  * traefik: package version 1.0.0 #1559 (https://github.com/CiscoCloud/mantl/issues/1559)
+  * traefik: fixes traefik ui #1563 (https://github.com/CiscoCloud/mantl/issues/1563)
+
+* Mutli-cloud automated testing improvements
+  * TRAVIS DOCKER Install bash for provisioning #1499 (https://github.com/CiscoCloud/mantl/issues/1499)
+  * dockerfile: upgrade to terraform v0.6.16 #1533 (https://github.com/CiscoCloud/mantl/issues/1533)
+
+* Documentation improvements
+  * readme: revamp supported platform section #1509 (https://github.com/CiscoCloud/mantl/issues/1509)
+  * Replace CiscoCloud logo with Mantl logo in docs #1470 (https://github.com/CiscoCloud/mantl/issues/1470)
+  * updated functional IP descriptions #1567 (https://github.com/CiscoCloud/mantl/issues/1567)
+
+* AWS Provider Improvements
+  * Change default vpc name to mantl #1479 (https://github.com/CiscoCloud/mantl/issues/1479)
+
+* GCE Provider Improvements
+  * gce: short_name and long_name should default to "mantl" #1503 (https://github.com/CiscoCloud/mantl/issues/1503)
+  * gce: long_name and short_name should default to "mantl" #1502 (https://github.com/CiscoCloud/mantl/issues/1502)
+  * gce: default network short_name to mantl #1549 (https://github.com/CiscoCloud/mantl/issues/1549)
+
+* ELK Stack Improvements
+  * Split ELK role into standalone Elasticsearch and Kibana roles #1481 (https://github.com/CiscoCloud/mantl/issues/1481)
+  * inconsistent value for elasticsearch-http when using kibana-mesos #1545 (https://github.com/CiscoCloud/mantl/issues/1545)
+  * Consistent kibana elasticsearch-http value #1550 (https://github.com/CiscoCloud/mantl/issues/1550)
+  * elk: increase default resources #1569 (https://github.com/CiscoCloud/mantl/issues/1569)
+
+* Calico support
+  * Upgrade Calico to latest - 0.19.0 #1523 (https://github.com/CiscoCloud/mantl/issues/1523)
+  * Calico with Mesos and Kubernetes integrated #1521 (https://github.com/CiscoCloud/mantl/issues/1521)
+
+* Vault improvements
+  * Lock down vault configuration file #1494 (https://github.com/CiscoCloud/mantl/issues/1494)
+  * vault: verify server with TLS #1498 (https://github.com/CiscoCloud/mantl/issues/1498)
+  * Vault 0.5.3 #1510 (https://github.com/CiscoCloud/mantl/issues/1510)
+  * Upgrade to Vault 0.5 #1496 (https://github.com/CiscoCloud/mantl/issues/1496)
+
+* Kafka Addon Improvements
+  * kafka: create topics and cleanup config #1525 (https://github.com/CiscoCloud/mantl/issues/1525)
+  * Kafka enhancements #1468 (https://github.com/CiscoCloud/mantl/issues/1468)
+
+* Other fixes and enhancements
+  * reduce code duplication in nginx_proxy.yml #1526 (https://github.com/CiscoCloud/mantl/issues/1526)
+  * readme: add clc to supported platforms #1536 (https://github.com/CiscoCloud/mantl/issues/1536)
+  * Update vagrant to include kubeworkers and refator edge, worker loop #1365 (https://github.com/CiscoCloud/mantl/issues/1365)
+  * Remove mantl rename FAQ #1471 (https://github.com/CiscoCloud/mantl/issues/1471)
+  * List cloud-init-providers in a variable #1508 (https://github.com/CiscoCloud/mantl/issues/1508)
+  * Hardcode consul_dns_domain #1449 (https://github.com/CiscoCloud/mantl/issues/1449)
+  * Fix jupyter example - ws not a valid config for traefik #1547 (https://github.com/CiscoCloud/mantl/issues/1547)
+  * Ensure package removal url is only one line #1539 (https://github.com/CiscoCloud/mantl/issues/1539)
+  * Extraneous file "test.mesos.yml" #1522 (https://github.com/CiscoCloud/mantl/issues/1522)
+  * Add memory usage restrictions to Docker containers #1451 (https://github.com/CiscoCloud/mantl/issues/1451)
+  * Distributive-dnsmasq 0.2.6 #1558 (https://github.com/CiscoCloud/mantl/issues/1558)
+  * remove test.mesos.yml  #1552 (https://github.com/CiscoCloud/mantl/issues/1552)
+  * Add playbook to force consul leader election #948 (https://github.com/CiscoCloud/mantl/issues/948)
+  * Vagrant update to include Kube worker #1542 (https://github.com/CiscoCloud/mantl/issues/1542)
+
 ## 1.1 (May 13, 2016)
 
 ### Features and Improvements

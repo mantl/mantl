@@ -1,5 +1,5 @@
 ---
-marathon_version: 1.0.0_RC1
+marathon_version: 1.1.1
 marathon_package: "marathon-{{ marathon_version }}"
 
 marathon_zk_auth: "{% if zk_marathon_user_secret is defined %}{{ zk_marathon_user }}:{{ zk_marathon_user_secret }}@{% endif %}"
@@ -37,4 +37,6 @@ mesos_consul_refresh: "7s"
 marathon_consul_image: ciscocloud/marathon-consul
 marathon_consul_image_tag: 0.2
 mantl_api_image: ciscocloud/mantl-api
-mantl_api_image_tag: 0.2.1
+mantl_api_image_tag: 0.2.2
+mantl_api_config_url: ""
+mantl_api_config_file: ""

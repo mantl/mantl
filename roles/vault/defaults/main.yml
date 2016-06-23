@@ -1,5 +1,5 @@
 ---
-vault_package: vault-0.4.1
+vault_package: vault-0.6.0
 vault_default_port: 8200
 vault_command_options: --ca-cert=/etc/pki/CA/ca.cert
 

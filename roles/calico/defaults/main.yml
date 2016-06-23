@@ -1,13 +1,10 @@
 ---
-calico_version: 0.15.0
+calico_version: 0.19.0
 
 calico_image: calico/node
 calico_image_tag: v{{ calico_version }}
 
-bintray_baseurl: "https://bintray.com/artifact/download/asteris"
-calico_binary: "{{ bintray_baseurl }}/mantl-rpm/calico-{{ calico_version }}-1.x86_64.rpm"
-
-etcd_service_name: etcd.service.consul
+etcd_service_name: etcd.service.{{ consul_dns_domain }}
 etcd_client_port: 2379
 
 calico_etcdaddr: "{{ private_ipv4 }}:{{ etcd_client_port }}"

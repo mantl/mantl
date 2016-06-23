@@ -4,6 +4,7 @@
     "kibana-mesos": {
       "id": "{{ kibana_mesos_id }}",
       "framework-name": "{{ kibana_mesos_framework_name }}",
+      "elasticsearch-http": "http://{{ kibana_mesos_elasticsearch_service }}.service.consul:9200",
       "scheduler": {
         "cpu": {{ kibana_mesos_scheduler_cpu }},
         "ram": {{ kibana_mesos_scheduler_ram }}
