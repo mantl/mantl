@@ -4,7 +4,7 @@ variable control_size { default = "4gb" }
 variable datacenter { default = "mi" }
 variable edge_count { default = 2 }
 variable edge_size { default = "2gb" }
-variable image_name { default = "centos-7-0-x64" }
+variable image_name { default = "centos-7-2-x64" }
 variable region_name { default = "nyc3" }
 variable short_name { default = "mi" }
 variable ssh_key { }
