@@ -83,7 +83,7 @@ The base platform contains control nodes that manage the cluster and any number
 of agent nodes. Containers automatically register themselves into DNS so
 that other services can locate them.
 
-![mantl-diagram](docs/_static/mantl-diagram.svg)
+![mantl-diagram](docs/_static/mantl-diagram.png)
 
 #### Control Nodes
 
