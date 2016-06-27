@@ -111,13 +111,13 @@ Variables
 
    The amount of CPU resources to allocate to each Kibana instance (Kibana on Marathon).
 
-   default: 0.5
+   default: 1.0
 
 .. data:: kibana_ram
 
    The amount of memory to allocate to each instance of Kibana (MB) (Kibana on Marathon).
 
-   default: 512
+   default: 1024
 
 .. data:: kibana_instances
 
@@ -172,28 +172,28 @@ Variables
    The amount of CPU resources to allocate to the Kibana framework scheduler
    (Kibana Mesos framework).
 
-   default: 0.2
+   default: 0.5
 
 .. data:: kibana_mesos_scheduler_ram
 
    The amount of memory to allocate to the Kibana framework scheduler (MB)
    (Kibana Mesos framework).
 
-   default: 256
+   default: 512
 
 .. data:: kibana_mesos_executor_cpu
 
    The amount of CPU resources to allocate to each Kibana executor instance
    (Kibana Mesos framework).
 
-   default: 0.5
+   default: 1.0
 
 .. data:: kibana_mesos_executor_ram
 
    The amount of memory to allocate to each Kibana executor instance (MB)
    (Kibana Mesos framework).
 
-   default: 512
+   default: 1024
 
 .. data:: kibana_mesos_instances
 

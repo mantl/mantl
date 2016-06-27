@@ -93,7 +93,6 @@ module "control-nodes" {
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.ui_security_group},${module.security-groups.control_security_group}"
-  #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
 }
 
@@ -113,7 +112,6 @@ module "edge-nodes" {
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.edge_security_group}"
-  #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
 }
 
@@ -135,7 +133,6 @@ module "worker-nodes" {
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.worker_security_group}"
-  #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
 }
 
@@ -157,7 +154,6 @@ module "kubeworker-nodes" {
   # uncomment below it you want to use remote state for vpc variables
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.worker_security_group}"
-  #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
 }
 

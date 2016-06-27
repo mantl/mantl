@@ -1,0 +1,54 @@
+---
+# Docker overlay networking - connect containers across hosts in a virtual network!
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: all
+
+  vars:
+    overlay_name: overlay-net
+    # It's highly recommended to set a subnet. See the Docker Overlay guide:
+    # https://docs.docker.com/engine/userguide/networking/get-started-overlay/
+    overlay_subnet: ""
+    overlay_options:
+      - '--cluster-store=consul://localhost:8500'
+      - '--cluster-advertise={{ private_ipv4 }}:2376'
+
+  tasks:
+    - name: add overlay network options to systemd ExecStart drop-in
+      sudo: yes
+      lineinfile:
+        state: present
+        create: no
+        dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
+        line: '          $DOCKER_OVERLAY_NETWORK_OPTIONS \\'
+        insertafter: 'DOCKER_NETWORK_OPTIONS'
+      register: execstart
+
+    - name: configure docker daemon options
+      sudo: yes
+      template:
+        src: "{{ playbook_dir }}/16-overlay-network-options.conf.j2"
+        dest: /etc/systemd/system/docker.service.d/16-overlay-network-options.conf
+      register: daemon_options
+
+    - name: reload systemd
+      sudo: yes
+      command: systemctl daemon-reload
+      when: execstart.changed or daemon_options.changed
+
+    - name: restart docker
+      sudo: yes
+      command: systemctl restart docker
+      when: execstart.changed or daemon_options.changed
+
+    - name: create a docker overlay network
+      sudo: yes
+      run_once: yes # The network is stored in the Consul K/V
+      command: >
+        docker network create --driver overlay
+        {% if overlay_subnet != "" %}--subnet={{ overlay_subnet }}{% endif %}
+        {{ overlay_name }}

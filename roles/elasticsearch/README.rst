@@ -30,8 +30,8 @@ Default Configuration
 ---------------------
 
 The default configuration of the Elasticsearch cluster will require at least 4
-worker nodes, each having at least 1 full CPU and 1 GB of memory available to
-Mesos. In addition, each worker node will need to have at least 5 GBs of free
+worker nodes, each having at least 1 full CPU and 2+ GBs of memory available to
+Mesos. In addition, each worker node will need to have at least 10 GBs of free
 disk space.
 
 While a cluster of this size will be sufficient to evaluate and test
@@ -143,14 +143,14 @@ Variables
    The amount of memory to allocate to each Elasticsearch executor instance
    (MB).
 
-   default: 1024
+   default: 2048
 
 .. data:: elasticsearch_disk
 
    The amount of Disk resource to allocate to each Elasticsearch executor
    instance (MB).
 
-   default: 5120
+   default: 10240
 
 .. data:: elasticsearch_cpu
 
@@ -196,7 +196,7 @@ Variables
 
    The version of the Elasticsearch mesos framework. 
 
-   default: "1.0.1"
+   default: "1.0.1-1"
 
 .. data:: elasticsearch_framework_name
 
@@ -255,7 +255,7 @@ Variables
 
    The amount of memory to allocate to the Elasticsearch client node (MB).
 
-   default: 1024
+   default: 2048
 
 .. data:: elasticsearch_client_java_opts
 

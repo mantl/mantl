@@ -55,8 +55,8 @@ def link_user_defined_terraform_files():
         if 'MANTL_PROVIDER' not in os.environ:
             logging.critical("mantl.readthedocs.org for provider")
             exit(1)
-        tf = 'terraform/{}.sample.tf'.format(os.environ['MANTL_PROVIDER'])
 
+        tf = 'terraform/{}.sample.tf'.format(os.environ['MANTL_PROVIDER'])
         symlink_force(tf, 'mantl.tf')
 
 
@@ -83,11 +83,7 @@ def ci_setup():
     """Run all setup commands, saving files to MANTL_CONFIG_DIR"""
 
     if 'OS_IP' in os.environ:
-        ssh_key_path = '/local/ci'
-        os.chmod(ssh_key_path, 0400)
-
         # This string will be collapsed into one line
-        # I made this change for readability
         ssh_cmd = '''
 ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no
@@ -102,11 +98,11 @@ ln -sf sample.yml mantl.yml;
 echo 'build_number = \\"{build}\\"' > terraform.tfvars"
         '''
         ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'],
-                keypath='/local/ci',
-                ssh_port=os.environ['OS_PRT'],
-                ssh_ip=os.environ['OS_IP'],
-                tf_file=os.environ['TERRAFORM_FILE'],
-                build=os.environ['TF_VAR_build_number'])
+                                 keypath='/local/ci',
+                                 ssh_port=os.environ['OS_PRT'],
+                                 ssh_ip=os.environ['OS_IP'],
+                                 tf_file=os.environ['TERRAFORM_FILE'],
+                                 build=os.environ['TF_VAR_build_number'])
         ssh_cmd = " ".join(ssh_cmd.splitlines())
 
         exit(call(split(ssh_cmd)))
@@ -124,14 +120,8 @@ def ci_build():
     call("ssh-add")
     link_ci_terraform_file()
 
-    # Take different action for PRs from forks
-    if os.environ['MANTL_CI_FORK_CHECK'] == "1":
-        logging.warning("Currently, we can't unlock deploy keys for forks of Mantl, so we are skipping the build")
-        exit(0)
-
     # Filter out commits that are documentation changes.
     commit_range_cmd = 'git diff --name-only {}'.format(os.environ['TRAVIS_COMMIT_RANGE'])
-
     commit_range_str = str(check_output(split(commit_range_cmd)))
 
     commit_range = []
@@ -147,37 +137,38 @@ def ci_build():
             commit_range.append(commit)
 
     if len(commit_range) < 1:
-        logging.info("All of the changes I found were in documentation files. Skipping build")
+        logging.info("All of the changes were in documentation. Skipping build.")
         exit(0)
 
-    # Filter out commits that are pushes to non-master branches
-    ci_branch = os.environ['TRAVIS_BRANCH']
-    ci_is_pr = os.environ['TRAVIS_PULL_REQUEST']
-    if ci_branch is not 'master' and ci_is_pr is False:
-        logging.info("We don't want to build on pushes to branches that aren't master.")
-        exit(0)
+    build_command = 'python2 ./testing/build-cluster.py'
 
-    if 'OS_IP' in os.environ:
-        ssh_cmd = '''
+    if not os.environ.get('DOCKER_SECRETS', False):
+        logging.warning('Secrets not available, only linting')
+        build_command = 'python2 ./testing/build-cluster.py plan-only'
+
+    elif os.environ.get('PROVIDER', '') == 'clc' or 'clc' in os.environ.get('TERRAFORM_FILE', ''):
+        logging.warning('Full CI builds not supported on CLC, only linting')
+        build_command = 'python2 ./testing/build-cluster.py plan-only'
+
+    elif 'OS_IP' in os.environ:
+        ssh_cmd_template = '''
 ssh -i {keypath} -p {ssh_port}
 -o BatchMode=yes -o StrictHostKeyChecking=no
 travis@{ssh_ip} /bin/sh -c '
 eval $(ssh-agent);
 ssh-add;
 cd ./mantl/{commit};
-python2 ./testing/build-cluster.py'
+{build_cmd}'
         '''
-        ssh_cmd = ssh_cmd.format(commit=os.environ['CI_HEAD_COMMIT'],
-                keypath='/local/ci',
-                ssh_port=os.environ['OS_PRT'],
-                ssh_ip=os.environ['OS_IP'])
-        ssh_cmd = " ".join(ssh_cmd.splitlines())
+        ssh_cmd = ssh_cmd_template.format(commit=os.environ['CI_HEAD_COMMIT'],
+                                          keypath='/local/ci',
+                                          ssh_port=os.environ['OS_PRT'],
+                                          ssh_ip=os.environ['OS_IP'],
+                                          build_cmd=build_command)
+        build_cmd = " ".join(ssh_cmd.splitlines())
 
-        exit(call(split(ssh_cmd)))
-
-    else:
-        logging.info("Starting cloud provider test")
-        exit(call(split("python2 testing/build-cluster.py")))
+    logging.info("Starting cloud provider test")
+    exit(call(split(build_command)))
 
 
 def ci_destroy():
@@ -196,17 +187,16 @@ cd ..;
 rm -fr {commit}'
         '''
         destroy_cmd = ssh_cmd.format(destroy=destroy_cmd,
-                keypath='/local/ci',
-                ssh_port=os.environ['OS_PRT'],
-                ssh_ip=os.environ['OS_IP'],
-                commit=os.environ['CI_HEAD_COMMIT'])
+                                     keypath='/local/ci',
+                                     ssh_port=os.environ['OS_PRT'],
+                                     ssh_ip=os.environ['OS_IP'],
+                                     commit=os.environ['CI_HEAD_COMMIT'])
         destroy_cmd = " ".join(destroy_cmd.splitlines())
     else:
         logging.info("Destroying cloud provider resources")
         link_or_generate_ssh_keys()
         call("ssh-add")
         link_ci_terraform_file()
-
 
     exit(call(split(destroy_cmd)))
 
@@ -219,7 +209,7 @@ if __name__ == "__main__":
     if 'MANTL_CONFIG_DIR' not in os.environ:
         exit(1)
 
-    #TODO: replace this with either click or pypsi
+    # TODO: replace this with either click or pypsi
     if len(argv) > 1:
         if argv[1] == 'ci-setup':
             ci_setup()

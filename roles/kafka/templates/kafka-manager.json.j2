@@ -1,0 +1,14 @@
+{
+  "name": "kafka-manager",
+  "config": {
+    "kafka-manager": {
+      "id": "{{ kafka_manager_id }}",
+      "instances": {{ kafka_manager_instances }},
+      "cpu": {{ kafka_manager_cpu }},
+      "mem": {{ kafka_manager_mem }}
+    },
+    "mantl": {
+      "load-balancer": "{{ kafka_manager_load_balancer }}"
+    }
+  }
+}

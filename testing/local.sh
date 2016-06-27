@@ -19,7 +19,7 @@ fi
 export TF_VAR_build_number="$(whoami)-local"
 export TRAVIS_COMMIT_RANGE="$(git rev-parse master)...$(git rev-parse HEAD)"
 export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
-export DOCKER_ARGS='--rm -i -a stdout -a stderr -e TF_VAR_build_number -e CI_HEAD_COMMIT -e TRAVIS_COMMIT_RANGE -e TRAVIS_REPO_SLUG=CiscoCloud/mantl -e TRAVIS_BRANCH=master -e TRAVIS_PULL_REQUEST=1 -e TERRAFORM_FILE'
+export DOCKER_ARGS='--rm -i -a stdout -a stderr -e TF_VAR_build_number -e CI_HEAD_COMMIT -e TRAVIS_COMMIT_RANGE -e TRAVIS_REPO_SLUG=CiscoCloud/mantl -e TRAVIS_BRANCH=master -e TRAVIS_PULL_REQUEST=1 -e TERRAFORM_FILE -e DOCKER_SECRETS'
 export DOCKER_IMAGE=sehqlr/mantl:testing
 
 case $1 in

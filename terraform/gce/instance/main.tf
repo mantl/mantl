@@ -1,7 +1,9 @@
 variable "count" {default = "3"}
 variable "machine_type" {default = "n1-standard-1"}
 variable "volume_size" {default = "20"} # size is in gigabytes
+variable "volume_type" {default = "pd-standard"}
 variable "data_volume_size" {default = "20"} # size is in gigabytes
+variable "data_volume_type" {default = "pd-ssd"}
 variable "datacenter" {}
 variable "image" {}
 variable "role" {}
@@ -15,7 +17,7 @@ variable "zones" {}
 # Instances
 resource "google_compute_disk" "disk" {
   name = "${var.short_name}-${var.role}-lvm-${format("%02d", count.index+1)}"
-  type = "pd-ssd"
+  type = "${var.data_volume_type}"
   zone = "${element(split(",", var.zones), count.index)}"
   size = "${var.data_volume_size}"
   count = "${var.count}"
@@ -31,6 +33,7 @@ resource "google_compute_instance" "instance" {
 
   disk {
     image = "${var.image}"
+    type = "${var.volume_type}"
     size = "${var.volume_size}"
     auto_delete = true
   }

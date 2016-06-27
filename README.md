@@ -18,9 +18,9 @@ distributed services
         - [Addons](#addons)
         - [Goals](#goals)
         - [Architecture](#architecture)
-        - [Control Nodes](#control-nodes)
-        - [Resource Nodes](#resource-nodes)
-        - [Edge Nodes](#edge-nodes)
+            - [Control Nodes](#control-nodes)
+            - [Agent Nodes](#agent-nodes)
+            - [Edge Nodes](#edge-nodes)
     - [Getting Started](#getting-started)
         - [Software Requirements](#software-requirements)
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
@@ -80,37 +80,29 @@ See the `addons/` directory for the most up-to-date information.
 ### Architecture
 
 The base platform contains control nodes that manage the cluster and any number
-of resource nodes. Containers automatically register themselves into DNS so
+of agent nodes. Containers automatically register themselves into DNS so
 that other services can locate them.
 
-![Single-DC](docs/_static/single_dc.png)
+![mantl-diagram](docs/_static/mantl-diagram.png)
 
-### Control Nodes
+#### Control Nodes
 
-The control nodes manage a single datacenter.  Each control node runs Consul
-for service discovery, Mesos leaders for resource scheduling and Mesos
-frameworks like Marathon.
+The control nodes manage a single datacenter. Each control node runs Consul for
+service discovery, Mesos and Kubernetes leaders for resource scheduling and
+Mesos frameworks like Marathon.
 
-In general, it's best to provision an odd number (at least 3 or 5) of control
-nodes to achieve higher availability of services. The Consul Ansible role will
-automatically bootstrap and join multiple Consul nodes. The Mesos role will
-provision highly-availabile Mesos and ZooKeeper environments when more than one
-node is provisioned.
+The Consul Ansible role will automatically bootstrap and join multiple Consul
+nodes. The Mesos role will provision highly-availabile Mesos and ZooKeeper
+environments when more than one node is provisioned.
 
-![Control Node](docs/_static/control_node.png)
+#### Agent Nodes
 
-### Resource Nodes
+Agent nodes launch containers and other Mesos- or Kubernetes-based workloads.
 
-Resource nodes launch containers and other Mesos-based workloads.
-
-![Resource Node](docs/_static/resource_node.png)
-
-### Edge Nodes
+#### Edge Nodes
 
 Edge nodes are responsible for proxying external traffic into services running
 in the cluster.
-
-![Edge Node](docs/_static/edge_node.png)
 
 ## Getting Started
 
@@ -129,10 +121,10 @@ git tag
 0.1.0
 0.2.0
 ...
-1.0.2
+1.2.0
 
 
-git checkout 1.0.2
+git checkout 1.2.0
 ```
 
 A Vagrantfile is provided that provisions everything on a few VMs. To run,
