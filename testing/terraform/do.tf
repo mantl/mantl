@@ -3,6 +3,10 @@ variable "build_number" {}
 provider "digitalocean" {
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "do-mantl-keypair" {
   source = "./terraform/digitalocean/keypair"
   public_key_filename = "~/.ssh/id_rsa.pub"

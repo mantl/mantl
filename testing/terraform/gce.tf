@@ -17,6 +17,10 @@ variable "zones" {
   default = "us-central1-a,us-central1-b"
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 provider "google" {
   project = "mantl-ci"
   region = "us-central1"

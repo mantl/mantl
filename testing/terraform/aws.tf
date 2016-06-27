@@ -4,6 +4,10 @@ provider "aws" {
   region = "us-west-1"
 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "aws-mantl-testing" {
   source = "./terraform/aws"
   availability_zone = "us-west-1b"

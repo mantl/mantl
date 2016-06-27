@@ -22,6 +22,10 @@ variable control_flavor_name { default = "CO2-Medium" }
 variable worker_flavor_name { default = "CO2-Medium" }
 variable edge_flavor_name { default = "Micro-Small" }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "ssh-key" {
   source = "./terraform/openstack/keypair_v2"
   public_key = "${var.public_key}"

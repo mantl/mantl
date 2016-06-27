@@ -20,6 +20,10 @@ variable worker_package { default = "Large 8GB" } # 8GB and 8 VCPUs
 variable public_network { default = "9ec60129-9034-47b4-b111-3026f9b1a10f" } # default public in us-east-1. Find yours with `triton network list`
 variable vlan_id { default = 3 }
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 module "triton-keypair" {
   source = "./terraform/triton/keypair"
 

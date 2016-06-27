@@ -1,5 +1,9 @@
 variable build_number {}
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 provider "softlayer" {
   username = "test_username"
   api_key = "test_api_key"

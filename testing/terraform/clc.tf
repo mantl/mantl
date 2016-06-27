@@ -9,6 +9,10 @@ variable ssh_key { default = "~/.ssh/id_rsa.pub" }
 
 provider "clc" {}
 
+module "terraform-py" {
+  source = "./terraform/common/terraform-py"
+}
+
 resource "clc_group" "mantl" {
   location_id = "${var.location}"
   name = "ci"
