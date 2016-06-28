@@ -12,6 +12,13 @@
     - consul
     - bootstrap
 
+- name: add consul user to tls group
+  sudo: yes
+  user:
+    append: yes
+    name: consul
+    groups: tls
+
 - name: configure consul
   sudo: yes
   template:
@@ -52,7 +59,7 @@
   tags:
     - consul
 
-- name: enable consul
+- name: start consul
   sudo: yes
   service:
     name: consul

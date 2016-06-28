@@ -1,5 +1,7 @@
 ---
 allow_duplicates: yes
 dependencies:
+  - role: certificates
+    when: do_chronos_ssl
   - role: distributive
     current_role: chronos

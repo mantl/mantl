@@ -120,11 +120,9 @@ broad_opts.add_argument(
     help=
     'Use iptables rules. This overrides all other options related to iptables.')
 
-# certificates
 cert_opts = parser.add_argument_group(
     "SSL Certificate Options",
-    "a certificate authority will be set up, and "
-    "certificates will be issued using these options", )
+    "Options for generating the root CA")
 cert_opts.add_argument(
     '--cert-country',
     default='US',
@@ -454,53 +452,6 @@ class Component(object):
             email=overrides.get('email', self.args.cert_email)
         )
 
-    def generate_certificate(self, name):
-        key = posixpath.join(CERT_PATH, 'private', name + '.key.pem')
-        csr = posixpath.join(CERT_PATH, 'certs', name + '.csr.pem')
-        cert = posixpath.join(CERT_PATH, 'certs', name + '.cert.pem')
-
-	common = "server"
-        san = dict(SAN='DNS:localhost,DNS:*.node.consul,DNS:*.service.consul,IP:127.0.0.1')
-
-        with self.chdir(CERT_PATH):
-            if posixpath.exists(key):
-                print('{} key already exists'.format(name))
-            else:
-                self.wrap_call(
-                    'openssl genrsa -out {} 2048 -config ./openssl_req.cnf'.format(
-                        key), env=san)
-                os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
-                print('generated {} key'.format(name))
-
-            if posixpath.exists(cert):
-                print('{} certificate already exists'.format(name))
-            else:
-                # CSR
-                self.wrap_call(
-                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl_req.cnf'.format(
-                        self.openssl_subject(common), key, csr), env=san)
-                print('generated {} CSR'.format(name))
-
-                # certificate
-                self.wrap_call(
-                    'openssl ca -extensions usr_cert -notext -md sha256 '
-                    '-in {} -out {} -config ./openssl_req.cnf -batch'.format(
-                        csr, cert), env=san)
-                os.chmod(
-                    cert, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
-                    | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
-                print('generated {} certificate'.format(name))
-
-            # verify
-            if not self.args.no_verify_certificates:
-                status, out, err = self.wrap_call(
-                    'openssl verify -CAfile {} {}'.format(ROOT_CERT, cert), env=san)
-                if out != '{}: OK\n'.format(cert):
-                    self.print_call_failure(status, out, err)
-                    sys.exit(1)
-
-                print('{} certificate is valid'.format(name))
-
     def toggle_boolean(self, inFlag, inValue, inDefault):
         with self.modify_security() as config:
             if inFlag not in config:
@@ -512,7 +463,7 @@ class Component(object):
 
 class Certificates(Component):
     def check(self):
-        return [self.ca, self.host_cert]
+        return [self.ca]
 
     def ca(self):
         "certificate authority"
@@ -545,10 +496,6 @@ class Certificates(Component):
                 os.chmod(ROOT_KEY, stat.S_IRUSR | stat.S_IWUSR)
                 os.chmod(ROOT_CERT, stat.S_IRUSR | stat.S_IWUSR)
                 print('generated root CA')
-
-    def host_cert(self):
-        "SSL certificate"
-        self.generate_certificate("host")
 
 
 class Nginx(Component):

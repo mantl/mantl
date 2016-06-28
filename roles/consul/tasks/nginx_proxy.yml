@@ -1,9 +1,20 @@
 ---
+- name: create nginx configuration directories
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/templates
+  tags:
+    - consul
+
 - name: deploy nginx template
   sudo: yes
   copy:
     src: consul.nginx
-    dest: /etc/nginx/templates
+    dest: /etc/nginx/templates/consul.nginx
   notify:
     - reload nginx
   tags:

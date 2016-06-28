@@ -23,12 +23,17 @@ docker_options:
   - "{% if docker_selinux_enabled %}--selinux-enabled {% endif %}"
   - "{% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %}"
 
+docker_tcp: false
+docker_tcp_tls: "{{ docker_tcp }}"
+
 # Docker network options can be provided as a list
 docker_network_options:
   - "-H unix:///var/run/docker.sock"
-# If you want to open the docker API, uncomment the line below.
-# Please note this is insecure
-#  - "-H tcp://0.0.0.0:2375"
+  - "{% if docker_tcp %}-H tcp://0.0.0.0:2375{% endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlsverify{% endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlscacert=/etc/pki/CA/ca.cert{%- endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlscert={{ host_cert }}{%- endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlskey={{ host_key }}{%- endif %}"
 
 # Possible values: overlay (default), devicemapper, btrfs (unsupported)
 # Used with docker-storage-setup
