@@ -62,7 +62,7 @@ resource "google_compute_instance" "instance" {
   count = "${var.count}"
 
   provisioner "remote-exec" {
-    script = "./terraform/gce/disk.sh"
+    script = "./terraform/gce/gce-init.sh"
 
     connection {
       type = "ssh"
