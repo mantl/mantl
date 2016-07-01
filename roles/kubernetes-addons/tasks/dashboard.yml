@@ -11,6 +11,14 @@
     - dashboard
     - kubernetes
 
+- name: wait for apiserver to come up
+  wait_for:
+    port: 8085
+  tags:
+    - addons
+    - dashboard
+    - kubernetes
+
 - name: create or update dashboard
   sudo: yes
   kube:

@@ -4,15 +4,11 @@
     - secrets
     - kubernetes
 
-- name: download kubernetes binaries
+- name: install kubernetes binaries
   sudo: yes
-  get_url:
-    url: "{{ kube_url }}/{{ item }}"
-    dest: /usr/bin
-    mode: 0753
-  with_items:
-    - kubelet
-    - kubectl
+  yum:
+    name: "{{ kubernetes_package }}"
+    state: present
   tags:
     - master
     - kubernetes
@@ -70,6 +66,7 @@
     - kube-proxy
     - kube-podmaster
     - kube-system
+    - kube2consul
   notify:
     - restart kubelet
   tags:
