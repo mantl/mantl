@@ -40,6 +40,16 @@ you simply need to re-run ``security-setup``:
 Of course, if you customized your security settings (manually or using the CLI
 arguments), you should be careful to re-run ``security-setup`` the same way.
 
+Core Component Rolling Upgrade
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: shell
+
+  ansible-playbook -e @security.yml playbooks/upgrade-1.1.yml
+
+This playbook performs a rolling update of consul which is required to support
+new features in Mantl 1.2.
+
 Upgrade to Mantl 1.2
 ~~~~~~~~~~~~~~~~~~~~
 

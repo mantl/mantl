@@ -3,6 +3,7 @@
   serial: "{{ serial | default(1) }}"
   vars:
     consul_create_secure_acl: true
+    state: "{{ package_state | default('present') }}"
   tasks:
     - include_vars: ../roles/consul/defaults/main.yml
 
@@ -10,7 +11,7 @@
       sudo: yes
       yum:
         name: "{{ item }}"
-        state: present
+        state: "{{ state }}"
       with_items:
         - "{{ consul_package }}"
         - "{{ consul_ui_package }}"
