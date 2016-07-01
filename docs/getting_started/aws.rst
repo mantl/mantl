@@ -23,7 +23,7 @@ customization. In the next sections, we'll describe the settings that you need
 to configure.
 
 Do not copy the text contents above into a file, if you do not have the terraform/aws.sample.tf file, you need to clone the mantl repository.
-Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from amazon's new "AWS Credentials file" standard.
+Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from Amazon's new "AWS Credentials file" standard.
 
 Store your credentials like below in a file called ``~/.aws/credentials`` on Linux/Mac, or ``%USERPROFILE%\.aws\credentials`` on Windows.
 
@@ -33,7 +33,7 @@ Store your credentials like below in a file called ``~/.aws/credentials`` on Lin
   aws_access_key_id = ACCESS_KEY
   aws_secret_access_key = SECRET_KEY
 
-If you do not have an AWS access key ID and secret key, then follow the "Creating an IAM user" section below. If you already have working AWS credentials, you can skip this step.
+If you do not have an AWS access key ID and secret key, then follow the "Creating an IAM User" section below. If you already have working AWS credentials, you can skip this step.
 
 Creating an IAM User
 ^^^^^^^^^^^^^^^^^^^^^
