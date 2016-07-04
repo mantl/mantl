@@ -5,7 +5,7 @@
     - name: check for security
       when: security_enabled is not defined or not security_enabled
       fail:
-        msg: |
+        msg: >
           Security is not enabled. Please run `security-setup` in the root
           directory and re-run this playbook with the `--extra-vars`/`-e` option
           pointing to your `security.yml` (e.g., `-e @security.yml`)
@@ -16,7 +16,7 @@
         ansible_version["string"] | version_compare("1.9.1", "<")
         or ansible_version["string"] | version_compare("2", ">=")
       fail:
-        msg: |
+        msg: >
           Your version of Ansible doesn't match the required version. Please
           install ansible-playbook with `pip install -r requirements.txt`.
 
@@ -26,7 +26,7 @@
     - name: check for compatible centos version
       when: ansible_distribution_version | version_compare("7.2", "<")
       fail:
-        msg: |
+        msg: >
           Your hosts don't appear to be running a compatible version of Centos.
           Please run the playbook playbooks/upgrade-packages.yml before
           continuing.
@@ -37,7 +37,7 @@
         and provider != "digitalocean"
         and provider != "packer"
       fail:
-        msg: |
+        msg: >
           Your hosts don't appear to be running a compatible version of the
           Linux kernel. Please run the playbook playbooks/upgrade-packages.yml
           before continuing.
