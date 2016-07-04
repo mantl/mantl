@@ -10,8 +10,6 @@
     # CA public key
     - src: ssl/cacert.pem
       dest: /etc/pki/CA/ca.cert
-    - src: ssl/cacert.pem # https://github.com/asteris-llc/mantl-packaging/issues/90
-      dest: /etc/pki/CA/cacert.pem
     - src: ssl/cacert.pem
       dest: /etc/pki/ca-trust/source/cacert.pem
     - src: ssl/cacert.pem
@@ -27,7 +25,7 @@
 - name: install generate-certificate
   sudo: yes
   yum:
-    name: generate-certificate-0.0.1
+    name: "{{ generate_certificate_package }}"
     state: present
 
 - name: create certificate destination directory
@@ -43,6 +41,7 @@
   sudo: yes
   command: >
     generate-certificate
+    --cacert /etc/pki/CA/ca.cert
     {% if country != "" %} --country "{{ country }}" {% endif %}
     {% if state != "" %} --state "{{ state }}" {% endif %}
     {% if locality != "" %} --locality "{{ locality }}" {% endif %}

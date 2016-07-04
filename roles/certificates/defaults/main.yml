@@ -1,4 +1,6 @@
 ---
+generate_certificate_package: generate-certificate-0.1.1-1
+
 # Options passed to generate-certificate
 country: ""      # Default: US
 state: ""        # Default: New York
