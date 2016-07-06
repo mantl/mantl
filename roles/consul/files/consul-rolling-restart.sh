@@ -25,8 +25,11 @@ sleep 10
 # Verify that there is a leader before releasing the lock and restarting
 /usr/local/bin/consul-wait-for-leader.sh
 
-# Release the lock
-consul-cli kv-unlock ${ccargs} locks/consul --session=${sessionid}
+# Release the lock, trying up to 5 times
+for i in 1 2 3 4 5; do
+    consul-cli kv-unlock ${ccargs} locks/consul --session=${sessionid} && break
+    sleep 5
+done
 
 # Restart the service
 systemctl restart consul
