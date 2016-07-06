@@ -20,7 +20,7 @@ sessionid=$(consul-cli kv-lock ${ccargs} locks/consul)
 # Lock acquired. Pause briefly to allow the previous holder to restart
 # If it takes longer than five seconds run `systemctl restart consul`
 # after releasing the lock then we might cause a quorum outage
-sleep 5
+sleep 10
 
 # Verify that there is a leader before releasing the lock and restarting
 /usr/local/bin/consul-wait-for-leader.sh
