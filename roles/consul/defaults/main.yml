@@ -8,8 +8,8 @@ consul_servers_group: role=control
 consul_log_level: "warn"
 consul_is_server: "{{ consul_servers_group in group_names }}"
 consul_advertise: "{{ private_ipv4 }}"
-consul_retry_join: "{% if consul_servers_group_override is not defined %}{% for host in groups[consul_servers_group] | intersect(groups[consul_dc_group]) %}\"{{ hostvars[host].private_ipv4 }}\"{% if not loop.last %},{% endif %}{% endfor %}{% endif %}{% if consul_servers_group_override is defined  %}{% for controller in consul_servers_group_override %}\"{{ controller }}\"{% if not %loop.last %},{% endif %} {% endfor %} {% endif %}"
-consul_bootstrap_expect: "{% if consul_servers_group_override is not defined %}{{ groups[consul_servers_group] | intersect(groups[consul_dc_group]) | %length }}{% endif %}"
+consul_retry_join: "{% if consul_servers_group_override is not defined %}{% for host in groups[consul_servers_group] | intersect(groups[consul_dc_group]) %}\"{{ hostvars[host].private_ipv4 }}\"{% if not loop.last %},{% endif %}{% endfor %}{% endif %}{% if consul_servers_group_override is defined  %}{% for controller in consul_servers_group_override %}\"{{ controller }}\"{% if not loop.last %},{% endif %} {% endfor %} {% endif %}"
+consul_bootstrap_expect: "{% if consul_servers_group_override is not defined %}{{ groups[consul_servers_group] | intersect(groups[consul_dc_group]) | length }}{% endif %}"
 consul_disable_remote_exec: yes
 consul_ca_file: ca.cert
 consul_cert_file: consul.cert
