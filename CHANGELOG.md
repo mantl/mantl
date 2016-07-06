@@ -71,6 +71,7 @@
   * remove test.mesos.yml  [#1552](https://github.com/CiscoCloud/mantl/issues/1552)
   * Add playbook to force consul leader election [#948](https://github.com/CiscoCloud/mantl/issues/948)
   * Vagrant update to include Kube worker [#1542](https://github.com/CiscoCloud/mantl/issues/1542)
+  * Increase the time waiting for a consul leader to be elected [#1648](https://github.com/CiscoCloud/mantl/pull/1648)
 
 * Upgrade support for upgrading a 1.1 cluster
   * 1.1 -> 1.2 upgrade playbook [#1631](https://github.com/CiscoCloud/mantl/pull/1631)
