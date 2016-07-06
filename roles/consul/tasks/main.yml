@@ -27,6 +27,13 @@
   tags:
     - consul
 
+- name: assert consul clustering
+  sudo: yes
+  command: consul join {{ item }}
+  with_items: consul_retry_join
+  tags:
+    - consul
+
 - name: register docker with consul
   sudo: yes
   copy:
