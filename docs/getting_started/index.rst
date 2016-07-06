@@ -27,7 +27,7 @@ Preparing to provision Cloud Hosts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The playbooks and roles in this project will work on whatever provider
-(or metal) you care to spin up, as long as it can run CentOS 7 or
+(or bare metal) you care to spin up, as long as it can run CentOS 7 or
 equivalent.
 
 Your hosts will have to be accessible with your SSH key. If you're unfamiliar
