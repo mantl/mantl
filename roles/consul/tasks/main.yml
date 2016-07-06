@@ -31,6 +31,7 @@
   sudo: yes
   command: consul join {{ item }}
   with_items: consul_retry_join
+  when: consul_servers_group_override is defined
   tags:
     - consul
 
