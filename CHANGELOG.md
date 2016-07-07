@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2 (July 05, 2016)
+## 1.2 (July 07, 2016)
 
 * Mesos and Marathon improvements
   * Upgrade Mesos to 0.28.2 and Marathon to 1.1.1 [#1524](https://github.com/CiscoCloud/mantl/issues/1524)
