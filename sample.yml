@@ -19,6 +19,7 @@
     consul_servers_group: role=control
   roles:
     - common
+    - certificates
     - lvm
     - docker
     - logrotate

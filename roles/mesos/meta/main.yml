@@ -1,5 +1,3 @@
 ---
 dependencies:
-  - role: certificates
-    when: do_mesos_ssl
   - role: handlers
