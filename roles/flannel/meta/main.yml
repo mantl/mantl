@@ -1,4 +1,3 @@
 ---
 dependencies:
-  - { role: etcd }
-
+  - role: etcd
