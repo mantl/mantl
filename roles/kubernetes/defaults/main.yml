@@ -1,5 +1,3 @@
-kube_url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/amd64
-
 # Kubernetes services logging level, integer from 0 to 4, where 4 is most
 # verbose. Applies to all services globally. Be carefull with highest log level,
 # log sizes grow quickly even without a real workload.
@@ -40,4 +38,3 @@ os_username: "{{ lookup('env','OS_USERNAME') }}"
 os_password: "{{ lookup('env','OS_PASSWORD') }}"
 os_region_name: "{{ lookup('env','OS_REGION_NAME') }}"
 os_tenant_id: "{{ lookup('env','OS_TENANT_ID') }}"
-

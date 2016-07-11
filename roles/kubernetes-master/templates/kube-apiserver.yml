@@ -7,12 +7,13 @@ spec:
   hostNetwork: true
   containers:
   - name: kube-apiserver
-    image: gcr.io/google_containers/hyperkube:{{ kube_version }}
+    image: "{{ kube_hyperkube_image }}:{{ kube_version }}"
     command:
     - /hyperkube
     - apiserver
     - --bind-address={{ private_ipv4 }}
-    - --etcd-servers={{ etcd_url_scheme }}://etcd.service.consul:{{ etcd_client_port }}/
+    - --insecure-bind-address=127.0.0.1
+    - --etcd-servers=http://127.0.0.1:8500
     - --allow-privileged=true
     - --service-cluster-ip-range={{ kube_service_addresses }}
     - --secure_port={{ kube_master_port }}
@@ -26,6 +27,7 @@ spec:
     - --basic-auth-file={{ kube_users_dir }}/known_users.csv
     - --runtime-config=extensions/v1beta1/daemonsets=true
     - --v={{kube_log_level}}
+    - --storage-backend=consul
     ports:
     - containerPort: {{ kube_master_port }}
       hostPort: {{ kube_master_port }}
