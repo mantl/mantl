@@ -15,11 +15,8 @@ kube_version: v1.2.0
 
 # Users to create for basic auth in Kubernetes API via HTTP
 kube_users:
-  kube:
-    pass: changeme
-    role: admin
-  root:
-    pass: changeme
+  admin:
+    pass: "{{ nginx_admin_password }}"
     role: admin
 
 # Select which network manager to use. After choosing, edit kubernetes.yml file and include aproriate roles.
