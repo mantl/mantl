@@ -10,7 +10,6 @@ etcd_security: true
 etcd_conf_dir: /etc/etcd
 etcd_script_dir: /usr/libexec/etcd
 
-
 etcd_initial_cluster_state: new
 etcd_initial_cluster_token: etcd-k8-cluster
 

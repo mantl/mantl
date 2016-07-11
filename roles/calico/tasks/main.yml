@@ -25,6 +25,7 @@
     owner: root
     group: root
     mode: 0644
+    validate: "bash -n %s"
   notify:
     - restart calico
   tags:

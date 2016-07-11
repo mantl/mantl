@@ -39,9 +39,9 @@ ETCD_ADVERTISE_CLIENT_URLS={{ etcd_advertise_client_urls }}
 #[security]
 {% if etcd_security -%}
 ETCD_CA_FILE=/etc/pki/CA/ca.cert
-ETCD_CERT_FILE={{ host_cert }}
-ETCD_KEY_FILE={{ host_key }}
+ETCD_CERT_FILE=/etc/pki/mantl/cert
+ETCD_KEY_FILE=/etc/pki/mantl/key
 ETCD_PEER_CA_FILE=/etc/pki/CA/ca.cert
-ETCD_PEER_CERT_FILE={{ host_cert }}
-ETCD_PEER_KEY_FILE={{ host_key }}
+ETCD_PEER_CERT_FILE=/etc/pki/mantl/cert
+ETCD_PEER_KEY_FILE=/etc/pki/mantl/key
 {% endif -%}
