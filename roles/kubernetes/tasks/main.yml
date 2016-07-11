@@ -14,6 +14,59 @@
   tags:
     - kubernetes
 
+- name: download kubernetes binaries
+  sudo: yes
+  get_url:
+    url: "{{ kube_url }}/{{ item }}"
+    dest: /usr/bin
+    mode: 0753
+  with_items:
+    - kubelet
+    - kubectl
+  tags:
+    - kubernetes
+
+- name: generate kubelet systemd unit
+  sudo: yes
+  template:
+    src: >
+      {% if 'role=control' in group_names -%}kubelet-master.service.j2
+      {%- else -%}kubelet-node.service.j2{%- endif %}
+    dest: /usr/lib/systemd/system/kubelet.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - kubernetes
+
+- name: generate kubelet kubeconfig
+  sudo: yes
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/kubernetes/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - kubernetes
+  with_items:
+    - "{% if 'role=control' in group_names %}master.kubeconfig{% else %}node.kubeconfig{% endif %}"
+
+- name: enable and start kubelet service
+  sudo: yes
+  service:
+    name: kubelet
+    enabled: yes
+    state: started
+  tags:
+    - kubernetes
+
 - name: pull hyperkube docker image
   sudo: yes
   command: "docker pull gcr.io/google_containers/hyperkube:{{ kube_version }}"

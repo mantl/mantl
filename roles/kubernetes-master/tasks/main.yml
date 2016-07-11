@@ -1,62 +1,4 @@
 ---
-- include: secrets.yml
-  tags:
-    - secrets
-    - kubernetes
-
-- name: download kubernetes binaries
-  sudo: yes
-  get_url:
-    url: "{{ kube_url }}/{{ item }}"
-    dest: /usr/bin
-    mode: 0753
-  with_items:
-    - kubelet
-    - kubectl
-  tags:
-    - master
-    - kubernetes
-
-- name: generate kubelet systemd unit
-  sudo: yes
-  template:
-    src: kubelet.service.j2
-    dest: /usr/lib/systemd/system/kubelet.service
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - reload systemd
-    - restart kubelet
-  tags:
-    - master
-    - kubernetes
-
-- name: generate kubelet kubeconfig
-  sudo: yes
-  template:
-    src: master.kubeconfig.j2
-    dest: "/etc/kubernetes/master.kubeconfig"
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - reload systemd
-    - restart kubelet
-  tags:
-    - master
-    - kubernetes
-
-- name: enable and start kubelet service
-  sudo: yes
-  service:
-    name: kubelet
-    enabled: yes
-    state: started
-  tags:
-    - master
-    - kubernetes
-
 - name: generate kubernetes manifests
   sudo: yes
   template:
@@ -128,17 +70,6 @@
     - master
     - kubernetes
 
-- name: create fluentd pod
-  sudo: yes
-  copy:
-    src: fluentd-es.yaml
-    dest: "{{ kube_manifest_dir }}/fluentd-es.yaml"
-  when: enable_logging
-  tags:
-    - addons
-    - logging
-    - kubernetes
-
 - name: configure kubectl
   sudo: no
   command: "/bin/kubectl {{ item }}"
@@ -146,5 +77,15 @@
     - config set-cluster mantl --server=http://127.0.0.1:8085
     - config set-context mantl --cluster=mantl --namespace=kube-system
     - config use-context mantl
+  tags:
+    - kubernetes
+
+- include: skydns.yml
+  when: dns_setup
+  tags:
+    - kubernetes
+
+- include: dashboard.yml
+  when: enable_ui
   tags:
     - kubernetes
