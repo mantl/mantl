@@ -1,19 +1,22 @@
 #!/usr/bin/env python2
 from __future__ import print_function
-import sys
-import json
 import base64
-from time import sleep
-import urllib2
+import json
+import logging
+import socket
 import ssl
 import subprocess
+import sys
+import time
+import urllib2
+
 
 def get_credentials():
     """ Get consul api password from security.yml """
-    # TODO: is this the correct YAML key for the Consul API password?
+    # TODO: Should we just add pyyaml as a dependency?
     yaml_key = "nginx_admin_password:"
     try:
-        with open('security.yml') as f:
+        with open('security.yml', 'r') as f:
             for line in f:
                 if yaml_key in line:
                     # credentials are the whole string after the key
@@ -25,84 +28,89 @@ def get_credentials():
         # than just failing because security.yml isn't present.
         return ""
 
+
 def get_hosts_from_json(json_str, role="control"):
-    """ Get a list of IP addresses of hosts with a certain role from a JSON
+    """ Get a list of (hostname, ip) pairs with a certain role from a JSON
     string """
     ips = []
-    json_dic = json.loads(json_str)
-    host_data = json_dic["_meta"]["hostvars"]
+    host_data = json.loads(json_str)["_meta"]["hostvars"]
     for key, dic in host_data.iteritems():
         if dic.get("role", "").lower() == role:
-            ips.append(dic["public_ipv4"])
+            ips.append((key, dic["public_ipv4"]))
     return ips
+
 
 def get_hosts_from_dynamic_inventory(cmd, role="control"):
     """ Get a list of IP addresses of control hosts from terraform.py """
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     rc = proc.wait()
     if rc != 0:
-        print("terraform.py exited with ", rc)
+        logging.error("terraform.py exited with ", rc)
         return []
     else:
         return get_hosts_from_json(proc.stdout.read())
 
-def node_health_check(node_address):
-    """ Return a boolean: if a node passes all of its health checks """
 
-    # Create a context that doesn't validate SSL certificates, since Mantl's
-    # are self-signed.
+def failing_checks(node_address, timeout=30):
+    """ Returns a list of failing checks. """
+
+    # Verify TLS certs using the generated CA
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
+    ctx.load_verify_locations(cafile="ssl/cacert.pem")
+    ctx.verify_mode = ssl.CERT_REQUIRED
 
-    url = "https://" + node_address + "/consul/v1/health/state/any"
+    url = "https://{}:8500/v1/health/state/any".format(node_address)
     request = urllib2.Request(url)
     auth = b'Basic ' + base64.b64encode(get_credentials())
     request.add_header("Authorization", auth)
 
-    try:
-        f = urllib2.urlopen(request, None, 30, context=ctx)
-    except urllib2.URLError as e:
-        print("Could not open ", url, "\n", e)
-        return False
+    f = urllib2.urlopen(request, None, timeout, context=ctx)
+    checks = json.loads(f.read().decode('utf8'))
 
-    try:
-        health_checks = json.loads(f.read().decode('utf8'))
-    except TypeError as e:
-        print("Invalid JSON input string", e)
-        return False
-    except IOError as e:
-        print("Could not load JSON from ", url, "\n", e)
-        return False
-
-    for check in health_checks:
-        if check['Status'] != "passing":
-            output = check['Name'] + ":" + check['Status'] + "\n" + check['Output']
-            print(output.encode('utf8'))
-            return False
-
-    return True
-
-def cluster_health_check(ip_addresses):
-    """ Return an integer representing how many nodes failed """
-    failed = 0
-    for ip in ip_addresses:
-        passed = node_health_check(ip)
-        print("Node ", ip, " ", "passed" if passed else "failed")
-        failed += 0 if passed else 1
-    return failed
+    return [c for c in checks if c.get("Status", "").lower() != "passing"]
 
 if __name__ == "__main__":
-    print("Waiting for cluster to finalize init before starting health checks")
-    sleep(60*5)  # five minutes
-
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Getting hosts")
     # Get IP addresses of hosts from a dynamic inventory script
     cmd = ["python2", "plugins/inventory/terraform.py", "--list"]
-    address_list = get_hosts_from_dynamic_inventory(cmd)
+    hosts = get_hosts_from_dynamic_inventory(cmd)
 
-    if len(address_list) == 0:
-        print("terraform.py reported no control hosts.")
+    if len(hosts) == 0:
+        logging.error("terraform.py reported no control hosts.")
         sys.exit(1)
 
-    failed = cluster_health_check(address_list)
-    sys.exit(0 if failed == 0 else 1)
+    # If it's been less than five minutes, accept failures.
+    logging.info("Beginning health checks")
+    began = time.time()
+    failed = True
+    while time.time() - began < 300 and failed:
+        timeout = 5
+        for hostname, ip in hosts:
+            try:
+                failed = failing_checks(ip, timeout=timeout)
+                if not failed:
+                    logging.info("All Consul health checks are passing.")
+                    sys.exit(0)
+                else:
+                    for check in failed:
+                        name = check.get("Name", "<unknown>")
+                        status = check.get("Status", "<unknown>")
+                        output = check.get("Output", "<unknown>")
+                        logging.warn("Check '{}' failing with status '{}' and output: {}".format(name, status, output))
+
+            except socket.timeout as e:
+                logging.warn("Network timeout: {}".format(e))
+                timeout += 5
+
+            except ValueError as e:
+                logging.warn("Error decoding JSON: {}".format(e))
+
+            except IOError as e:
+                logging.warn("Unknown error: {}".format(e))
+
+        logging.info("Sleeping...")
+        time.sleep(10)
+
+    sys.exit(1)

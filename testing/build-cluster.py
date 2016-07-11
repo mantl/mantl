@@ -59,8 +59,9 @@ if __name__ == "__main__":
             (ap + ["playbooks/wait-for-hosts.yml"], 3),
             (ap + ["-e", "serial=0", "playbooks/upgrade-packages.yml"], 1),
             (ap + ["sample.yml"], 1),
-            (["python2", "testing/healthchecks.py"], 2)
+            (["python2", "testing/healthchecks.py"], 1)
         ])
 
     if not run_cmds(setup, fail_sequential=True):
         exit(1)
+    exit(0)
