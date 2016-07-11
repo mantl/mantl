@@ -21,7 +21,7 @@ to an OpenStack cloud. The Terraform `OpenStack Provider
 updated since it does not support Magnum. If/when this is accomplished, adding
 Magnum support to Mantl should be straightforward.
 
-Can I use Mantl with`Kubernetes <http://kubernetes.io/>`_?
+Can I use Mantl with `Kubernetes <http://kubernetes.io>`_?
 ----------------------------------------------------------------
 
 Kubernetes is an open source orchestration system for Docker containers.
