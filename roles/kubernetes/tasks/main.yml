@@ -14,15 +14,11 @@
   tags:
     - kubernetes
 
-- name: download kubernetes binaries
+- name: install kubernetes binaries
   sudo: yes
-  get_url:
-    url: "{{ kube_url }}/{{ item }}"
-    dest: /usr/bin
-    mode: 0753
-  with_items:
-    - kubelet
-    - kubectl
+  yum:
+    name: "{{ kubernetes_package }}"
+    state: present
   tags:
     - kubernetes
 
@@ -69,7 +65,7 @@
 
 - name: pull hyperkube docker image
   sudo: yes
-  command: "docker pull gcr.io/google_containers/hyperkube:{{ kube_version }}"
+  command: "docker pull {{ kube_hyperkube_image }}:{{ kube_version }}"
   register: docker_pull_result
   changed_when: docker_pull_result.stdout.find('newer') > -1
   tags:

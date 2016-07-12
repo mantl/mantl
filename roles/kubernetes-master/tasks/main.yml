@@ -12,6 +12,7 @@
     - kube-proxy
     - kube-podmaster
     - kube-system
+    - kube2consul
   notify:
     - restart kubelet
   tags:
