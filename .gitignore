@@ -8,6 +8,9 @@ ssl/serial*
 ssl/.rnd
 .syncdir/
 
+# ansible
+*.retry
+
 # terraform
 /*.tf
 **/*.tfstate*
