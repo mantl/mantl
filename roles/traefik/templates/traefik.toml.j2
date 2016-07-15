@@ -1,7 +1,18 @@
-port = ":80"
+defaultEntryPoints = ["http", "https"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      CertFile = "/etc/pki/mantl/cert"
+      KeyFile = "/etc/pki/mantl/key"
+
 graceTimeOut = 10
 logLevel = "ERROR"
 
+# Use the REST API configuration backend
 [web]
 address = ":8081"
 CertFile = "/etc/pki/mantl/cert"
