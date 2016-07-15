@@ -33,6 +33,7 @@ install:
   - python testing/travis.py install
 
 before_script:
+  - terraform remote config -backend=s3 -backend-config='bucket=mantl-ci-remote-tfstate' -backend-config='key=${PROVIDER}/terraform.tfstate' -backend-config='region=us-west-1'
   - export TERRAFORM_FILE=testing/terraform/${PROVIDER}.tf
   - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
   - echo $CI_HEAD_COMMIT
