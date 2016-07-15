@@ -265,38 +265,3 @@ For managing DNS with Route 53, you can use a policy like the following:
 
 You would replace HOSTED_ZONE_ID with the hosted zone ID of your domain in
 Route 53.
-
-Adding an Elastic Load Balancer (ELB)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Optionally, you can configure your environment to include an Elastic Load
-Balancer (ELB) in front of Mantl UI.
-
-You will need to ensure that your IAM user has the following permissions:
-
-* elasticloadbalancing:AddTags
-* elasticloadbalancing:ApplySecurityGroupsToLoadBalancer
-* elasticloadbalancing:ConfigureHealthCheck
-* elasticloadbalancing:CreateLoadBalancer
-* elasticloadbalancing:CreateLoadBalancerListeners
-* elasticloadbalancing:DeleteLoadBalance
-* elasticloadbalancing:DescribeLoadBalancerAttributes
-* elasticloadbalancing:DescribeLoadBalancers
-* elasticloadbalancing:ModifyLoadBalancerAttributes
-* elasticloadbalancing:RegisterInstancesWithLoadBalancer
-* iam:DeleteServerCertificate
-* iam:GetServerCertificate
-* iam:UploadServerCertificate
-
-In your ``aws.tf``, you will want to uncomment the aws-elb module:
-
-.. code-block:: json
-
-  # Example setup for an AWS ELB
-  module "aws-elb" {
-    source = "./terraform/aws/elb"
-    short_name = "${var.short_name}"
-    instances = "${module.control-nodes.control_ids}"
-    subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
-    security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
-  }
