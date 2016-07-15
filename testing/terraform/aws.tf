@@ -90,26 +90,3 @@ module "kubeworker-nodes" {
   security_group_ids = "${module.vpc.default_security_group},${module.security-groups.worker_security_group}"
   vpc_subnet_ids = "${module.vpc.subnet_ids}"
 }
-
-# TODO: waiting on #1688
-# module "aws-elb" {
-#   source = "./terraform/aws/elb"
-#   short_name = "${var.short_name}"
-#   instances = "${module.control-nodes.ec2_ids}"
-#   subnets = "${module.vpc.subnet_ids}"
-#   security_groups = "${module.security-groups.ui_security_group},${module.vpc.default_security_group}"
-#   ## uncomment below it you want to use remote state for vpc variables
-#   ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
-#   ##security_groups = "${module.security-groups.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
-# }
-
-# module "traefik-elb" {
-#   source = "./terraform/aws/elb/traefik"
-#   instances = "${module.edge-nodes.ec2_ids}"
-#   short_name = "${var.short_name}"
-#   subnets = "${module.vpc.subnet_ids}"
-#   security_groups = "${module.security-groups.ui_security_group},${module.vpc.default_security_group}"
-#   ## uncomment below it you want to use remote state for vpc variables
-#   ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
-#   ##security_groups = "${module.security-groups.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
-# }
