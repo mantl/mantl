@@ -94,3 +94,9 @@
     traefik_marathon_domain: marathon.localhost
   roles:
     - traefik
+
+# Configure the remaining portion of the attached disk on each node (if
+# applicable)
+- hosts: all
+  roles:
+    - disk
