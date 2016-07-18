@@ -49,6 +49,7 @@
   roles:
     - mesos
     - calico
+    - disk
 
 - hosts: role=kubeworker
   gather_facts: yes
@@ -56,6 +57,7 @@
     - calico
     - kubernetes
     - kubernetes-node
+    - disk
 
 # the control nodes are necessarily more complex than the worker nodes, and have
 # ZooKeeper, Mesos, and Marathon leaders. In addition, they control Vault to
@@ -94,9 +96,3 @@
     traefik_marathon_domain: marathon.localhost
   roles:
     - traefik
-
-# Configure the remaining portion of the attached disk on each node (if
-# applicable)
-- hosts: all
-  roles:
-    - disk
