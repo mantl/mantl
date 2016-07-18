@@ -11,6 +11,7 @@
         "java-heap": "{{ elasticsearch_java_opts }}"
       },
       "executor": {
+        "data-directory": "{{ elasticsearch_data_directory }}",
         "cluster-name": "{{ elasticsearch_cluster_name }}",
         "name": "{{ elasticsearch_executor_name }}",
         "cpu": {{ elasticsearch_executor_cpu }},
