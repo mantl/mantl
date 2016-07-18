@@ -1,10 +1,8 @@
 {
   "maxReviewers": 2,
-  "fileBlacklist": [], // mention-bot will ignore any files that match these file globs
-  "userBlacklist": [], // users in this list will never be mentioned by mention-bot
-  "requiredOrgs": ["asteris-llc", "CiscoCloud"], // mention-bot will only mention user who are a member of one of these organizations
-  "delayed": true, // don't comment until 3 hours after a PR has been posted.
+  "requiredOrgs": ["asteris-llc", "CiscoCloud"],
+  "delayed": true,
   "delayedUntil": "5h",
   "skipAlreadyAssignedPR": true,
-  "assignToReviewer": true,
+  "assignToReviewer": true
 }
