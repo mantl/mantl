@@ -1,0 +1,10 @@
+[volume:mesos]
+group = mantl
+volume = mesos
+size = {{ mesos_lvm_data_volume_size }}
+
+[filesystem:mesos]
+dev = /dev/mantl/mesos
+fstype = ext4
+mount = /mnt/mesos
+required_by = mesos-agent.service
