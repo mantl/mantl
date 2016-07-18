@@ -26,7 +26,7 @@ kafka_broker_options:
   - log.flush.scheduler.interval.ms=2000
   - log.retention.hours=72
   - log.flush.interval.messages=20000
-  - log.dirs=/mantl/a/dfs-data/kafka-logs\\,/mantl/b/dfs-data/kafka-logs\\,/mantl/c/dfs-data/kafka-logs\\,/mantl/d/dfs-data/kafka-logs\\,/mantl/e/dfs-data/kafka-logs\\,/mantl/f/dfs-data/kafka-logs
+  - log.dirs=/mnt/mantldata/kafka/a/dfs-data/kafka-logs\\,/mnt/mantldata/kafka/b/dfs-data/kafka-logs\\,/mnt/mantldata/kafka/c/dfs-data/kafka-logs\\,/mnt/mantldata/kafka/d/dfs-data/kafka-logs\\,/mnt/mantldata/kafka/e/dfs-data/kafka-logs\\,/mnt/mantldata/kafka/f/dfs-data/kafka-logs
   - log.index.interval.bytes=4096
   - socket.receive.buffer.bytes=10485
   - min.insync.replicas=2
