@@ -9,7 +9,6 @@
     mode: 0644
   with_items:
     - kube-apiserver
-    - kube-proxy
     - kube-podmaster
     - kube-system
     - kube2consul
