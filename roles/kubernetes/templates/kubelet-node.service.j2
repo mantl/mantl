@@ -16,8 +16,7 @@ ExecStart=/usr/bin/kubelet \
   --tls-cert-file={{ kube_cert_dir }}/kubelet.crt \
   --tls-private-key-file={{ kube_cert_dir }}/kubelet.key \
   --v={{ kube_log_level }} {% if enable_cloud_provider %} \
-  --cloud-provider={{ cloud_provider }} \
-  --cloud-config={{ cloud_provider_config }} {% endif %} \
+  --cloud-provider={{ cloud_provider }} {% endif %} \
   {% if calico_image is defined -%}
   --network-plugin=cni \
   --network-plugin-dir=/etc/cni/net.d {% endif %}

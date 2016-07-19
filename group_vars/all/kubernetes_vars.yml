@@ -32,12 +32,8 @@ network: calico
 cluster_name: cluster.local
 
 # Enable to leverage some unique features of a specific cloud provider.
-enable_cloud_provider: false
-
-# Only OpenStack provider is currently supported.
-cloud_provider: openstack
-
-cloud_provider_config: /etc/kubernetes/cloud-config
+enable_cloud_provider: "{% if provider in ['aws'] %}True{% else %}False{% endif %}"
+cloud_provider: "{{ provider }}"
 
 # Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
@@ -96,6 +92,3 @@ etcd_url_scheme: http
 
 # Intra-cluster communication protocol (http/https)
 etcd_peer_url_scheme: http
-
-# enable cloud provider integration
-enable_cloud_provider: false

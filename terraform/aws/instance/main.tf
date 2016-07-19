@@ -25,6 +25,7 @@ resource "aws_ebs_volume" "ebs" {
 
   tags {
     Name = "${var.short_name}-${var.role}-lvm-${format(var.count_format, count.index+1)}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -36,7 +37,7 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids = [ "${split(",", var.security_group_ids)}"]
   key_name = "${var.ssh_key_pair}"
   associate_public_ip_address = true
-  subnet_id = "${element(split(",", var.vpc_subnet_ids), count.index)}" 
+  subnet_id = "${element(split(",", var.vpc_subnet_ids), count.index)}"
   iam_instance_profile = "${var.iam_profile}"
   root_block_device {
     delete_on_termination = true
@@ -50,6 +51,7 @@ resource "aws_instance" "instance" {
     sshUser = "${var.ssh_username}"
     role = "${var.role}"
     dc = "${var.datacenter}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 

@@ -2,7 +2,6 @@ variable "availability_zone" {}
 variable "control_count" {default = "3"}
 variable "count_format" {default = "%02d"}
 variable "worker_count_format" {default = "%03d"}
-variable "control_iam_profile" {default = "" }
 variable "control_type" {default = "m3.medium"}
 variable "control_volume_size" {default = "20"} # size is in gigabytes
 variable "control_data_volume_size" {default = "20"} # size is in gigabytes
@@ -22,15 +21,20 @@ variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_username"  {default = "centos"}
 variable "worker_count" {default = "1"}
 variable "kubeworker_count" {default = "0"}
-variable "worker_iam_profile" {default = "" }
 variable "worker_type" {default = "m3.medium"}
 variable "worker_volume_size" {default = "20"} # size is in gigabytes
+
+module "iam-profiles" {
+  source = "./iam"
+  short_name = "${var.short_name}"
+}
 
 resource "aws_vpc" "main" {
   cidr_block = "${var.network_ipv4}"
   enable_dns_hostnames = true
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -40,6 +44,7 @@ resource "aws_subnet" "main" {
   availability_zone = "${var.availability_zone}"
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -47,6 +52,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -60,6 +66,7 @@ resource "aws_route_table" "main" {
 
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -76,6 +83,7 @@ resource "aws_ebs_volume" "mi-control-lvm" {
 
   tags {
     Name = "${var.short_name}-control-lvm-${format("%02d", count.index+1)}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -94,7 +102,7 @@ resource "aws_instance" "mi-control-nodes" {
 
   subnet_id = "${aws_subnet.main.id}"
 
-  iam_instance_profile = "${var.control_iam_profile}"
+  iam_instance_profile = "${module.iam-profiles.control_iam_instance_profile}"
 
   root_block_device {
     delete_on_termination = true
@@ -106,6 +114,7 @@ resource "aws_instance" "mi-control-nodes" {
     sshUser = "${var.ssh_username}"
     role = "control"
     dc = "${var.datacenter}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -125,6 +134,7 @@ resource "aws_ebs_volume" "mi-worker-lvm" {
 
   tags {
     Name = "${var.short_name}-worker-lvm-${format("%02d", count.index+1)}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -144,7 +154,7 @@ resource "aws_instance" "mi-worker-nodes" {
 
   subnet_id = "${aws_subnet.main.id}"
 
-  iam_instance_profile = "${var.worker_iam_profile}"
+  iam_instance_profile = "${module.iam-profiles.worker_iam_instance_profile}"
 
   root_block_device {
     delete_on_termination = true
@@ -156,6 +166,7 @@ resource "aws_instance" "mi-worker-nodes" {
     sshUser = "${var.ssh_username}"
     role = "worker"
     dc = "${var.datacenter}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -175,6 +186,7 @@ resource "aws_ebs_volume" "mi-kubeworker-lvm" {
 
   tags {
     Name = "${var.short_name}-kubeworker-lvm-${format("%02d", count.index+1)}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -194,7 +206,7 @@ resource "aws_instance" "mi-kubeworker-nodes" {
 
   subnet_id = "${aws_subnet.main.id}"
 
-  iam_instance_profile = "${var.worker_iam_profile}"
+  iam_instance_profile = "${module.iam-profiles.worker_iam_instance_profile}"
 
   root_block_device {
     delete_on_termination = true
@@ -206,6 +218,7 @@ resource "aws_instance" "mi-kubeworker-nodes" {
     sshUser = "${var.ssh_username}"
     role = "kubeworker"
     dc = "${var.datacenter}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -225,6 +238,7 @@ resource "aws_ebs_volume" "mi-edge-lvm" {
 
   tags {
     Name = "${var.short_name}-edge-lvm-${format("%02d", count.index+1)}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -255,6 +269,7 @@ resource "aws_instance" "mi-edge-nodes" {
     sshUser = "${var.ssh_username}"
     role = "edge"
     dc = "${var.datacenter}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -270,6 +285,10 @@ resource "aws_security_group" "control" {
   name = "${var.short_name}-control"
   description = "Allow inbound traffic for control nodes"
   vpc_id = "${aws_vpc.main.id}"
+
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
 
   ingress { # SSH
     from_port = 22
@@ -319,6 +338,10 @@ resource "aws_security_group" "worker" {
   name = "${var.short_name}-worker"
   description = "Allow inbound traffic for worker nodes"
   vpc_id = "${aws_vpc.main.id}"
+
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
 
   ingress { # SSH
     from_port = 22
@@ -375,6 +398,10 @@ resource "aws_security_group" "ui" {
   description = "Allow inbound traffic for Mantl UI"
   vpc_id = "${aws_vpc.main.id}"
 
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
+
   ingress { # HTTP
     from_port = 80
     to_port = 80
@@ -401,6 +428,10 @@ resource "aws_security_group" "edge" {
   name = "${var.short_name}-edge"
   description = "Allow inbound traffic for edge routing"
   vpc_id = "${aws_vpc.main.id}"
+
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
 
   ingress { # SSH
     from_port = 22

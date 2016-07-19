@@ -73,12 +73,18 @@ module "security-groups" {
   vpc_id = "${module.vpc.vpc_id}"
 }
 
+module "iam-profiles" {
+  source = "./terraform/aws/iam"
+  short_name = "${var.short_name}"
+}
+
 module "control-nodes" {
   source = "./terraform/aws/instance"
   count = "${var.control_count}"
   datacenter = "${var.datacenter}"
   role = "control"
   ec2_type = "${var.control_type}"
+  iam_profile = "${module.iam-profiles.control_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"
@@ -119,6 +125,7 @@ module "worker-nodes" {
   data_ebs_volume_size = "100"
   role = "worker"
   ec2_type = "${var.worker_type}"
+  iam_profile = "${module.iam-profiles.worker_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"
@@ -140,6 +147,7 @@ module "kubeworker-nodes" {
   data_ebs_volume_size = "100"
   role = "kubeworker"
   ec2_type = "${var.kubeworker_type}"
+  iam_profile = "${module.iam-profiles.worker_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"

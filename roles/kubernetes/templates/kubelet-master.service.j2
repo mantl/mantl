@@ -13,8 +13,7 @@ ExecStart=/usr/bin/kubelet \
   --cluster-dns={{ private_ipv4 }} \
   --cluster-domain={{ dns_domain }} \
   --config={{ kube_manifest_dir }} {% if enable_cloud_provider %}\
-  --cloud-provider={{ cloud_provider }} \
-  --cloud-config={{ cloud_provider_config }} {% endif %} \
+  --cloud-provider={{ cloud_provider }} {% endif %} \
   {% if calico_image is defined -%}
   --network-plugin=cni \
   --network-plugin-dir=/etc/cni/net.d {% endif %}
