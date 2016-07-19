@@ -24,10 +24,6 @@ kube_users:
     pass: "{{ nginx_admin_password }}"
     role: admin
 
-# Select which network manager to use. After choosing, edit kubernetes.yml file and include aproriate roles.
-network: calico
-#network: flannel
-
 # Kubernetes cluster name, also will be used as DNS domain
 cluster_name: cluster.local
 
