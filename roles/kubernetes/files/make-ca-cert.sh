@@ -55,15 +55,15 @@ sans="IP:${service_ip},IP:127.0.0.1,DNS:localhost,DNS:kubernetes,DNS:kubernetes.
 hosts=$(for host in ${masters}; do echo DNS:${host}; done|tr [[:space:]] ,)
 sans="$sans,${hosts%?}"
 
-curl -L -O https://github.com/OpenVPN/easy-rsa/releases/download/3.0.0/EasyRSA-3.0.0.tgz > /dev/null 2>&1
-tar xzf EasyRSA-3.0.0.tgz > /dev/null
+curl -L -O https://github.com/OpenVPN/easy-rsa/releases/download/3.0.0/EasyRSA-3.0.0.tgz
+tar xzf EasyRSA-3.0.0.tgz
 cd EasyRSA-3.0.0
 
-(./easyrsa init-pki > /dev/null 2>&1
- ./easyrsa --batch "--req-cn=kubernetes@$(date +%s)" build-ca nopass > /dev/null 2>&1
- ./easyrsa --subject-alt-name="${sans}" build-server-full server nopass > /dev/null 2>&1
- ./easyrsa build-client-full kubelet nopass > /dev/null 2>&1
- ./easyrsa build-client-full kubecfg nopass > /dev/null 2>&1) || {
+(./easyrsa init-pki
+ ./easyrsa --batch "--req-cn=kubernetes@$(date +%s)" build-ca nopass
+ ./easyrsa --subject-alt-name="${sans}" build-server-full server nopass
+ ./easyrsa build-client-full kubelet nopass
+ ./easyrsa build-client-full kubecfg nopass) || {
  # If there was an error in the subshell, just die.
  # TODO(roberthbailey): add better error handling here
  echo "=== Failed to generate certificates: Aborting ==="
