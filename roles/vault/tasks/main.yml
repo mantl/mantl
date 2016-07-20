@@ -45,3 +45,12 @@
     vault
 
 - include: bootstrap.yml
+
+- name: set vault_token fact
+  set_fact:
+    vault_token: "{{ vault_root_token }}"
+  when: >
+    {{ vault_root_token is defined
+    and 'Vault is already initialized' in vault_init_output.stdout }}
+
+- include: tls-auth.yml
