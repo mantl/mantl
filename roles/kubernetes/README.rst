@@ -11,8 +11,8 @@ From `Kubernetes.io <http://kubernetes.io>`_:
 
 Since version 1.1, Mantl ships Kubernetes by default. All you need to do is set
 the ``kubeworker_count`` and ``kubeworker_type`` variables in your Terraform
-configuration (see the example Terraform configurations for where this variable integrates into the
-workflow.)
+configuration (see the example Terraform configurations for where this variable
+integrates into the workflow.)
 
 `kubectl` is installed and configured for the default SSH user on the control
 nodes. Please refer to the `Kubernetes getting started documentation
@@ -55,3 +55,12 @@ to disable cloud provider integration, set the variable
           should first use ``kubectl`` or the Kubernetes API to delete your
           Kubernetes-managed AWS resources. Otherwise, it can cause your
           ``terraform destroy`` command to fail.
+
+DNS Outline
+-----------
+
+Every node in the cluster hosts etcd and skydns instances. All DNS queries for
+the .local zone are resolved locally. If a container asks for name in .local
+domain, the request is routed through dnsmasq to skydns, which accesses data
+stored in etcd. Updates for container dns names are managed by kube2sky, which
+acts upon kubeapi events.
