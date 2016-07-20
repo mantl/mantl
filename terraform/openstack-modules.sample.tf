@@ -3,6 +3,8 @@ variable public_key { default = "/home/you/.ssh/id_rsa.pub" }
 variable ssh_user { default = "cloud-user" }
 
 variable name { default = "mantl" }        # resources will start with "mantl-"
+variable host_domain { default = "novalocal" } # set persistent hostname
+
 variable control_count { default = "3"}    # mesos masters, zk leaders, consul servers
 variable worker_count { default = "5"}     # worker nodes
 variable kubeworker_count { default = "2"} # kubeworker nodes
@@ -78,6 +80,7 @@ module "floating-ips-edge" {
 module "instances-control" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.control_count}"
   role = "control"
   volume_size = "${var.control_volume_size}"
@@ -92,6 +95,7 @@ module "instances-control" {
 module "instances-worker" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.worker_count}"
   volume_size = "${var.worker_volume_size}"
   count_format = "%03d"
@@ -107,6 +111,7 @@ module "instances-worker" {
 module "instances-kubeworker" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.kubeworker_count}"
   volume_size = "100"
   count_format = "%03d"
@@ -122,6 +127,7 @@ module "instances-kubeworker" {
 module "instances-edge" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.edge_count}"
   volume_size = "${var.edge_volume_size}"
   count_format = "%02d"
