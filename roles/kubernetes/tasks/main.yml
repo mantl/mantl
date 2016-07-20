@@ -14,6 +14,17 @@
   tags:
     - kubernetes
 
+- name: generate kube-proxy manifest
+  sudo: yes
+  template:
+    src: "kube-proxy.yml"
+    dest: "{{ kube_manifest_dir }}/kube-proxy.yml"
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - kubernetes
+
 - name: install kubernetes binaries
   sudo: yes
   yum:
@@ -25,9 +36,7 @@
 - name: generate kubelet systemd unit
   sudo: yes
   template:
-    src: >
-      {% if 'role=control' in group_names -%}kubelet-master.service.j2
-      {%- else -%}kubelet-node.service.j2{%- endif %}
+    src: kubelet.service.j2
     dest: /usr/lib/systemd/system/kubelet.service
     owner: root
     group: root
@@ -41,25 +50,14 @@
 - name: generate kubelet kubeconfig
   sudo: yes
   template:
-    src: "{{ item }}.j2"
-    dest: "/etc/kubernetes/{{ item }}"
+    src: "kubeconfig.yml.j2"
+    dest: "/etc/kubernetes/kubeconfig.yml"
     owner: root
     group: root
     mode: 0644
   notify:
     - reload systemd
     - restart kubelet
-  tags:
-    - kubernetes
-  with_items:
-    - "{% if 'role=control' in group_names %}master.kubeconfig{% else %}node.kubeconfig{% endif %}"
-
-- name: enable and start kubelet service
-  sudo: yes
-  service:
-    name: kubelet
-    enabled: yes
-    state: started
   tags:
     - kubernetes
 
@@ -74,4 +72,13 @@
 - include: secrets.yml
   tags:
     - secrets
+    - kubernetes
+
+- name: enable and start kubelet service
+  sudo: yes
+  service:
+    name: kubelet
+    enabled: yes
+    state: started
+  tags:
     - kubernetes

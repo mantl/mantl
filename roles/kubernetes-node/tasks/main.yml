@@ -1,18 +1,4 @@
 ---
-- name: generate kubernetes manifests
-  sudo: yes
-  template:
-    src: "{{ item }}.yml"
-    dest: "{{ kube_manifest_dir }}/{{ item }}.yml"
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - kube-proxy
-  tags:
-    - node
-    - kubernetes
-
 - name: generate consul config for NodePort services
   sudo: yes
   template:

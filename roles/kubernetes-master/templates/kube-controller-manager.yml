@@ -14,6 +14,9 @@ spec:
     - --master=http://127.0.0.1:{{ kube_insecure_port }}
     - --service-account-private-key-file={{ kube_cert_dir }}/server.key
     - --root-ca-file={{ kube_cert_dir }}/ca.crt
+    {% if enable_cloud_provider -%}
+    - --cloud-provider={{ cloud_provider }}
+    {% endif -%}
     - --v={{kube_log_level}}
     livenessProbe:
       httpGet:
