@@ -23,8 +23,8 @@ ExecStart=/usr/bin/kubelet \
   --config={{ kube_manifest_dir }} \
   --hostname-override={{ inventory_hostname }} \
   --kubeconfig=/etc/kubernetes/kubeconfig.yml \
-  --tls-cert-file={{ kube_cert_dir }}/kubelet.crt \
-  --tls-private-key-file={{ kube_cert_dir }}/kubelet.key \
+  --tls-cert-file={{ host_cert }} \
+  --tls-private-key-file={{ host_key }} \
   --v={{ kube_log_level }}
 
 Restart=always
