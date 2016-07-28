@@ -43,9 +43,8 @@ def script():
     commit_range = os.environ.get("TRAVIS_COMMIT_RANGE", "master..HEAD")
     diff_names = str(subprocess.check_output(["git",  "diff",  "--name-only", commit_range]))
 
-    not_docfiles = filter_not_docfiles(diff_names)
-    if len(not_docfiles) < 1:
-        logging.info("All of the changes were in documentation. Skipping build.")
+    if skip(diff_names):
+        logging.info("Skipping build.")
         sys.exit(0)
 
     # linter commands
@@ -125,10 +124,17 @@ def run_cmds(cmds, fail_sequential=False):
     return to_return
 
 
-def filter_not_docfiles(diff_names):
+def skip(diff_names):
+    if os.environ['TRAVIS_BRANCH'] is not 'master' and os.environ["TRAVIS_PULL_REQUEST"]:
+        logging.info("We don't want to build on pushes to branches that aren't master.")
+        return True
 
     is_doc = lambda f: f.startswith('docs') or any([f.endswith(ext) for ext in ['md', 'rst']])
-    return [f for f in diff_names.split() if not is_doc(f)]
+    if len([ f for f in diff_names.split() if not is_doc(f) ]) < 1:
+        logging.info("All changed files were for documentation.")
+        return True
+
+    return False
 
 
 def deploy_to_cloud_cmds():
