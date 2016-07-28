@@ -80,6 +80,17 @@
   tags:
     - kubernetes
 
+- name: register kube_default_token
+  shell: /bin/kubectl describe secrets default-token | grep "token:" | sed -r 's/token:\s+//' | tr -d '\n'
+  register: kube_token_out
+  run_once: true
+  tags:
+    - kubernetes
+
+- local_action: copy content={{ kube_token_out.stdout }} dest={{ playbook_dir }}/ssl/kubernetes/token
+  tags:
+    - kubernetes
+    
 - include: skydns.yml
   when: dns_setup
   tags:

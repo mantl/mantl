@@ -18,6 +18,32 @@
     - traefik
     - bootstrap
 
+
+# Kubernetes backend setup
+- name: create secrets directory
+  sudo: yes
+  file:
+    path: /var/run/secrets/kubernetes.io/serviceaccount/
+    state: directory
+
+- name: write secure token
+  sudo: yes
+  copy:
+    src: "{{ playbook_dir }}/ssl/kubernetes/token"
+    dest: /var/run/secrets/kubernetes.io/serviceaccount/token
+  tags:
+    - bootstrap
+    - traefik
+
+- name: copy ca certificates
+  sudo: yes
+  copy:
+    src: "{{ playbook_dir }}/ssl/kubernetes/ca.crt"
+    dest: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+  tags:
+    - bootstrap
+    - traefik
+
 - name: create local traefik service override
   sudo: yes
   template:
