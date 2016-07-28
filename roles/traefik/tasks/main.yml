@@ -29,7 +29,7 @@
 - name: write secure token
   sudo: yes
   copy:
-    src: "{{ playbook_dir }}/ssl/kubernetes/token"
+    src: "{{ playbook_dir }}/ssl/kubernetes/default-token"
     dest: /var/run/secrets/kubernetes.io/serviceaccount/token
   tags:
     - bootstrap

@@ -96,10 +96,10 @@
   tags:
     - kubernetes
 
-- local_action: copy content={{ kube_token_out.stdout }} dest={{ playbook_dir }}/ssl/kubernetes/token
+- local_action: copy content={{ kube_token_out.stdout }} dest={{ playbook_dir }}/ssl/kubernetes/default-token
   tags:
     - kubernetes
-    
+
 - include: skydns.yml
   when: dns_setup
   tags:

@@ -5,3 +5,6 @@ traefik_marathon_domain: marathon.localhost
 
 # Do Marathon apps automatically get exposed (traefik default is false)
 traefik_marathon_expose_by_default: "true"
+
+traefik_k8s_endpoint: "https://kubernetes.service.consul:{{ kube_master_port }}"
+traefik_k8s_namespaces: ["default", "kube-system"]
