@@ -1,9 +1,5 @@
 language: python
 
-sudo: required
-services:
-  - docker
-
 addons:
   apt:
     packages:
@@ -13,11 +9,14 @@ branches:
   only:
     - master
 
+cache:
+  - pip
+  - testing/cache
+
 env:
   global:
   - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
-  - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number -e CI_HEAD_COMMIT -e TRAVIS_COMMIT_RANGE -e TRAVIS_REPO_SLUG -e TRAVIS_BRANCH -e TRAVIS_PULL_REQUEST -e TERRAFORM_FILE -e DOCKER_SECRETS'
-  - DOCKER_IMAGE=siddharthist/mantl-testing:0.7.0-rc2
+  - TERRAFORM_VERSION=0.7.0-rc2
   matrix:
   # These providers have a full battery of Terraform+Ansible tests
   - PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
@@ -29,15 +28,17 @@ env:
   - PROVIDER=softlayer
   - PROVIDER=triton
 
+install:
+  - eval $(ssh-agent)
+  - python testing/travis.py install
+
 before_script:
   - export TERRAFORM_FILE=testing/terraform/${PROVIDER}.tf
   - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
   - echo $CI_HEAD_COMMIT
-  - docker pull $DOCKER_IMAGE
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 docker.py ci-setup"
 
 script:
-  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-build"
+  - python testing/travis.py script
+  - python testing/travis.py health_checks
 
-after_script:
-  - if [ -n "$DOCKER_SECRETS" ]; then docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-destroy"; fi
+after_script: python testing/travis.py after_script

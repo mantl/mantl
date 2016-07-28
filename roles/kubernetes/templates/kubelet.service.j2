@@ -9,20 +9,22 @@ ExecStart=/usr/bin/kubelet \
   {% if 'role=control' in group_names -%}
   --register-schedulable=false \
   {% endif -%}
+  {% if enable_cloud_provider | bool -%}
+  --cloud-provider={{ cloud_provider }} \
+  {% endif -%}
+  {% if calico_image is defined -%}
+  --network-plugin=cni \
+  --network-plugin-dir=/etc/cni/net.d \
+  {% endif -%}
   --allow-privileged=true \
-  {% if enable_cloud_provider -%}
   --api-servers=https://kubernetes.service.consul:{{ kube_master_port }} \
-  --cloud-provider={{ cloud_provider }} \ {% endif %}
   --cluster-dns={{ private_ipv4 }} \
   --cluster-domain={{ dns_domain }} \
   --config={{ kube_manifest_dir }} \
   --hostname-override={{ inventory_hostname }} \
   --kubeconfig=/etc/kubernetes/kubeconfig.yml \
-  {% if calico_image is defined -%}
-  --network-plugin=cni \
-  --network-plugin-dir=/etc/cni/net.d \ {% endif %}
-  --tls-cert-file={{ kube_cert_dir }}/kubelet.crt \
-  --tls-private-key-file={{ kube_cert_dir }}/kubelet.key \
+  --tls-cert-file={{ host_cert }} \
+  --tls-private-key-file={{ host_key }} \
   --v={{ kube_log_level }}
 
 Restart=always

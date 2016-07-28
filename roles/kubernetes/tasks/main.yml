@@ -9,7 +9,6 @@
     - "/srv/kubernetes"
     - "{{ kube_manifest_dir }}"
     - "{{ kube_podmaster_dir }}"
-    - "{{ kube_cert_dir }}"
     - "{{ kube_users_dir }}"
   tags:
     - kubernetes
@@ -45,6 +44,13 @@
     - reload systemd
     - restart kubelet
   tags:
+    - kubernetes
+
+# Consul must be available when kubelet stores the manifests in the k/v.
+- name: wait for leader
+  command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
     - kubernetes
 
 - name: generate kubelet kubeconfig
