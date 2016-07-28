@@ -78,7 +78,6 @@
     - mantlui
     - kubernetes
     - kubernetes-master
-    - kubernetes-addons
 
 # The edge role exists solely for routing traffic into the cluster. Firewall
 # settings should be such that web traffic (ports 80 and 443) is exposed to the

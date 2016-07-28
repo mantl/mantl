@@ -1,0 +1,27 @@
+---
+- name: write dashboard manifest
+  sudo: yes
+  template:
+    src: kubernetes-dashboard.yml
+    dest: "{{ kube_manifest_dir }}/kubernetes-dashboard.yml"
+  register: kubernetes_dashboard_rc_def
+  run_once: true
+  tags:
+    - addons
+    - dashboard
+    - kubernetes
+
+- name: create or update dashboard
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: rc
+    name: kubernetes-dashboard
+    filename: "{{ kube_manifest_dir }}/kubernetes-dashboard.yml"
+    state: "{{ kubernetes_dashboard_rc_def.changed | ternary('latest','present') }}"
+    server: "http://localhost:{{ kube_insecure_port }}/"
+  run_once: true
+  tags:
+    - addons
+    - dashboard
+    - kubernetes

@@ -4,7 +4,7 @@ calico_version: 0.19.0
 calico_image: calico/node
 calico_image_tag: v{{ calico_version }}
 
-etcd_service_name: etcd.service.{{ consul_dns_domain }}
+etcd_service_name: etcd.service.consul
 etcd_client_port: 2379
 
 calico_etcdaddr: "{{ inventory_hostname }}:{{ etcd_client_port }}"

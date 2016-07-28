@@ -1,21 +1,22 @@
 # input variables
-variable control_count { default = 3 }
-variable control_size { default = "4gb" }
-variable datacenter { default = "mi" }
-variable edge_count { default = 2 }
-variable edge_size { default = "2gb" }
+variable datacenter { default = "mantl" }
 variable image_name { default = "centos-7-2-x64" }
 variable region_name { default = "nyc3" }
-variable short_name { default = "mi" }
+variable name { default = "mantl" }
 variable ssh_key { }
+# Hosts
+variable control_count { default = 3 }
+variable control_size { default = "4gb" }
 variable worker_count { default = 3 }
-variable kubeworker_count { default = 0 }
 variable worker_size { default = "4gb" }
+variable edge_count { default = 2 }
+variable edge_size { default = "2gb" }
+variable kubeworker_count { default = 0 }
 
 # create resources
 resource "digitalocean_droplet" "control" {
   count = "${var.control_count}"
-  name = "${var.short_name}-control-${format("%02d", count.index+1)}"
+  name = "${var.name}-control-${format("%02d", count.index+1)}"
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.control_size}"
@@ -25,7 +26,7 @@ resource "digitalocean_droplet" "control" {
 
 resource "digitalocean_droplet" "worker" {
   count = "${var.worker_count}"
-  name = "${var.short_name}-worker-${format("%03d", count.index+1)}"
+  name = "${var.name}-worker-${format("%03d", count.index+1)}"
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.worker_size}"
@@ -35,7 +36,7 @@ resource "digitalocean_droplet" "worker" {
 
 resource "digitalocean_droplet" "kubeworker" {
   count = "${var.kubeworker_count}"
-  name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}"
+  name = "${var.name}-kubeworker-${format("%03d", count.index+1)}"
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.worker_size}"
@@ -45,7 +46,7 @@ resource "digitalocean_droplet" "kubeworker" {
 
 resource "digitalocean_droplet" "edge" {
   count = "${var.edge_count}"
-  name = "${var.short_name}-edge-${format("%02d", count.index+1)}"
+  name = "${var.name}-edge-${format("%02d", count.index+1)}"
   image = "${var.image_name}"
   region = "${var.region_name}"
   size = "${var.edge_size}"

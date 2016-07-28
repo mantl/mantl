@@ -121,8 +121,8 @@ def process_vg(sec, params):
     else:
         subprocess.check_call([VGCREATE_CMD] + vgoptions + ['-s', str(pesize), name] + list(dev_list))
 
-pct_re = re.compile(r'^(\d+)%(PVS|LV|FREE)$')
-size_re = re.compile(r'^(\d+)[bskmgtpe]$')
+pct_re = re.compile(r'^(\d+)%(PVS|VG|FREE)$')
+size_re = re.compile(r'^(\d+)([bskmgtpe])b?$')
 def parse_size(size):
     if size:
         m = pct_re.match(size)

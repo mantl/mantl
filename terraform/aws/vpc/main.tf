@@ -21,6 +21,7 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -31,6 +32,7 @@ resource "aws_subnet" "main" {
   availability_zone = "${var.region}${element(split(",", var.availability_zones), count.index)}"
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -38,6 +40,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -49,6 +52,7 @@ resource "aws_route_table" "main" {
   }
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
