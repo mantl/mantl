@@ -125,7 +125,7 @@ def run_cmds(cmds, fail_sequential=False):
 
 
 def skip(diff_names):
-    if os.environ['TRAVIS_BRANCH'] is not 'master' and os.environ["TRAVIS_PULL_REQUEST"]:
+    if os.environ['TRAVIS_BRANCH'] != 'master' and os.environ["TRAVIS_PULL_REQUEST"]:
         logging.info("We don't want to build on pushes to branches that aren't master.")
         return True
 
