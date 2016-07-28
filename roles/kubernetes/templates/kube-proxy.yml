@@ -21,13 +21,7 @@ spec:
     - mountPath: /etc/kubernetes
       name: etc-kubernetes
       readOnly: true
-    - mountPath: /etc/pki
-      name: etc-pki
-      readOnly: true
   volumes:
-  - name: etc-kubernetes
-    hostPath:
+  - hostPath:
       path: /etc/kubernetes
-  - name: etc-pki
-    hostPath:
-      path: /etc/pki
+    name: etc-kubernetes

@@ -1,12 +1,4 @@
 ---
-# Consul must be available when kubelet stores the manifests in the k/v.
-- name: wait for leader
-  command: /usr/local/bin/consul-wait-for-leader.sh
-  tags:
-    - consul
-    - master
-    - kubernetes
-
 - name: generate kubernetes manifests
   sudo: yes
   template:
@@ -61,8 +53,7 @@
 
 - name: wait for apiserver to come up
   wait_for:
-    port: "{{ kube_insecure_port }}"
-    timeout: 90
+    port: 8085
   tags:
     - kubernetes
 
@@ -83,7 +74,7 @@
   sudo: no
   command: "/bin/kubectl {{ item }}"
   with_items:
-    - config set-cluster mantl --server="http://127.0.0.1:{{ kube_insecure_port }}"
+    - config set-cluster mantl --server=http://127.0.0.1:8085
     - config set-context mantl --cluster=mantl --namespace=kube-system
     - config use-context mantl
   tags:
