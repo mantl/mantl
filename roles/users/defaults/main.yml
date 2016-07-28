@@ -1,8 +1,8 @@
 ---
-users:
-  - name: siddharthist
-    state: present
-    groups:
-      - wheel # caution: this will allow passwordless sudo
-    authorized_keys:
-      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDxuEh/4ia2C+e7uV/BYjRsCSZqbiNQv8Rz0LDiNbTRqEiA0Qmu+NnZ2Glq+Hb3BTAIs0o8bFmZq0pjdxfQuX3dPdpfI0UAurdajJAaduyfZ8Aavgm59hF/muF/z9KTjkcUIp68P4pdQZQ0xhrWHmhJQTv7uw6hVqVPpMj3y8pHc9EoqLYN7cj9X+VWmjfBKCx/tbnUkIN8l/RvwYuuuJewc0jfgY6rZznVI3d5OauuwymxifPtar5FcsxM6DMJgcS5w92y0Jsy2Kh7vVY9eTbdTKLy8xKwZnekSu6qQVBILQjnKmj9/y4ZRIHcLvI7xigkOvUw6+zVvdZ4z+6YcTX siddharthist@nova"
+# users:
+#   - name: user1
+#     present: true
+#     groups:
+#       - wheel # caution: this will allow passwordless sudo
+#     authorized_keys:
+#       - "ssh-ed25519 AAAABBBCCC123..."
