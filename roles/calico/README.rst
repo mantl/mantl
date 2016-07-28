@@ -153,14 +153,6 @@ Variables
 You can use these variables to customize your Calico installation. For more
 information, refer to the :doc:`etcd` configuration.
 
-.. data:: etcd_service_name
-
-   Set the ``ETCD_AUTHORITY`` environment variable that is used by Calico Docker
-   container and the CLI tool ``calicoctl``. The value of this variable is
-   a Consul service that must be resolved through DNS
-
-   Default: ``etcd.service.consul``
-
 .. data:: etcd_client_port
 
    Port for etcd client communication
