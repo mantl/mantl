@@ -11,13 +11,13 @@ spec:
     command:
     - /hyperkube
     - controller-manager
-    - --master=http://127.0.0.1:{{ kube_insecure_port }}
-    - --service-account-private-key-file={{ kube_cert_dir }}/server.key
-    - --root-ca-file={{ kube_cert_dir }}/ca.crt
     {% if enable_cloud_provider | bool -%}
     - --cloud-provider={{ cloud_provider }}
     {% endif -%}
-    - --v={{kube_log_level}}
+    - --master=http://127.0.0.1:{{ kube_insecure_port }}
+    - --root-ca-file=/etc/pki/CA/ca.cert
+    - --service-account-private-key-file={{ host_key }}
+    - --v={{ kube_log_level }}
     livenessProbe:
       httpGet:
         host: 127.0.0.1
@@ -29,7 +29,13 @@ spec:
     - mountPath: /etc/kubernetes
       name: etc-kubernetes
       readOnly: true
+    - mountPath: /etc/pki
+      name: etc-pki
+      readOnly: true
   volumes:
-  - hostPath:
+  - name: etc-kubernetes
+    hostPath:
       path: /etc/kubernetes
-    name: etc-kubernetes
+  - name: etc-pki
+    hostPath:
+      path: /etc/pki

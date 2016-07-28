@@ -12,21 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Configuration to deploy release version of the Dashboard UI.
-#
-# Example usage: kubectl create -f <this_file>
-
 kind: List
 apiVersion: v1
 items:
 - kind: ReplicationController
   apiVersion: v1
   metadata:
+    name: kubernetes-dashboard
+    namespace: kube-system
     labels:
       app: kubernetes-dashboard
       version: v1.0.1
-    name: kubernetes-dashboard
-    namespace: kube-system
   spec:
     replicas: 1
     selector:
@@ -38,22 +34,37 @@ items:
       spec:
         containers:
         - name: kubernetes-dashboard
-          image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.0.1
+          image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.1.0
           imagePullPolicy: Always
           ports:
           - containerPort: 9090
             protocol: TCP
+          env:
+            - name: KUBECONFIG
+              value: /etc/kubernetes/kubeconfig.yml
           args:
-            # Uncomment the following line to manually specify Kubernetes API server Host
-            # If not specified, Dashboard will attempt to auto discover the API server and connect
-            # to it. Uncomment only if the default does not work.
-            # - --apiserver-host=http://my-address:port
+            - --apiserver-host=https://kubernetes.service.consul:{{ kube_master_port }}
           livenessProbe:
             httpGet:
               path: /
               port: 9090
             initialDelaySeconds: 30
             timeoutSeconds: 30
+          volumeMounts:
+          - mountPath: /etc/kubernetes
+            name: etc-kubernetes
+            readOnly: true
+          - mountPath: /etc/pki
+            name: etc-pki
+            readOnly: true
+        volumes:
+        - name: etc-kubernetes
+          hostPath:
+            path: /etc/kubernetes
+        - name: etc-pki
+          hostPath:
+            path: /etc/pki
+
 - kind: Service
   apiVersion: v1
   metadata:

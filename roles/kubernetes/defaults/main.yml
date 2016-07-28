@@ -7,9 +7,6 @@ kube_log_level: 0
 kube_master_port: 443
 kube_insecure_port: 8085
 
-# This is where all the cert scripts and certs will be located
-kube_cert_dir: "/etc/kubernetes/ssl"
-
 # This is where all of the bearer tokens will be stored
 kube_token_dir: "/etc/kubernetes/tokens"
 

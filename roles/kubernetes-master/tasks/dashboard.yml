@@ -1,19 +1,11 @@
 ---
-- name: write pod file
+- name: write dashboard manifest
   sudo: yes
-  copy:
-    src: kubernetes-dashboard.yaml
-    dest: "{{ kube_manifest_dir }}/kubernetes-dashboard.yaml"
+  template:
+    src: kubernetes-dashboard.yml
+    dest: "{{ kube_manifest_dir }}/kubernetes-dashboard.yml"
   register: kubernetes_dashboard_rc_def
   run_once: true
-  tags:
-    - addons
-    - dashboard
-    - kubernetes
-
-- name: wait for apiserver to come up
-  wait_for:
-    port: 8085
   tags:
     - addons
     - dashboard
@@ -25,9 +17,9 @@
     namespace: kube-system
     resource: rc
     name: kubernetes-dashboard
-    filename: "{{ kube_manifest_dir }}/kubernetes-dashboard.yaml"
+    filename: "{{ kube_manifest_dir }}/kubernetes-dashboard.yml"
     state: "{{ kubernetes_dashboard_rc_def.changed | ternary('latest','present') }}"
-    server: "http://localhost:8085/"
+    server: "http://localhost:{{ kube_insecure_port }}/"
   run_once: true
   tags:
     - addons

@@ -11,20 +11,29 @@ spec:
     command:
     - /hyperkube
     - apiserver
+
+    # Network binding & advertising
     - --bind-address={{ private_ipv4 }}
+    - --secure-port={{ kube_master_port }}
     - --insecure-bind-address=127.0.0.1
-    - --etcd-servers=http://127.0.0.1:8500
-    - --allow-privileged=true
-    - --service-cluster-ip-range={{ kube_service_addresses }}
-    - --secure_port={{ kube_master_port }}
-    - --insecure_port={{ kube_insecure_port }}
+    - --insecure-port={{ kube_insecure_port }}
     - --advertise-address={{ ansible_default_ipv4.address }}
+    - --service-cluster-ip-range={{ kube_service_addresses }}
+
+    # Security
+    - --allow-privileged=true
     - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
-    - --tls-cert-file={{ kube_cert_dir }}/server.crt
-    - --tls-private-key-file={{ kube_cert_dir }}/server.key
-    - --client-ca-file={{ kube_cert_dir }}/ca.crt
-    - --service-account-key-file={{ kube_cert_dir }}/server.key
     - --basic-auth-file={{ kube_users_dir }}/known_users.csv
+    - --client-ca-file=/etc/pki/CA/ca.cert
+    - --kubelet-certificate-authority=/etc/pki/CA/ca.cert
+    - --kubelet-client-certificate={{ host_cert }}
+    - --kubelet-client-key={{ host_key }}
+    - --tls-cert-file={{ host_cert }}
+    - --tls-private-key-file={{ host_key }}
+    - --service-account-key-file={{ host_key }}
+
+    # Other
+    - --etcd-servers=http://127.0.0.1:8500
     - --runtime-config=extensions/v1beta1/daemonsets=true
     {% if enable_cloud_provider | bool -%}
     - --cloud-provider={{ cloud_provider }}
@@ -44,7 +53,13 @@ spec:
     - mountPath: /etc/kubernetes
       name: etc-kubernetes
       readOnly: true
+    - mountPath: /etc/pki
+      name: etc-pki
+      readOnly: true
   volumes:
-  - hostPath:
+  - name: etc-kubernetes
+    hostPath:
       path: /etc/kubernetes
-    name: etc-kubernetes
+  - name: etc-pki
+    hostPath:
+      path: /etc/pki
