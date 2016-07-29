@@ -138,7 +138,7 @@ def skip(diff_names):
     ]
 
     for fltr, log in filter_and_explaination:
-        if len([f for f in diff_names.split if fltr(f)]) < 1:
+        if len([f for f in diff_names.split() if fltr(f)]) < 1:
             logging.info(log)
             return True
 
