@@ -12,11 +12,20 @@ ExecStartPre=-/usr/bin/docker rm -f etcd
 ExecStartPre=/usr/bin/docker pull {{ etcd_image }}:{{ etcd_image_tag }}
 
 ExecStart=/usr/bin/docker run \
+    {# Docker -#}
     --name=etcd \
     --publish={{ etcd_client_port }}:{{ etcd_client_port }} \
     --publish={{ etcd_peer_port }}:{{ etcd_peer_port }} \
     {{ etcd_image }}:{{ etcd_image_tag }} \
     --name {{ inventory_hostname }} \
+    {# Security -#}
+    --cert-file={{ host_cert }} \
+    --key-file={{ host_key }} \
+    --trusted-ca-file=/etc/pki/CA/ca.cert \
+    --peer-cert-file={{ host_cert }} \
+    --peer-key-file={{ host_key }} \
+    --peer-trusted-ca-file=/etc/pki/CA/ca.cert \
+    {# Advertising and addresses -#}
     --listen-peer-urls http://0.0.0.0:{{ etcd_peer_port }} \
     --listen-client-urls http://0.0.0.0:{{ etcd_client_port }} \
     --initial-advertise-peer-urls http://{{ inventory_hostname }}:{{ etcd_peer_port }} \
