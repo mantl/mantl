@@ -137,10 +137,6 @@ def skip(diff_names):
     return False
 
 
-def deploy_to_cloud_cmds():
-    return cmds
-
-
 def get_credentials():
     """ Get consul api password from security.yml """
     # TODO: Should we just add pyyaml as a dependency?
