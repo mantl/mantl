@@ -125,6 +125,7 @@ def run_cmds(cmds, fail_sequential=False):
 
 
 def skip(diff_names):
+    logging.info(os.environ['TRAVIS_SECURE_ENV_VARS'])
     if not os.environ['TRAVIS_SECURE_ENV_VARS']:
         logging.info("Deploy secrets are not available for forks")
         return True
