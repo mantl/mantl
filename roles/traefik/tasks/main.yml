@@ -35,13 +35,26 @@
     - bootstrap
     - traefik
 
-- name: copy ca certificates
+- name: copy k8s ca certificate
   sudo: yes
   copy:
     src: "{{ playbook_dir }}/ssl/kubernetes/ca.crt"
     dest: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
   tags:
     - bootstrap
+    - traefik
+
+- name: authorize k8s ca certificate
+  sudo: yes
+  copy:
+    src: "{{ playbook_dir }}/ssl/kubernetes/ca.crt"
+    dest: /etc/pki/ca-trust/source/anchors/ca.crt
+    owner: root
+    group: root
+  notify:
+    - update-ca-trust
+  tags:
+    - certificates
     - traefik
 
 - name: create local traefik service override
