@@ -137,8 +137,8 @@ def skip(diff_names):
         (lambda f: f == '.mention-bot', "All changes were for bot config files"),
     ]
 
-    for fltr, log in filter_and_explaination:
-        if len([f for f in diff_names.split() if fltr(f)]) < 1:
+    for pred, log in filter_and_explaination:
+        if len([f for f in diff_names.split() if not pred(f)]) < 1:
             logging.info(log)
             return True
 
