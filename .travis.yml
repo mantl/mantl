@@ -34,8 +34,6 @@ install:
 
 before_script:
   - export TERRAFORM_FILE=testing/terraform/${PROVIDER}.tf
-  - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
-  - echo $CI_HEAD_COMMIT
 
 script:
   - python testing/travis.py script
