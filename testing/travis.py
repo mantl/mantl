@@ -125,8 +125,8 @@ def run_cmds(cmds, fail_sequential=False):
 
 
 def skip(diff_names):
-    if os.environ['TRAVIS_BRANCH'] != 'master' and os.environ["TRAVIS_PULL_REQUEST"]:
-        logging.info("We don't want to build on pushes to branches that aren't master.")
+    if os.environ['TRAVIS_SECURE_ENV_VARS']:
+        logging.info("Deploy secrets are not available for forks")
         return True
 
     is_doc = lambda f: f.startswith('docs') or any([f.endswith(ext) for ext in ['md', 'rst']])
