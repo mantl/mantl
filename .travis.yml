@@ -19,12 +19,12 @@ env:
   - TERRAFORM_VERSION=0.7.0-rc2
   matrix:
   # These providers have a full battery of Terraform+Ansible tests
-  - PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
-  - PROVIDER=do  DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
-  - PROVIDER=gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
+  - PROVIDER=aws
+  - PROVIDER=do
+  - PROVIDER=gce
   # These providers are only linted using `terraform plan`, and have no secrets
   # Secrets are available for CLC, but the build times out.
-  - PROVIDER=clc DOCKER_SECRETS='-e CLC_USERNAME -e CLC_PASSWORD'
+  - PROVIDER=clc
   - PROVIDER=softlayer
   - PROVIDER=triton
 
