@@ -1,0 +1,8 @@
+{
+ "id": "logstash",
+ "cpus": 0.2,
+ "mem": 512,
+ "instances": 2,
+ "uris": [ "https://download.elastic.co/logstash/logstash/logstash-2.3.2.tar.gz" ],
+ "cmd": "export HOME=$MESOS_DIRECTORY && curl -s http://localhost:8500/v1/kv/conf/logstash/logstash-template.json?raw > logstash-template.json && curl -s http://localhost:8500/v1/kv/conf/logstash/logstash.conf?raw > logstash.conf && logstash-2.3.2/bin/logstash -f logstash.conf"
+}
