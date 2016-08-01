@@ -1,0 +1,3 @@
+---
+collectd_image: tpolekhin/collectd-monasca
+collectd_image_tag: 5.5.2
