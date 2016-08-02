@@ -13,7 +13,13 @@ Traefik is used as the only work role on the edge nodes. You should customize
 ``apps.yourdomain.com``) and then set an A record for each of the edge servers
 to ``*.apps.yourdomain.com``.
 
+Changes
+-------
 
+.. versionadded: 1.3
+
+Starting with version 1.3, traefik runs as a kubernetes daemonset. To modify
+configuration change the variables found in `roles/kubernetes/defaults`.
 
 Variables
 ---------
@@ -41,6 +47,5 @@ You can use these variables to customize your Traefik installation.
    Automatically expose Marathon applications in traefik.
 
    The traefik default is ``false``, or not forward traffic.
-  
+
    The mantl default is set to ``true``.
- 
