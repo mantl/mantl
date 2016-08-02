@@ -1,3 +1,15 @@
 ---
-collectd_image: tpolekhin/collectd-monasca
+# CollectD docker container
+collectd_image: ciscocloud/collectd
 collectd_image_tag: 5.5.2
+
+# Configure CollectD network output
+collectd_output_network: true
+collectd_output_network_server_addr: localhost
+collectd_output_network_server_port: 25826
+
+# Configure CollectD kafka output
+collectd_output_kafka: false
+collectd_output_kafka_broker_list: broker-1.service.consul:9092,broker-2.service.consul:9092,broker-3.service.consul:9092
+collectd_output_kafka_topic: metrics
+collectd_output_kafka_format: Monasca

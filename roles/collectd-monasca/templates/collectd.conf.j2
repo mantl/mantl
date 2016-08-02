@@ -67,11 +67,21 @@ LoadPlugin "syslog"
   LogLevel "err"
 </Plugin>
 
+{% if collectd_output_network %}
+LoadPlugin "network"
+<Plugin "network">
+  Server "{{ collectd_output_network_server_addr }}" "{{ collectd_output_network_server_port }}"
+</Plugin>
+{% endif %}
+
+{% if collectd_output_kafka %}
+LoadPlugin "write_kafka"
 <Plugin "write_kafka">
-  Property "metadata.broker.list" "broker-1.service.consul:9092,broker-2.service.consul:9092,broker-3.service.consul:9092"
-  <Topic "metrics">
-    Format Monasca
+  Property "metadata.broker.list" "{{ collectd_output_kafka_broker_list }}"
+  <Topic "{{ collectd_output_kafka_topic }}">
+    Format {{ collectd_output_kafka_format }}
   </Topic>
 </Plugin>
+{% endif %}
 
 # EOF
