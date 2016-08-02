@@ -9,19 +9,24 @@
 
 - name: copy logstash configuration
   sudo: yes
+  template:
+    src: logstash.conf.j2
+    dest: "/etc/logstash/{{logstash_configuration_file}}"
+  tags:
+    - logstash-monasca
+
+- name: copy elasticsearch index template
+  sudo: yes
   copy:
-    src: "{{ item }}"
-    dest: "/etc/logstash/{{ item }}"
-  with_items:
-    - logstash.conf
-    - logstash-template.json
+    src: "{{logstash_es_template_file}}"
+    dest: "/etc/logstash/{{logstash_es_template_file}}"
   tags:
     - logstash-monasca
 
 - name: copy logstash app json
   sudo: yes
-  copy:
-    src: logstash.json
+  template:
+    src: logstash.json.j2
     dest: /etc/logstash/logstash.json
   tags:
     - logstash-monasca
@@ -31,8 +36,8 @@
   run_once: yes
   command: "curl -XPUT -d@/etc/logstash/{{item}} http://localhost:8500/v1/kv/conf/logstash/{{item}}"
   with_items:
-    - logstash.conf
-    - logstash-template.json
+    - "{{logstash_configuration_file}}"
+    - "{{logstash_es_template_file}}"
   tags:
     - logstash-monasca
 
