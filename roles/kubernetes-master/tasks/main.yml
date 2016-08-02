@@ -12,6 +12,7 @@
     - kube-podmaster
     - kube-system
     - kube2consul
+    - kube-traefik-ingress-controller
   notify:
     - restart kubelet
   tags:
@@ -80,6 +81,7 @@
   tags:
     - kubernetes
 
+
 - include: skydns.yml
   when: dns_setup
   tags:
@@ -87,5 +89,9 @@
 
 - include: dashboard.yml
   when: enable_ui
+  tags:
+    - kubernetes
+
+- include: traefik.yml
   tags:
     - kubernetes

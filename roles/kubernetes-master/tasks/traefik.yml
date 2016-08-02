@@ -1,0 +1,26 @@
+- name: create traefik daemonset
+  sudo: yes
+  kube:
+    namespace: kube-system
+    resource: ds
+    name: kube-traefik-ingress-controller
+    filename: "{{ kube_manifest_dir }}/kube-traefik-ingress-controller.yml"
+    state: "present"
+    server: "http://localhost:{{kube_insecure_port}}"
+  run_once: true
+  tags:
+    - kubernetes
+
+- name: label edge nodes
+  sudo: yes
+  command: kubectl label nodes {{item}} role=edge --overwrite --server "http://localhost:{{kube_insecure_port}}"
+  with_items: groups["role=edge"]
+  tags:
+    - kubernetes
+
+- name: make edge nodes unschedulable
+  sudo: yes
+  command: 'kubectl patch nodes {{item}} -p ''{"spec": {"unschedulable": true}}'' --server "http://localhost:{{kube_insecure_port}}"'
+  with_items: groups["role=edge"]
+  tags:
+    - kubernetes
