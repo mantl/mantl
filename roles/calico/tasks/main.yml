@@ -87,6 +87,9 @@
 - include: kubernetes.yml
   when: kube_version is defined
 
+- include: mesos.yml
+  when: mesos_version is defined
+
 - include: calico-configure.yml
 
 - name: reload calico systemd file

@@ -26,4 +26,6 @@ EXTRA_OPTS="{% if calico_etcdaddr is defined %}--modules=file:///etc/calico/modu
 # calico integration
 {% if calico_etcdaddr is defined %}
 ETCD_AUTHORITY={{ calico_etcdaddr }}
+NETWORK_CNI_CONFIG_DIR=/etc/mesos/cni/
+NETWORK_CNI_PLUGINS_DIR=/opt/cni/bin/
 {% endif %}

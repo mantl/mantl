@@ -1,0 +1,15 @@
+- name: Calico directory for mesos-cni config
+  sudo: yes
+  file:
+    path: /etc/mesos/cni
+    state: directory
+  tags:
+    - calico
+
+- name: Calico cni config for mesos
+  sudo: yes
+  template:
+    src: mesos-config.conf
+    dest: /etc/mesos/cni/calico-net-1.conf
+  tags:
+    - calico
