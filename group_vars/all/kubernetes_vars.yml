@@ -37,21 +37,6 @@ kube_service_addresses: 10.254.0.0/16
 # Kubernetes api port
 kube_master_port: 6443
 
-# internal network (optional). When used, it will assign IP
-# addresses from this range to individual pods.
-# This network must be unused in your network infrastructure!
-overlay_network_subnet: 10.10.0.0
-
-# internal network total size (optional). This is the prefix of the
-# entire overlay network.  So the entirety of 4.0.0.0/16 must be
-# unused in your environment.
-overlay_network_prefix: 16
-
-# internal network node size allocation (optional). This is the size allocated
-# to each node on your network.  With these defaults you should have
-# room for 4096 nodes with 254 pods per node.
-overlay_network_host_prefix: 24
-
 # Internal DNS configuration.
 # Kubernetes can create and mainatain its own DNS server to resolve service names
 # into appropriate IP addresses. It's highly advisable to run such DNS server,
