@@ -12,6 +12,7 @@ variable "short_name" {}
 variable "ssh_key" {}
 variable "ssh_user" {}
 variable "zones" {}
+variable "service_account_scopes" { default = "compute-rw,monitoring,logging-write,storage-ro,https://www.googleapis.com/auth/ndev.clouddns.readwrite" }
 
 
 # Instances
@@ -57,6 +58,10 @@ resource "google_compute_instance" "instance" {
     role = "${var.role}"
     sshKeys = "${var.ssh_user}:${file(var.ssh_key)} ${var.ssh_user}"
     ssh_user = "${var.ssh_user}"
+  }
+
+  service_account {
+    scopes = ["${split(",", var.service_account_scopes)}"]
   }
 
   count = "${var.count}"
