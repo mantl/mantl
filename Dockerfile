@@ -10,7 +10,7 @@ ENV MANTL_CONFIG_DIR /local
 
 VOLUME /root/.ssh
 
-ENV TERRAFORM_VERSION 0.7.0-rc2
+ENV TERRAFORM_VERSION 0.7.0
 RUN mkdir -p /tmp/terraform/ && \
     cd /tmp/terraform/ && \
     curl -SLO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \

@@ -70,13 +70,13 @@ resource "aws_route53_record" "dns-wildcard" {
 }
 
 output "edge_fqdn" {
-  value = "${join(\",\", aws_route53_record.dns-edge.*.fqdn)}"
+  value = "${join(",", aws_route53_record.dns-edge.*.fqdn)}"
 }
 
 output "control_fqdn" {
-  value = "${join(\",\", aws_route53_record.dns-control.*.fqdn)}"
+  value = "${join(",", aws_route53_record.dns-control.*.fqdn)}"
 }
 
 output "worker_fqdn" {
-  value = "${join(\",\", aws_route53_record.dns-worker.*.fqdn)}"
+  value = "${join(",", aws_route53_record.dns-worker.*.fqdn)}"
 }

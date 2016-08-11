@@ -67,13 +67,13 @@ resource "aws_volume_attachment" "instance-lvm-attachment" {
 
 
 output "hostname_list" {
-  value = "${join(\",\", aws_instance.instance.*.tags.Name)}"
+  value = "${join(",", aws_instance.instance.*.tags.Name)}"
 }
 
 output "ec2_ids" {
-  value = "${join(\",\", aws_instance.instance.*.id)}"
+  value = "${join(",", aws_instance.instance.*.id)}"
 }
 
 output "ec2_ips" {
-  value = "${join(\",\", aws_instance.instance.*.public_ip)}"
+  value = "${join(",", aws_instance.instance.*.public_ip)}"
 }

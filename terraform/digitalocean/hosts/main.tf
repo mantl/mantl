@@ -55,17 +55,17 @@ resource "digitalocean_droplet" "edge" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", digitalocean_droplet.control.*.ipv4_address)}"
+  value = "${join(",", digitalocean_droplet.control.*.ipv4_address)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", digitalocean_droplet.worker.*.ipv4_address)}"
+  value = "${join(",", digitalocean_droplet.worker.*.ipv4_address)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", digitalocean_droplet.kubeworker.*.ipv4_address)}"
+  value = "${join(",", digitalocean_droplet.kubeworker.*.ipv4_address)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", digitalocean_droplet.edge.*.ipv4_address)}"
+  value = "${join(",", digitalocean_droplet.edge.*.ipv4_address)}"
 }

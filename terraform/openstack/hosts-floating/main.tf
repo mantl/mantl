@@ -208,17 +208,17 @@ resource "openstack_networking_router_interface_v2" "ms-router-interface" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", openstack_compute_instance_v2.control.*.access_ip_v4)}"
+  value = "${join(",", openstack_compute_instance_v2.control.*.access_ip_v4)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", openstack_compute_instance_v2.worker.*.access_ip_v4)}"
+  value = "${join(",", openstack_compute_instance_v2.worker.*.access_ip_v4)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", openstack_compute_instance_v2.kubeworker.*.access_ip_v4)}"
+  value = "${join(",", openstack_compute_instance_v2.kubeworker.*.access_ip_v4)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", openstack_compute_instance_v2.edge.*.access_ip_v4)}"
+  value = "${join(",", openstack_compute_instance_v2.edge.*.access_ip_v4)}"
 }

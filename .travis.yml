@@ -16,7 +16,7 @@ cache:
 env:
   global:
   - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
-  - TERRAFORM_VERSION=0.7.0-rc2
+  - TERRAFORM_VERSION=0.7.0
   matrix:
   # These providers have a full battery of Terraform+Ansible tests
   - PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'

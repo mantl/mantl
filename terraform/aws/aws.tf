@@ -481,21 +481,21 @@ output "default_security_group" {
 }
 
 output "control_ids" {
-  value = "${join(\",\", aws_instance.mi-control-nodes.*.id)}"
+  value = "${join(",", aws_instance.mi-control-nodes.*.id)}"
 }
 
 output "control_ips" {
-  value = "${join(\",\", aws_instance.mi-control-nodes.*.public_ip)}"
+  value = "${join(",", aws_instance.mi-control-nodes.*.public_ip)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", aws_instance.mi-worker-nodes.*.public_ip)}"
+  value = "${join(",", aws_instance.mi-worker-nodes.*.public_ip)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", aws_instance.mi-kubeworker-nodes.*.public_ip)}"
+  value = "${join(",", aws_instance.mi-kubeworker-nodes.*.public_ip)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", aws_instance.mi-edge-nodes.*.public_ip)}"
+  value = "${join(",", aws_instance.mi-edge-nodes.*.public_ip)}"
 }
