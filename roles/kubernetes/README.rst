@@ -45,16 +45,17 @@ cluster.
 Cloud Provider Integration
 --------------------------
 
-As of 1.3, when you install Mantl on an AWS cluster, Kubernetes cloud provider
-integration will be enabled by default. Kubernetes will be able to natively
-manage some AWS resources (such as ELBs or EBS persistent volumes). If you wish
-to disable cloud provider integration, set the variable
-``enable_cloud_provider`` to ``false`` when building your cluster.
+Cloud provider integration is enabled by default for AWS and GCE clusters
+starting in Mantl 1.3. This means that Kubernetes can manage cloud-specific
+resources such as disk volumes and load balancers. If you wish to disable cloud
+provider integration, set the variable ``enable_cloud_provider`` to ``false``
+when building your cluster.
 
 .. note:: If you are planning on destroying your cluster with terraform, you
           should first use ``kubectl`` or the Kubernetes API to delete your
-          Kubernetes-managed AWS resources. Otherwise, it can cause your
-          ``terraform destroy`` command to fail.
+          Kubernetes-managed resources. Otherwise, it is possible that they will
+          interfere with your ability to successfully ``terraform destroy`` your
+          cluster.
 
 DNS Outline
 -----------

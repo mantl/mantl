@@ -28,7 +28,7 @@ kube_users:
 cluster_name: cluster.local
 
 # Enable to leverage some unique features of a specific cloud provider.
-enable_cloud_provider: "{% if provider in ['aws'] %}True{% else %}False{% endif %}"
+enable_cloud_provider: "{% if provider in ['aws', 'gce'] %}True{% else %}False{% endif %}"
 cloud_provider: "{{ provider }}"
 
 # Kubernetes internal network for services, unused block of space.

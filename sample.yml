@@ -30,38 +30,15 @@
     - dnsmasq
 
 # ROLES - after provisioning the software that's common to all hosts, we do
-# specialized hosts. This configuration has two major groups: control nodes and
-# worker nodes. We provision the worker nodes first so that we don't create any
-# race conditions. This could happen in the Mesos components - if there are no
-# worker nodes when trying to schedule control software, the deployment process
-# would hang.
-#
-# The worker role itself has a minimal configuration, as it's designed mainly to
-# run software that the Mesos leader shedules. It also forwards traffic to
-# globally known ports configured through Marathon.
-- hosts: role=worker
-  # role=worker hosts are a subset of "all". Since we already gathered facts on
-  # all servers, we can skip it here to speed up the deployment.
-  gather_facts: no
-  vars:
-    mesos_mode: follower
-    zookeeper_server_group: role=control
-  roles:
-    - mesos
-    - calico
+# specialized hosts. There are 4 built-in roles: control, workers (mesos),
+# kubeworkers (kubernetes), and edge (for external traffic into the cluster).
 
-- hosts: role=kubeworker
-  gather_facts: yes
-  roles:
-    - calico
-    - kubernetes
-    - kubernetes-node
-
-# the control nodes are necessarily more complex than the worker nodes, and have
-# ZooKeeper, Mesos, and Marathon leaders. In addition, they control Vault to
-# manage secrets in the cluster. These servers do not run applications by
-# themselves, they only schedule work. That said, there should be at least 3 of
-# them (and always an odd number) so that ZooKeeper can get and keep a quorum.
+# The control nodes are necessarily more complex than the worker nodes, and have
+# ZooKeeper, Mesos, and Marathon leaders as well as Kubernetes master
+# components. In addition, they control Vault to manage secrets in the cluster.
+# These servers do not run applications by themselves, they only schedule work.
+# That said, there should be at least 3 of them (and always an odd number) so
+# that ZooKeeper can get and keep a quorum.
 - hosts: role=control
   gather_facts: yes
   vars:
@@ -78,6 +55,29 @@
     - mantlui
     - kubernetes
     - kubernetes-master
+
+# The worker role itself has a minimal configuration, as it's designed mainly to
+# run software that the Mesos leader shedules. It also forwards traffic to
+# globally known ports configured through Marathon.
+- hosts: role=worker
+  # role=worker hosts are a subset of "all". Since we already gathered facts on
+  # all servers, we can skip it here to speed up the deployment.
+  gather_facts: no
+  vars:
+    mesos_mode: follower
+    zookeeper_server_group: role=control
+  roles:
+    - mesos
+    - calico
+
+# The kubeworker role is similar to the worker role but are intended for
+# Kubernetes workloads.
+- hosts: role=kubeworker
+  gather_facts: yes
+  roles:
+    - calico
+    - kubernetes
+    - kubernetes-node
 
 # The edge role exists solely for routing traffic into the cluster. Firewall
 # settings should be such that web traffic (ports 80 and 443) is exposed to the
