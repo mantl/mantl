@@ -17,6 +17,7 @@ dns:
   - "{{ ansible_hostname }}"
   - "{{ ansible_hostname }}.node.consul"
   - "*.service.consul"
+  - "kubernetes.default.svc.{{ cluster_name }}"
 # What IP addresses will this certificate be valid for?
 ip:
   - "{{ ansible_all_ipv4_addresses | join(' ') }}"
