@@ -63,7 +63,7 @@ Marathon runs on `https://<your-control-ip>:8080` or
 
 Check out the Vagrant README to figure out the IP addresses it will assign. If
 you're using the default configuration, you'll have one control node at
-"192.168.100.101" and one worker at "192.168.100.201".
+"172.20.10.101" and one worker at "172.20.10.201".
 
 #### Cloud
 
@@ -209,7 +209,7 @@ If you forget to provide the `--cacert` option to `curl`, you may get a message
 like this:
 
 ```
-$ curl -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
+$ curl -X POST -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://172.20.10.101/marathon/v2/apps"
 curl: (60) SSL certificate problem: Invalid certificate chain
 More details here: http://curl.haxx.se/docs/sslcerts.html
 
@@ -228,7 +228,7 @@ If you'd like to turn off curl's verification of the certificate, use
 If you forgot to provide the `-X` or `-d` options to `curl`, you may get a
 message like this:
 ```
-$ curl -k -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
+$ curl -k -H "Content-Type: application/json" -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://172.20.10.101/marathon/v2/apps"
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
@@ -245,8 +245,8 @@ If you remembered both, make sure the path you pass to `-d` exists.
 If you forgot to provide the `-H application/json` option to `curl`, you may get
 a message like this:
 ```
-$ curl -k -X POST -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://192.168.100.101/marathon/v2/apps"
-curl: (6) Could not resolve host:  
+$ curl -k -X POST -u "admin:hardpass" -d@"hello-world/hello-world.json" "https://172.20.10.101/marathon/v2/apps"
+curl: (6) Could not resolve host:
 {"message":"Unsupported Media Type"}
 ```
 
