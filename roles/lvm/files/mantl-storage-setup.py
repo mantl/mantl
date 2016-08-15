@@ -139,6 +139,15 @@ def parse_size(size):
     fail("size not specified")
 
 
+def wait_for_device(dev):
+    print "--> Wait for device {}".format(dev)
+    for sec in range(0, 60):
+        if os.path.exists(dev):
+            print "--> Device {} appears in {} seconds".format(dev, sec)
+            break
+        os.sleep(1)
+
+
 def process_volume(sec, params):
     lv = params.get(sec, "volume")
     vg = params.get(sec, "group")
@@ -176,6 +185,7 @@ def process_fs(sec, params):
 
     fstype = params.get(sec, "fstype")
 
+    wait_for_device(dev)
     try:
         exist_fs = check_output(["blkid", "-c", "/dev/null", "-o", "value", "-s", "TYPE", dev]).strip()
     except subprocess.CalledProcessError:
