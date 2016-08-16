@@ -125,11 +125,11 @@ def run_cmds(cmds, fail_sequential=False):
 
 
 def skip(diff_names):
-    if os.environ['TRAVIS_SECURE_ENV_VARS'] == 'false':
+    if os.environ.get('TRAVIS_SECURE_ENV_VARS', 'false') == 'false':
         logging.info("Deploy secrets are not available for forks")
         return True
 
-    filter_and_explaination = [
+    filter_and_explanation = [
         (lambda f: f.startswith('docs') or any([f.endswith(ext) for ext in ['md', 'rst']]),
                 "All changes were for documentation files"),
         (lambda f: f.startswith('addons'), "All changes were for addons"),
@@ -137,8 +137,8 @@ def skip(diff_names):
         (lambda f: f == '.mention-bot', "All changes were for bot config files"),
     ]
 
-    for pred, log in filter_and_explaination:
-        if len([f for f in diff_names.split() if not pred(f)]) < 1:
+    for pred, log in filter_and_explanation:
+        if not pred(diff_names.split()):
             logging.info(log)
             return True
 
@@ -226,10 +226,6 @@ def health_checks():
                 timeout += 5
 
             except ValueError as e:
-                logging.warn("Error decoding JSON: {}".format(e))
-
-            except IOError as e:
-                logging.warn("Unknown error: {}".format(e))
                 logging.warn("Error decoding JSON: {}".format(e))
 
             except IOError as e:
