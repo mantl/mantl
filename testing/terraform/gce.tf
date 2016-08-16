@@ -17,7 +17,6 @@ variable "zones" {
 }
 
 provider "google" {
-  credentials = "${file("account.json")}"
   project = "mantl-ci"
   region = "us-central1"
 }
