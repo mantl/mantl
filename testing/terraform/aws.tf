@@ -19,8 +19,8 @@ variable "control_count" { default = 3 }
 variable "datacenter" {default = "aws-us-west-2"}
 variable "edge_count" { default = 2 }
 variable "region" {default = "us-west-2"}
-variable "short_name" {default = "mantl"}
-variable "long_name" {default = "mantl"}
+variable "short_name" {default = "mantl-ci"}
+variable "long_name" {default = "ciscocloud-mantl-ci"}
 variable "ssh_username" {default = "centos"}
 variable "worker_count" { default = 4 }
 variable "kubeworker_count" { default = 2 }
@@ -58,25 +58,25 @@ provider "aws" {
 module "vpc" {
   source ="./terraform/aws/vpc"
   availability_zones = "${var.availability_zones}"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   long_name = "${var.long_name}"
   region = "${var.region}"
 }
 
 module "ssh-key" {
   source ="./terraform/aws/ssh"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
 }
 
 module "security-groups" {
   source = "./terraform/aws/security_groups"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   vpc_id = "${module.vpc.vpc_id}"
 }
 
 module "iam-profiles" {
   source = "./terraform/aws/iam"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
 }
 
 module "control-nodes" {
@@ -88,7 +88,7 @@ module "control-nodes" {
   iam_profile = "${module.iam-profiles.control_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
   security_group_ids = "${module.vpc.default_security_group},${module.security-groups.ui_security_group},${module.security-groups.control_security_group}"
@@ -107,7 +107,7 @@ module "edge-nodes" {
   ec2_type = "${var.edge_type}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
   security_group_ids = "${module.vpc.default_security_group},${module.security-groups.edge_security_group}"
@@ -129,7 +129,7 @@ module "worker-nodes" {
   iam_profile = "${module.iam-profiles.worker_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
   security_group_ids = "${module.vpc.default_security_group},${module.security-groups.worker_security_group}"
@@ -151,7 +151,7 @@ module "kubeworker-nodes" {
   iam_profile = "${module.iam-profiles.worker_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_key_pair = "${module.ssh-key.ssh_key_name}"
   availability_zones = "${module.vpc.availability_zones}"
   security_group_ids = "${module.vpc.default_security_group},${module.security-groups.worker_security_group}"

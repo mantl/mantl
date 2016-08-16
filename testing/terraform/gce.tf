@@ -6,8 +6,8 @@ variable "edge_count" { default = 1}
 variable "edge_type" { default = "n1-standard-1" }
 variable "image" {default = "centos-7-v20160606"}
 variable "kubeworker_count" {default = 2}
-variable "long_name" {default = "mantl"}
-variable "short_name" {default = "mi"}
+variable "long_name" {default = "ciscocloud-mantl-ci"}
+variable "short_name" {default = "mantl-ci"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
 variable "worker_count" {default = 2}
@@ -24,8 +24,8 @@ provider "google" {
 module "gce-network" {
   source = "./terraform/gce/network"
   network_ipv4 = "10.0.0.0/16"
-  long_name = "${var.long_name}"
-  short_name = "${var.short_name}"
+  long_name = "${var.long_name}-${var.build_number}"
+  short_name = "${var.short_name}-${var.build_number}"
 }
 
 # remote state example
@@ -49,7 +49,7 @@ module "control-nodes" {
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "control"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
@@ -65,7 +65,7 @@ module "edge-nodes" {
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "edge"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
@@ -80,7 +80,7 @@ module "worker-nodes" {
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "worker"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
@@ -95,7 +95,7 @@ module "kubeworker-nodes" {
   network_name = "${module.gce-network.network_name}"
   #network_name = "${terraform_remote_state.gce-network.output.network_name}"
   role = "kubeworker"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
   ssh_user = "${var.ssh_user}"
   ssh_key = "${var.ssh_key}"
   zones = "${var.zones}"
@@ -104,5 +104,5 @@ module "kubeworker-nodes" {
 module "network-lb" {
   source = "./terraform/gce/lb"
   instances = "${module.edge-nodes.instances}"
-  short_name = "${var.short_name}"
+  short_name = "${var.short_name}-${var.build_number}"
 }
