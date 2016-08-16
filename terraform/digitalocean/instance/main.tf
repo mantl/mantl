@@ -24,5 +24,5 @@ output "droplet_ids" {
 }
 
 output "droplet_ips" {
-  value = "${join(",", digitalocean_droplet.instance.*.public_ip)}"
+  value = "${join(",", digitalocean_droplet.instance.*.ipv4_address)}"
 }
