@@ -2,6 +2,7 @@
 import subprocess
 from ConfigParser import ConfigParser, NoOptionError
 import os
+import time
 import sys
 import re
 from contextlib import closing
@@ -145,7 +146,7 @@ def wait_for_device(dev):
         if os.path.exists(dev):
             print "--> Device {} appears in {} seconds".format(dev, sec)
             break
-        os.sleep(1)
+        time.sleep(1)
 
 
 def process_volume(sec, params):
