@@ -51,6 +51,7 @@ Here are some guides specific to each of the platforms that Mantl supports:
    triton.rst
 
 Community-supported platform:
+
 .. toctree::
    :maxdepth:1
         
