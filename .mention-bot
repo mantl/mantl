@@ -1,6 +1,6 @@
 {
   "maxReviewers": 2,
-  "requiredOrgs": ["asteris-llc", "CiscoCloud"],
+  "requiredOrgs": ["asteris-llc", "mantl"],
   "delayed": true,
   "delayedUntil": "5h",
   "skipAlreadyAssignedPR": true,
