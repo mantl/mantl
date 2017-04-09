@@ -18,11 +18,19 @@ integrates into the workflow.)
 nodes. Please refer to the `Kubernetes getting started documentation
 <http://kubernetes.io/docs/hellonode/>`_ for how to use Kubernetes.
 
-To talk to the services launched inside Kubernetes, launch them with the
-``NodePort`` service type (`more on what service types are available
-<https://aster.is/blog/2016/03/11/the-hamburger-of-kubernetes-service-types/>`_),
-then connect on the assigned port on any Kubernetes worker node. Consul service
-integration will happen in a future release.
+Exposing Services
+-----------------
+
+To talk to the services launched inside Kubernetes, you can either launch them
+with the ``NodePort`` service type (all platforms), or the ``LoadBalancer``
+service type (see the section on "Cloud Provider Integration" below). You can
+find out more about service types on `the Asteris blog
+<https://aster.is/blog/2016/03/11/the-hamburger-of-kubernetes-service-types/>`_).
+
+Your exposed Kubernetes services will automatically be registered in Consul, but
+they currently do not have valid DNS names (see `the issue on Mustwin's fork of
+Kubernetes <https://github.com/MustWin/kubernetes/issues/7>`_ for details).
+
 
 Running kubectl Remotely
 ------------------------
