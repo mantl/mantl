@@ -1,5 +1,5 @@
 ---
-etcd_version: 2.2.5
+etcd_version: 3.0.15
 etcd_client_port: 2379
 etcd_peer_port: 2380
 
