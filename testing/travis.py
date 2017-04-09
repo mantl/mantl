@@ -43,8 +43,9 @@ def script():
     commit_range = os.environ.get("TRAVIS_COMMIT_RANGE", "master..HEAD")
     diff_names = str(subprocess.check_output(["git",  "diff",  "--name-only", commit_range]))
 
-    if skip(diff_names):
-        logging.info("Skipping build.")
+    not_docfiles = filter_not_docfiles(diff_names)
+    if len(not_docfiles) < 1:
+        logging.info("All of the changes were in documentation. Skipping build.")
         sys.exit(0)
 
     # linter commands
@@ -124,25 +125,15 @@ def run_cmds(cmds, fail_sequential=False):
     return to_return
 
 
-def skip(diff_names):
-    if os.environ.get('TRAVIS_SECURE_ENV_VARS', 'false') == 'false':
-        logging.info("Deploy secrets are not available for forks")
-        return True
+def filter_not_docfiles(diff_names):
 
-    filter_and_explanation = [
-        (lambda f: f.startswith('docs') or any([f.endswith(ext) for ext in ['md', 'rst']]),
-                "All changes were for documentation files"),
-        (lambda f: f.startswith('addons'), "All changes were for addons"),
-        (lambda f: f.endswith('ignore'), "All changes were for ignore files"),
-        (lambda f: f == '.mention-bot', "All changes were for bot config files"),
-    ]
+    is_doc = lambda f: f.startswith('docs') or any([f.endswith(ext) for ext in ['md', 'rst']])
+    return [f for f in diff_names.split() if not is_doc(f)]
 
-    for pred, log in filter_and_explanation:
-        if not pred(diff_names.split()):
-            logging.info(log)
-            return True
 
-    return False
+def deploy_to_cloud_cmds():
+    return cmds
+
 
 def get_credentials():
     """ Get consul api password from security.yml """
