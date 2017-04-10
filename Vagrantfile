@@ -62,7 +62,7 @@ def spin_up(config_hash:, config:, host_array:, hostvars:, hosts:, role:)
   end
 end
 
-Vagrant.require_version ">= 1.8"
+Vagrant.require_version ">= 1.8.2"
 
 Vagrant.configure(2) do |config|
   # Prefer VirtualBox before VMware Fusion
