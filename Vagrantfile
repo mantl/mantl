@@ -10,6 +10,7 @@ config_hash = {
   "kubeworker_ip_start" => "172.20.10.15",
   "worker_ip_start" => "172.20.10.20",
   "control_ip_start" => "172.20.10.10",
+  "control_port_start" => "808",
   "edge_ip_start" => "172.20.10.25",
   "kubeworker_memory" => 1024,
   "worker_memory" => 1024,
@@ -87,6 +88,7 @@ Vagrant.configure(2) do |config|
   (1..config_hash["control_count"]).each do |c|
     hostname = "control-0#{c}"
     ip = config_hash["control_ip_start"] + "#{c}"
+    port = config_hash["control_port_start"] + "#{c}"
     last = (c >= config_hash["control_count"])
 
     config.vm.define hostname, primary: last do |control|
@@ -96,6 +98,7 @@ Vagrant.configure(2) do |config|
       end
       control.vm.hostname = hostname
       control.vm.network "#{config_hash['network']}_network", :ip => ip
+      control.vm.network "forwarded_port", guest: 80, host: port
       hosts += "#{ip}    #{hostname}\n"
       controls << hostname
       control_hostvars = {
