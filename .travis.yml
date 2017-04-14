@@ -24,9 +24,9 @@ env:
   - PROVIDER=gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
   # These providers are only linted using `terraform plan`, and have no secrets
   # Secrets are available for CLC, but the build times out.
-  - PROVIDER=clc DOCKER_SECRETS='-e CLC_USERNAME -e CLC_PASSWORD'
-  - PROVIDER=softlayer
-  - PROVIDER=triton
+  #- PROVIDER=clc DOCKER_SECRETS='-e CLC_USERNAME -e CLC_PASSWORD'
+  #- PROVIDER=softlayer
+  #- PROVIDER=triton
 
 install:
   - eval $(ssh-agent)
