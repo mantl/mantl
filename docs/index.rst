@@ -5,9 +5,6 @@ Mantl documentation
    :alt: Join the chat at https://gitter.im/CiscoCloud/mantl
    :target: https://gitter.im/CiscoCloud/mantl
 
-.. image:: https://badge.waffle.io/CiscoCloud/mantl.png?label=ready&title=Ready
-   :alt: Stories in Ready
-   :target: https://waffle.io/CiscoCloud/microservices-infrastructure
 
 Mantl is a modern platform for rapidly deploying globally distributed services.
 Please see `the README
@@ -25,9 +22,10 @@ Contents:
    security/index.rst
    upgrading/index.rst
    packer.rst
-   changelog.rst
    faq.rst
    license.rst
+
+* `Changelog <https://github.com/CiscoCloud/mantl/blob/master/CHANGELOG.md>`_
 
 .. only:: html
 

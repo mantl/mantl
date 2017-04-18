@@ -3,7 +3,7 @@ Vagrant
 
 .. versionadded:: 1.0
 
-`Vagrant <https://vagrantup.com/>`_ is used to "Create and configure
+`Vagrant <https://www.vagrantup.com/>`_ is used to "Create and configure
 lightweight, reproducible, and portable development environments." We use it
 to test Mantl locally before deploying to a cloud provider.
 Our current setup creates a configurable number of virtual machines, and you can
@@ -24,23 +24,23 @@ Variables
 You can find the default values for all these variables in the ``config_hash``
 in the provided Vagrantfile.
 
-.. data:: worker_count, control_count, edge_count
+.. data:: worker_count, control_count, edge_count, kubeworker_count
 
    The number of nodes with this role.
 
-.. data:: worker_ip_start, control_ip_start, edge_ip_start
+.. data:: worker_ip_start, control_ip_start, edge_ip_start, kubeworker_ip_start
 
    A base IP address which will have its last digit appended. For example, if
-   ``worker_ip_start`` is set to "192.168.100.10", the first worker node will
-   have the IP address 192.168.100.101, the second will have 192.168.100.102,
+   ``worker_ip_start`` is set to "172.20.10.10", the first worker node will
+   have the IP address 172.20.10.101, the second will have 172.20.10.102,
    etc.
 
-.. data:: worker_memory, control_memory, edge_memory
+.. data:: worker_memory, control_memory, edge_memory, kubeworker_memory
 
    The amount of memory in MB to allocate for each kind of VM. This setting is
    only valid for the virtualbox provider.
 
-.. data:: worker_cpus, control_cpus, edge_cpus
+.. data:: worker_cpus, control_cpus, edge_cpus, kubeworker_cpus
 
    The number of CPUs to allocate for each kind of VM. This setting is only
    valid for the virtualbox provider.
@@ -48,7 +48,7 @@ in the provided Vagrantfile.
 .. data:: network
 
    Default: private. Which type of Vagrant network to provision. See
-   https://docs.vagrantup.com/v2/networking/index.html
+   https://www.vagrantup.com/docs/networking/index.html
 
 .. data:: playbooks
 

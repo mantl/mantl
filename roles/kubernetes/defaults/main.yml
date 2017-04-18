@@ -1,52 +1,37 @@
-# The version of software to install for Kubernetes.
-# When testing repo is used, state is "latest", so this has no effect.
-kube_version: 1.0.3
-
-# Kubernetes services logging level, integer from 0 to 4, where 4 is highest
-# Applys to all services globally. Be carefull with highest log level,
-# log sizes are growing pretty fast even without real workload.
+# Kubernetes services logging level, integer from 0 to 4, where 4 is most
+# verbose. Applies to all services globally. Be carefull with highest log level,
+# log sizes grow quickly even without a real workload.
 kube_log_level: 0
 
-# This directory is where all the additional scripts go
-# that Kubernetes normally puts in /srv/kubernetes.
-# This puts them in a sane location
-kube_script_dir: /usr/libexec/kubernetes
-
-# This directory is where all the additional config stuff goes
-# the kubernetes normally puts in /srv/kubernets.
-# This puts them in a sane location.
-# Editting this value will almost surely break something. Don't
-# change it. Things like the systemd scripts are hard coded to
-# look in here. Don't do it.
-kube_config_dir: /etc/kubernetes
-
 # The port the API Server will be listening on.
-kube_master_port: 6443
+kube_master_port: 443
 kube_insecure_port: 8085
 
-# This is where all the cert scripts and certs will be located
-kube_cert_dir: "{{ kube_config_dir }}/certs"
-
 # This is where all of the bearer tokens will be stored
-kube_token_dir: "{{ kube_config_dir }}/tokens"
+kube_token_dir: "/etc/kubernetes/tokens"
 
 # This is where to save basic auth file
-kube_users_dir: "{{ kube_config_dir }}/users"
+kube_users_dir: "/etc/kubernetes/users"
 
 # This is where you can drop yaml/json files and the kubelet will run those
 # pods on startup
-kube_manifest_dir: "{{ kube_config_dir }}/manifests"
+kube_manifest_dir: "/etc/kubernetes/manifests"
 
-# This is the group that the cert creation scripts chgrp the
-# cert files to. Not really changable...
-kube_cert_group: kube-cert
+# This is where manifests for podmaster will be stored
+kube_podmaster_dir: "/srv/kubernetes/manifests"
 
 dns_domain: "{{ cluster_name }}"
 
-# IP address of the DNS server.
-# Kubernetes will create a pod with several containers, serving as the DNS
-# server and expose it under this IP address. The IP address must be from
-# the range specified as kube_service_addresses. This magic will actually
-# pick the 10th ip address in the kube_service_addresses range and use that.
-#dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
-dns_server: "{{ private_ipv4  }}"
+# IP address of the DNS server. Kubernetes will create a pod with several
+# containers, serving as the DNS server and exposing it at this IP address. The
+# IP address must be from the range specified in kube_service_addresses. This
+# magic will actually pick the 10th ip address in the kube_service_addresses
+# range and use that.
+dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
+
+# OpenStack cloud provider authentication variables.
+os_auth_url: "{{ lookup('env','OS_AUTH_URL') }}"
+os_username: "{{ lookup('env','OS_USERNAME') }}"
+os_password: "{{ lookup('env','OS_PASSWORD') }}"
+os_region_name: "{{ lookup('env','OS_REGION_NAME') }}"
+os_tenant_id: "{{ lookup('env','OS_TENANT_ID') }}"

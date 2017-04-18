@@ -11,12 +11,15 @@ using Ansible variables.
    chronos.rst
    collectd.rst
    consul.rst
+   distributive.rst
    dnsmasq.rst
    docker.rst
    elk.rst
    etcd.rst
    glusterfs.rst
    haproxy.rst
+   kafka.rst
+   kubernetes.rst
    logstash.rst
    marathon.rst
    mesos.rst

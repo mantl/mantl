@@ -2,6 +2,7 @@
 
 # input variables
 variable role {}
+variable name {}
 variable count {}
 variable group_id {}
 variable location { default = "CA1" }
@@ -18,7 +19,7 @@ variable ssh_key { default = "~/.ssh/id_rsa.pub" }
 resource "clc_server" "node" {
   count = "${var.count}"
   group_id = "${var.group_id}"
-  name_template = "-${var.role}"
+  name_template = "${var.name}"
   source_server_id = "${var.image_name}"
   cpu = "${var.cpu}"
   memory_mb = "${var.mem}"
@@ -26,7 +27,7 @@ resource "clc_server" "node" {
   password = "${var.ssh_pass}"
 
   metadata {
-    dc = "${var.location}"
+    dc = "${lower(var.location)}"
     role = "${var.role}"
   }  
 }
@@ -64,16 +65,16 @@ resource "clc_public_ip" "ip" {
     destination = "/root/.ssh/authorized_keys"
   }
   provisioner "remote-exec" {
-    inline = [ "yum remove -y open-vm-tools" ]
+    inline = [ "yum -y swap -- install open-vm-tools -- remove open-vm-tools-deploypkg" ]
   }
 }
 
 output "server_id" {
-  value = "${join(\",\", clc_server.node.*.id)}"
+  value = "${join(",", clc_server.node.*.id)}"
 }
 output "private_ip" {
-  value = "${join(\",\", clc_server.node.*.private_ip_address)}"
+  value = "${join(",", clc_server.node.*.private_ip_address)}"
 }
 output "public_ip" {
-  value = "${join(\",\", clc_server.node.*.public_ip_address)}"
+  value = "${join(",", clc_server.node.*.public_ip_address)}"
 }

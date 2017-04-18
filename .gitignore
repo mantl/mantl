@@ -2,12 +2,17 @@ docs/_build
 *.pyc
 .vagrant
 security.yml
+
+# TLS certificates
 ssl/**/*.pem
-ssl/index.txt*
-ssl/serial*
 ssl/.rnd
+ssl/kubernetes
+
+# ansible
+*.retry
 
 # terraform
+/*.tf
 **/*.tfstate*
 **/.terraform
 

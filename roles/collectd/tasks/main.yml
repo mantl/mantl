@@ -11,18 +11,6 @@
     - collectd
     - bootstrap
 
-- name: install collectd docker plugin dependencies
-  sudo: yes
-  pip:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - py-dateutil
-    - docker-py>=1.0.0
-    - six>=1.9.0
-  tags:
-    - collectd
-
 - name: create collectd config directory
   sudo: yes
   file:
@@ -51,54 +39,10 @@
   tags:
     - collectd
 
-- name: install collectd docker plugin
-  sudo: yes
-  copy:
-    src: "{{ item }}"
-    dest: "/usr/share/collectd/plugins/{{ item }}"
-    mode: 0444
-  with_items:
-    - dockerplugin.py
-    - dockerplugin.db
-
-- name: configure collectd docker plugin
-  sudo: yes
-  copy:
-    src: dockerplugin.conf
-    dest: /etc/collectd.d/docker.conf
-  notify:
-    - restart collectd
-  tags:
-    - collectd
-
 - name: authorize collectd to make tcp connections
   sudo: yes
   seboolean: name=collectd_tcp_network_connect state=yes persistent=yes
   when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
-  tags:
-    - collectd
-
-- name: check if collectd is authorized to connect to docker
-  sudo: yes
-  shell: semodule -l
-  register: semodule_list
-  failed_when: no
-  changed_when: no
-  when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
-  tags:
-    - collectd
-
-- name: copy collectd selinux docker policy
-  sudo: yes
-  copy: src=collectd_docker_plugin.pp dest=/tmp/collectd_docker_plugin.pp owner=root mode=0600
-  when: "semodule_list.stdout is defined and semodule_list.stdout.find('collectd_docker_plugin') == -1"
-  tags:
-    - collectd
-
-- name: authorize collectd to connect to docker
-  sudo: yes
-  shell: semodule -i /tmp/collectd_docker_plugin.pp
-  when: "semodule_list.stdout is defined and semodule_list.stdout.find('collectd_docker_plugin') == -1"
   tags:
     - collectd
 
@@ -110,3 +54,8 @@
     state: started
   tags:
     - collectd
+
+- include: marathon.yml
+- include: mesos-master.yml
+- include: mesos-agent.yml
+- include: zookeeper.yml

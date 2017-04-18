@@ -3,7 +3,7 @@ Chronos
 
 .. versionadded:: 0.1
 
-`Chronos <http://http://mesos.github.io/chronos/>`_ is a distributed and
+`Chronos <http://mesos.github.io/chronos/>`_ is a distributed and
 fault-tolerant scheduler that runs on top of Apache Mesos that can be used for
 job orchestration. You can think of it as distributed cron service. It supports
 custom Mesos executors as well as the default command executor. By default,
@@ -235,12 +235,6 @@ Variables
    The default epsilon value for tasks, in seconds.
 
    default: 60
-
-.. data:: chronos_zk_hosts
-
-   The list of ZooKeeper servers for storing state.
-
-   default: "zookeeper.service.consul:2181"
 
 .. data:: chronos_zk_timeout
 

@@ -2,7 +2,7 @@
 - name: install consul-template
   sudo: yes
   yum:
-    name: consul-template-0.12.2
+    name: consul-template-0.15.0
     state: present
   tags:
     - consul-template
@@ -10,9 +10,9 @@
 
 - name: configure consul-template
   sudo: yes
-  copy:
-    src: consul.hcl
-    dest: /etc/consul-template/config.d
+  template:
+    src: consul.cfg.j2
+    dest: /etc/consul-template/config.d/consul.hcl
   notify:
     - reload consul-template
   tags:

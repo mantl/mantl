@@ -1,0 +1,9 @@
+LoadPlugin python
+
+<Plugin "python">
+    ModulePath "/usr/share/collectd/python/"
+    Import "zookeeper"
+    <Module "zookeeper">
+        Hosts "{{ inventory_hostname }}.node.consul"
+    </Module>
+</Plugin>

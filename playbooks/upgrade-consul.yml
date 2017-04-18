@@ -1,6 +1,9 @@
 ---
 - hosts: all
   serial: "{{ serial | default(1) }}"
+  vars:
+    consul_create_secure_acl: true
+    state: "{{ package_state | default('present') }}"
   tasks:
     - include_vars: ../roles/consul/defaults/main.yml
 
@@ -8,7 +11,7 @@
       sudo: yes
       yum:
         name: "{{ item }}"
-        state: present
+        state: "{{ state }}"
       with_items:
         - "{{ consul_package }}"
         - "{{ consul_ui_package }}"
@@ -26,5 +29,6 @@
       sudo: yes
       run_once: yes
       command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl Secure Token" --rule='key:secure:write' --rule='service::write' {{ consul_acl_secure_token }}
+      when: consul_create_secure_acl
       tags:
         - consul

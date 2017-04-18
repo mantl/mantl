@@ -1,0 +1,8 @@
+---
+# use this playbook to verify that all your hosts can connect to one another.
+# It's provided here for debugging purposes.
+- hosts: all
+  tasks:
+    - name: check host connectivity
+      command: ping -c 1 {{hostvars[item].private_ipv4}}
+      with_items: groups["all"]

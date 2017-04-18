@@ -1,61 +1,72 @@
 {
     "variables": {
         "atlas_username": "{{env `ATLAS_USERNAME`}}",
-        "atlas_name": "{{env `ATLAS_NAME`}}"
+        "atlas_name": "{{env `ATLAS_NAME`}}",
+        "root": "{{template_dir}}/..",
+        "scripts": "{{template_dir}}/scripts",
+        "staging": "/tmp/packer-provisioner-ansible-local"
     },
     "provisioners": [
         {
             "type": "shell",
             "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "{{pwd}}/packer/scripts/ansible.sh",
-                "{{pwd}}/packer/scripts/vagrant.sh"
+                "{{user `scripts`}}/ansible.sh",
+                "{{user `scripts`}}/vagrant.sh"
             ]
         },
         {
             "type": "shell",
             "only": ["virtualbox-iso"],
             "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-            "script": "{{pwd}}/packer/scripts/vbox.sh"
+            "script": "{{user `scripts`}}/vbox.sh"
         },
-	{
-	    "type": "ansible-local",
-	    "playbook_file": "{{pwd}}/playbooks/rolling-upgrade-packages.yml"
-	},
         {
             "type": "ansible-local",
-            "playbook_file": "{{pwd}}/sample.yml",
-            "role_paths": [
-                "{{pwd}}/roles/calico",
-                "{{pwd}}/roles/chronos",
-                "{{pwd}}/roles/collectd",
-                "{{pwd}}/roles/common",
-                "{{pwd}}/roles/consul",
-                "{{pwd}}/roles/consul-template",
-                "{{pwd}}/roles/dnsmasq",
-                "{{pwd}}/roles/docker",
-                "{{pwd}}/roles/etcd",
-                "{{pwd}}/roles/glusterfs",
-                "{{pwd}}/roles/handlers",
-                "{{pwd}}/roles/haproxy",
-                "{{pwd}}/roles/logrotate",
-                "{{pwd}}/roles/logstash",
-                "{{pwd}}/roles/lvm",
-                "{{pwd}}/roles/mantlui",
-                "{{pwd}}/roles/marathon",
-                "{{pwd}}/roles/mesos",
-                "{{pwd}}/roles/nginx",
-                "{{pwd}}/roles/traefik",
-                "{{pwd}}/roles/vault",
-                "{{pwd}}/roles/zookeeper"
-            ],
+            "playbook_file": "{{user `root`}}/playbooks/rolling-upgrade-packages.yml"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "mkdir -p {{user `staging`}}"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/group_vars",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/library",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/playbooks",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/plugins",
+            "destination": "{{user `staging`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{user `root`}}/roles",
+            "destination": "{{user `staging`}}/playbooks"
+        },
+        {
+            "type": "ansible-local",
+            "playbook_file": "{{user `root`}}/sample.yml",
+            "staging_directory": "{{user `staging`}}",
             "extra_arguments": [ "--tags", "bootstrap", "--extra-vars=\"provider=vagrant\"" ],
             "inventory_groups": "role=control,role=worker"
         },
         {
             "type": "shell",
             "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-            "script": "{{pwd}}/packer/scripts/cleanup.sh"
+            "script": "{{user `scripts`}}/cleanup.sh"
         }
     ],
     "builders": [
@@ -68,7 +79,7 @@
             "disk_size": 20480,
             "guest_os_type": "RedHat_64",
             "headless": false,
-            "http_directory": "{{pwd}}/packer/kickstarts",
+            "http_directory": "{{template_dir}}/kickstarts",
             "iso_urls": [
                 "iso/CentOS-7-x86_64-Minimal-1511.iso",
                 "http://centos.mirrors.hoobly.com/7/isos/x86_64/CentOS-7-x86_64-Minimal-1511.iso"
@@ -106,7 +117,14 @@
                     "created_at": "{{timestamp}}",
                     "provider": "virtualbox"
                 }
+            },
+            {
+                "type": "shell-local",
+                "inline": [
+                    "mv builds/VirtualBox-mantl.box builds/mantl-bootstrap-$(git describe --tags --always --dirty).box"
+                ]
             }
+
         ]
     ],
     "push": {

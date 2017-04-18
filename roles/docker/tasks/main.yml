@@ -9,105 +9,27 @@
     - docker
     - bootstrap
 
-- name: install docker packages
+- name: enable Docker, Inc. yum repo
+  sudo: yes
+  copy:
+    src: docker.repo
+    dest: /etc/yum.repos.d/docker.repo
+  tags:
+    - docker
+  when: docker_package_source is defined and docker_package_source == "docker"
+
+- name: remove old docker package
   sudo: yes
   yum:
     name: "{{ item }}"
-    state: present
+    state: absent
   with_items:
-    - docker
-    - docker-selinux
+    - "{{ docker_package_to_remove }}"
+    - "{{ docker_package_to_remove }}-common"
+    - "{{ docker_package_to_remove }}-selinux"
   tags:
     - docker
     - bootstrap
-
-- name: check if docker storage already set up with devicemapper
-  sudo: yes
-  shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup && echo ${STORAGE_DRIVER:-NOT_SET}"
-  register: docker_storage_already_set_up
-  tags:
-    - disk
-    - docker
-
-- name: set docker_configure_lvm
-  set_fact:
-    docker_configure_lvm: '{{ docker_lvm_backed|bool and docker_storage_driver in ["btrfs", "overlay"] and docker_storage_already_set_up.stdout in ["NOT_SET", "btrfs", "overlay"] }}'
-  tags:
-    - disk
-    - docker
-
-- name: create backing storage volume for docker storage
-  sudo: yes
-  lvol:
-    vg: "{{ volume_group_name }}"
-    lv: "{{ docker_volume_name }}"
-    size: "{{ docker_volume_size }}"
-  when: docker_configure_lvm|bool
-  tags:
-    - disk
-    - docker
-
-- name: create backing storage filesystem for docker storage
-  sudo: yes
-  filesystem:
-    dev: "{{ docker_volume_device }}"
-    fstype: "{{ docker_volume_fs_type }}"
-    opts: "{{ docker_volume_fs_opts }}" 
-  when: docker_configure_lvm|bool
-  tags:
-    - disk
-    - docker
-
-- name: create mount point for docker storage
-  sudo: yes
-  file:
-    state: directory
-    name: "{{ docker_volume_mount }}"
-    mode: 0755
-  when: docker_configure_lvm|bool
-  tags:
-    - disk
-    - docker
-
-- name: mount docker storage
-  sudo: yes
-  mount:
-    state: mounted
-    name: "{{ docker_volume_mount }}"
-    fstype: "{{ docker_volume_fs_type }}"
-    src: "{{ docker_volume_device }}"
-    dump: 1
-    passno: 2
-  when: docker_configure_lvm|bool
-  tags:
-    - disk
-    - docker
-
-- name: setup docker storage
-  sudo: yes
-  lineinfile:
-    dest: /etc/sysconfig/docker-storage-setup
-    regexp: "^{{ item.var }}=.*"
-    line: "{{ item.var }}={{ item.value }}"
-    state: present
-    create: yes
-  with_items:
-    - var: STORAGE_DRIVER
-      value: "{{ docker_storage_driver }}"
-    - var: DATA_SIZE
-      value: "{{ docker_lvm_data_volume_size }}"
-    - var: VG
-      value: "{{ volume_group_name }}"
-    - var: MIN_DATA_SIZE
-      value: "{{ docker_lvm_data_volume_size_min }}"
-    - var: AUTO_EXTEND_POOL
-      value: "{{ docker_lvm_auto_extend_pool }}"
-  when: docker_lvm_backed|bool and docker_storage_already_set_up.stdout == "NOT_SET"
-  tags:
-    - docker
-
-- include: lvm.yml
-  when: docker_lvm_backed|bool and provider!="bare-metal"
 
 - name: create rsyslog.d
   sudo: yes
@@ -131,18 +53,51 @@
     - docker
 
 
-- name: configure docker consul dns
+- name: create directory for systemd drop-ins
   sudo: yes
-  lineinfile:
-    dest: /etc/sysconfig/docker
-    regexp: ^OPTIONS=
-    line: OPTIONS='{% if docker_selinux_enabled %}--selinux-enabled {% endif %}--dns {{ private_ipv4 }} --dns-search service.{{ consul_dns_domain }} {% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %} --log-driver=syslog'
-    state: present
-    create: yes
-  notify:
-    - restart docker
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: 0755
   tags:
     - docker
+
+# We have to restart docker when these files have changed, otherwise the updated
+# configuration won't come into effect.
+- name: systemd drop-in for options
+  sudo: yes
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/systemd/system/docker.service.d/{{ item }}"
+  with_items:
+    - 10-options.conf
+    - 12-network-options.conf
+  notify:
+    - reload docker
+  tags:
+    - docker
+
+- name: systemd drop-in for ExecStart
+  sudo: yes
+  copy:
+    src: 20-ExecStart.conf.j2
+    dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
+  notify:
+    - reload docker
+  tags:
+    - docker
+
+- name: install docker packages
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ docker_package }}"
+    - "{{ docker_package }}-selinux"
+  tags:
+    - docker
+    - bootstrap
 
 - name: ensure docker config dir exists
   sudo: yes
@@ -172,6 +127,9 @@
     - docker
     - skip_ansible_lint
 
+- include: lvm.yml
+  when: docker_lvm_backed|bool
+
 - name: enable docker
   sudo: yes
   service:
@@ -181,3 +139,13 @@
   tags:
     - docker
     - bootstrap # needed to install Docker images during bootstrap
+
+- name: install docker-gc
+  sudo: yes
+  yum:
+    name: docker-gc
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+  when: docker_gc_install is defined and docker_gc_install|bool

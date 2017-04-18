@@ -1,0 +1,25 @@
+{% if docker_lvm_backed|bool and docker_storage_driver in ["btrfs", "overlay"] %}
+[volume:docker]
+group = {{ volume_group_name }}
+volume = {{ docker_volume_name }}
+size = {{ docker_volume_size }}
+
+[filesystem:docker]
+dev = {{ docker_volume_device }}
+fstype = {{ docker_volume_fs_type }}
+mount = {{ docker_volume_mount }}
+required_by = docker-storage-setup.service docker.service
+
+[write:config]
+file = /etc/sysconfig/mantl-storage
+content = MANTL_STORAGE_OPTIONS=--storage-driver {{ docker_storage_driver }} 
+{% endif %}
+{%if docker_lvm_backed|bool and docker_storage_driver == "devicemapper" %}
+[thin:docker]
+group = {{ volume_group_name }}
+# Fixed volume name, to be compatible with docker-storage-setup
+pool = docker-pool
+size = {{ docker_lvm_data_volume_size }}
+config = /etc/sysconfig/mantl-storage
+
+{% endif %}

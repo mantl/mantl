@@ -3,6 +3,13 @@ Collectd
 
 Collectd role for deploying Collectd.
 
+Installation
+------------
+
+As of 1.1.0, Collectd is distributed as an addon for Mantl. After a successful
+initial run from your customized ``sample.yml``, install it with
+``ansible-playbook -e @security.yml addons/collectd.yml``.
+
 Variables
 ---------
 
@@ -12,7 +19,7 @@ This role has the following global settings:
 
    Hostname to append to metrics                    
    
-   Default: ``{{ ansible_hostname }}``
+   Default: ``{{ inventory_hostname }}``
 
 .. data ::  Interval  
 
@@ -77,22 +84,3 @@ This role enables the following Collectd plugins and settings:
    Type: write 
    Description: write collectd logs to syslog                               
    Default: ``LogLevel "err"``
-
-SELinux Policy
---------------
-
-If your cluster is built with SELinux enabled and enforcing, a custom SELinux
-policy will be installed to support the collectd docker plugin. The TE file
-looks like this:
-
-.. literalinclude:: ../../roles/collectd/files/collectd_docker_plugin.te
-   :language: shell
-
-and is included in ``roles/collectd/files/collectd_docker_plugin.te``.
-
-It was built with the following commands:
-
-.. code-block:: shell
-
-   checkmodule -M -m -o collectd_docker_plugin.mod collectd_docker_plugin.te
-   semodule_package -o collectd_docker_plugin.pp -m collectd_docker_plugin.mod

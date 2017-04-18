@@ -5,7 +5,7 @@ CenturyLinkCloud
 
 Terraform can use CLC to provision hosts for your cluster. You
 can `download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`_.
+<https://www.terraform.io/downloads.html>`_.
 
 Documentation on using the CLC driver with terraform is `available here
 <https://www.terraform.io/docs/providers/clc/index.html>`_.
@@ -104,18 +104,3 @@ the deployment, and ``terraform apply`` will provision the
 cluster. Afterwards, you can use the instructions in :doc:`getting
 started <index>` to install Mantl on your new cluster.
 
-
-
-Post-Provisioning
------------------
-
-NOTE: currently the open-vm-tools package causes issues with kernel
-upgrades in playbooks/upgrade-packages.yml. As part of the terraform
-buildout, this package is removed to facilitate automated execution of
-the upgrade playbook. It is not advised to leave this package missing on the
-VMs, so after running upgrade-packages, execute the following to
-reinstall it.
-
-.. code-block:: shell
-
-  ansible all -a "yum install -y open-vm-tools"` 

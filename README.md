@@ -1,41 +1,41 @@
-
-![image](./mantl-logo-1.png)
+![image](./docs/_static/mantl-logo.png)
 
 # Overview
 
 [![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/mantl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Stories in Ready](https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready)](https://waffle.io/CiscoCloud/microservices-infrastructure)
-[![Build Status](https://travis-ci.org/CiscoCloud/mantl.svg?branch=master)](https://travis-ci.org/CiscoCloud/mantl)
-
+[![Build Status](https://img.shields.io/travis/mantl/mantl.svg)](https://travis-ci.org/mantl/mantl)
 
 Mantl is a modern, batteries included platform for rapidly deploying globally
 distributed services
 
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
 
 - [Overview](#overview)
     - [Features](#features)
         - [Core Components](#core-components)
         - [Addons](#addons)
-        - [Goals](#Goals)
+        - [Goals](#goals)
         - [Architecture](#architecture)
-        - [Control Nodes](#control-nodes)
-        - [Resource Nodes](#resource-nodes)
+            - [Control Nodes](#control-nodes)
+            - [Agent Nodes](#agent-nodes)
+            - [Edge Nodes](#edge-nodes)
     - [Getting Started](#getting-started)
         - [Software Requirements](#software-requirements)
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
     - [Documentation](#documentation)
     - [Roadmap](#roadmap)
-        - [Core Components and Features](#core-components-and-features)
         - [Mesos Frameworks](#mesos-frameworks)
         - [Security](#security)
         - [Operations](#operations)
-        - [Platform Support](#platform-support)
+        - [Supported Platforms](#supported-platforms)
+            - [Community Supported Platforms](#community-supported-platforms)
     - [Development](#development)
+    - [Getting Support](#getting-support)
     - [License](#license)
 
 <!-- markdown-toc end -->
+
 
 ## Features
 
@@ -46,6 +46,8 @@ distributed services
   isolation and sharing across distributed services
 * [Marathon](https://mesosphere.github.io/marathon) for cluster management of
   long running containerized services
+* [Kubernetes](http://kubernetes.io/) for managing, organizing, and scheduling
+  containers
 * [Terraform](https://terraform.io) deployment to multiple cloud providers
 * [Docker](http://docker.io) container runtime
 * [Traefik](https://traefik.github.io/) for proxying external traffic
@@ -61,8 +63,10 @@ distributed services
   collection and analysis
      -  [Logstash](https://github.com/elastic/logstash) for log forwarding
 * [GlusterFS](http://www.gluster.org/) for container volume storage
-* [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
-* [Calico](http://www.projectcalico.org) a new kind of virtual network
+* [Docker Swarm](https://www.docker.com/products/docker-swarm/) for clustering
+  Docker daemons between networked hosts
+* [etcd](https://github.com/coreos/etcd), distributed key-value store for Calico
+* [Calico](http://www.projectcalico.org), a new kind of virtual network
 * [collectd](https://collectd.org/) for metrics collection
 * [Chronos](https://mesos.github.io/chronos/) a distributed task scheduler
 * [Kong](http://getkong.org) for managing APIs
@@ -77,37 +81,29 @@ See the `addons/` directory for the most up-to-date information.
 ### Architecture
 
 The base platform contains control nodes that manage the cluster and any number
-of resource nodes. Containers automatically register themselves into DNS so
+of agent nodes. Containers automatically register themselves into DNS so
 that other services can locate them.
 
-![Single-DC](docs/_static/single_dc.png)
+![mantl-diagram](docs/_static/mantl-diagram.png)
 
-### Control Nodes
+#### Control Nodes
 
-The control nodes manage a single datacenter.  Each control node runs Consul
-for service discovery, Mesos leaders for resource scheduling and Mesos
-frameworks like Marathon.
+The control nodes manage a single datacenter. Each control node runs Consul for
+service discovery, Mesos and Kubernetes leaders for resource scheduling and
+Mesos frameworks like Marathon.
 
-In general, it's best to provision an odd number (at least 3 or 5) of control
-nodes to achieve higher availability of services. The Consul Ansible role will
-automatically bootstrap and join multiple Consul nodes. The Mesos role will
-provision highly-availabile Mesos and ZooKeeper environments when more than one
-node is provisioned.
+The Consul Ansible role will automatically bootstrap and join multiple Consul
+nodes. The Mesos role will provision highly-availabile Mesos and ZooKeeper
+environments when more than one node is provisioned.
 
-![Control Node](docs/_static/control_node.png)
+#### Agent Nodes
 
-### Resource Nodes
+Agent nodes launch containers and other Mesos- or Kubernetes-based workloads.
 
-Resource nodes launch containers and other Mesos-based workloads.
-
-![Resource Node](docs/_static/resource_node.png)
-
-### Edge Nodes
+#### Edge Nodes
 
 Edge nodes are responsible for proxying external traffic into services running
 in the cluster.
-
-![Edge Node](docs/_static/edge_node.png)
 
 ## Getting Started
 
@@ -126,10 +122,10 @@ git tag
 0.1.0
 0.2.0
 ...
-1.0.2
+1.2.0
 
 
-git checkout 1.0.2
+git checkout 1.2.0
 ```
 
 A Vagrantfile is provided that provisions everything on a few VMs. To run,
@@ -175,7 +171,6 @@ make html
 ### Mesos Frameworks
 
 - [x] Marathon
-- [ ] Kubernetes
 - [x] Kafka
 - [ ] Riak
 - [x] Cassandra
@@ -208,21 +203,27 @@ repo](https://github.com/CiscoCloud/mantl-universe).
 - [ ] Self maintaining system (log rotation, etc)
 - [ ] Self healing system (automatic failed instance replacement, etc)
 
-### Platform Support
+### Supported Platforms
 
-- [x] Vagrant (Mac OSX + VirtualBox)
-- [x] Vagrant (Linux + VirtualBox)
+- [x] [Amazon Web Services](https://aws.amazon.com/)
+- [x] [CenturyLinkCloud](https://www.ctl.io)
+- [x] [Cisco Cloud Services](http://www.cisco.com/c/en/us/solutions/cloud/overview.html)
+- [x] [Cisco MetaCloud](http://www.cisco.com/c/en/us/products/cloud-systems-management/metapod/index.html)
+- [x] [DigitalOcean](https://www.digitalocean.com/)
+- [x] [Joyent Triton](https://www.joyent.com/)
+- [x] [Google Compute Engine](https://cloud.google.com/compute/)
+- [x] [OpenStack](http://www.openstack.org/)
+- [x] [Vagrant](https://www.vagrantup.com/) (Linux/OSX + VirtualBox)
+- [ ] [Apache CloudStack](https://cloudstack.apache.org/)
+- [ ] [Cisco Unified Computing System](http://www.cisco.com/c/en/us/products/servers-unified-computing/index.html)
+- [ ] [Microsoft Azure](https://azure.microsoft.com/en-us/?b=16.17)
 - [ ] Vagrant (Windows + VirtualBox)
-- [x] OpenStack
-- [x] Cisco Cloud Services
-- [x] Cisco MetaCloud
-- [ ] Cisco Unified Computing System
-- [x] Amazon Web Services
-- [ ] Microsoft Azure
-- [x] Google Compute Engine
-- [ ] VMware vSphere
-- [ ] Apache CloudStack
-- [x] Digital Ocean
+
+#### Community Supported Platforms
+
+- [x] Bare Metal
+- [x] [IBM Softlayer](http://www.softlayer.com/)
+- [x] [VMware vSphere](http://www.vmware.com/products/vsphere/)
 
 Please see [milestones](https://github.com/CiscoCloud/mantl/milestones) for
 more details on the roadmap.

@@ -12,7 +12,7 @@
   command: "{{ item }}"
   with_items:
     - systemctl stop mesos-agent
-    - rm -rf /tmp/mesos/meta/slaves/latest
+    - "rm -rf {{ mesos_work_dir }}/meta/slaves/latest"
     - systemctl start mesos-agent
 
 - name: restart mesos follower
@@ -27,8 +27,8 @@
   sudo: yes
   command: systemctl daemon-reload
 
-- name: restart collectd
+- name: restart rsyslog
   sudo: yes
   service:
-    name: collectd
+    name: rsyslog
     state: restarted

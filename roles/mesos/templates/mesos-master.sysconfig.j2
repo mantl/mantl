@@ -1,8 +1,9 @@
 # common configuration
 MESOS_PORT={{ mesos_leader_port }}
 MESOS_ADVERTISE_IP={{ private_ipv4 }}
-MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node." + consul_dns_domain) }}
-MESOS_LOG_DIR={{ mesos_log_dir }}
+MESOS_IP={{ private_ipv4 }}
+MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname) }}
+MESOS_EXTERNAL_LOG_FILE=/var/log/mesos/mesos-master.log
 MESOS_LOGGING_LEVEL={{ mesos_logging_level }}
 
 # master configuration

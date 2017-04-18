@@ -66,7 +66,6 @@
 
 - name: create zookeeper acl
   sudo: yes
-  run_once: yes
   command: "{{ mesos_zk_acl_cmd }}"
   notify:
     - restart mesos leader
@@ -79,6 +78,12 @@
   tags:
     - mesos
 
+- name: write iptables configuration
+  run_once: true
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/mesos/leader/ip_tables {{ do_mesos_iptables }}
+  tags:
+    - mesos
+
 - name: deploy iptables configuration
   sudo: yes
   copy:
@@ -87,40 +92,11 @@
   with_items:
     - src: mesos-leader-consul.cfg
       dest: /etc/consul-template/config.d
+    - src: mesos-leader-iptables.tmpl
+      dest: /etc/consul-template/templates
   notify:
     - reload consul-template
   tags:
     - mesos
-
-- name: deploy iptables template
-  sudo: yes
-  template:
-    src: mesos-leader-iptables.tmpl.j2
-    dest: /etc/consul-template/templates/mesos-leader-iptables.tmpl
-  notify:
-    reload consul-template
-  tags:
-    - mesos
-
-- name: install collectd mesos-master plugin
-  sudo: yes
-  copy:
-    src: mesos-master.py
-    dest: /usr/share/collectd/plugins
-    mode: 0444
-  tags:
-    - mesos
-    - collectd
-
-- name: configure collectd mesos-master plugin
-  sudo: yes
-  template:
-    src: mesos-master.conf.j2
-    dest: /etc/collectd.d/mesos-master.conf
-  notify:
-    - restart collectd
-  tags:
-    - mesos
-    - collectd
 
 - include: nginx-proxy.yml

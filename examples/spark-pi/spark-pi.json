@@ -1,0 +1,18 @@
+{ 
+    "schedule" : "R0/2030-01-01T12:00:00Z/PT1H",  
+    "cpus": "0.5",
+    "mem": "512",  
+    "epsilon" : "PT10M",  
+    "name" : "spark-pi",
+    "container": {
+        "type": "DOCKER",
+        "image": "farmbio/spark-mantl:1.6.0",       
+        "volumes": [{
+	    "containerPath": "/etc/sysconfig/mantl-api",
+            "hostPath": "/etc/sysconfig/mantl-api",
+            "mode": "RO"
+    	}]
+    },
+    "command" : "bin/spark-submit --class org.apache.spark.examples.SparkPi --master $(./get-master.sh) --deploy-mode cluster http://central.maven.org/maven2/org/apache/spark/spark-examples_2.10/1.1.1/spark-examples_2.10-1.1.1.jar 1000",
+    "owner" : "user@example.com"
+}

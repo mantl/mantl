@@ -1,0 +1,14 @@
+# collectd
+
+LoadPlugin python
+<Plugin python>
+  ModulePath "/usr/share/collectd/plugins"
+  Import "marathon"
+  <Module "marathon">
+    Host "{{ inventory_hostname }}.node.consul"
+    Port "18080"
+    Verbose false
+  </Module>
+</Plugin>
+
+# EOF
