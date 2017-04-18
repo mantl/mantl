@@ -31,8 +31,8 @@ in the provided Vagrantfile.
 .. data:: worker_ip_start, control_ip_start, edge_ip_start, kubeworker_ip_start
 
    A base IP address which will have its last digit appended. For example, if
-   ``worker_ip_start`` is set to "192.168.100.10", the first worker node will
-   have the IP address 192.168.100.101, the second will have 192.168.100.102,
+   ``worker_ip_start`` is set to "172.20.10.10", the first worker node will
+   have the IP address 172.20.10.101, the second will have 172.20.10.102,
    etc.
 
 .. data:: worker_memory, control_memory, edge_memory, kubeworker_memory

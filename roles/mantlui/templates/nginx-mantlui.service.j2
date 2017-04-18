@@ -19,8 +19,8 @@ ExecStart=/usr/bin/docker run \
     --env-file=/etc/default/nginx-mantlui.env \
     -p 80:80 \
     -p 443:443 \
-    -v /etc/pki/tls/certs/host.cert:/etc/nginx/ssl/nginx.cert:ro \
-    -v /etc/pki/tls/private/host.key:/etc/nginx/ssl/nginx.key:ro \
+    -v /etc/pki/mantl/cert:/etc/nginx/ssl/nginx.cert:ro \
+    -v /etc/pki/mantl/key:/etc/nginx/ssl/nginx.key:ro \
     -v /etc/pki/ca-trust/source/anchors/:/usr/local/share/ca-certificates/:ro \
     {{ mantlui_nginx_image }}:{{ mantlui_nginx_image_tag }}
 

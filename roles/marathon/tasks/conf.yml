@@ -14,7 +14,6 @@
 
 - name: create zookeeper acl
   sudo: yes
-  run_once: yes
   command: "{{ marathon_zk_acl_cmd }}"
   notify:
     - restart marathon

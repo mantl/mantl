@@ -299,17 +299,17 @@ resource "google_compute_instance" "mi-edge-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", google_compute_instance.mi-control-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-control-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", google_compute_instance.mi-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", google_compute_instance.mi-kubeworker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-kubeworker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", google_compute_instance.mi-edge-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-edge-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }

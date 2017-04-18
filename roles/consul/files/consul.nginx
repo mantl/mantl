@@ -3,8 +3,8 @@
 server {
 	listen {{with node}}{{.Node.Address}}{{end}}:8500 {{if $consulSsl}}ssl{{end}};
 {{if $consulSsl}}
-	ssl_certificate		/etc/pki/tls/certs/host.cert;
-	ssl_certificate_key	/etc/pki/tls/private/host.key;
+	ssl_certificate		/etc/pki/mantl/cert;
+	ssl_certificate_key	/etc/pki/mantl/key;
 
 	ssl on;
 	ssl_session_cache	builtin:1000 shared:SSL:10m;

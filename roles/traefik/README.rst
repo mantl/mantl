@@ -13,12 +13,7 @@ Traefik is used as the only work role on the edge nodes. You should customize
 ``apps.yourdomain.com``) and then set an A record for each of the edge servers
 to ``*.apps.yourdomain.com``.
 
-Migrating from haproxy
-----------------------
 
-In 0.5, this role replaces haproxy. To migrate, set ``traefik_marathon_domain``
-to whatever was previously the value of ``haproxy_domain`` and make sure your
-customized config has the new role from ``sample.yml``.
 
 Variables
 ---------

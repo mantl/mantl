@@ -120,11 +120,9 @@ broad_opts.add_argument(
     help=
     'Use iptables rules. This overrides all other options related to iptables.')
 
-# certificates
 cert_opts = parser.add_argument_group(
     "SSL Certificate Options",
-    "a certificate authority will be set up, and "
-    "certificates will be issued using these options", )
+    "Options for generating the root CA")
 cert_opts.add_argument(
     '--cert-country',
     default='US',
@@ -149,10 +147,6 @@ cert_opts.add_argument(
     '--cert-email',
     default='operations@example.com',
     help='contact email for organizational unit')
-cert_opts.add_argument(
-    '--no-verify-certificates',
-    action='store_true',
-    help='skip verifying certificates as part of setup process')
 
 # mantlui
 mantlui_opts = parser.add_argument_group(
@@ -442,6 +436,19 @@ class Component(object):
 
         return status, out, err
 
+    def toggle_boolean(self, inFlag, inValue, inDefault):
+        with self.modify_security() as config:
+            if inFlag not in config:
+                config[inFlag] = inDefault
+
+            if inValue is not None:
+                config[inFlag] = inValue
+
+
+class Certificates(Component):
+    def check(self):
+        return [self.ca]
+
     def openssl_subject(self, common, **overrides):
         return '/C={country}/ST={state}/L={locality}/O={organization}' \
                '/OU={unit}/CN={common}/emailAddress={email}'.format(
@@ -454,101 +461,21 @@ class Component(object):
             email=overrides.get('email', self.args.cert_email)
         )
 
-    def generate_certificate(self, name):
-        key = posixpath.join(CERT_PATH, 'private', name + '.key.pem')
-        csr = posixpath.join(CERT_PATH, 'certs', name + '.csr.pem')
-        cert = posixpath.join(CERT_PATH, 'certs', name + '.cert.pem')
-
-	common = "server"
-        san = dict(SAN='DNS:localhost,DNS:*.node.consul,DNS:*.service.consul,IP:127.0.0.1')
-
-        with self.chdir(CERT_PATH):
-            if posixpath.exists(key):
-                print('{} key already exists'.format(name))
-            else:
-                self.wrap_call(
-                    'openssl genrsa -out {} 2048 -config ./openssl_req.cnf'.format(
-                        key), env=san)
-                os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
-                print('generated {} key'.format(name))
-
-            if posixpath.exists(cert):
-                print('{} certificate already exists'.format(name))
-            else:
-                # CSR
-                self.wrap_call(
-                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl_req.cnf'.format(
-                        self.openssl_subject(common), key, csr), env=san)
-                print('generated {} CSR'.format(name))
-
-                # certificate
-                self.wrap_call(
-                    'openssl ca -extensions usr_cert -notext -md sha256 '
-                    '-in {} -out {} -config ./openssl_req.cnf -batch'.format(
-                        csr, cert), env=san)
-                os.chmod(
-                    cert, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
-                    | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
-                print('generated {} certificate'.format(name))
-
-            # verify
-            if not self.args.no_verify_certificates:
-                status, out, err = self.wrap_call(
-                    'openssl verify -CAfile {} {}'.format(ROOT_CERT, cert), env=san)
-                if out != '{}: OK\n'.format(cert):
-                    self.print_call_failure(status, out, err)
-                    sys.exit(1)
-
-                print('{} certificate is valid'.format(name))
-
-    def toggle_boolean(self, inFlag, inValue, inDefault):
-        with self.modify_security() as config:
-            if inFlag not in config:
-                config[inFlag] = inDefault
-
-            if inValue is not None:
-                config[inFlag] = inValue
-
-
-class Certificates(Component):
-    def check(self):
-        return [self.ca, self.host_cert]
-
     def ca(self):
         "certificate authority"
-        serial = posixpath.join(CERT_PATH, 'serial')
-        if posixpath.exists(serial):
-            print('serial already exists')
-        else:
-            with open(serial, 'w') as fh:
-                fh.write('100001')
-
-            print('created serial')
-
-        index = posixpath.join(CERT_PATH, 'index.txt')
-        if posixpath.exists(index):
-            print('index already exists')
-        else:
-            open(index, 'w').close()
-            print('created index')
-
         with self.chdir(CERT_PATH):
-            if posixpath.exists(ROOT_KEY) or posixpath.exists(ROOT_CERT):
+            if posixpath.exists(ROOT_CERT):
                 print('root CA already exists')
             else:
                 self.wrap_call(
                     'openssl req -new -x509 -extensions v3_ca -nodes -subj "{}" '
-                    '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
+                    '-keyout {} -out {} -days 3650 -config ./openssl.cnf'.format(
                         self.openssl_subject(
                             "security-setup"), ROOT_KEY, ROOT_CERT))
 
                 os.chmod(ROOT_KEY, stat.S_IRUSR | stat.S_IWUSR)
                 os.chmod(ROOT_CERT, stat.S_IRUSR | stat.S_IWUSR)
                 print('generated root CA')
-
-    def host_cert(self):
-        "SSL certificate"
-        self.generate_certificate("host")
 
 
 class Nginx(Component):
