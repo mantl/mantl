@@ -3,7 +3,7 @@ Calico
 
 .. versionadded:: 0.4
 
-`Calico <http://www.projectcalico.org>`_ is used in the project to add the IP
+`Calico <https://www.projectcalico.org>`_ is used in the project to add the IP
 per container functionality. Calico connects Docker containers through IP no matter
 which worker node they are on. Calico uses :doc:`etcd` to distribute information
 about workloads, endpoints, and policy to each worker node. Endpoints are
@@ -12,7 +12,7 @@ container on each worker node and managed by systemd. Any workload managed by
 Calico is registered as a service in Consul.
 
 Calico is not enabled by default. In order to run Calico, you should make a
-couple of changes to your ``terraform.yml``. You will need to add the ``etcd``
+couple of changes to your ``mantl.yml``. You will need to add the ``etcd``
 role into the ``roles`` section for ``all`` hosts:
 
 .. code-block:: json
@@ -152,14 +152,6 @@ Variables
 
 You can use these variables to customize your Calico installation. For more
 information, refer to the :doc:`etcd` configuration.
-
-.. data:: etcd_service_name
-
-   Set the ``ETCD_AUTHORITY`` environment variable that is used by Calico Docker
-   container and the CLI tool ``calicoctl``. The value of this variable is
-   a Consul service that must be resolved through DNS
-
-   Default: ``etcd.service.consul``
 
 .. data:: etcd_client_port
 

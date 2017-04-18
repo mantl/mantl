@@ -5,7 +5,7 @@ Amazon Web Services
 
 As of Mantl 0.3 you can bring up Amazon Web Services
 environments using Terraform. You can `download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`_.
+<https://www.terraform.io/downloads.html>`_.
 
 Configuring Amazon Web Services for Terraform
 -----------------------------------------------
@@ -31,11 +31,13 @@ the template located at ``terraform/aws.sample.tf``. The beginning of it looks l
     region = "${var.region}"
   }
 
+
 Copy that *file* in it's entirety to the root of the project as ``aws.tf`` to start
 customization. In the next sections, we'll describe the settings that you need
 to configure.
 
 Do not copy the text contents above into a file, if you do not have the terraform/aws.sample.tf file, you need to clone the mantl repository.
+
 Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from amazon's new "AWS Credentials file" standard.
 
 Store your credentials like below in a file called ``~/.aws/credentials`` on Linux/Mac, or ``%USERPROFILE%\.aws\credentials`` on Windows.
@@ -55,7 +57,7 @@ Before running Terraform, we need to supply it with valid AWS credentials. While
 you could use the credentials for your AWS root account, it is `not recommended
 <http://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html>`_.
 In this section, we'll cover creating an `IAM User
-<http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html>`_
+<http://docs.aws.amazon.com/IAM/latest/UserGuide/id.html>`_
 that has the necessary permissions to build your cluster with Terraform.
 
 .. note:: You'll need to have an existing AWS account with sufficient IAM
@@ -74,9 +76,9 @@ Next, navigate to the "Users" screen and click the "Create New Users" button.
    :alt: Create IAM User
 
 You will be given the opportunity to create 5 different users on the next
-screen. For our purposes, we are just going to create one:
-"microservices-infrastructure". Make sure that you leave the "Generate an access
-key for each user" option checked and click the "Create" button.
+screen. For our purposes, we are just going to create one: "mantl". Make sure
+that you leave the "Generate an access key for each user" option checked and
+click the "Create" button.
 
 .. image:: /_static/aws_iam_create_user.png
    :alt: IAM Create User
@@ -215,15 +217,18 @@ Mantl on your new AWS VM's
 Terraform State
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Terraform stores the `state <https://terraform.io/docs/state/index.html>`_ of your
+
+Terraform stores the `state <https://www.terraform.io/docs/state/index.html>`_ of your
 infrastructure in a file called "terraform.tfstate". This file can be stored locally
-or in a `remote <https://terraform.io/docs/state/index.html>`_ location such as S3.
+or in a `remote <https://www.terraform.io/docs/state/index.html>`_ location such as S3.
+
 If you use the ``aws.sample.tf`` that is provided, by default the state of all the modules
 are stored in local terraform.tfstate file at the root of this project.
 
 Instead of storing the state for all the modules in one file, you might deploy the modules
 independently and have different terraform.tfstate for each module (either locally or remote).
-This can help with blue/green deployments, or making sure you don't accidently override more static
+
+This can help with blue/green deployments, or making sure you don't accidentally override more static 
 parts of the infrastructure such as a VPC.
 
 In the aws.sample.tf we have included examples of how you would reference a remote state file for VPC variables.

@@ -39,7 +39,14 @@ commonly used to least.
 
    Group to configure join IPs from. For example, if this value is
    ``consul_servers``, IPs will be calculated from the hosts in that group and
-   added to the list of servers to join. Defaults to ``all``.
+   added to the list of servers to join. Defaults to ``role=control``.
+
+.. data:: consul_log_level
+
+   The level of logging for the Consul agent. The available log levels are
+   "trace", "debug", "info", "warn", and "err".
+
+   Default: warn
 
 .. data:: consul_gossip_key
 

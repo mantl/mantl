@@ -80,7 +80,7 @@ class ImplicitBool(object):
             return cls(False, True)
         else:
             raise argparse.ArgumentTypeError(
-                '"%s" is not allowed. Try "true" or "false"' % raw_opt)
+                '"%s" is not allowed. Try "true" or "false"' % opt)
 
 # disables
 broad_opts = parser.add_argument_group(
@@ -120,11 +120,9 @@ broad_opts.add_argument(
     help=
     'Use iptables rules. This overrides all other options related to iptables.')
 
-# certificates
 cert_opts = parser.add_argument_group(
     "SSL Certificate Options",
-    "a certificate authority will be set up, and "
-    "certificates will be issued using these options", )
+    "Options for generating the root CA")
 cert_opts.add_argument(
     '--cert-country',
     default='US',
@@ -149,10 +147,6 @@ cert_opts.add_argument(
     '--cert-email',
     default='operations@example.com',
     help='contact email for organizational unit')
-cert_opts.add_argument(
-    '--no-verify-certificates',
-    action='store_true',
-    help='skip verifying certificates as part of setup process')
 
 # mantlui
 mantlui_opts = parser.add_argument_group(
@@ -185,10 +179,6 @@ consul_opts.add_argument(
     default=True,
     help='enable Consul auth',
     dest='do_consul_ssl', )
-consul_opts.add_argument(
-    '--consul-dns-domain',
-    default='consul',
-    help='consul domain suffix')
 
 # Mesos security
 mesos_opts = parser.add_argument_group(
@@ -446,6 +436,19 @@ class Component(object):
 
         return status, out, err
 
+    def toggle_boolean(self, inFlag, inValue, inDefault):
+        with self.modify_security() as config:
+            if inFlag not in config:
+                config[inFlag] = inDefault
+
+            if inValue is not None:
+                config[inFlag] = inValue
+
+
+class Certificates(Component):
+    def check(self):
+        return [self.ca]
+
     def openssl_subject(self, common, **overrides):
         return '/C={country}/ST={state}/L={locality}/O={organization}' \
                '/OU={unit}/CN={common}/emailAddress={email}'.format(
@@ -458,101 +461,15 @@ class Component(object):
             email=overrides.get('email', self.args.cert_email)
         )
 
-    def generate_certificate(self, name):
-        key = posixpath.join(CERT_PATH, 'private', name + '.key.pem')
-        csr = posixpath.join(CERT_PATH, 'certs', name + '.csr.pem')
-        cert = posixpath.join(CERT_PATH, 'certs', name + '.cert.pem')
-        with self.modify_security() as config:
-	    consul_dns_domain = config['consul_dns_domain']
-
-	common = "%s.service.%s" % (name, consul_dns_domain)
-	san = dict(SAN='DNS:localhost,DNS:*.node.' + consul_dns_domain + ',DNS:*.service.' + consul_dns_domain + ',IP:127.0.0.1')
-
-        with self.chdir(CERT_PATH):
-            if posixpath.exists(key):
-                print('{} key already exists'.format(name))
-            else:
-                self.wrap_call(
-                    'openssl genrsa -out {} 2048 -config ./openssl_req.cnf'.format(
-                        key), env=san)
-                os.chmod(key, stat.S_IRUSR | stat.S_IWUSR)
-                print('generated {} key'.format(name))
-
-            if posixpath.exists(cert):
-                print('{} certificate already exists'.format(name))
-            else:
-                # CSR
-                self.wrap_call(
-                    'openssl req -sha256 -new -subj "{}" -key {} -out {} -config ./openssl_req.cnf'.format(
-                        self.openssl_subject(common), key, csr), env=san)
-                print('generated {} CSR'.format(name))
-
-                # certificate
-                self.wrap_call(
-                    'openssl ca -extensions usr_cert -notext -md sha256 '
-                    '-in {} -out {} -config ./openssl_req.cnf -batch'.format(
-                        csr, cert), env=san)
-                os.chmod(
-                    cert, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP
-                    | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
-                print('generated {} certificate'.format(name))
-
-            # verify
-            if not self.args.no_verify_certificates:
-                status, out, err = self.wrap_call(
-                    'openssl verify -CAfile {} {}'.format(ROOT_CERT, cert), env=san)
-                if out != '{}: OK\n'.format(cert):
-                    self.print_call_failure(status, out, err)
-                    sys.exit(1)
-
-                print('{} certificate is valid'.format(name))
-
-    def toggle_boolean(self, inFlag, inValue, inDefault):
-        with self.modify_security() as config:
-            if inFlag not in config:
-                config[inFlag] = inDefault
-
-            if inValue is not None:
-                config[inFlag] = inValue
-
-
-class Certificates(Component):
-    def check(self):
-        return [self.domain, self.ca]
-
-    def domain(self):
-	with self.modify_security() as config:
-	    if 'consul_dns_domain' not in config:
-		config['consul_dns_domain'] = self.args.consul_dns_domain
-		print("set consul domain")
-	    else:
-		print('consul domain already set')
-
     def ca(self):
         "certificate authority"
-        serial = posixpath.join(CERT_PATH, 'serial')
-        if posixpath.exists(serial):
-            print('serial already exists')
-        else:
-            with open(serial, 'w') as fh:
-                fh.write('100001')
-
-            print('created serial')
-
-        index = posixpath.join(CERT_PATH, 'index.txt')
-        if posixpath.exists(index):
-            print('index already exists')
-        else:
-            open(index, 'w').close()
-            print('created index')
-
         with self.chdir(CERT_PATH):
-            if posixpath.exists(ROOT_KEY) or posixpath.exists(ROOT_CERT):
+            if posixpath.exists(ROOT_CERT):
                 print('root CA already exists')
             else:
                 self.wrap_call(
                     'openssl req -new -x509 -extensions v3_ca -nodes -subj "{}" '
-                    '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
+                    '-keyout {} -out {} -days 3650 -config ./openssl.cnf'.format(
                         self.openssl_subject(
                             "security-setup"), ROOT_KEY, ROOT_CERT))
 
@@ -563,11 +480,7 @@ class Certificates(Component):
 
 class Nginx(Component):
     def check(self):
-        return [self.cert, self.password]
-
-    def cert(self):
-        "SSL certificate"
-        self.generate_certificate("nginx")
+        return [self.password]
 
     def password(self):
         "admin password"
@@ -584,7 +497,7 @@ class Nginx(Component):
 class Consul(Component):
     def check(self):
         return [self.check_security, self.gossip_key, self.master_acl_token,
-		self.agent_acl_token, self.secure_acl_token, self.cert]
+		self.agent_acl_token, self.secure_acl_token]
 
     def check_security(self):
         "check security"
@@ -630,22 +543,6 @@ class Consul(Component):
                 print('set acl secure token')
             else:
                 print('acl secure token already set')
-
-    def cert(self):
-        "SSL certificate"
-        self.generate_certificate("consul")
-
-class Traefik(Component):
-    def check(self):
-        return [self.admin_cert]
-
-    def admin_cert(self):
-        "admin SSL certificate"
-        self.generate_certificate("traefik-admin")
-
-    def cert(self):
-        "SSL certificate"
-        self.generate_certificate("consul")
 
 class Marathon(Component):
     def check(self):
@@ -748,7 +645,7 @@ class Chronos(Component):
 
 class MantlApi(Component):
     def check(self):
-        return [self.check_security, self.mesos_auth]
+        return [self.check_security, self.mesos_auth, self.consul_acl_token]
 
     def check_security(self):
         "check security"
@@ -765,6 +662,15 @@ class MantlApi(Component):
                 print('set Mantl API framework secret')
             else:
                 print('Mantl API secret already set')
+
+    def consul_acl_token(self):
+        "mantl-api acl token"
+        with self.modify_security() as config:
+            if 'consul_acl_mantl_api_token' not in config:
+                config['consul_acl_mantl_api_token'] = str(uuid.uuid4())
+                print('set acl mantl-api token')
+            else:
+                print('acl mantl-api token already set')
 
 
 class DockerRegistry(Component):

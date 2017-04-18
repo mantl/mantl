@@ -1,5 +1,5 @@
 # input variables
-variable short_name { default = "mi" }
+variable short_name { default = "mantl" }
 variable public_key_filename { default = "~/.ssh/id_rsa.pub" }
 
 # create resources

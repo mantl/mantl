@@ -1,5 +1,5 @@
 variable "availability_zones"  {
-  default = "a,b,c" 
+  default = "a,b,c"
 }
 variable "cidr_blocks" {
   default = {
@@ -9,7 +9,7 @@ variable "cidr_blocks" {
   }
 }
 variable "datacenter" {default = "aws"}
-variable "long_name" {default = "microservices-infastructure"}
+variable "long_name" {default = "mantl"}
 variable "short_name" {default = "mantl"}
 variable "vpc_cidr" {default = "10.1.0.0/21"}
 variable "region" {}
@@ -21,16 +21,18 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
 resource "aws_subnet" "main" {
   vpc_id = "${aws_vpc.main.id}"
   count = "${length(split(",", var.availability_zones))}"
-  cidr_block = "${lookup(var.cidr_blocks, concat("az", count.index))}"
+  cidr_block = "${lookup(var.cidr_blocks, "az${count.index}")}"
   availability_zone = "${var.region}${element(split(",", var.availability_zones), count.index)}"
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -38,6 +40,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 
@@ -49,6 +52,7 @@ resource "aws_route_table" "main" {
   }
   tags {
     Name = "${var.long_name}"
+    KubernetesCluster = "${var.short_name}"
   }
 }
 

@@ -1,8 +1,4 @@
 ---
-- name: restart networkmanager
-  sudo: yes
-  command: systemctl restart NetworkManager
-
 - name: restart dnsmasq
   sudo: yes
   command: systemctl restart dnsmasq

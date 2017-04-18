@@ -2,9 +2,11 @@
 # Passed to Consul via Registrator for service discovery
 zookeeper_service: zookeeper
 zookeeper_service_tags: "{{ zookeeper_service }}"
-zookeeper_ensemble: cluster1
+zookeeper_ensemble: mantl
 zookeeper_container_name: "{{ zookeeper_service }}"
 zookeeper_data_volume: "{{ zookeeper_service }}-data-volume"
+zookeeper_log_threshold: WARN
+
 
 # Allow larger than default maximum client connections.
 zookeeper_max_conns: 200
@@ -25,6 +27,11 @@ zookeeper_client_port: 2181
 zookeeper_server_ports: 2888:3888
 
 zookeeper_os_user: zookeeper
+
+#Log purging & intervals
+# Run every purge_interval hours, keep  retain_count copies
+zookeeper_log_retain_count: 3
+zookeeper_log_purge_interval: 12
 
 # Set the ZooKeeper ID
 zookeeper_server_group: role=control

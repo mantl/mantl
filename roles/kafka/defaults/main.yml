@@ -1,0 +1,79 @@
+---
+kafka_scheduler_name: mantl/kafka
+kafka_service_name: kafka-mantl
+kafka_scheduler_cpu: 0.2
+kafka_scheduler_mem: 512
+
+# Configuration for kafka brokers
+kafka_broker_count: 3
+kafka_broker_cpu: 1
+kafka_broker_mem: 4096
+kafka_broker_heap: 4096
+kafka_broker_port: 9092
+
+kafka_broker_options:
+  - log.flush.interval.ms=10000
+  - log.flush.interval=1000
+  - num.recovery.threads.per.data.dir=1
+  - delete.topic.enable=true
+  - log.index.size.max.bytes=10485760
+  - num.partitions=8
+  - num.network.threads=3
+  - socket.request.max.bytes=104857600
+  - log.segment.bytes=536870912
+  - log.cleaner.enable=true
+  - zookeeper.connection.timeout.ms=1000000
+  - log.flush.scheduler.interval.ms=2000
+  - log.retention.hours=72
+  - log.flush.interval.messages=20000
+  - log.dirs=/mantl/a/dfs-data/kafka-logs\\,/mantl/b/dfs-data/kafka-logs\\,/mantl/c/dfs-data/kafka-logs\\,/mantl/d/dfs-data/kafka-logs\\,/mantl/e/dfs-data/kafka-logs\\,/mantl/f/dfs-data/kafka-logs
+  - log.index.interval.bytes=4096
+  - socket.receive.buffer.bytes=10485
+  - min.insync.replicas=2
+  - replica.lag.max.messages=10000000
+  - replica.lag.time.max.ms=1000000
+  - log.retention.check.interval.ms=3600000
+  - message.max.bytes=20480
+  - default.replication.factor=2
+  - zookeeper.session.timeout.ms=500000
+  - num.io.threads=8
+  - auto.create.topics.enable=false
+  - socket.send.buffer.bytes=1048576
+  - topic.flush.intervals.ms=5000
+
+kafka_broker_jvm_options:
+  - "-Dcom.sun.management.jmxremote"
+  - "-Dcom.sun.management.jmxremote.port=9010"
+  - "-Dcom.sun.management.jmxremote.local.only=false"
+  - "-Dcom.sun.management.jmxremote.authenticate=false"
+  - "-Dcom.sun.management.jmxremote.ssl=false"
+
+kafka_brokers_configuration: "cpus={{kafka_broker_cpu}}&mem={{kafka_broker_mem}}&heap={{kafka_broker_heap}}&port={{kafka_broker_port}}&jvmOptions={{kafka_broker_jvm_options|join(' ')}}&options={{kafka_broker_options|join(',')}}"
+
+kafka_topics:
+  - name: logs
+    partitions: 16
+    replicas: 3
+    options: retention.ms=86400000,flush.ms=3000
+  - name: events
+    partitions: 16
+    replicas: 3
+    options: retention.ms=86400000,flush.ms=500,max.message.bytes=2000000
+  - name: metrics
+    partitions: 24
+    replicas: 3
+    options: retention.ms=86400000,flush.ms=3000
+  - name: alarm-state-transitions
+    partitions: 3
+    replicas: 3
+    options: retention.ms=3600000,flush.ms=1000
+
+
+# kafka-manager
+kafka_manager_install: no
+kafka_manager_id: mantl/kafka-manager
+kafka_manager_service_name: kafka-manager-mantl
+kafka_manager_instances: 1
+kafka_manager_cpu: 0.5
+kafka_manager_mem: 1024
+kafka_manager_load_balancer: off

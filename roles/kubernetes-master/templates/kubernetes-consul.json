@@ -1,0 +1,21 @@
+{
+    "services": [
+        {
+            "name": "kubernetes",
+            "port": {{ kube_insecure_port }},
+            "tags": ["insecure"],
+            "checks": [{
+                "id": "api",
+                "name": "API on port {{ kube_insecure_port }}",
+                "http": "http://localhost:{{ kube_insecure_port }}/healthz",
+                "interval": "10s",
+                "timeout": "1s"
+            }]
+        },
+        {
+            "name": "kubernetes",
+            "port": {{ kube_master_port }},
+            "tags": ["secure"]
+        }
+    ]
+}

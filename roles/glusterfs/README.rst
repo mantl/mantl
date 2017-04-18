@@ -12,7 +12,7 @@ Installation
 ------------
 
 As of 0.5.1, GlusterFS is distributed as an addon for Mantl. After a successful
-initial run (from your customized ``terraform.sample.yml``), install it with
+initial run (from your customized ``sample.yml``), install it with
 ``ansible-playbook -e @security.yml addons/glusterfs.yml``.
 
 Restarting

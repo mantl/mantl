@@ -1,5 +1,0 @@
-# Never forward addresses in the non-routed address spaces.
-bogus-priv
-
-server=8.8.8.8
-server=8.8.4.4

@@ -1,0 +1,36 @@
+---
+- name: install fail2ban
+  sudo: yes
+  yum:
+    name: fail2ban-systemd
+    state: latest
+  tags:
+    - bootstrap
+    - common
+    - fail2ban
+
+- name: enable fail2ban jails
+  sudo: yes
+  copy:
+    src: fail2ban/{{ item }}
+    dest: /etc/fail2ban/jail.d/{{ item }}
+  with_items:
+    - sshd.local
+    - sshd-ddos.local
+  tags:
+    - common
+    - fail2ban
+  notify:
+    - restart fail2ban
+
+- name: enable fail2ban
+  sudo: yes
+  service:
+    name: fail2ban
+    enabled: yes
+    state: started
+  notify:
+    - restart fail2ban
+  tags:
+    - common
+    - fail2ban

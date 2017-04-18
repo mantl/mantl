@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-controller-manager
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube-controller-manager
+    image: "{{ kube_hyperkube_image }}:{{ kube_hyperkube_image_tag }}"
+    command:
+    - /hyperkube
+    - controller-manager
+    {% if enable_cloud_provider | bool -%}
+    - --cloud-provider={{ cloud_provider }}
+    {% endif -%}
+    - --master=http://127.0.0.1:{{ kube_insecure_port }}
+    - --root-ca-file=/etc/pki/CA/ca.cert
+    - --service-account-private-key-file={{ host_key }}
+    - --v={{ kube_log_level }}
+    livenessProbe:
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 10252
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+    volumeMounts:
+    - mountPath: /etc/kubernetes
+      name: etc-kubernetes
+      readOnly: true
+    - mountPath: /etc/pki
+      name: etc-pki
+      readOnly: true
+  volumes:
+  - name: etc-kubernetes
+    hostPath:
+      path: /etc/kubernetes
+  - name: etc-pki
+    hostPath:
+      path: /etc/pki

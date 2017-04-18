@@ -11,6 +11,15 @@
     - collectd
     - bootstrap
 
+- name: create collectd config directory
+  sudo: yes
+  file:
+    path: /etc/collectd.d
+    state: directory
+    mode: 0755
+  tags:
+    - collectd
+
 - name: create collectd plugin directory
   sudo: yes
   file:
@@ -30,35 +39,10 @@
   tags:
     - collectd
 
-
 - name: authorize collectd to make tcp connections
   sudo: yes
   seboolean: name=collectd_tcp_network_connect state=yes persistent=yes
   when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
-  tags:
-    - collectd
-
-- name: check if collectd is authorized to connect to docker
-  sudo: yes
-  shell: semodule -l
-  register: semodule_list
-  failed_when: no
-  changed_when: no
-  when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
-  tags:
-    - collectd
-
-- name: copy collectd selinux docker policy
-  sudo: yes
-  copy: src=collectd_docker_plugin.pp dest=/tmp/collectd_docker_plugin.pp owner=root mode=0600
-  when: "semodule_list.stdout is defined and semodule_list.stdout.find('collectd_docker_plugin') == -1"
-  tags:
-    - collectd
-
-- name: authorize collectd to connect to docker
-  sudo: yes
-  shell: semodule -i /tmp/collectd_docker_plugin.pp
-  when: "semodule_list.stdout is defined and semodule_list.stdout.find('collectd_docker_plugin') == -1"
   tags:
     - collectd
 
@@ -70,3 +54,8 @@
     state: started
   tags:
     - collectd
+
+- include: marathon.yml
+- include: mesos-master.yml
+- include: mesos-agent.yml
+- include: zookeeper.yml

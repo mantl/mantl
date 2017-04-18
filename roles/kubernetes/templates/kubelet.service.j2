@@ -1,0 +1,34 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target docker.service
+Requires=network.target docker.service
+
+[Service]
+ExecStart=/usr/bin/kubelet \
+  {% if 'role=control' in group_names -%}
+  --register-schedulable=false \
+  {% endif -%}
+  {% if enable_cloud_provider | bool -%}
+  --cloud-provider={{ cloud_provider }} \
+  {% endif -%}
+  {% if calico_image is defined -%}
+  --network-plugin=cni \
+  --network-plugin-dir=/etc/cni/net.d \
+  {% endif -%}
+  --allow-privileged=true \
+  --api-servers=https://kubernetes.service.consul:{{ kube_master_port }} \
+  --cluster-dns={{ private_ipv4 }} \
+  --cluster-domain={{ dns_domain }} \
+  --config={{ kube_manifest_dir }} \
+  --hostname-override={{ inventory_hostname }} \
+  --kubeconfig=/etc/kubernetes/kubeconfig.yml \
+  --tls-cert-file={{ host_cert }} \
+  --tls-private-key-file={{ host_key }} \
+  --v={{ kube_log_level }}
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

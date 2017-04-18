@@ -1,0 +1,46 @@
+---
+- name: give consul privileges to run docker commands
+  when: "{{ current_role in ['consul', 'logstash'] }}"
+  become: yes
+  copy:
+    content: |
+      consul ALL=(ALL)    NOPASSWD:   /bin/docker
+    dest: /etc/sudoers.d/consul-docker-auth
+    validate: visudo -c -f "%s"
+  tags:
+    - bootstrap
+    - consul
+    - distributive
+    - docker
+
+- name: install distributive, checklists for role
+  become: yes
+  yum:
+    state: present
+    name: "{{ item }}"
+  tags:
+    - distributive
+    - bootstrap
+  with_items:
+    - "{{ distributive_package }}"
+    - "distributive-{{ current_role }}-{{ checklist_versions[current_role] }}"
+
+- name: create consul configuration directory
+  become: yes
+  file:
+    path: /etc/consul
+    state: directory
+    mode: 0770
+  tags:
+    - bootstrap
+    - consul
+    - distributive
+
+- name: configure consul health check
+  become: yes
+  template:
+    src: consul-healthcheck.json.j2
+    dest: /etc/consul/distributive-{{ current_role }}-check.json
+  tags:
+    - consul
+    - distributive

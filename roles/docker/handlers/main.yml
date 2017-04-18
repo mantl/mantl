@@ -5,12 +5,6 @@
     name: docker
     state: restarted
 
-- name: restart collectd
-  sudo: yes
-  service:
-    name: collectd
-    state: restarted
-
 - name: restart rsyslog
   sudo: yes
   service:

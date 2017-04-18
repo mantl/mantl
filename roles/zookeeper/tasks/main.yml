@@ -144,10 +144,15 @@
 - name: generate zookeeper config
   sudo: yes
   template:
-    src: zoo.cfg.j2
-    dest: /etc/zookeeper/conf/zoo.cfg
+    src: "{{ item }}.j2"
+    dest: /etc/zookeeper/conf/{{ item }}
+  with_items:
+    - zoo.cfg
+    - log4j.properties
   notify:
     - restart zookeeper
+  tags:
+    - zookeeper
 
 - name: register zookeeper service
   sudo: yes
@@ -158,16 +163,4 @@
   tags:
     - zookeeper
 
-- name: install zookeepercli package
-  sudo: yes
-  yum:
-    name: https://github.com/outbrain/zookeepercli/releases/download/v1.0.10/zookeepercli-1.0.10-1.x86_64.rpm
-    state: present
-  tags:
-    - zookeeper
-
-- include: collectd.yml
-
 - meta: flush_handlers
-
-- include: distributive.yml

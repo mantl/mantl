@@ -4,11 +4,12 @@ logLevel = "ERROR"
 
 [web]
 address = ":8081"
-CertFile = "/etc/traefik/certs/traefik-admin.cert.pem"
-KeyFile = "/etc/traefik/certs/traefik-admin.key.pem"
+CertFile = "/etc/pki/mantl/cert"
+KeyFile = "/etc/pki/mantl/key"
 
 [marathon]
 endpoint = "{{ traefik_marathon_endpoint }}"
 domain = "{{ traefik_marathon_domain }}"
 watch = true
-networkInterface = "eth0"
+networkInterface = "{{ ansible_default_ipv4['interface'] }}"
+ExposedByDefault = {{ traefik_marathon_expose_by_default }}

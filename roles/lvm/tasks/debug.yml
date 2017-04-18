@@ -1,0 +1,33 @@
+# This rules executed only when debug_storage_setup == true
+
+- name: install partitioner script
+  sudo: yes
+  copy:
+    src: mantl-storage-setup.py
+    dest: /usr/bin/mantl-storage-setup
+    mode: 0755
+  when: debug_storage_setup
+  tags:
+    - docker
+    - lvm
+
+- name: install partitioner service
+  sudo: yes
+  copy:
+    src: mantl-storage-setup.service
+    dest: /usr/lib/systemd/system/mantl-storage-setup.service
+    mode: 0644
+  when: debug_storage_setup
+  tags:
+    - docker
+    - lvm
+
+- name: enable partitioner service
+  sudo: yes
+  service:
+    name: mantl-storage-setup.service
+    enabled: yes
+  when: debug_storage_setup
+  tags:
+    - docker
+    - lvm

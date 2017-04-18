@@ -3,7 +3,7 @@ Traefik
 
 .. versionadded:: 0.5
 
-`Traefik <http://traefik.github.io/>`_ is a modern HTTP reverse proxy and load
+`Traefik <https://traefik.io/>`_ is a modern HTTP reverse proxy and load
 balancer made to deploy microservices with ease. It supports several backends
 (Docker, Mesos/Marathon, Consul, Etcd, Zookeeper, BoltDB, Rest API, file…) to
 manage its configuration automatically and dynamically.
@@ -13,12 +13,7 @@ Traefik is used as the only work role on the edge nodes. You should customize
 ``apps.yourdomain.com``) and then set an A record for each of the edge servers
 to ``*.apps.yourdomain.com``.
 
-Migrating from haproxy
-----------------------
 
-In 0.5, this role replaces haproxy. To migrate, set ``traefik_marathon_domain``
-to whatever was previously the value of ``haproxy_domain`` and make sure your
-customized config has the new role from ``terraform.sample.yml``.
 
 Variables
 ---------
@@ -37,6 +32,15 @@ You can use these variables to customize your Traefik installation.
 
    The domain that Traefik will match hosts on by default (you can `change this
    on a per-app basis
-   <https://github.com/emilevauge/traefik/blob/master/docs/index.md#marathon>`_)
+   <http://traefik.readthedocs.org/en/latest/backends/#marathon-backend>`_)
 
    default: ``marathon.localhost``
+
+.. data:: traefik_marathon_expose_by_default
+
+   Automatically expose Marathon applications in traefik.
+
+   The traefik default is ``false``, or not forward traffic.
+  
+   The mantl default is set to ``true``.
+ 

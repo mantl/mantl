@@ -1,0 +1,11 @@
+---
+- name: create lastlog file
+  sudo: yes
+  file:
+    path: /var/log/lastlog
+    mode: 0644
+    group: utmp
+    state: touch
+  tags:
+    - bootstrap
+    - ssh
