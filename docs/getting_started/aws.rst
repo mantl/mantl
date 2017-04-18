@@ -14,16 +14,31 @@ Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
 the template located at ``terraform/aws.sample.tf``. The beginning of it looks like this:
 
-.. include:: ../../terraform/aws.sample.tf
-   :end-before: # _local is for development only
-   :code:
+.. code-block:: json
+
+  variable "control_count" { default = 3 }
+  variable "worker_count" { default = 2 }
+  variable "edge_count" { default = 2 }
+  variable "datacenter" {default = "aws-us-west-2"}
+  variable "region" {default = "us-west-2"}
+  variable "short_name" {default = "mantl"}
+  variable "source_ami" {default ="ami-d440a6e7"}
+  variable "ssh_username" {default = "centos"}
+
+  provider "aws" {
+    access_key = ""
+    secret_key = ""
+    region = "${var.region}"
+  }
+
 
 Copy that *file* in it's entirety to the root of the project as ``aws.tf`` to start
 customization. In the next sections, we'll describe the settings that you need
 to configure.
 
 Do not copy the text contents above into a file, if you do not have the terraform/aws.sample.tf file, you need to clone the mantl repository.
-Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from Amazon's new "AWS Credentials file" standard.
+
+Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from amazon's new "AWS Credentials file" standard.
 
 Store your credentials like below in a file called ``~/.aws/credentials`` on Linux/Mac, or ``%USERPROFILE%\.aws\credentials`` on Windows.
 
@@ -33,7 +48,7 @@ Store your credentials like below in a file called ``~/.aws/credentials`` on Lin
   aws_access_key_id = ACCESS_KEY
   aws_secret_access_key = SECRET_KEY
 
-If you do not have an AWS access key ID and secret key, then follow the "Creating an IAM User" section below. If you already have working AWS credentials, you can skip this step.
+If you do not have an AWS access key ID and secret key, then follow the "Creating an IAM user" section below. If you already have working AWS credentials, you can skip this step.
 
 Creating an IAM User
 ^^^^^^^^^^^^^^^^^^^^^
@@ -175,11 +190,11 @@ for your control nodes and worker nodes and they must be compatible with the
 Security Setup
 ^^^^^^^^^^^^^^
 
-Mantl doesn't ship with default passwords or certs. For security, we have provided a script to generate
+Mantl doesn't ship with default passwords or ceritificates. For security, we have provided a script to generate
 all the security configuration for your deployment.
 
 Please run ``./security_setup`` from the base of the mantl repository.
-This will generate certificates and other security tokens needed for the mantl deployment, as well as prompting you for a mantl admin password.
+This will generate cetificates and other security tokens needed for the mantl deployment, as well as prompting you for a mantl admin password.
 
 If you get an 'Import' error when running security setup, your local machine lacks certain python modules that the script needs.
 Please try `` pip install pyyaml `` and then re-run ``./security_setup``.
@@ -202,15 +217,18 @@ Mantl on your new AWS VM's
 Terraform State
 ^^^^^^^^^^^^^^^^^^^^^^
 
+
 Terraform stores the `state <https://www.terraform.io/docs/state/index.html>`_ of your
 infrastructure in a file called "terraform.tfstate". This file can be stored locally
 or in a `remote <https://www.terraform.io/docs/state/index.html>`_ location such as S3.
+
 If you use the ``aws.sample.tf`` that is provided, by default the state of all the modules
 are stored in local terraform.tfstate file at the root of this project.
 
 Instead of storing the state for all the modules in one file, you might deploy the modules
 independently and have different terraform.tfstate for each module (either locally or remote).
-This can help with blue/green deployments, or making sure you don't accidentally override more static
+
+This can help with blue/green deployments, or making sure you don't accidentally override more static 
 parts of the infrastructure such as a VPC.
 
 In the aws.sample.tf we have included examples of how you would reference a remote state file for VPC variables.
@@ -265,3 +283,38 @@ For managing DNS with Route 53, you can use a policy like the following:
 
 You would replace HOSTED_ZONE_ID with the hosted zone ID of your domain in
 Route 53.
+
+Adding an Elastic Load Balancer (ELB)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Optionally, you can configure your environment to include an Elastic Load
+Balancer (ELB) in front of Mantl UI.
+
+You will need to ensure that your IAM user has the following permissions:
+
+* elasticloadbalancing:AddTags
+* elasticloadbalancing:ApplySecurityGroupsToLoadBalancer
+* elasticloadbalancing:ConfigureHealthCheck
+* elasticloadbalancing:CreateLoadBalancer
+* elasticloadbalancing:CreateLoadBalancerListeners
+* elasticloadbalancing:DeleteLoadBalance
+* elasticloadbalancing:DescribeLoadBalancerAttributes
+* elasticloadbalancing:DescribeLoadBalancers
+* elasticloadbalancing:ModifyLoadBalancerAttributes
+* elasticloadbalancing:RegisterInstancesWithLoadBalancer
+* iam:DeleteServerCertificate
+* iam:GetServerCertificate
+* iam:UploadServerCertificate
+
+In your ``aws.tf``, you will want to uncomment the aws-elb module:
+
+.. code-block:: json
+
+  # Example setup for an AWS ELB
+  module "aws-elb" {
+    source = "./terraform/aws/elb"
+    short_name = "${var.short_name}"
+    instances = "${module.control-nodes.control_ids}"
+    subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
+    security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
+  }
