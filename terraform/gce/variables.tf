@@ -47,8 +47,8 @@ variable "instance_type" {
 
 variable "atlas_artifact" {
   default = {
-    master = "capgemini/apollo-ubuntu-14.04-amd64"
-    agent  = "capgemini/apollo-ubuntu-14.04-amd64"
+    master = ""
+    agent  = ""
   }
 }
 
