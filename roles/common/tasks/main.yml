@@ -18,6 +18,38 @@
   tags:
     - common
 
+- name: preserve hostname
+  sudo: yes
+  copy:
+    src: 02_hostname.cfg
+    dest: /etc/cloud/cloud.cfg.d/02_hostname.cfg
+    owner: root
+    group: root
+    mode: 0644
+  when: provider in cloud_init_providers
+  tags:
+    - common
+
+- name: set persistent hostname
+  sudo: yes
+  copy:
+    dest: /etc/hostname
+    content: "{{ inventory_hostname }}"
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - common
+
+# add yum-utils if not already installed
+- name: add yum-config-manager
+  sudo: yes
+  yum:
+    name: yum-utils
+  tags:
+    - bootstrap
+
 - name: increase timeouts in YUM
   sudo: yes
   shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
@@ -32,6 +64,8 @@
   yum:
     name: epel-release
     state: latest
+  tags:
+    - bootstrap
 
 - name: install system utilities
   sudo: yes
@@ -43,11 +77,26 @@
     - nc
     - openssh
     - policycoreutils-python
+    - libselinux-python
     - unzip
     - jq
     - java-1.8.0-openjdk
+    - chrony
+    - smlr
+    - zookeepercli
+    - python2-pip
+    - python-pip
+    - bind-utils
+    - nano
   tags:
     - bootstrap
+
+- name: enable chronyd
+  sudo: yes
+  service:
+    name: chronyd
+    enabled: yes
+    state: started
 
 - name: disable firewalld
   sudo: yes
@@ -57,12 +106,6 @@
     state: stopped
   register: command_result
   failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"
-
-- name: install pip
-  sudo: yes
-  yum:
-    name: python-pip
-    state: latest
 
 - name: update setuptools and pip
   sudo: yes
@@ -90,6 +133,5 @@
     - security
     - bootstrap
 
-- include: users.yml
-- include: ssl.yml
-- include: distributive.yml
+- include: ssh.yml
+- include: fail2ban.yml

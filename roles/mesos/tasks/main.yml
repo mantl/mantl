@@ -1,11 +1,17 @@
 ---
+- name: remove mesos
+  sudo: yes
+  yum:
+    name: mesos
+    state: absent
+     
 - name: install mesos packages
   sudo: yes
   yum:
     name: "{{ item }}"
     state: present
   with_items:
-    - https://bintray.com/artifact/download/asteris/mantl-rpm/mesos-{{ mesos_version }}-{{ mesos_iteration }}.x86_64.rpm
+    - "{{ mesos_package }}"
     - cyrus-sasl-md5
   tags:
     - mesos
@@ -18,6 +24,22 @@
     state: directory
   tags:
     - mesos
+
+- name: create mesos entries for syslogd
+  sudo: yes
+  copy:
+    dest: /etc/rsyslog.d/20-mesos.conf
+    content: |
+      # Mesos logging
+      :syslogtag, isequal, "mesos-slave:"  /var/log/mesos/mesos-agent.log
+      :syslogtag, isequal, "mesos-master:"  /var/log/mesos/mesos-master.log
+      & ~
+  notify:
+    - restart rsyslog
+  tags:
+    - mesos
+
+- meta: flush_handlers
 
 - include: leader.yml
   when: mesos_mode == "leader" or mesos_mode == "mixed"

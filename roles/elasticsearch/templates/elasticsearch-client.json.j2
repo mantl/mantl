@@ -1,0 +1,17 @@
+{
+  "name": "elasticsearch-client",
+  "config": {
+    "elasticsearch-client": {
+      "id": "{{ elasticsearch_client_id }}",
+      "cluster-name": "{{ elasticsearch_cluster_name }}",
+      "elasticsearch-service": "{{ elasticsearch_client_elasticsearch_service }}",
+      "client-port": {{ elasticsearch_client_client_port }},
+      "transport-port": {{ elasticsearch_client_transport_port }},
+      "cpu": {{ elasticsearch_client_cpu }},
+      "ram": {{ elasticsearch_client_ram }},
+      "java-opts": "{{ elasticsearch_client_java_opts }}",
+      "consul-ssl": {{ do_consul_ssl|to_nice_json }},
+      "consul-ssl-verify": false
+    }
+  }
+}

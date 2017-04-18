@@ -1,0 +1,25 @@
+---
+
+# This playbook forces etcd to recreate cluster memembership allowing new memembers
+# to join the cluster.
+#
+# WARNING: this will delete all information stored in etcd for the entire cluster.
+
+- include: "{{ playbook_dir }}/check-requirements.yml"
+
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Stop etcd
+      sudo: yes
+      service:
+        name: etcd
+        state: stopped
+    - name: Delete etcd data directory
+      sudo: yes
+      shell: rm -rf {{ etcd_data_dir }}/*
+    - name: Start etcd
+      sudo: yes
+      service:
+        name: etcd
+        state: started

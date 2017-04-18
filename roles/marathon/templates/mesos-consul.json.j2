@@ -1,6 +1,6 @@
 {
   "args": [
-    "--zk=zk://zookeeper.service.{{ consul_dns_domain }}:2181/mesos"{% if do_consul_ssl %},
+    "--zk=zk://{{ marathon_zk_hosts }}/mesos"{% if do_consul_ssl %},
     "--consul-ssl",
     "--consul-ssl-verify=false"{% endif %},
     "--mesos-ip-order=mesos,host",
@@ -21,4 +21,3 @@
   "cpus": 0.1,
   "mem": 128
 }
-

@@ -1,0 +1,74 @@
+# ansible remote user account
+# ansible_ssh_user: centos
+
+# ansible groups for service configuration
+etcd_group_name: role=control
+master_group_name: role=control
+minion_group_name: role=kubeworker
+
+# Which type of packages should be used for deployment: stable, testing
+package_channel: stable
+
+kubernetes_package: kubernetes-1.3.3_consul
+kube_hyperkube_image: ciscocloud/hyperkube-amd64
+# Kubernetes hyperkube image tag to use
+kube_hyperkube_image_tag: v1.3.3-consul
+
+kube2consul_image: ciscocloud/kube2consul-amd64
+kube2consul_image_tag: v1.3.0-alpha.1.1977-a1e79e91b9fb6a
+
+# Users to create for basic auth in Kubernetes API via HTTP
+kube_users:
+  admin:
+    pass: "{{ nginx_admin_password }}"
+    role: admin
+
+# Kubernetes cluster name, also will be used as DNS domain
+cluster_name: cluster.local
+
+# Enable to leverage some unique features of a specific cloud provider.
+enable_cloud_provider: "{% if provider in ['aws', 'gce'] %}True{% else %}False{% endif %}"
+cloud_provider: "{{ provider }}"
+
+# Kubernetes internal network for services, unused block of space.
+kube_service_addresses: 10.254.0.0/16
+
+# Kubernetes api port
+kube_master_port: 6443
+
+# Internal DNS configuration.
+# Kubernetes can create and mainatain its own DNS server to resolve service names
+# into appropriate IP addresses. It's highly advisable to run such DNS server,
+# as it greatly simplifies configuration of your applications - you can use
+# service names instead of magic environment variables.
+# You still must manually configure all your containers to use this DNS server,
+# Kubernetes won't do this for you (yet).
+
+# Turn this varable to 'false' to disable whole DNS configuration.
+dns_setup: true
+skydns_port: 153
+
+# Number of replicas of DNS instances started on kubernetes
+dns_replicas: 1
+
+# Set to 'false' to disable default Kubernetes UI setup
+enable_ui: true
+
+# Set to 'false' to disable default Elasticsearch + Kibana logging setup
+enable_logging: true
+
+# Set to "false' to disable default Monitoring (cAdvisor + heapster + influxdb + grafana)
+enable_monitoring: true
+
+# etcd specific variables
+# TCP port used for client communications
+etcd_client_port: 2379
+
+# TCP port used for intra-cluster communications
+etcd_peer_port: 2380
+
+# Client communication protocol (http/https)
+etcd_url_scheme: http
+
+# Intra-cluster communication protocol (http/https)
+etcd_peer_url_scheme: http

@@ -1,6 +1,6 @@
 variable "long_name" {default = "mantl"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
-variable "short_name" {default = "mi"}
+variable "short_name" {default = "mantl"}
 
 # Network
 resource "google_compute_network" "mantl-network" {
@@ -45,6 +45,10 @@ resource "google_compute_firewall" "mantl-firewall-internal" {
   allow {
     protocol = "udp"
     ports = ["1-65535"]
+  }
+
+  allow {
+    protocol = "4"
   }
 }
 

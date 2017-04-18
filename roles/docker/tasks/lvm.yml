@@ -1,11 +1,26 @@
-
-# dependency for cloud-utils-growpart
-# which is required if we have GROWPART=yes (default) in /etc/sysconfig/docker-storage-setup
-- name: install cloud-utils-growpart package
+---
+- name: configure lvm for docker
   sudo: yes
-  yum:
-    name: "cloud-utils-growpart"
-    state: present
+  template:
+    src: docker-volume.conf.j2
+    dest: /etc/mantl/filesystems.d/20-docker-volume.conf
+    mode: 0644
   tags:
     - docker
-    - bootstrap
+    - disk
+
+- name: systemd drop-in for storage options
+  sudo: yes
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/systemd/system/docker.service.d/{{ item }}"
+  with_items:
+    - 14-storage-options.conf
+  notify:
+    - reload systemd
+  tags:
+    - docker
+
+- name: process with mantl storage setup
+  sudo: yes
+  shell: "/usr/bin/mantl-storage-setup"

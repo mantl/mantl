@@ -12,11 +12,7 @@
     - wait for marathon to listen
 
 - name: wait for marathon to listen
-  command: /usr/local/bin/marathon-wait-for-listen.sh
-
-- name: reload consul
-  sudo: yes
-  command: "{{ consul_bin }} reload"
+  command: /usr/bin/smlr http "http://localhost:{{ marathon_port }}/ping"
 
 - name: restart nginx-marathon
   sudo: yes
@@ -25,9 +21,3 @@
 - name: reload nginx-marathon
   sudo: yes
   command: systemctl daemon-reload
-
-- name: restart collectd
-  sudo: yes
-  service:
-    name: collectd
-    state: restarted

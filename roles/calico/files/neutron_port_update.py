@@ -71,7 +71,7 @@ def neutron_public_url(catalog):
     """Get Neutron publicURL"""
 
     for i in catalog['access']['serviceCatalog']:
-        if i['name'] == 'neutron':
+        if i['type'] == 'network':
             for endpoint in i['endpoints']:
                 return endpoint['publicURL']
 

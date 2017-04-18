@@ -12,14 +12,14 @@ variable name { default = "mantl" }
 variable network_uuid {}
 variable role { default = "instance" }
 variable security_groups { default = "default" }
-variable ssh_user { default = "cloud-user" }
+variable ssh_user {}
 variable volume_size { default = 20 }
 variable volume_device { default = "/dev/vdb" }
 variable user_data { default = "" }
 
 resource "openstack_blockstorage_volume_v1" "blockstorage" {
-  name = "${var.name}-${format(var.count_format, var.count_offset+count.index+1) }"
-  description = "${var.name}-${format(var.count_format, var.count_offset+count.index+1) }"
+  name = "${var.name}-${var.role}-${format(var.count_format, var.count_offset+count.index+1) }"
+  description = "${var.name}-${var.role}-${format(var.count_format, var.count_offset+count.index+1) }"
   size = "${var.volume_size}"
   metadata = {
     attached_mode = "${var.blockstorage_metadata_attached_mode}"

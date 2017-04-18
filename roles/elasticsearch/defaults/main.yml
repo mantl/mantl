@@ -1,0 +1,38 @@
+---
+# elasticsearch framework
+elasticsearch_java_opts: "-Xms1g -Xmx1g"
+elasticsearch_ram: 1024
+elasticsearch_executor_ram: 2048
+elasticsearch_disk: 10240
+elasticsearch_cpu: 1.0
+elasticsearch_executor_cpu: 1.0
+elasticsearch_nodes: 3
+elasticsearch_cluster_name: mantl
+elasticsearch_service: elasticsearch-mantl
+elasticsearch_executor_name: elasticsearch-executor-mantl
+elasticsearch_framework_version: 1.0.1-1
+elasticsearch_framework_name: mantl/elasticsearch
+elasticsearch_framework_ui_port: 31100
+
+# elasticsearch client node
+elasticsearch_client_id: mantl/elasticsearch-client
+elasticsearch_client_service: elasticsearch-client-mantl
+elasticsearch_client_elasticsearch_service: transport_port.{{ elasticsearch_executor_name }}
+elasticsearch_client_client_port: 9200
+elasticsearch_client_transport_port: 9300
+elasticsearch_client_cpu: 1
+elasticsearch_client_ram: 2048
+elasticsearch_client_java_opts: "-Xms1g -Xmx1g"
+
+es_packages:
+  elasticsearch:
+    template: elasticsearch.json.j2
+    dest: elasticsearch.json
+    service_name: "{{ elasticsearch_service }}"
+  elasticsearch-client:
+    template: elasticsearch-client.json.j2
+    dest: elasticsearch-client.json
+    service_name: "{{ elasticsearch_client_service }}"
+
+elasticsearch_uninstall: false
+elasticsearch_remove_data: false

@@ -1,5 +1,5 @@
 GCP Cloud DNS
-=======
+=============
 
 Terraform can use ``google_dns_record_set`` resources to provide DNS records for
 your cluster.

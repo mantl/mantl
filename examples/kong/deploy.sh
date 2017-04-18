@@ -33,7 +33,7 @@ if ! service_is_available cassandra-kong-node; then
   curl -X POST -sku "$username:$password" \
                -H "Content-Type: application/json" \
                -d @cassandra.json \
-               "https://$ip/api/1/packages"
+               "https://$ip/api/1/install"
 fi
 echo; echo
 

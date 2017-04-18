@@ -1,0 +1,35 @@
+---
+# which kibana package to use. kibana = kibana on marathon, kibana-mesos = kibana mesos framework
+kibana_package: kibana-mesos
+
+kibana_logstash_config: false
+
+# kibana on marathon
+kibana_id: mantl/kibana
+kibana_service: kibana-mantl
+kibana_image: ciscocloud/mantl-kibana:4.3.2.1
+kibana_elasticsearch_service: elasticsearch-client-mantl
+kibana_cpu: 1.0
+kibana_ram: 1024
+kibana_instances: 1
+
+# kibana mesos framework
+kibana_mesos_id: mantl/kibana
+kibana_mesos_framework_name: kibana-mantl
+kibana_mesos_service: kibana-mantl
+kibana_mesos_image: ciscocloud/mantl-kibana:4.3.2.1
+kibana_mesos_elasticsearch_service: elasticsearch-client-mantl
+kibana_mesos_kibana_service: "{{ kibana_mesos_framework_name }}-task"
+kibana_mesos_scheduler_cpu: 0.5
+kibana_mesos_scheduler_ram: 512
+kibana_mesos_executor_cpu: 1.0
+kibana_mesos_executor_ram: 1024
+kibana_mesos_instances: 1
+
+kibana_packages:
+  kibana:
+    template: "{{ kibana_package }}.json.j2"
+    dest: "{{ kibana_package }}.json"
+    service_name: "{% if kibana_package == 'kibana-mesos' %}{{ kibana_mesos_service }}{% else %}{{ kibana_service }}{% endif %}"
+
+kibana_uninstall: false

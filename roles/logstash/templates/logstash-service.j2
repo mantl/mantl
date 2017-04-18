@@ -5,14 +5,15 @@ Requires=docker.service
 Requires=dnsmasq.service
 
 [Service]
-Restart=on-failure
+Restart=always
 RestartSec=20
 TimeoutStartSec=20m
 
-ExecStartPre=-/usr/bin/docker rm logstash
+ExecStartPre=-/usr/bin/docker rm -f logstash
 ExecStartPre=-/usr/bin/docker pull {{ logstash_image }}:{{ logstash_image_tag }}
 
 ExecStart=/usr/bin/docker run \
+    --memory=2G \
     --rm \
     --name=logstash \
     --hostname={{ inventory_hostname }} \
@@ -36,13 +37,12 @@ ExecStart=/usr/bin/docker run \
 {% if "'role=control' in group_names" %}
     --volume=/var/log/zookeeper:/logs/zookeeper:ro \
 {% endif %}
-    --volume=/usr/share/collectd:/collectd:ro \
     {{ logstash_image }}:{{ logstash_image_tag }} \
     logstash -f /config-dir/
 
 ExecStop=/bin/bash -c " \
     /usr/bin/docker kill logstash && \
-    /usr/bin/docker rm logstash"
+    /usr/bin/docker rm -f logstash"
 
 [Install]
 WantedBy=multi-user.target

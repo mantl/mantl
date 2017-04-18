@@ -11,6 +11,10 @@ variable short_name {}
 variable subdomain { default = "" }
 variable worker_count {}
 variable worker_ips {}
+variable kubeworker_count {}
+variable kubeworker_ips {}
+variable project {}
+variable project_name {}
 
 # individual records
 resource "google_dns_record_set" "dns-control" {
@@ -20,6 +24,7 @@ resource "google_dns_record_set" "dns-control" {
   type = "A"
   ttl = 60
   rrdatas = ["${element(split(",", var.control_ips), count.index)}"]
+  project = "${var.project_name}"
 }
 
 resource "google_dns_record_set" "dns-edge" {
@@ -29,6 +34,7 @@ resource "google_dns_record_set" "dns-edge" {
   type = "A"
   ttl = 60
   rrdatas = ["${element(split(",", var.edge_ips), count.index)}"]
+  project = "${var.project_name}"
 }
 
 resource "google_dns_record_set" "dns-worker" {
@@ -38,6 +44,17 @@ resource "google_dns_record_set" "dns-worker" {
   type = "A"
   ttl = 60
   rrdatas = ["${element(split(",", var.worker_ips), count.index)}"]
+  project = "${var.project_name}"
+}
+
+resource "google_dns_record_set" "dns-kubeworker" {
+  count = "${var.kubeworker_count}"
+  managed_zone = "${var.managed_zone}"
+  name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}.node${var.subdomain}.${var.domain}."
+  type = "A"
+  ttl = 60
+  rrdatas = ["${element(split(",", var.kubeworker_ips), count.index)}"]
+  project = "${var.project_name}"
 }
 
 # group records
@@ -47,6 +64,7 @@ resource "google_dns_record_set" "dns-control-group" {
   type = "A"
   ttl = 60
   rrdatas = ["${split(",", var.control_ips)}"]
+  project = "${var.project_name}"
 }
 
 resource "google_dns_record_set" "dns-wildcard" {
@@ -55,4 +73,5 @@ resource "google_dns_record_set" "dns-wildcard" {
   type = "A"
   ttl = 60
   rrdatas = ["${var.lb_ip}"]
+  project = "${var.project_name}"
 }
