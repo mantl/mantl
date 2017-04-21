@@ -47,7 +47,6 @@
     mesos_mode: leader
     zookeeper_server_group: role=control
   roles:
-    - common
     - vault
     - zookeeper
     - mesos
@@ -68,7 +67,6 @@
     mesos_mode: follower
     zookeeper_server_group: role=control
   roles:
-    - common
     - mesos
     - calico
 
@@ -77,7 +75,6 @@
 - hosts: role=kubeworker
   gather_facts: yes
   roles:
-    - common
     - calico
     - kubernetes
     - kubernetes-node
@@ -96,7 +93,6 @@
     # and format as `haproxy_domain`.
     traefik_marathon_domain: marathon.localhost
   roles:
-    - common
     - traefik
 
 # Temporary workaround for https://github.com/mantl/mantl/issues/1922
