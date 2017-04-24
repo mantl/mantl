@@ -89,7 +89,8 @@
   tags:
     - kubernetes
 
-- pause: seconds=30
+- name: wait for k8 to settle down
+  pause: seconds=30
 
 - include: skydns.yml
   when: dns_setup
