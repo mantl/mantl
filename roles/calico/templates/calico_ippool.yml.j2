@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ipPool
+metadata:
+  cidr: {{ calico_network }}
+spec:
+  ipip:
+    enabled: true
+    mode: cross-subnet
+  nat-outgoing: true
+  disabled: false
