@@ -112,7 +112,8 @@ All development is done on the `master` branch. Tested, stable versions are
 identified via git tags. To get started, you can clone or fork this repo:
 
 ```
-git clone https://github.com/mantl/mantl.git
+git clone https://github.com/CiscoCloud/mantl.git
+
 ```
 
 To use a stable version, use `git tag` to list the stable versions:
