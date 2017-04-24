@@ -89,6 +89,8 @@
   tags:
     - kubernetes
 
+- pause: seconds=30
+
 - include: skydns.yml
   when: dns_setup
   tags:
