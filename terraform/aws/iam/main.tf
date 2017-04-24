@@ -2,7 +2,7 @@ variable "short_name" {default = "mantl"}
 
 resource "aws_iam_instance_profile" "control_profile" {
   name = "${var.short_name}-control-profile"
-  roles = ["${aws_iam_role.control_role.name}"]
+  role = "${aws_iam_role.control_role.name}"
 }
 
 resource "aws_iam_role_policy" "control_policy" {
@@ -54,7 +54,7 @@ output "control_iam_instance_profile" {
 
 resource "aws_iam_instance_profile" "worker_profile" {
   name = "${var.short_name}-worker-profile"
-  roles = ["${aws_iam_role.worker_role.name}"]
+  role = "${aws_iam_role.worker_role.name}"
 }
 
 resource "aws_iam_role_policy" "worker_policy" {
