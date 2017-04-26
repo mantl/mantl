@@ -9,3 +9,14 @@
   tags:
     - node
     - kubernetes
+
+- name: create fluentd pod
+  sudo: yes
+  copy:
+    src: fluentd-es.yaml
+    dest: "{{ kube_manifest_dir }}/fluentd-es.yaml"
+  when: enable_logging
+  tags:
+    - addons
+    - logging
+    - kubernetes

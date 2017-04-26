@@ -1,0 +1,10 @@
+---
+- include: logging.yml
+  when: enable_logging
+  tags:
+    - kubernetes
+
+- include: monitoring.yml
+  when: enable_monitoring
+  tags:
+    - kubernetes

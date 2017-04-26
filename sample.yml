@@ -55,17 +55,16 @@
     - mantlui
     - kubernetes
     - kubernetes-master
+    - kubernetes-addons
 
-# The worker role itself has a minimal configuration, as it's designed mainly to
-# run software that the Mesos leader shedules. It also forwards traffic to
-# globally known ports configured through Marathon.
-- hosts: role=worker
+- hosts: role=kubeworker
   # role=worker hosts are a subset of "all". Since we already gathered facts on
   # all servers, we can skip it here to speed up the deployment.
   gather_facts: no
   vars:
     mesos_mode: follower
     zookeeper_server_group: role=control
+    consul_dns_domain: consul
   roles:
     - mesos
     - calico
@@ -75,7 +74,7 @@
 - hosts: role=kubeworker
   gather_facts: yes
   roles:
-    - calico
+    - flannel
     - kubernetes
     - kubernetes-node
 

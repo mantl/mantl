@@ -1,0 +1,8 @@
+---
+- name: install flannel
+  sudo: yes
+  yum:
+    pkg="flannel-{{ flannel_version }}"
+    state=present
+  tags:
+    - flannel

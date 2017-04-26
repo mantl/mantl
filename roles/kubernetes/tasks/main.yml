@@ -9,6 +9,7 @@
     - "/srv/kubernetes"
     - "{{ kube_manifest_dir }}"
     - "{{ kube_podmaster_dir }}"
+    - "{{ kube_cert_dir }}"
     - "{{ kube_users_dir }}"
   tags:
     - kubernetes
@@ -69,7 +70,7 @@
 
 - name: pull hyperkube docker image
   sudo: yes
-  command: "docker pull {{ kube_hyperkube_image }}:{{ kube_hyperkube_image_tag }}"
+  command: "docker pull gcr.io/google_containers/hyperkube:{{ kube_version }}"
   register: docker_pull_result
   changed_when: docker_pull_result.stdout.find('newer') > -1
   tags:

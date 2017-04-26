@@ -1,4 +1,9 @@
 ---
+- include: secrets.yml
+  tags:
+    - secrets
+    - kubernetes
+    
 # Consul must be available when kubelet stores the manifests in the k/v.
 - name: wait for leader
   command: /usr/local/bin/consul-wait-for-leader.sh
@@ -17,9 +22,10 @@
     mode: 0644
   with_items:
     - kube-apiserver
+    - kube-proxy
     - kube-podmaster
     - kube-system
-    - kube2consul
+    
   notify:
     - restart kubelet
   tags:
@@ -77,6 +83,17 @@
   run_once: true
   tags:
     - master
+    - kubernetes
+
+- name: create fluentd pod
+  sudo: yes
+  copy:
+    src: fluentd-es.yaml
+    dest: "{{ kube_manifest_dir }}/fluentd-es.yaml"
+  when: enable_logging
+  tags:
+    - addons
+    - logging
     - kubernetes
 
 - name: configure kubectl
