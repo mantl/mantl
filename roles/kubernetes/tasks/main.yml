@@ -27,10 +27,15 @@
 
 - name: install kubernetes binaries
   sudo: yes
-  yum:
-    name: "{{ kubernetes_package }}"
-    state: present
+  get_url:
+    url: "{{ kube_url }}/{{ item }}"
+    dest: /usr/bin
+    mode: 0753
+  with_items:
+    - kubelet
+    - kubectl
   tags:
+    - master
     - kubernetes
 
 - name: generate kubelet systemd unit
