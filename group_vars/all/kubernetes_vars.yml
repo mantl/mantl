@@ -11,8 +11,8 @@ package_channel: stable
 
 # Kubernetes build to use, stable is used by default.
 # Place "testing" here to use latest build available.
-kubernetes_package: kubernetes-1.2.0
-kube_version: v1.2.0
+kubernetes_package: kubernetes-1.3.3
+kube_version: v1.3.3
 
 # Users to create for basic auth in Kubernetes API via HTTP
 kube_users:
@@ -21,8 +21,8 @@ kube_users:
     role: admin
 
 # Select which network manager to use. After choosing, edit kubernetes.yml file and include aproriate roles.
-network: calico
-# network: flannel
+#network: calico
+network: flannel
 
 # Kubernetes cluster name, also will be used as DNS domain
 cluster_name: cluster.local

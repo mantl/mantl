@@ -11,21 +11,28 @@ spec:
     command:
     - /hyperkube
     - apiserver
+
+    # Network binding & advertising
     - --bind-address={{ private_ipv4 }}
     - --etcd-servers={{ etcd_url_scheme }}://etcd.service.consul:{{ etcd_client_port }}/
-    - --allow-privileged=true
     - --service-cluster-ip-range={{ kube_service_addresses }}
-    - --secure_port={{ kube_master_port }}
-    - --insecure_port={{ kube_insecure_port }}
+    - --secure-port={{ kube_master_port }}
+    - --insecure-bind-address=127.0.0.1
+    - --insecure-port={{ kube_insecure_port }}
     - --advertise-address={{ ansible_default_ipv4.address }}
-    - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
-    - --tls-cert-file={{ kube_cert_dir }}/server.crt
-    - --tls-private-key-file={{ kube_cert_dir }}/server.key
-    - --client-ca-file={{ kube_cert_dir }}/ca.crt
-    - --service-account-key-file={{ kube_cert_dir }}/server.key
+
+    # Security
+    - --allow-privileged=true
+    - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota 
+    - --tls-cert-file={{ host_cert }}
+    - --tls-private-key-file={{ host_key }}
+    - --service-account-key-file={{ host_key }}
+    - --client-ca-file=/etc/pki/CA/ca.cert
     - --basic-auth-file={{ kube_users_dir }}/known_users.csv
-    - --v=3
-    
+    - --kubelet-certificate-authority=/etc/pki/CA/ca.cert
+    - --kubelet-client-certificate={{ host_cert }}
+    - --kubelet-client-key={{ host_key }}    
+
     # Other
     - --apiserver-count={{ groups['role=control'] | length }}
     - --etcd-servers=http://127.0.0.1:8500
