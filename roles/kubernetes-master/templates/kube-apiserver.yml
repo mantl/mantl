@@ -15,11 +15,11 @@ spec:
     # Network binding & advertising
     - --bind-address={{ private_ipv4 }}
     - --etcd-servers={{ etcd_url_scheme }}://etcd.service.consul:{{ etcd_client_port }}/
-    - --service-cluster-ip-range={{ kube_service_addresses }}
     - --secure-port={{ kube_master_port }}
     - --insecure-bind-address=127.0.0.1
     - --insecure-port={{ kube_insecure_port }}
     - --advertise-address={{ ansible_default_ipv4.address }}
+    - --service-cluster-ip-range={{ kube_service_addresses }}
 
     # Security
     - --allow-privileged=true
