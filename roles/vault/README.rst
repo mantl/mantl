@@ -13,18 +13,19 @@ Variables
 
 .. data:: vault_default_port
 
-   Port for Vault to listen on
+   Port for Vault to listen on.
 
    default: ``8200``
 
 .. data:: vault_command_options
 
-   Extra options to pass to Vault at startup
+   Extra options to pass to Vault at startup. The defaults allow both the client
+   and server to authenticate one another with their TLS certs.
 
-   default: ``--ca-cert=/etc/pki/CA/ca.cert``
+   default: ``--ca-cert=/etc/pki/CA/ca.cert --client-cert={{ host_cert }} --client-key={{ host_key }}``
 
 .. data:: vault_init_json
 
-   Initial JSON configuration for Vault
+   Initial JSON configuration for Vault.
 
    default: ``{"secret_shares": 4, "secret_threshold": 3}``

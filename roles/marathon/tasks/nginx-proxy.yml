@@ -1,4 +1,15 @@
 ---
+- name: create nginx configuration directories
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/templates
+  tags:
+    - marathon
+
 - name: copy nginx configuration
   sudo: yes
   copy:

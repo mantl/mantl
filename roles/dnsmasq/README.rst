@@ -6,10 +6,9 @@ configure each host to use :doc:`consul` for DNS.
 
 This role also adds (as of Mantl 1.1) search paths for ``.consul`` and
 ``.node.consul``. This means that you can address your nodes by their consul
-names directly: if you have a node named ``x``, you can address it there or at
-``x.node``, as well as the fully-qualified ``x.node.consul``. You can also
-address services using the shortened version (for example ``zookeeper.service``
-instead of the full ``zookeeper.service.consul``.)
+names directly: if you have a node named ``x``, you can address it as ``x`` or
+as ``x.node.consul``. Addressing services works similarly, e.g.
+``kubernetes.service.consul``.
 
 Changes
 -------

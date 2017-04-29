@@ -16,7 +16,7 @@
     dest: /etc/yum.repos.d/docker.repo
   tags:
     - docker
-  when: docker_package_source is defined and docker_package_source == "docker" 
+  when: docker_package_source is defined and docker_package_source == "docker"
 
 - name: remove old docker package
   sudo: yes
@@ -58,11 +58,12 @@
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
-    mode: 0755 
+    mode: 0755
   tags:
     - docker
 
-# Not restart docker on file drop
+# We have to restart docker when these files have changed, otherwise the updated
+# configuration won't come into effect.
 - name: systemd drop-in for options
   sudo: yes
   template:
@@ -72,19 +73,18 @@
     - 10-options.conf
     - 12-network-options.conf
   notify:
-    - reload systemd
+    - reload docker
   tags:
     - docker
 
-# Not restart docker on file drop
 - name: systemd drop-in for ExecStart
   sudo: yes
   copy:
     src: 20-ExecStart.conf.j2
     dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
-  notify: 
-    - reload systemd
-  tags: 
+  notify:
+    - reload docker
+  tags:
     - docker
 
 - name: install docker packages

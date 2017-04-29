@@ -37,4 +37,4 @@ resource "openstack_compute_secgroup_v2" "secgroup" {
 
 output "secgroup_name" {
   value = "${openstack_compute_secgroup_v2.secgroup.name}"
-}
+  }

@@ -14,7 +14,7 @@ spec:
     - --domain=cluster.local
     - --healthz-port=8081
     - --kube-master-url=http://127.0.0.1:{{ kube_insecure_port }}
-    - --kubecfg-file=/etc/kubernetes/master.kubeconfig
+    - --kubecfg-file=/etc/kubernetes/kubeconfig.yml
     - --log-flush-frequency=5s
     livenessProbe:
       httpGet:
@@ -27,7 +27,13 @@ spec:
     - mountPath: /etc/kubernetes
       name: etc-kubernetes
       readOnly: true
+    - mountPath: /etc/pki
+      name: etc-pki
+      readOnly: true
   volumes:
-  - hostPath:
+  - name: etc-kubernetes
+    hostPath:
       path: /etc/kubernetes
-    name: etc-kubernetes
+  - name: etc-pki
+    hostPath:
+      path: /etc/pki

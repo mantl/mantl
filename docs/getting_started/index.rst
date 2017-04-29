@@ -27,7 +27,7 @@ Preparing to provision Cloud Hosts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The playbooks and roles in this project will work on whatever provider
-(or metal) you care to spin up, as long as it can run CentOS 7 or
+(or bare metal) you care to spin up, as long as it can run CentOS 7 or
 equivalent.
 
 Your hosts will have to be accessible with your SSH key. If you're unfamiliar
@@ -50,11 +50,20 @@ Here are some guides specific to each of the platforms that Mantl supports:
    vagrant.rst
    triton.rst
 
+Community-supported platform:
+
+.. toctree::
+   :maxdepth:1
+        
+    vsphere.rst
+    softplayer.rst
+    bare-metal.rst
+        
 There are several preparatory steps to provisioning the cloud hosts that are
 common to all providers:
 
 Step 1: Copy .tf file
----------------------
+----------------------
 
 You will need to copy the .tf file of the platform you are using from
 `mantl/terraform/`_ to the root of the project. For example,

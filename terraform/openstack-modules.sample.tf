@@ -10,6 +10,8 @@ variable worker_count { default = "5"}     # worker nodes
 variable kubeworker_count { default = "2"} # kubeworker nodes
 variable edge_count { default = "2"}       # load balancer nodes
 
+variable security_groups {default = "default"}
+
 # Run 'nova network-list' to get these names and values
 # Floating ips are optional
 variable external_network_uuid { default = "uuid-of-your-external-network" }
@@ -81,6 +83,11 @@ module "floating-ips-edge" {
   floating_pool = "${var.floating_ip_pool}"
 }
 
+# Create and apply a set of default security group rules
+module "secgroup" {
+  source = "./terraform/openstack/secgroup"
+}
+
 # Create instances for each of the roles
 module "instances-control" {
   source = "./terraform/openstack/instance"
@@ -96,6 +103,7 @@ module "instances-control" {
   flavor_name = "${var.control_flavor_name}"
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
+  security_groups = "${ module.secgroup.secgroup_common },${ module.secgroup.secgroup_web }"
 }
 
 module "instances-worker" {
@@ -113,6 +121,7 @@ module "instances-worker" {
   flavor_name = "${var.worker_flavor_name}"
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
+  security_groups = "${ module.secgroup.secgroup_common }"
 }
 
 module "instances-kubeworker" {
@@ -129,6 +138,7 @@ module "instances-kubeworker" {
   security_groups = "${module.secgroup.secgroup_name}"
   flavor_name = "${var.kubeworker_flavor_name}"
   image_name = "${var.image_name}"
+  security_groups = "${ module.secgroup.secgroup_common }"
   ssh_user = "${var.ssh_user}"
 }
 
@@ -147,5 +157,6 @@ module "instances-edge" {
   flavor_name = "${var.edge_flavor_name}"
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
+  security_groups = "${ module.secgroup.secgroup_common },${ module.secgroup.secgroup_web }"
 }
 

@@ -27,5 +27,5 @@ resource "triton_machine" "instance" {
 }
 
 output "ips" {
-  value = "${join(\",\", triton_machine.instance.*.primaryip)}"
+  value = "${join(",", triton_machine.instance.*.primaryip)}"
 }

@@ -6,6 +6,10 @@ resource "aws_security_group" "control" {
   description = "Allow inbound traffic for control nodes"
   vpc_id = "${var.vpc_id}"
 
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
+
   ingress { # SSH
     from_port = 22
     to_port = 22
@@ -55,6 +59,10 @@ resource "aws_security_group" "ui" {
   description = "Allow inbound traffic for Mantl UI"
   vpc_id = "${var.vpc_id}"
 
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
+
   ingress { # HTTP
     from_port = 80
     to_port = 80
@@ -82,6 +90,10 @@ resource "aws_security_group" "edge" {
   description = "Allow inbound traffic for edge routing"
   vpc_id = "${var.vpc_id}"
 
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
+
   ingress { # SSH
     from_port = 22
     to_port = 22
@@ -108,6 +120,10 @@ resource "aws_security_group" "worker" {
   name = "${var.short_name}-worker"
   description = "Allow inbound traffic for worker nodes"
   vpc_id = "${var.vpc_id}"
+
+  tags {
+    KubernetesCluster = "${var.short_name}"
+  }
 
   ingress { # SSH
     from_port = 22
