@@ -87,8 +87,10 @@ to source the environment variables into your shell.)
 OpenStack Security Group
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-In order for terraform to apply correctly, you need to create a security group
-in openstack for Mantl.
+A default set of Openstack security groups will be created and applied to the 
+hosts which allows all traffic between the hosts, web and SSH traffic from 
+0.0.0.0/0 to controller and edge nodes. If you need any additional security 
+groups, you can create it in Openstack and add it to the nodes. 
 
 You can either login to the Web UI to perform this task or use the openstack
 commmand line interface as below.
@@ -96,8 +98,6 @@ commmand line interface as below.
 .. code-block:: shell
 
   openstack security group create <group_name>
-
-Once your group is created, ensure you update the openstack.tf file accordingly.
 
 OpenStack Username/Password
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
