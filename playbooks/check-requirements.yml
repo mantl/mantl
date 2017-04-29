@@ -14,7 +14,6 @@
     - name: check for compatible Ansible version
       when: >
         ansible_version["string"] | version_compare("1.9.1", "<")
-        or ansible_version["string"] | version_compare("2", ">=")
       fail:
         msg: >
           Your version of Ansible doesn't match the required version. Please

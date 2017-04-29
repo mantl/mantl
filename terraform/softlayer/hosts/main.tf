@@ -58,13 +58,13 @@ resource "softlayer_virtual_guest" "edge" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", softlayer_virtual_guest.control.*.ipv4_address)}"
+  value = "${join(",", softlayer_virtual_guest.control.*.ipv4_address)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", softlayer_virtual_guest.worker.*.ipv4_address)}"
+  value = "${join(",", softlayer_virtual_guest.worker.*.ipv4_address)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", softlayer_virtual_guest.edge.*.ipv4_address)}"
+  value = "${join(",", softlayer_virtual_guest.edge.*.ipv4_address)}"
 }

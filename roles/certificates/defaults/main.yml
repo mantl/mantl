@@ -1,3 +1,4 @@
+
 ---
 generate_certificate_package: generate-certificate-0.1.1-1
 
@@ -14,9 +15,12 @@ location: "{{ inventory_hostname }}" # Openssl's "CN" ("Common Name"). Can't be 
 dns:
   - "{{ inventory_hostname }}"
   - "{{ inventory_hostname }}.node.consul"
+  - "{{ inventory_hostname }}.ec2.internal"
   - "{{ ansible_hostname }}"
   - "{{ ansible_hostname }}.node.consul"
+  - "{{ ansible_hostname }}.ec2.internal"
   - "*.service.consul"
+  - "kubernetes.default.svc.{{ cluster_name }}"
 # What IP addresses will this certificate be valid for?
 ip:
   - "{{ ansible_all_ipv4_addresses | join(' ') }}"

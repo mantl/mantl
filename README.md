@@ -3,6 +3,8 @@
 # Overview
 
 [![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/mantl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://img.shields.io/travis/mantl/mantl.svg)](https://travis-ci.org/mantl/mantl)
+[![Stories in Ready](https://badge.waffle.io/mantl/mantl.svg?label=ready&title=Ready)](http://waffle.io/mantl/mantl)
 
 Mantl is a modern, batteries included platform for rapidly deploying globally
 distributed services
@@ -62,8 +64,10 @@ distributed services
   collection and analysis
      -  [Logstash](https://github.com/elastic/logstash) for log forwarding
 * [GlusterFS](http://www.gluster.org/) for container volume storage
-* [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
-* [Calico](http://www.projectcalico.org) a new kind of virtual network
+* [Docker Swarm](https://www.docker.com/products/docker-swarm/) for clustering
+  Docker daemons between networked hosts
+* [etcd](https://github.com/coreos/etcd), distributed key-value store for Calico
+* [Calico](http://www.projectcalico.org), a new kind of virtual network
 * [collectd](https://collectd.org/) for metrics collection
 * [Chronos](https://mesos.github.io/chronos/) a distributed task scheduler
 * [Kong](http://getkong.org) for managing APIs
@@ -108,8 +112,7 @@ All development is done on the `master` branch. Tested, stable versions are
 identified via git tags. To get started, you can clone or fork this repo:
 
 ```
-git clone https://github.com/CiscoCloud/mantl.git
-
+git clone https://github.com/mantl/mantl.git
 ```
 
 To use a stable version, use `git tag` to list the stable versions:

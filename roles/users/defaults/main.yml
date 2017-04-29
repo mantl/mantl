@@ -1,0 +1,8 @@
+---
+# users:
+#   - name: user1
+#     present: true
+#     groups:
+#       - wheel # caution: this will allow passwordless sudo
+#     authorized_keys:
+#       - "ssh-ed25519 AAAABBBCCC123..."

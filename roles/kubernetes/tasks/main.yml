@@ -69,7 +69,7 @@
 
 - name: pull hyperkube docker image
   sudo: yes
-  command: "docker pull {{ kube_hyperkube_image }}:{{ kube_version }}"
+  command: "docker pull {{ kube_hyperkube_image }}:{{ kube_hyperkube_image_tag }}"
   register: docker_pull_result
   changed_when: docker_pull_result.stdout.find('newer') > -1
   tags:

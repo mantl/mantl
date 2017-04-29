@@ -7,7 +7,7 @@ spec:
   hostNetwork: true
   containers:
   - name: kube-apiserver
-    image: "{{ kube_hyperkube_image }}:{{ kube_version }}"
+    image: "{{ kube_hyperkube_image }}:{{ kube_hyperkube_image_tag }}"
     command:
     - /hyperkube
     - apiserver
@@ -33,6 +33,7 @@ spec:
     - --service-account-key-file={{ host_key }}
 
     # Other
+    - --apiserver-count={{ groups['role=control'] | length }}
     - --etcd-servers=http://127.0.0.1:8500
     - --runtime-config=extensions/v1beta1/daemonsets=true
     {% if enable_cloud_provider | bool -%}

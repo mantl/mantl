@@ -31,3 +31,5 @@ packer_cache/
 account.json
 # annoying osx files
 .DS_Store
+
+.idea/
