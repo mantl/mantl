@@ -9,15 +9,9 @@ iptables -X MESOSLEADER
 
 {{ if not $mesosLeaderIpTables }}exit 0{{ end }}
 
-{{ if or (eq 0 (len (service "master.mesos" "any"))) (eq 0 (len (service "follower.mesos" "any"))) }}exit 0
-{{ end }}
-
 iptables -N MESOSLEADER
 
-{{ range service "master.mesos" "any" }}
-iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -s {{ .Address }} -j ACCEPT
-{{ end }}
-{{ range service "follower.mesos" "any" }}
+{{ range nodes }}
 iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -s {{ .Address }} -j ACCEPT
 {{ end }}
 iptables -A MESOSLEADER -p tcp --dport {{ $mesosLeaderPort }} -d 127.0.0.1 -j ACCEPT

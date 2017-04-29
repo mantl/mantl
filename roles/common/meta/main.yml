@@ -1,5 +1,4 @@
 ---
-allow_duplicates: yes
 dependencies:
   - role: repos
   - role: distributive

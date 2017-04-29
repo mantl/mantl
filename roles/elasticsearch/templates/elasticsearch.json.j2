@@ -1,0 +1,23 @@
+{
+  "name": "elasticsearch",
+  "version": "{{ elasticsearch_framework_version }}",
+  "config": {
+    "elasticsearch": {
+      "framework-name": "{{ elasticsearch_framework_name }}",
+      "port": {{ elasticsearch_framework_ui_port }},
+      "scheduler": {
+        "cpu": {{ elasticsearch_cpu }},
+        "ram": {{ elasticsearch_ram }},
+        "java-heap": "{{ elasticsearch_java_opts }}"
+      },
+      "executor": {
+        "cluster-name": "{{ elasticsearch_cluster_name }}",
+        "name": "{{ elasticsearch_executor_name }}",
+        "cpu": {{ elasticsearch_executor_cpu }},
+        "ram": {{ elasticsearch_executor_ram }},
+        "disk": {{ elasticsearch_disk }},
+        "instances": {{ elasticsearch_nodes }}
+      }
+    }
+  }
+}

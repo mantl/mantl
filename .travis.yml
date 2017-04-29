@@ -1,18 +1,42 @@
 language: python
+
+addons:
+  apt:
+    packages:
+    - unzip
+
+branches:
+  only:
+    - master
+
+cache:
+  - pip
+  - testing/cache
+
 env:
   global:
   - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
-  - DOCKER_ARGS='-i -a stdout -a stderr -e TF_VAR_build_number -e CI_HEAD_COMMIT -e TRAVIS_COMMIT_RANGE -e TRAVIS_REPO_SLUG -e TRAVIS_BRANCH -e TRAVIS_PULL_REQUEST -e TERRAFORM_FILE -e MANTL_CI_FORK_CHECK'
-  - DOCKER_IMAGE=sehqlr/mantl:testing
-  - MANTL_CI_FORK_CHECK=0
+  - TERRAFORM_VERSION=0.7.0
   matrix:
-  - TERRAFORM_FILE=testing/aws.tf DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
-  - TERRAFORM_FILE=testing/do.tf DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
-  - TERRAFORM_FILE=testing/gce.tf DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
+  # These providers have a full battery of Terraform+Ansible tests
+  - PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
+  - PROVIDER=do  DOCKER_SECRETS='-e DIGITALOCEAN_TOKEN'
+  - PROVIDER=gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
+  # These providers are only linted using `terraform plan`, and have no secrets
+  # Secrets are available for CLC, but the build times out.
+  #- PROVIDER=clc DOCKER_SECRETS='-e CLC_USERNAME -e CLC_PASSWORD'
+  #- PROVIDER=softlayer
+  #- PROVIDER=triton
+
+install:
+  - eval $(ssh-agent)
+  - python testing/travis.py install
 
 before_script:
+  - export TERRAFORM_FILE=testing/terraform/${PROVIDER}.tf
   - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
   - echo $CI_HEAD_COMMIT
+  
   - docker pull $DOCKER_IMAGE
   - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 docker.py ci-setup"
 

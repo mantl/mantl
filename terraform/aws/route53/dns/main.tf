@@ -5,12 +5,9 @@ variable control_subdomain { default = "control" }
 variable domain {}
 variable edge_count {}
 variable edge_ips {}
-variable elb_fqdn {}
 variable hosted_zone_id {}
 variable short_name {}
 variable subdomain { default = "" }
-variable traefik_elb_fqdn {}
-variable traefik_zone_id {}
 variable worker_count {}
 variable worker_ips {}
 variable kubeworker_count { default = "0" }
@@ -64,37 +61,22 @@ resource "aws_route53_record" "dns-control-group" {
 }
 
 resource "aws_route53_record" "dns-wildcard" {
+  count = "${var.edge_count}"
   zone_id = "${var.hosted_zone_id}"
   name = "*${var.subdomain}.${var.domain}"
+  records = ["${split(",", var.edge_ips)}"]
   type = "A"
-
-  alias {
-    zone_id = "${var.traefik_zone_id}"
-    name = "${var.traefik_elb_fqdn}"
-    evaluate_target_health = true
-  }
-}
-
-resource "aws_route53_record" "elb-cname" {
-  zone_id = "${var.hosted_zone_id}"
-  name = "${var.short_name}"
-  type = "CNAME"
-  ttl = 5
-  records = ["${var.elb_fqdn}"]
-}
-
-output "elb_cname" {
-  value = "${aws_route53_record.elb-cname.fqdn}"
+  ttl = 60
 }
 
 output "edge_fqdn" {
-  value = "${join(\",\", aws_route53_record.dns-edge.*.fqdn)}"
+  value = "${join(",", aws_route53_record.dns-edge.*.fqdn)}"
 }
 
 output "control_fqdn" {
-  value = "${join(\",\", aws_route53_record.dns-control.*.fqdn)}"
+  value = "${join(",", aws_route53_record.dns-control.*.fqdn)}"
 }
 
 output "worker_fqdn" {
-  value = "${join(\",\", aws_route53_record.dns-worker.*.fqdn)}"
+  value = "${join(",", aws_route53_record.dns-worker.*.fqdn)}"
 }
