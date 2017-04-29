@@ -3,6 +3,8 @@ variable public_key { default = "/home/you/.ssh/id_rsa.pub" }
 variable ssh_user { default = "cloud-user" }
 
 variable name { default = "mantl" }        # resources will start with "mantl-"
+variable host_domain { default = "novalocal" } # set persistent hostname
+
 variable control_count { default = "3"}    # mesos masters, zk leaders, consul servers
 variable worker_count { default = "5"}     # worker nodes
 variable kubeworker_count { default = "2"} # kubeworker nodes
@@ -38,6 +40,11 @@ module "ssh-key" {
   source = "./terraform/openstack/keypair_v2"
   public_key = "${var.public_key}"
   keypair_name = "mantl-key"
+}
+
+module "secgroup" {
+  source = "./terraform/openstack/secgroup"
+  secgroup_name = "mantl-secgroup"
 }
 
 #Create a network with an externally attached router
@@ -85,12 +92,14 @@ module "secgroup" {
 module "instances-control" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.control_count}"
   role = "control"
   volume_size = "${var.control_volume_size}"
   network_uuid = "${module.network.network_uuid}"
   floating_ips = "${module.floating-ips-control.ip_list}"
   keypair_name = "${module.ssh-key.keypair_name}"
+  security_groups = "${module.secgroup.secgroup_name}"
   flavor_name = "${var.control_flavor_name}"
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
@@ -100,6 +109,7 @@ module "instances-control" {
 module "instances-worker" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.worker_count}"
   volume_size = "${var.worker_volume_size}"
   count_format = "%03d"
@@ -107,6 +117,7 @@ module "instances-worker" {
   network_uuid = "${module.network.network_uuid}"
   floating_ips = "${module.floating-ips-worker.ip_list}"
   keypair_name = "${module.ssh-key.keypair_name}"
+  security_groups = "${module.secgroup.secgroup_name}"
   flavor_name = "${var.worker_flavor_name}"
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
@@ -116,6 +127,7 @@ module "instances-worker" {
 module "instances-kubeworker" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.kubeworker_count}"
   volume_size = "100"
   count_format = "%03d"
@@ -123,6 +135,7 @@ module "instances-kubeworker" {
   network_uuid = "${module.network.network_uuid}"
   floating_ips = "${module.floating-ips-kubeworker.ip_list}"
   keypair_name = "${module.ssh-key.keypair_name}"
+  security_groups = "${module.secgroup.secgroup_name}"
   flavor_name = "${var.kubeworker_flavor_name}"
   image_name = "${var.image_name}"
   security_groups = "${ module.secgroup.secgroup_common }"
@@ -132,6 +145,7 @@ module "instances-kubeworker" {
 module "instances-edge" {
   source = "./terraform/openstack/instance"
   name = "${var.name}"
+  host_domain = "${var.host_domain}"
   count = "${var.edge_count}"
   volume_size = "${var.edge_volume_size}"
   count_format = "%02d"
@@ -139,6 +153,7 @@ module "instances-edge" {
   network_uuid = "${module.network.network_uuid}"
   floating_ips = "${module.floating-ips-edge.ip_list}"
   keypair_name = "${module.ssh-key.keypair_name}"
+  security_groups = "${module.secgroup.secgroup_name}"
   flavor_name = "${var.edge_flavor_name}"
   image_name = "${var.image_name}"
   ssh_user = "${var.ssh_user}"
