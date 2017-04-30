@@ -1,0 +1,9 @@
+[volume:mantldata]
+group = mantl
+volume = mantldata
+size = {{ mantl_data_lvm_data_volume_size }}
+
+[filesystem:mantldata]
+dev = /dev/mantl/mantldata
+fstype = ext4
+mount = /mnt/mantldata

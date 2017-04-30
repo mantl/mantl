@@ -1,4 +1,31 @@
 ---
+- name: configure lvm for mesos data
+  sudo: yes
+  template:
+    src: 40-mesos-data-volume.conf.j2
+    dest: /etc/mantl/filesystems.d/40-mesos-data-volume.conf
+    mode: 0644
+  when: lvm_physical_device != ""
+  tags:
+    - mesos
+    - disk
+
+- name: process with mantl storage setup
+  sudo: yes
+  shell: "/usr/bin/mantl-storage-setup"
+  when: lvm_physical_device != ""
+  tags:
+    - mesos
+    - disk
+
+- name: create mesos work dir for non-lvm platforms
+  sudo: yes
+  shell: mkdir -p {{ mesos_work_dir }}
+  when: lvm_physical_device == ""
+  tags:
+    - mesos
+    - disk
+
 - name: install follower configuration
   sudo: yes
   yum:

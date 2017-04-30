@@ -69,6 +69,7 @@
   roles:
     - mesos
     - calico
+    - disk
 
 # The kubeworker role is similar to the worker role but are intended for
 # Kubernetes workloads.
@@ -78,6 +79,7 @@
     - calico
     - kubernetes
     - kubernetes-node
+    - disk
 
 # The edge role exists solely for routing traffic into the cluster. Firewall
 # settings should be such that web traffic (ports 80 and 443) is exposed to the
