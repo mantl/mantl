@@ -1,12 +1,8 @@
 ---
-- name: create nginx configuration directories
+- name: assert nginx folder
   sudo: yes
-  file:
-    state: directory
-    path: "{{ item }}"
-  with_items:
-    - /etc/nginx
-    - /etc/nginx/templates
+  file: path=/etc/nginx state=directory
+
   tags:
     - consul
 

@@ -2,6 +2,12 @@
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 {% for item in groups['all'] %}
 {% if hostvars[item].private_ipv4 is defined %}
-{{ hostvars[item].private_ipv4 }} {% if use_host_domain %}{{ item }}.{{ host_domain }}{% endif %} {{ item }}
+{{ hostvars[item].private_ipv4 }} {% if use_host_domain %}{{ item }}.{{
+host_domain }}{% endif %} {{ item }}
 {% endif %}
 {% endfor %}
+{% if hosts_core_override is defined %}
+{% for host in hosts_core_override %}
+{{ host.private_ipv4 }} {{ host.hostname }}
+{% endfor %}
+{% endif %}
