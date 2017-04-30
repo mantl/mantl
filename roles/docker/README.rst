@@ -6,9 +6,43 @@ Docker
 `Docker <https://www.docker.com/>`_ is a container manager and scheduler. In
 their words, it "allows you to package an application with all of its
 dependencies into a standardized unit for software development." Their site has
-`more on what Docker is <https://www.docker.com/whatisdocker>`_. We use it in
-microservices-infrastructure to ship units of work around the cluster, combined
+`more on what Docker is <https://www.docker.com/what-docker>`_. We use it in
+Mantl to ship units of work around the cluster, combined
 with :doc:`marathon`'s scheduling.
+
+Variables
+---------
+
+.. data :: docker_source
+
+  Specify origin of docker packages.
+
+  Possible values:  ``docker``, ``redhat``.
+
+  Default: ``docker` -- using packages from ``Docker, inc``.
+
+.. data :: docker_tcp
+
+  Open the Docker socket to TCP control?
+
+  Note that if TCP/TLS are enabled after your cluster is already built, you'll
+  run into https://github.com/docker/docker/issues/17902 and have to restart
+  all your containers manually:
+
+  ::
+    $ ansible --become all -a 'systemctl start nginx-consul'
+    $ ansible --become role=control -a 'systemctl start nginx-mantlui'
+    $ ansible --become role=control -a 'systemctl start kubelet'
+    $ ansible --become role=kubeworker -a 'systemctl start kubelet'
+
+  Default: ``false``
+
+.. data :: docker_tcp_tls
+
+  Protect the Docker socket with TLS authentication. TLS should always be used
+  in conjunction with ``docker_tcp``.
+
+  Defaults to the value of ``docker_tcp``.
 
 Using a private Docker registry
 -------------------------------

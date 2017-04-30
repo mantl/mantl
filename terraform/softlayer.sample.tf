@@ -1,3 +1,4 @@
+
 provider "softlayer" {
 }
 
@@ -10,19 +11,10 @@ module "softlayer-hosts" {
   source = "./terraform/softlayer/hosts"
   ssh_key = "${module.softlayer-keypair.keypair_id}"
 
+  hourly_billing = true
   region_name = "ams01"
   domain = "example.com"
   control_count = 3
-  worker_count = 3
+  worker_count = 4
+  edge_count = 2
 }
-
-# Example setup for DNS with dnsimple;
-# module "dnsimple-dns" {
-#   source = "./terraform/dnsimple/dns"
-#   short_name = "mi"
-#   control_count = 3
-#   worker_count = 3
-#   domain = "example.com"
-#   control_ips = "${module.softlayer-hosts.control_ips}"
-#   worker_ips = "${module.softlayer-hosts.worker_ips}"
-# }

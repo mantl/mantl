@@ -1,50 +1,46 @@
 ---
+- name: create nginx configuration directories
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/templates
+  tags:
+    - marathon
+
 - name: copy nginx configuration
   sudo: yes
-  template:
-    src: marathon.nginx.j2
-    dest: /etc/marathon/marathon.nginx
+  copy:
+    src: marathon.nginx
+    dest: /etc/nginx/templates
   notify:
-    - restart nginx-marathon
+    - reload nginx
   tags:
     - marathon
 
-- name: configure nginx
-  sudo: yes
-  command: consul-cli kv-write service/nginx/templates/marathon @/etc/marathon/marathon.nginx
-  tags:
-    - marathon
-
-- name: ensure consul-nginx docker image is present
-  sudo: yes
-  command: /usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
-  tags:
-    - marathon
-    - bootstrap
-
-- name: configure nginx-marathon
-  sudo: yes
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+- name: write nginx config vars to the consul k/v
+  run_once: yes
+  command: >
+    consul-cli kv-write --token={{ consul_acl_secure_token }}
+    "{{ item.path }}" "{{ item.content }}"
   with_items:
-    - src: nginx-marathon.service.j2
-      dest: /usr/lib/systemd/system/nginx-marathon.service
-    - src: nginx-marathon.env.j2
-      dest: /etc/default/nginx-marathon.env
-  notify:
-    - reload nginx-marathon
-    - restart nginx-marathon
+    - path: secure/marathon/nginx/do_ssl
+      content: "{{ do_marathon_ssl }}"
+    - path: secure/marathon/nginx/do_auth
+      content: "{{ do_marathon_auth }}"
   tags:
     - marathon
 
-- name: enable nginx-marathon
-  sudo: yes
-  service:
-    name: nginx-marathon
-    enabled: yes
-    state: started
-  notify:
-    - restart nginx-marathon
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/proxy_port {{ marathon_proxy_port }}
+  tags:
+    - marathon
+
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/port {{ marathon_port }}
   tags:
     - marathon

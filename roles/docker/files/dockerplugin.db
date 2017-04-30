@@ -1,8 +1,0 @@
-blkio                   read:GAUGE:0:U, write:GAUGE:0:U, sync:GAUGE:0:U, async:GAUGE:0:U, total:GAUGE:0:U
-blkio.single            value:GAUGE:0:U
-cpu.percpu.usage        value:GAUGE:0:U
-cpu.usage               total:GAUGE:0:U, kernelmode:GAUGE:0:U, usermode:GAUGE:0:U, system:GAUGE:0:U
-cpu.throttling_data     periods:GAUGE:0:U, throttled_periods:GAUGE:0:U, throttled_time:GAUGE:0:U
-network.usage           rx_bytes:GAUGE:0:U, rx_dropped:GAUGE:0:U, rx_errors:GAUGE:0:U, rx_packets:GAUGE:0:U, tx_bytes:GAUGE:0:U, tx_dropped:GAUGE:0:U, tx_errors:GAUGE:0:U, tx_packets:GAUGE:0:U
-memory.usage            failcnt:COUNTER:0:U, max:GAUGE:0:U, total:GAUGE:0:U
-memory.stats            value:GAUGE:0:U

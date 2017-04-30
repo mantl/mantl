@@ -1,0 +1,10 @@
+---
+lvm_volume_group_name: mantl
+lvm_physical_device: >
+  {%- if provider is defined -%}
+  {%- if provider == 'gce' -%}/dev/disk/by-id/google-lvm
+  {%- elif provider == 'aws' -%}/dev/xvdh
+  {%- elif provider == 'openstack' -%}/dev/vdb
+  {%- endif -%}{%- endif -%}
+
+debug_storage_setup: False

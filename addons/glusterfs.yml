@@ -1,0 +1,27 @@
+---
+# Gluster distributed storage. Run this playbook after mantl is up and running
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: role=control
+  vars:
+    glusterfs_mode: server
+  roles:
+    - glusterfs
+
+- hosts: role=worker
+  gather_facts: no
+  vars:
+    glusterfs_mode: client
+  roles:
+    - glusterfs
+
+- hosts: role=kubeworker
+  gather_facts: no
+  vars:
+    glusterfs_mode: client
+  roles:
+    - glusterfs

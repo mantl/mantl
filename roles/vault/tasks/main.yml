@@ -2,35 +2,20 @@
 - name: install vault
   sudo: yes
   yum:
-    name: "https://bintray.com/artifact/download/stevendborrelli/rpm/vault-0.1.0-1.el7.centos.x86_64.rpm"
+    name: "{{ vault_package }}"
     state: present
   tags:
     - vault
     - bootstrap
 
-- name: configure vault service
-  sudo: yes
-  copy:
-    src: vault.service
-    dest: /usr/lib/systemd/system/vault.service
-  notify:
-    - restart vault
-  tags:
-    - vault
-
-- name: create vault directories
-  sudo: yes
-  file:
-    path: /etc/vault
-    state: directory
-  tags:
-    - vault
-
 - name: configure vault
   sudo: yes
   template:
-    src: vault.config.j2
-    dest: /etc/vault/vault.config
+    src: vault.hcl.j2
+    dest: /etc/vault/vault.hcl
+    mode: 0600
+    owner: root
+    group: root
   tags:
     - vault
 
@@ -49,6 +34,23 @@
   tags:
     - vault
 
+- name: deregister vault service in consul
+  command: consul-cli service-deregister vault
+
+- name: register vault service in consul
+  command: >
+    consul-cli service-register
+    --port=8200
+    --check='script:15s:test "$(curl -s -1 https://localhost:8200/v1/sys/seal-status | jq .sealed) == false"'
+    vault
+
 - include: bootstrap.yml
 
-- include: distributive.yml
+- name: set vault_token fact
+  set_fact:
+    vault_token: "{{ vault_root_token }}"
+  when: >
+    {{ vault_root_token is defined
+    and 'Vault is already initialized' in vault_init_output.stdout }}
+
+- include: tls-auth.yml

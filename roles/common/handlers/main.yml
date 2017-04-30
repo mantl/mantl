@@ -1,4 +1,4 @@
 ---
-- name: update-ca-trust
+- name: restart fail2ban
   sudo: yes
-  command: update-ca-trust
+  command: systemctl restart fail2ban

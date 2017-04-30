@@ -1,91 +1,118 @@
-
-![image](./mantl-logo-1.png)
-
-# Microservices-Infrastructure is now MANTL.
-
-See [http://mantl.io](http://mantl.io) for more details.
-
-Existing Developer? For information on how the rename affects you, [see our handy FAQ](./mantl-rename-faq.md) 
+![image](./docs/_static/mantl-logo.png)
 
 # Overview
 
-[![Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/microservices-infrastructure?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Stories in Ready](https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready)](https://waffle.io/CiscoCloud/microservices-infrastructure)
+[![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/mantl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://img.shields.io/travis/mantl/mantl.svg)](https://travis-ci.org/mantl/mantl)
+[![Stories in Ready](https://badge.waffle.io/mantl/mantl.svg?label=ready&title=Ready)](http://waffle.io/mantl/mantl)
 
+Mantl is a modern, batteries included platform for rapidly deploying globally
+distributed services
 
-Mantl is a modern, batteries included platform for rapidly deploying globally distributed services
-
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc/generate-toc again -->
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
 
 - [Overview](#overview)
     - [Features](#features)
+        - [Core Components](#core-components)
+        - [Addons](#addons)
+        - [Goals](#goals)
         - [Architecture](#architecture)
-        - [Control Nodes](#control-nodes)
-        - [Resource Nodes](#resource-nodes)
+            - [Control Nodes](#control-nodes)
+            - [Agent Nodes](#agent-nodes)
+            - [Edge Nodes](#edge-nodes)
     - [Getting Started](#getting-started)
         - [Software Requirements](#software-requirements)
         - [Deploying on multiple servers](#deploying-on-multiple-servers)
     - [Documentation](#documentation)
     - [Roadmap](#roadmap)
-        - [Core Components and Features](#core-components-and-features)
         - [Mesos Frameworks](#mesos-frameworks)
         - [Security](#security)
         - [Operations](#operations)
-        - [Platform Support](#platform-support)
+        - [Supported Platforms](#supported-platforms)
+            - [Community Supported Platforms](#community-supported-platforms)
     - [Development](#development)
+    - [Getting Support](#getting-support)
     - [License](#license)
 
 <!-- markdown-toc end -->
 
+
 ## Features
-* [Terraform](https://terraform.io) deployment to multiple cloud providers
-* [etcd](https://github.com/coreos/etcd) distributed key-value store for Calico
-* [Calico](http://www.projectcalico.org) a new kind of virtual network
-* [Mesos](http://mesos.apache.org) cluster manager for efficient resource isolation and sharing across distributed services
-* [Marathon](https://mesosphere.github.io/marathon) for cluster management of long running containerized services
+
+### Core Components
 * [Consul](http://consul.io) for service discovery
 * [Vault](http://vaultproject.io) for managing secrets
+* [Mesos](http://mesos.apache.org) cluster manager for efficient resource
+  isolation and sharing across distributed services
+* [Marathon](https://mesosphere.github.io/marathon) for cluster management of
+  long running containerized services
+* [Kubernetes](http://kubernetes.io/) for managing, organizing, and scheduling
+  containers
+* [Terraform](https://terraform.io) deployment to multiple cloud providers
 * [Docker](http://docker.io) container runtime
+* [Traefik](https://traefik.github.io/) for proxying external traffic
+* [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul
+  service discovery with Mesos tasks
+* [Mantl API](https://github.com/CiscoCloud/mantl-api) easily install supported
+  Mesos frameworks on Mantl
+* [Mantl UI](https://github.com/CiscoCloud/nginx-mantlui) a beautiful
+  administrative interface to Mantl
+
+### Addons
+* [ELK Stack](https://www.elastic.co/webinars/introduction-elk-stack) for log
+  collection and analysis
+     -  [Logstash](https://github.com/elastic/logstash) for log forwarding
+* [GlusterFS](http://www.gluster.org/) for container volume storage
+* [Docker Swarm](https://www.docker.com/products/docker-swarm/) for clustering
+  Docker daemons between networked hosts
+* [etcd](https://github.com/coreos/etcd), distributed key-value store for Calico
+* [Calico](http://www.projectcalico.org), a new kind of virtual network
 * [collectd](https://collectd.org/) for metrics collection
-* [Logstash](https://github.com/elastic/logstash) for log forwarding
-* [mesos-consul](https://github.com/CiscoCloud/mesos-consul) populating Consul service discovery with Mesos tasks
-* [marathon-consul](https://github.com/CiscoCloud/marathon-consul) update consul k/v with Marathon tasks
-* Multi-datacenter support
-* High availability
+* [Chronos](https://mesos.github.io/chronos/) a distributed task scheduler
+* [Kong](http://getkong.org) for managing APIs
+
+See the `addons/` directory for the most up-to-date information.
+
+### Goals
 * Security
+* High availability
+* Rapid immutable deployment (with Terraform + Packer)
 
 ### Architecture
 
-The base platform contains control nodes that manage the cluster and any number of resource nodes. Containers automatically register themselves into DNS so that other services can locate them.
+The base platform contains control nodes that manage the cluster and any number
+of agent nodes. Containers automatically register themselves into DNS so
+that other services can locate them.
 
-![Single-DC](docs/_static/single_dc.png)
+![mantl-diagram](docs/_static/mantl-diagram.png)
 
-Once WAN joining is configured, each cluster can locate services in other data centers via DNS or the [Consul API](http://www.consul.io/docs/agent/http.html).
+#### Control Nodes
 
-![Mult-DC](docs/_static/multi_dc.png)
+The control nodes manage a single datacenter. Each control node runs Consul for
+service discovery, Mesos and Kubernetes leaders for resource scheduling and
+Mesos frameworks like Marathon.
 
-### Control Nodes
+The Consul Ansible role will automatically bootstrap and join multiple Consul
+nodes. The Mesos role will provision highly-availabile Mesos and ZooKeeper
+environments when more than one node is provisioned.
 
-The control nodes manage a single datacenter.  Each control node runs Consul for service discovery, Mesos leaders for resource scheduling and Mesos frameworks like Marathon.
+#### Agent Nodes
 
-In general, it's best to provision 3 or 5 control nodes to achieve higher availability of services. The Consul Ansible role will automatically bootstrap and join multiple Consul nodes. The Mesos Ansible role will provision highly-availabile Mesos and ZooKeeper environments when more than one node is provisioned.
+Agent nodes launch containers and other Mesos- or Kubernetes-based workloads.
 
-![Control Node](docs/_static/control_node.png)
+#### Edge Nodes
 
-### Resource Nodes
-
-Resource nodes launch containers and other Mesos-based workloads.
-
-![Resource Node](docs/_static/resource_node.png)
+Edge nodes are responsible for proxying external traffic into services running
+in the cluster.
 
 ## Getting Started
 
-All development is done on the `master` branch. Tested, stable versions are identified via git tags.
+All development is done on the `master` branch. Tested, stable versions are
+identified via git tags. To get started, you can clone or fork this repo:
 
 ```
-    git clone https://github.com/CiscoCloud/microservices-infrastructure.git
-
+git clone https://github.com/mantl/mantl.git
 ```
 
 To use a stable version, use `git tag` to list the stable versions:
@@ -95,36 +122,41 @@ git tag
 0.1.0
 0.2.0
 ...
-0.3.0
+1.2.0
 
-git checkout 0.3.0
+
+git checkout 1.2.0
 ```
 
-A Vagrantfile is provided that provisions everything on a single VM. To run, first ensure that your system has 4GB of RAM free, then:
+A Vagrantfile is provided that provisions everything on a few VMs. To run,
+first ensure that your system has at least 2GB of RAM free, then just:
 
 ```
-sudo pip install -r requirements.txt
-./security-setup
 vagrant up
 ```
 
 Note:
 * There is no support for Windows at this time, however support is planned.
-* Vagrant 1.7.3+ is required for best results.
-* There is no support for the VMware Fusion Vagrant provider; hence your provider is set to Virtualbox in your Vagrantfile. In order to start running just issue the `vagrant up` command.
-
+* Use the latest version of Vagrant for best results. Version 1.8 is required.
+* There is no support for the VMware Fusion Vagrant provider; hence your
+  provider is set to Virtualbox in your Vagrantfile.
 
 ### Software Requirements
 
-Requirements for running the project are listed in `requirements.txt`. Of note: Ansible 1.9 or later is required; also Python 2.7 is required. All the software requirements are currently distributed as Python modules, and you can `pip install -r requirements.txt` to get them all at once.
+The only requirements for running Mantl are working installations of Terraform
+and Ansible (or Vagrant, if you're deploying to VMs). See the "Development"
+sections for requirements for developing Mantl.
 
 ### Deploying on multiple servers
 
-Please refer to the [Getting Started Guide](https://microservices-infrastructure.readthedocs.org/en/latest/getting_started/index.html), which covers multi-server and OpenStack deployments.
+Please refer to the [Getting Started
+Guide](http://docs.mantl.io/en/latest/getting_started/index.html), which covers
+cloud deployments.
 
 ## Documentation
 
-All documentation is located at [https://microservices-infrastructure.readthedocs.org](https://microservices-infrastructure.readthedocs.org/en/latest).
+All documentation is located at
+[http://docs.mantl.io](http://docs.mantl.io/en/latest).
 
 To build the documentation locally, run:
 
@@ -136,28 +168,22 @@ make html
 
 ## Roadmap
 
-
-### Core Components and Features
-
-- [x] Calico
-- [x] Mesos
-- [x] Consul
-- [x] Multi-datacenter
-- [x] High availability
-- [ ] Rapid immutable deployment (with Terraform + Packer)
-
 ### Mesos Frameworks
 
 - [x] Marathon
-- [ ] Kubernetes
-- [ ] Kafka
+- [x] Kafka
 - [ ] Riak
-- [ ] Cassandra
-- [ ] Elasticsearch
-- [ ] HDFS
+- [x] Cassandra
+- [x] Elasticsearch
+- [x] HDFS
 - [ ] Spark
 - [ ] Storm
-- [ ] Chronos
+- [x] Chronos
+- [x] MemSQL
+
+Note: The most up-to-date list of Mesos frameworks that are known to work with
+Mantl is always in the [mantl-universe
+repo](https://github.com/CiscoCloud/mantl-universe).
 
 ### Security
 
@@ -165,53 +191,76 @@ make html
 - [x] Authentication and authorization for Consul
 - [x] Authentication and authorization for Mesos
 - [x] Authentication and authorization for Marathon
-- [x] Application load balancer (based on HAProxy and consul-template)
+- [x] Application load balancer (based on [Traefik](https://traefik.github.io/))
 - [x] Application dynamic firewalls (using consul template)
 
 ### Operations
 
-- [x] Logging
-- [x] Metrics
+- [x] Logging (with the ELK stack)
+- [x] Metrics (with the collectd addon)
 - [ ] In-service upgrade with rollback
-- [ ] Autoscaling of Resource Nodes
+- [ ] Autoscaling of worker nodes
 - [ ] Self maintaining system (log rotation, etc)
 - [ ] Self healing system (automatic failed instance replacement, etc)
 
-### Platform Support
+### Supported Platforms
 
-- [x] Vagrant (Mac OSX + VirtualBox)
+- [x] [Amazon Web Services](https://aws.amazon.com/)
+- [x] [CenturyLinkCloud](https://www.ctl.io)
+- [x] [Cisco Cloud Services](http://www.cisco.com/c/en/us/solutions/cloud/overview.html)
+- [x] [Cisco MetaCloud](http://www.cisco.com/c/en/us/products/cloud-systems-management/metapod/index.html)
+- [x] [DigitalOcean](https://www.digitalocean.com/)
+- [x] [Joyent Triton](https://www.joyent.com/)
+- [x] [Google Compute Engine](https://cloud.google.com/compute/)
+- [x] [OpenStack](http://www.openstack.org/)
+- [x] [Vagrant](https://www.vagrantup.com/) (Linux/OSX + VirtualBox)
+- [ ] [Apache CloudStack](https://cloudstack.apache.org/)
+- [ ] [Cisco Unified Computing System](http://www.cisco.com/c/en/us/products/servers-unified-computing/index.html)
+- [ ] [Microsoft Azure](https://azure.microsoft.com/en-us/?b=16.17)
 - [ ] Vagrant (Windows + VirtualBox)
-- [x] OpenStack
-- [x] Cisco Cloud Services
-- [x] Cisco MetaCloud
-- [ ] Cisco Unified Computing System
-- [x] Amazon Web Services
-- [ ] Microsoft Azure
-- [x] Google Compute Engine
-- [ ] VMware vSphere
-- [ ] Apache CloudStack
-- [x] Digital Ocean
 
-Please see [milestones](https://github.com/CiscoCloud/microservices-infrastructure/milestones) for more details on the roadmap.
+#### Community Supported Platforms
+
+- [x] Bare Metal
+- [x] [IBM Softlayer](http://www.softlayer.com/)
+- [x] [VMware vSphere](http://www.vmware.com/products/vsphere/)
+
+Please see [milestones](https://github.com/CiscoCloud/mantl/milestones) for
+more details on the roadmap.
 
 ## Development
 
-If you're interested in contributing to the project, install [Terraform](https://www.terraform.io/downloads.html) and the Python modules listed in `requirements.txt` and follow the Getting Started instructions. To build the docs, enter the `docs` directory and run `make html`. The docs will be output to `_build/html`.
+If you're interested in contributing to the project, install
+[Terraform](https://www.terraform.io/downloads.html) and the Python modules
+listed in `requirements.txt` and follow the Getting Started instructions. To
+build the docs, enter the `docs` directory and run `make html`. The docs will
+be output to `_build/html`.
 
-Good issues to start with are marked with the [low hanging fruit](https://github.com/CiscoCloud/microservices-infrastructure/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22) tag.
+Good issues to start with are marked with the [low hanging
+fruit](https://github.com/CiscoCloud/mantl/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22)
+tag.
 
 ## Getting Support
 
-If you encounter any issues, please open a [Github Issue](https://github.com/CiscoCloud/microservices-infrastructure) against the project. We review issues daily.
+If you encounter any issues, please open a [Github
+Issue](https://github.com/CiscoCloud/mantl) against the project. We review
+issues daily.
 
-We also have a [gitter chat room](https://gitter.im/CiscoCloud/microservices-infrastructure). Drop by and ask any questions you might have. We'd be happy to walk you through your first deployment.
+We also have a [gitter chat room](https://gitter.im/CiscoCloud/mantl). Drop by
+and ask any questions you might have. We'd be happy to walk you through your
+first deployment.
 
-[Cisco Intercloud Services](https://developer.cisco.com/cloud) provides support for OpenStack based deployments of Microservices Infrastructure.
+[Cisco Intercloud Services](https://developer.cisco.com/cloud) provides support
+for OpenStack based deployments of Mantl.
 
 ## License
 
 Copyright © 2015 Cisco Systems, Inc.
 
-Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) (the "License").
+Licensed under the [Apache License, Version
+2.0](http://www.apache.org/licenses/LICENSE-2.0) (the "License").
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.

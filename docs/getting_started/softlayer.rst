@@ -3,8 +3,8 @@ SoftLayer
 
 .. versionadded:: 0.3.3
 
-As of microservices-infrastructure 0.3.3 you can bring up SoftLayer
-servers using Terraform. microservices-infrastructure uses Terraform to
+As of Mantl 0.3.3 you can bring up SoftLayer
+servers using Terraform. Mantl uses Terraform to
 provision hosts.
 
 As of now, the released version of Terraform doesn't have SoftLayer support,
@@ -27,7 +27,7 @@ customization. In the next sections, we'll describe the settings that you need
 to configure.
 
 Username and API Key
-^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 You need to generate an API key for your SoftLayer account. This can be done
 in the control panel at `http://softlayer.com<http://softlayer.com>`.
@@ -53,4 +53,4 @@ Once you're all set up with the provider, customize your modules (for
 Terraform to provision your cluster, ``terraform plan`` to see what will be
 created, and ``terraform apply`` to provision the cluster. Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+Mantl on your new cluster.

@@ -1,0 +1,5 @@
+[ciscocloud-rpm]
+name=ciscocloud-rpm
+baseurl=https://dl.bintray.com/ciscocloud/rpm
+gpgcheck=0
+enabled=1 

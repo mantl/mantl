@@ -1,40 +1,38 @@
 ---
-- name: deploy nginx template 
+- name: assert nginx folder
   sudo: yes
-  template:
-    src: consul.nginx.j2
-    dest: /etc/consul/consul.nginx
-  register:
-    nginx_template
+  file: path=/etc/nginx state=directory
+
   tags:
     - consul
 
-- name: deploy nginx service
+- name: deploy nginx template
   sudo: yes
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: nginx-consul.service.j2
-      dest: /usr/lib/systemd/system/nginx-consul.service
-    - src: nginx-consul.env.j2
-      dest: /etc/default/nginx-consul.env
+  copy:
+    src: consul.nginx
+    dest: /etc/nginx/templates/consul.nginx
   notify:
-    - restart nginx-consul
+    - reload nginx
   tags:
     - consul
 
-- name: install nginx template
-  sudo: yes
-  command: consul-cli kv-write service/nginx/templates/consul @/etc/consul/consul.nginx
-  when: nginx_template.changed
+- name: write nginx config vars to the consul k/v
+  run_once: yes
+  command: >
+    consul-cli kv-write --token={{ consul_acl_secure_token }}
+    "{{ item.path }}" "{{ item.content }}"
+  with_items:
+    - path: secure/consul/nginx/do_ssl
+      content: "{{ do_consul_ssl }}"
+    - path: secure/consul/nginx/do_auth
+      content: "{{ do_consul_auth }}"
   tags:
     - consul
-    
+
 - name: install nginx admin password
   sudo: yes
   run_once: yes
-  command: consul-cli kv-write service/nginx/auth/users/admin '{{ nginx_admin_password_encrypted }}'
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/auth/users/admin '{{ nginx_admin_password_encrypted }}'
   when: nginx_admin_password_encrypted is defined
   tags:
     - consul

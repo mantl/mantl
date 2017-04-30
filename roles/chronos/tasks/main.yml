@@ -1,153 +1,43 @@
 ---
-- name: add mesosphere repository
+- name: check if chronos is already installed
   sudo: yes
-  yum:
-    name:  http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm
-    state: present
+  run_once: yes
+  shell: "consul-cli catalog-service chronos | jq '.|length'"
+  register: chronos_service_count
+  changed_when: false
   tags:
     - chronos
 
-- name: install chronos package
-  sudo: yes
-  yum:
-    name: "{{ chronos_package }}"
-    state: present
+- name: notify that chronos is already installed
+  run_once: yes
+  when: chronos_service_count.stdout|int > 0
+  debug:
+    msg: You already have chronos running in your cluster.
   tags:
     - chronos
 
-- name: wait for zookeeper to listen
-  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
-
-- name: create zookeeper acl
-  sudo: yes
-  command: "{{ chronos_zk_acl_cmd }}"
-  notify:
-    - restart chronos
-  when: zk_chronos_user_secret is defined
-  run_once: true
-  tags:
-    - chronos
-
-- name: create chronos conf directory
-  sudo: yes
-  file:
-    dest: /etc/chronos/conf
-    state: directory
-  tags:
-    - chronos
-
-- include: framework_auth.yml
-
-- name: configure chronos unit file
-  sudo: yes
-  replace:
-    dest: /usr/lib/systemd/system/chronos.service
-    regexp: "=network.target"
-    replace: '=mesos-master.service'
-  notify:
-    - reload chronos
-    - restart chronos
-  tags:
-    - chronos
-
-- name: configure chronos to wait for zookeeper before starting
-  sudo: yes
-  lineinfile:
-    dest: /usr/lib/systemd/system/chronos.service
-    line: "ExecStartPre=/usr/local/bin/zookeeper-wait-for-listen.sh {{ chronos_zk_dns }}"
-    insertbefore: "^ExecStart="
-    state: present
-  notify:
-    - reload chronos
-    - restart chronos
-  tags:
-    - chronos
-
-- name: fix chronos bin file
-  sudo: yes
-  replace:
-    dest: /usr/bin/chronos
-    regexp: '\[\[ -s /etc/mesos/zk \]\]'
-    replace: 'false'
-  notify:
-    - restart chronos
-  tags:
-    - chronos
-
-- name: set key/value options
-  sudo: yes
-  when: item.value != ""
-  copy:
-    dest: /etc/chronos/conf/{{ item.key }}
-    content: "{{ item.value }}"
-  with_items:
-    - key: zk_hosts
-      value: "{{ chronos_zk_connect }}"
-    - key: master
-      value: "{{ chronos_zk_mesos_master }}"
-    - key: hostname
-      value: "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
-    - key: http_port
-      value: "{{ chronos_port }}"
-    - key: mesos_framework_name
-      value: "chronos"
-  notify:
-    - restart chronos
-  tags:
-    - chronos
-
-- name: enable and start chronos
-  sudo: yes
-  service:
-    enabled: yes
-    name: chronos
-    state: started
-  tags:
-    - chronos
-
-- meta: flush_handlers
-
-- include: nginx-proxy.yml
-
-- name: deploy iptables configuration
-  sudo: yes
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: chronos-consul.cfg
-      dest: /etc/consul-template/config.d
-  notify:
-    - reload consul-template
-  tags:
-    - chronos
-
-- name: deploy iptables template
+- name: create chronos application json
   sudo: yes
   template:
-    src: chronos-iptables.tmpl.j2
-    dest: /etc/consul-template/templates/chronos-iptables.tmpl
-  notify:
-    - reload consul-template
+    src: chronos.json.j2
+    dest: /etc/marathon/apps/chronos.json
+  when: chronos_service_count.stdout|int == 0
   tags:
     - chronos
 
-- name: ensure consul.d is present
+- name: install chronos addon
+  sudo: yes
+  run_once: yes
+  command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/chronos @/etc/marathon/apps/chronos.json
+  when: chronos_service_count.stdout|int == 0
+  tags:
+    - chronos
+
+- name: remove chronos application json
   sudo: yes
   file:
-    path: "{{ consul_dir }}"
-    state: directory
+    dest: /etc/marathon/apps/chronos.json
+    state: absent
+  when: chronos_service_count.stdout|int == 0
   tags:
     - chronos
-
-- name: generate chronos consul service
-  sudo: yes
-  template:
-    src: chronos-consul.j2
-    dest: "{{ consul_dir }}/chronos.json"
-  notify:
-    - reload consul
-  tags:
-    - chronos
-
-- include: distributive.yml

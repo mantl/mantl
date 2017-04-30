@@ -1,15 +1,26 @@
 ---
+calico_version: 1.1.1
+
 calico_image: calico/node
-calico_image_tag: v0.9.0
+calico_image_tag: v{{ calico_version }}
 
-bintray_baseurl: "https://bintray.com/artifact/download/zogg"
-calico_binary: "{{ bintray_baseurl }}/calico/calicoctl/calicoctl"
-
-etcd_service_name: etcd.service.{{ consul_dns_domain }}
-etcd_client_port: 2379
-
-calico_etcdaddr: "{{ private_ipv4 }}:{{ etcd_client_port }}"
-
+calico_etcdaddr: "{{ inventory_hostname }}:{{ etcd_client_port }}"
 calico_network: 192.168.0.0/16
-
 calico_profile: dev
+
+# You probably won't need to change the variables after this line.
+
+# This environment is used when etcd_security is False
+calico_env_insecure:
+  ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+
+# This environment is used when etcd_security is True
+calico_env_secure:
+  ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  ETCD_SCHEME: "{{ etcd_url_scheme }}"
+  ETCD_CA_CERT_FILE: "/etc/pki/CA/ca.cert"
+  ETCD_CERT_FILE: "/etc/pki/mantl/cert"
+  ETCD_KEY_FILE: "/etc/pki/mantl/key"
+
+# The environment in which all calico commmands should be run
+calico_env: "{{ (etcd_security|default(True)) | ternary(calico_env_secure, calico_env_insecure) }}"

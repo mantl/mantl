@@ -1,9 +1,0 @@
-{
-    "check": {
-        "id": "distributive-vault-checks",
-        "name": "Distributive vault Health Checks",
-        "script": "/bin/distributive -f /etc/distributive.d/vault.json -d '' --verbosity=info",
-        "interval": "1m",
-        "timeout": "30s"
-    }
-}

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+{{ $marathonPort := key_or_default "secure/marathon/nginx/port" "18080" }}
+{{ $marathonIpTables := eq (toLower (key_or_default "secure/marathon/ip_tables" "false")) "true"}}
+
+iptables -F MARATHON
+iptables -D INPUT -p tcp --dport {{ $marathonPort }} -j MARATHON
+iptables -X MARATHON
+
+iptables -N MARATHON
+
+{{ if not $marathonIpTables }}exit 0 {{ end }}
+
+{{ range service "marathon" "any" }}
+iptables -A MARATHON -p tcp --dport {{ $marathonPort }} -s {{ .Address }} -j ACCEPT
+{{ end }}{{ range service "traefik" "any" }}
+iptables -A MARATHON -p tcp --dport {{ $marathonPort }} -s {{ .Address}} -j ACCEPT
+{{ end }}
+iptables -A MARATHON -p tcp --dport {{ $marathonPort }} -d 127.0.0.1 -j ACCEPT
+iptables -A MARATHON -p tcp --dport {{ $marathonPort }} -i docker0 -j ACCEPT
+iptables -A MARATHON -p tcp --dport {{ $marathonPort }} -j DROP
+
+iptables -A INPUT -p tcp --dport {{ $marathonPort }} -j MARATHON

@@ -1,0 +1,12 @@
+{
+    "checks": [
+        {% for volume in glusterfs_volumes %}
+        {
+            "id": "glusterfs-{{ volume.name }}-mounted",
+            "name": "GlusterFS volume mounted: {{ volume.name }} at {{ volume.mount }}",
+            "script": "mount -l | grep {{ volume.mount }}",
+            "interval": "30s"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ]
+}

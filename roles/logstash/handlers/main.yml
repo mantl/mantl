@@ -29,3 +29,16 @@
     state: restarted
   tags:
     - logstash
+
+- name: reload consul
+  sudo: yes
+  command: systemctl is-active consul && systemctl reload consul
+  failed_when: false
+  tags:
+    - logstash
+
+- name: reload consul-template
+  sudo: yes
+  command: systemctl reload consul-template
+  tags:
+    - logstash

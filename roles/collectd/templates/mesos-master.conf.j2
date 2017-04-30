@@ -1,0 +1,12 @@
+LoadPlugin python
+
+<Plugin "python">
+    ModulePath "/usr/share/collectd/plugins/"
+    Import "mesos-master"
+    <Module "mesos-master">
+        Host "{{ inventory_hostname }}.node.consul"
+        Port 15050
+        Verbose false
+        Version "0.22.1"
+    </Module>
+</Plugin>

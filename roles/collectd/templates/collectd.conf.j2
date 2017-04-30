@@ -19,6 +19,16 @@ LoadPlugin "syslog"
 LoadPlugin "uptime"
 LoadPlugin "users"
 
+<Plugin "cpu">
+  ReportByState true
+  ReportByCpu true
+  ValuesPercentage true
+</Plugin>
+
+<Plugin "memory">
+  ValuesPercentage true
+</Plugin>
+
 <Plugin "df">
   FSType anon_inodefs
   FSType bdev

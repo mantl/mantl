@@ -1,0 +1,104 @@
+---
+# CHECK SECURITY - when customizing you should leave this in. If you
+# take it out and forget to specify security.yml, security could be turned off
+# on components in your cluster!
+- include: "{{ playbook_dir }}/playbooks/check-requirements.yml"
+
+# BASICS - we need every node in the cluster to have common software running to
+# increase stability and enable service discovery. You can look at the
+# documentation for each of these components in their README file in the
+# `roles/` directory, or by checking the online documentation at
+# docs.mantl.io.
+- hosts: all
+  vars:
+    # consul_acl_datacenter should be set to the datacenter you want to control
+    # Consul ACLs. If you only have one datacenter, set it to that or remove
+    # this variable.
+    # consul_acl_datacenter: your_primary_datacenter
+
+    consul_servers_group: role=control
+  roles:
+    - common
+    - certificates
+    - lvm
+    - docker
+    - logrotate
+    - consul-template
+    - nginx
+    - consul
+    - etcd
+    - dnsmasq
+
+# ROLES - after provisioning the software that's common to all hosts, we do
+# specialized hosts. There are 4 built-in roles: control, workers (mesos),
+# kubeworkers (kubernetes), and edge (for external traffic into the cluster).
+
+# The control nodes are necessarily more complex than the worker nodes, and have
+# ZooKeeper, Mesos, and Marathon leaders as well as Kubernetes master
+# components. In addition, they control Vault to manage secrets in the cluster.
+# These servers do not run applications by themselves, they only schedule work.
+# That said, there should be at least 3 of them (and always an odd number) so
+# that ZooKeeper can get and keep a quorum.
+- hosts: role=control
+  gather_facts: yes
+  vars:
+    consul_servers_group: role=control
+    mesos_leaders_group: role=control
+    mesos_mode: leader
+    zookeeper_server_group: role=control
+  roles:
+    - vault
+    - zookeeper
+    - mesos
+    - calico
+    - marathon
+    - mantlui
+    - kubernetes
+    - kubernetes-master
+
+# The worker role itself has a minimal configuration, as it's designed mainly to
+# run software that the Mesos leader shedules. It also forwards traffic to
+# globally known ports configured through Marathon.
+- hosts: role=worker
+  # role=worker hosts are a subset of "all". Since we already gathered facts on
+  # all servers, we can skip it here to speed up the deployment.
+  gather_facts: no
+  vars:
+    mesos_mode: follower
+    zookeeper_server_group: role=control
+  roles:
+    - mesos
+    - calico
+
+# The kubeworker role is similar to the worker role but are intended for
+# Kubernetes workloads.
+- hosts: role=kubeworker
+  gather_facts: yes
+  roles:
+    - calico
+    - kubernetes
+    - kubernetes-node
+
+# The edge role exists solely for routing traffic into the cluster. Firewall
+# settings should be such that web traffic (ports 80 and 443) is exposed to the
+# world.
+- hosts: role=edge
+  gather_facts: yes
+  vars:
+    # this is the domain that traefik will match on to do host-based HTTP
+    # routing. Set it to a domain you control and add a star domain to route
+    # traffic. (EG *.marathon.localhost)
+    #
+    # For those migrating from haproxy, this variable serves the same purpose
+    # and format as `haproxy_domain`.
+    traefik_marathon_domain: marathon.localhost
+  roles:
+    - traefik
+
+# Temporary workaround for https://github.com/mantl/mantl/issues/1922
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+    - name: update json healthchecks
+      replace: dest=/etc/distributive.d/distributive-common.json regexp='python-pip' replace='python2-pip'

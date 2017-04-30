@@ -1,35 +1,23 @@
-FROM centos:7
+FROM alpine:3.3
 
-ENV TERRAFORM_VERSION 0.5.3
-ENV TERRAFORM_STATE_ROOT /state
+RUN apk add --no-cache bash build-base curl git libffi-dev openssh openssl-dev py-pip python python-dev unzip \
+	&& git clone https://github.com/mantl/mantl /mantl \
+	&& pip install -r /mantl/requirements.txt \
+	&& apk del build-base python-dev py-pip
 
+VOLUME /local
+ENV MANTL_CONFIG_DIR /local
+
+VOLUME /root/.ssh
+
+ENV TERRAFORM_VERSION 0.7.0
 RUN mkdir -p /tmp/terraform/ && \
     cd /tmp/terraform/ && \
-    curl -SLO https://dl.bintray.com/mitchellh/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    curl -SLO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     cd /usr/local/bin/ && \
-    yum install -y unzip && \
     unzip /tmp/terraform/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    rm -rf /tmp/terraform/ && \
-    yum remove -y unzip && \
-    yum -y clean all
+    rm -rf /tmp/terraform/
+ENV TERRAFORM_STATE $MANTL_CONFIG_DIR/terraform.tfstate
 
-# install all dependencies
-COPY requirements.txt /mi/
-RUN yum install -y epel-release
-RUN yum install -y python-pip python-crypto openssl openssh-clients && \
-    pip install -U -r /mi/requirements.txt
-
-# load microservices-infrastructure and default setup
-COPY . /mi/
-
-# load user custom setup
-ONBUILD COPY ssl/ /mi/ssl/
-ONBUILD COPY security.yml /mi/security.yml
-ONBUILD COPY terraform.yml /mi/terraform.yml
-ONBUILD COPY *.tf /mi/
-
-RUN mkdir -p /state
-VOLUME /state /ssh
-
-WORKDIR /mi
-CMD ["/mi/docker_launch.sh"]
+WORKDIR /mantl
+ENTRYPOINT ["/usr/bin/ssh-agent", "-t", "3600", "/bin/sh", "-c"]

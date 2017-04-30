@@ -1,0 +1,62 @@
+# Where do we get docker packages from?
+# values are redhat or docker
+docker_package_source: docker
+
+docker_package: '{% if docker_package_source == "docker" %}docker-engine{% else %}docker{% endif %}'
+
+# inversion of docker_package for upgrade/transition code path
+docker_package_to_remove: '{% if docker_package_source == "docker" %}docker{% else %}docker-engine{% endif %}'
+
+# Install the docker_gc package (prunes docker containers, images, and volumes)
+docker_gc_install: true
+
+do_private_docker_registry: false
+docker_lvm_backed: "{% if provider in ['gce', 'openstack', 'aws'] %}True{% else %}False{% endif %}"
+
+# Docker log options: See https://docs.docker.com/engine/admin/logging/overview/
+docker_log_driver: journald
+
+# Docker options
+docker_selinux_enabled: false
+docker_options:
+  - "--dns {{ private_ipv4 }}"
+  - "--log-driver={{ docker_log_driver }}"
+  - "--disable-legacy-registry"
+  - "{% if docker_selinux_enabled %}--selinux-enabled{% endif %}"
+  - "{% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %}"
+
+docker_tcp: false
+docker_tcp_tls: "{{ docker_tcp }}"
+
+# Docker network options can be provided as a list
+docker_network_options:
+  - "-H unix:///var/run/docker.sock"
+  - "--icc=false" # disable inter-container networking
+  - "{% if docker_tcp %}-H tcp://0.0.0.0:2375{% endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlsverify{% endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlscacert=/etc/pki/CA/ca.cert{%- endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlscert={{ host_cert }}{%- endif %}"
+  - "{% if docker_tcp and docker_tcp_tls %}--tlskey={{ host_key }}{%- endif %}"
+
+# Possible values: overlay (default), devicemapper, btrfs (unsupported)
+# Used with docker-storage-setup
+docker_storage_driver: overlay
+
+## Settings for devicemapper thinprovider (docker-storage-setup)
+## These are not used for overlay on lvm
+## Refer to commentaries in ../templates/docker-storage-setup.conf.j2
+## or `man lvcreate` for acceptable sizes, and their syntax
+docker_lvm_data_volume_size: 40%FREE
+docker_lvm_data_volume_size_min: 2G
+
+docker_lvm_auto_extend_pool: yes
+
+# Settings for Overlayfs/Btrfs
+docker_volume_name: docker
+
+# Just propagate same size that thinprovider use
+docker_volume_size: "{{ docker_lvm_data_volume_size }}"
+docker_volume_mount: /var/lib/docker
+docker_volume_device: "/dev/{{ volume_group_name }}/{{ docker_volume_name }}"
+docker_volume_fs_type: "{% if docker_storage_driver == 'btrfs' %}btrfs{% else %}xfs{% endif %}"
+docker_volume_fs_opts: "{% if docker_volume_fs_type == 'xfs' %}-i size=512{% endif %}"

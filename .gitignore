@@ -2,10 +2,34 @@ docs/_build
 *.pyc
 .vagrant
 security.yml
+
+# TLS certificates
 ssl/**/*.pem
-ssl/index.txt*
-ssl/serial*
+ssl/.rnd
+ssl/kubernetes
+
+# ansible
+*.retry
 
 # terraform
+/*.tf
 **/*.tfstate*
 **/.terraform
+
+# downloaded by playbook
+addons/library/
+library/lvg.py
+
+# vagrant build customizations
+vagrant-config.yml
+
+# packer directories
+builds/
+packer_cache/
+
+# account files
+account.json
+# annoying osx files
+.DS_Store
+
+.idea/

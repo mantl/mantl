@@ -1,26 +1,13 @@
 ---
-- name: enable community repo
-  sudo: yes
-  get_url:
-    url: https://download.gluster.org/pub/gluster/glusterfs/{{ glusterfs_minor_version }}/{{ glusterfs_version }}/CentOS/glusterfs-epel.repo
-    dest: /etc/yum.repos.d/glusterfs-epel.repo
-    sha256sum: "{{ glusterfs_repo_sha256sum }}"
-  tags:
-    - glusterfs
-
-- name: install packages
+- name: install glusterfs repo package
   sudo: yes
   yum:
-    name: "{{ item }}"
+    name: "{{ glusterfs_repo_package }}"
     state: present
-  with_items:
-    - glusterfs
-    - glusterfs-fuse
   tags:
     - glusterfs
 
 - include: server.yml
-  when: glusterfs_mode == "server" and glusterfs_brick_device != ""
+  when: glusterfs_mode == "server"
 
 - include: client.yml
-  when: glusterfs_brick_device != ""

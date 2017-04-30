@@ -2,8 +2,7 @@
 - name: add calico ip-ip pool if required
   sudo: yes
   shell: calicoctl pool add "{{ calico_network }}" --ipip --nat-outgoing
-  environment:
-    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  environment: "{{ calico_env }}"
   run_once: True
   when: provider != 'openstack'
   tags:
@@ -12,8 +11,7 @@
 - name: check if calico profile already exists
   sudo: yes
   shell: calicoctl profile show|grep -w "{{ calico_profile }}"
-  environment:
-    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  environment: "{{ calico_env }}"
   register: check_result
   changed_when: False
   failed_when: check_result.stderr
@@ -24,8 +22,7 @@
 - name: create calico profile
   sudo: yes
   shell: calicoctl profile add "{{ calico_profile }}"
-  environment:
-    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  environment: "{{ calico_env }}"
   when: check_result.stdout == ""
   run_once: True
   tags:

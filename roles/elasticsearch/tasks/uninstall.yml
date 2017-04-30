@@ -1,0 +1,27 @@
+---
+- name: discover mantl-api url
+  sudo: no
+  run_once: yes
+  register: mantl_api_url
+  shell: consul-cli catalog-service mantl-api | jq -r '.[0] | .ServiceAddress + ":" + (.ServicePort|tostring)'
+  tags:
+    - elasticsearch
+
+- name: remove packages
+  sudo: no
+  run_once: yes
+  shell: "curl -XDELETE -d '{\"name\": \"{{ item|quote }}\"}' http://{{ mantl_api_url.stdout }}/1/install"
+  with_items:
+    - elasticsearch-client
+    - elasticsearch
+  tags:
+    - elasticsearch
+
+- name: remove elasticsearch data
+  sudo: yes
+  file: 
+    path: /var/lib/mesos/slave/elasticsearch/{{ elasticsearch_cluster_name }}
+    state: absent
+  when: elasticsearch_remove_data
+  tags:
+    - elasticsearch

@@ -1,3 +1,5 @@
+# WARNING: This module has been deprecated as of Mantl 1.0
+
 variable auth_url {}
 variable tenant_id {}
 variable tenant_name {}

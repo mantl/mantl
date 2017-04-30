@@ -1,6 +1,16 @@
 ---
+- name: wait for zookeeper service to be registered
+  wait_for:
+    host: "{{ marathon_zk_dns }}"
+    port: "{{ marathon_zk_port }}"
+    delay: 10
+    timeout: 300
+    state: present
+  tags:
+    - marathon
+
 - name: wait for zookeeper to listen
-  command: "/usr/local/bin/zookeeper-wait-for-listen.sh {{ inventory_hostname }}"
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh localhost"
 
 - name: create zookeeper acl
   sudo: yes
@@ -9,14 +19,30 @@
     - restart marathon
   when: zk_marathon_user_secret is defined
   run_once: true
+  register: zk_acl_marathon
+  until: zk_acl_marathon.rc == 0
+  retries: 5
+  delay: 10
   tags:
     - marathon
 
-- name: create marathon conf directory
+- name: write marathon config file
+  sudo: yes
+  template:
+    src: marathon.sysconfig.j2
+    dest: /etc/sysconfig/marathon
+    mode: 0600
+  notify:
+    - restart marathon
+  tags:
+    - marathon
+
+- name: create marathon directory
   sudo: yes
   file:
-    dest: /etc/marathon/conf
+    dest: /etc/marathon
     state: directory
+    mode: 0755
   tags:
     - marathon
 
@@ -25,34 +51,20 @@
   file:
     dest: /etc/marathon/store
     state: directory
+    mode: 0600
+  tags:
+    - marathon
+
+- name: create marathon apps directory
+  sudo: yes
+  file:
+    dest: /etc/marathon/apps
+    state: directory
+    mode: 0600
   tags:
     - marathon
 
 - include: framework_auth.yml
-
-- name: set key/value options
-  sudo: yes
-  when: item.value != ""
-  copy:
-    dest: /etc/marathon/conf/{{ item.key }}
-    content: "{{ item.value }}"
-  with_items:
-    - key: zk
-      value: "{{ marathon_zk_connect }}"
-    - key: ssl_keystore_password
-      value: "{{ marathon_keystore_password }}"
-    - key: http_port
-      value: 18080
-    - key: event_subscriber
-      value: http_callback
-    - key: hostname
-      value: "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
-    - key: artifact_store
-      value: "file:///etc/marathon/store"
-  notify:
-    - restart marathon
-  tags:
-    - marathon
 
 - name: check keystore consistency
   fail: msg="cannot set keystore path without keystore password"
@@ -63,51 +75,8 @@
   sudo: yes
   copy:
     src: "{{ marathon_keystore_path }}"
-    dest: /etc/marathon/keystore.jks
+    dest: /etc/sysconfig/marathon-keystore.jks
   notify:
     - restart marathon
   tags:
     - marathon
-
-- name: create marathon_keystore_path
-  when: marathon_keystore_path != ""
-  sudo: yes
-  copy:
-    dest: /etc/marathon/conf/ssl_keystore_path
-    content: /etc/marathon/keystore.jks
-  notify:
-    - restart marathon
-  tags:
-    - marathon
-
-# since the Mesosphere Marathon package configures itself with files
-# in a directory, we need to clean up old options when they become
-# unset.
-- name: remove blank options
-  sudo: yes
-  when: item.value == ""
-  file:
-    dest: /etc/marathon/conf/{{ item.key }}
-    state: absent
-    mode: 0700
-  with_items:
-    - key: http_credentials
-      value: "{{ marathon_http_credentials }}"
-    - key: ssl_keystore_password
-      value: "{{ marathon_keystore_password }}"
-    - key: ssl_keystore_path
-      value: "{{ marathon_keystore_path }}"
-  notify:
-    - restart marathon
-  tags:
-    - marathon
-
-- name: remove ssl keystore
-  when: marathon_keystore_path == ""
-  sudo: yes
-  file:
-    dest: /etc/marathon/keystore.jks
-    state: absent
-  tags:
-    - marathon
-

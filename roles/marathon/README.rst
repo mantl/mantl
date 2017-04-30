@@ -85,3 +85,39 @@ Variables
    <https://github.com/CiscoCloud/marathon-consul>`_ bridge
 
    Default: ``latest``
+
+.. data:: marathon_logging_level
+
+   Log level for Marathon
+
+   Default: ``warn``
+
+.. data:: mantl_api_image
+
+   The mantl-api docker image.
+
+   Default: ``ciscocloud/mantl-api``
+
+.. data:: mantl_api_image_tag
+
+   The tag for the mantl-api docker image.
+
+   Default: ``0.2.2``
+
+.. data:: mantl_api_config_url
+
+   The url for a custom mantl-api configuration file. This url must be
+   accessible from your cluster nodes. The file will be downloaded into the
+   Mesos sandbox for the mantl-api task.
+
+   Default: ""
+
+.. data:: mantl_api_config_file
+
+   The path to the config file for mantl-api to read. This should be based on
+   the file name of the ``mantl_api_config_url`` variable above. For example, if
+   you set ``mantl_api_config_url`` to
+   ``http://somebucket.s3.amazonaws.com/mantl-api/config.toml``, you would want
+   to set ``mantl_api_config_file`` to ``$MESOS_SANDBOX/config.toml``.
+
+   Default: ""

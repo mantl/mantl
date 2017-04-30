@@ -1,39 +1,15 @@
-microservices-infrastructure documentation
+Mantl documentation
 ==========================================
 
 .. image:: /_static/gitter.svg
-   :alt: Join the chat at https://gitter.im/CiscoCloud/microservices-infrastructure
-   :target: https://gitter.im/CiscoCloud/microservices-infrastructure
+   :alt: Join the chat at https://gitter.im/CiscoCloud/mantl
+   :target: https://gitter.im/CiscoCloud/mantl
 
-.. image:: https://badge.waffle.io/CiscoCloud/microservices-infrastructure.png?label=ready&title=Ready
-   :alt: Stories in Ready
-   :target: https://waffle.io/CiscoCloud/microservices-infrastructure
 
-microservices-infrastructure is a modern platform for rapidly deploying globally
-distributed services.
-
-Features
---------
-
-* `Terraform <https://terraform.io/>`_ deployment to multiple cloud and DNS providers
-* `etcd <https://github.com/coreos/etcd>`_ distributed key-value store for Calico
-* `Calico <http://www.projectcalico.org>`_ a new kind of virtual network
-* `Mesos <https://mesos.apache.org/>`_ cluster manager for efficient resource
-  isolation and sharing across distributed services
-* `Marathon <https://mesosphere.github.io/marathon/>`_ for cluster management of
-  long running containerized services
-* `Consul <http://consul.io>`_ for service discovery
-* `Vault <http://vaultproject.io>`_ for managing secrets
-* `Docker <http://docker.io>`_ container runtime
-* `collectd <https://collectd.org/>`_ for metrics collection
-* `Logstash <https://github.com/elastic/logstash>`_ for log forwarding
-* `mesos-consul <https://github.com/CiscoCloud/mesos-consul>`_ populating Consul
-  service discovery with Mesos tasks
-* `marathon-consul <https://github.com/CiscoCloud/marathon-consul>`_ update
-  consul k/v with Marathon tasks
-* Multi-datacenter support
-* High availablity
-* Security
+Mantl is a modern platform for rapidly deploying globally distributed services.
+Please see `the README
+<https://github.com/CiscoCloud/mantl/blob/master/README.md>`_ for a high level
+overview.
 
 Contents:
 
@@ -42,13 +18,16 @@ Contents:
 
    getting_started/index.rst
    components/index.rst
+   addons.rst
    security/index.rst
+   upgrading/index.rst
    packer.rst
-   changelog.rst
-   roadmap.rst
+   faq.rst
    license.rst
 
-.. only:: html 
+* `Changelog <https://github.com/CiscoCloud/mantl/blob/master/CHANGELOG.md>`_
+
+.. only:: html
 
    Indices and Tables
    ******************

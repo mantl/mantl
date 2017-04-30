@@ -1,49 +1,37 @@
 ---
+- name: create nginx configuration directories
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/templates
+  tags:
+    - mesos
+
 - name: copy nginx configuration
   sudo: yes
-  template:
-    src: mesos-leader.nginx.j2
-    dest: /etc/mesos-leader.nginx
+  copy:
+    src: mesos-leader.nginx
+    dest: /etc/nginx/templates/mesos-leader.nginx
+  notify:
+    - reload nginx
   tags:
     - mesos
 
 - name: configure nginx
+  run_once: yes
   sudo: yes
-  command: consul-cli kv-write service/nginx/templates/mesos-leader @/etc/mesos-leader.nginx
-  tags:
-    - mesos
-
-- name: ensure nginx-consul docker image is present
-  sudo: yes
-  command: /usr/bin/docker pull {{ consul_nginx_image }}:{{ consul_nginx_image_tag }}
-  tags:
-    - marathon
-    - bootstrap
-
-- name: configure nginx-mesos-leader
-  sudo: yes
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} "{{ item.path }}" "{{ item.value }}"
   with_items:
-    - src: nginx-mesos-leader.service.j2
-      dest: /usr/lib/systemd/system/nginx-mesos-leader.service
-    - src: nginx-mesos-leader.env.j2
-      dest: /etc/default/nginx-mesos-leader.env
-  notify:
-    - reload nginx-mesos-leader
-    - restart nginx-mesos-leader
-  tags:
-    - mesos
-
-
-- name: enable nginx-mesos-leader
-  sudo: yes
-  service:
-    name: nginx-mesos-leader
-    enabled: yes
-    state: started
-  notify:
-    - restart nginx-mesos-leader
+    - path: secure/mesos/nginx/do_ssl
+      value: "{{ do_mesos_ssl }}"
+    - path: secure/mesos/nginx/do_auth
+      value: "{{ do_mesos_auth }}"
+    - path: secure/mesos/leader/port
+      value: "{{ mesos_leader_port }}"
+    - path: secure/mesos/leader/proxy_port
+      value: "{{ mesos_leader_proxy_port }}"
   tags:
     - mesos

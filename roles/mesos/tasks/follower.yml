@@ -1,28 +1,19 @@
 ---
-- name: disable mesos leader
+- name: install follower configuration
   sudo: yes
-  service:
-    name: mesos-master
-    enabled: no
-  when: mesos_mode == "follower"
+  yum:
+    name: "{{ mesos_agent_package }}"
+    state: present
   tags:
     - mesos
+    - bootstrap
 
-- name: set containerizers
+- name: configure mesos-agent
   sudo: yes
-  copy:
-    content: "docker,mesos"
-    dest: /etc/mesos-slave/containerizers
-  notify: restart mesos follower
-  tags:
-    - mesos
-
-- name: set ip
-  sudo: yes
-  copy:
-    content: "{{ private_ipv4 }}"
-    dest: /etc/mesos-slave/ip
-  notify: restart mesos follower
+  template:
+    src: mesos-agent.sysconfig.j2
+    dest: /etc/sysconfig/mesos-agent
+  notify: remove mesos follower metadata
   tags:
     - mesos
 
@@ -30,7 +21,7 @@
   when: do_mesos_follower_auth|bool
   sudo: yes
   copy:
-    dest: /etc/mesos/follower-credential
+    dest: /etc/sysconfig/mesos-agent-credential
     content: "{{ mesos_follower_principal }} {{ mesos_follower_secret }}"
     mode: 0600
   notify: restart mesos follower
@@ -41,76 +32,27 @@
   when: not do_mesos_follower_auth|bool
   sudo: yes
   file:
-    dest: /etc/mesos/follower-credential
+    dest: /etc/sysconfig/mesos-agent-credential
     state: absent
   notify: restart mesos follower
   tags:
     - mesos
 
-- name: enable credential option
-  when: do_mesos_follower_auth|bool
-  sudo: yes
-  copy:
-    dest: /etc/mesos-slave/credential
-    content: /etc/mesos/follower-credential
-  notify: restart mesos follower
-  tags:
-    - mesos
-
-- name: disable credential option
-  when: not do_mesos_follower_auth|bool
-  sudo: yes
-  file:
-    dest: /etc/mesos-slave/credential
-    state: absent
-  notify: restart mesos follower
-  tags:
-    - mesos
-
-- name: set executor registration timeout
-  sudo: yes
-  copy:
-    dest: /etc/mesos-slave/executor_registration_timeout
-    content: "{{ mesos_executor_registration_timeout }}"
-  notify: restart mesos follower
-  tags:
-    - mesos
-
-- name: set follower resources
-  sudo: yes
-  copy:
-    dest: /etc/mesos-slave/resources
-    content: "{{ mesos_resources }}"
-  notify: remove mesos follower metadata
-  tags:
-    - mesos
-
-- name: set follower node id
-  sudo: yes
-  copy:
-    dest: /etc/mesos-slave/attributes
-    content: "node_id:{{ inventory_hostname }}"
-  notify: remove mesos follower metadata
-  tags:
-    - mesos
-
-- name: install collectd mesos-slave plugin
-  sudo: yes
-  copy:
-    src: mesos-slave.py
-    dest: /usr/share/collectd/plugins
-    mode: u=r
-  tags:
-    - mesos
-    - collectd
-
-- name: configure collectd mesos-slave plugin
+- name: write mantl-api credential
+  when: do_mesos_framework_auth|bool
   sudo: yes
   template:
-    src: mesos-slave.conf.j2
-    dest: /etc/collectd.d/mesos-slave.conf
-  notify:
-    - restart collectd
+    src: mantl-api-credential.j2
+    dest: /etc/sysconfig/mantl-api
+    mode: 0600
   tags:
     - mesos
-    - collectd
+
+- name: delete mantl-api credential
+  when: not do_mesos_framework_auth|bool
+  sudo: yes
+  file:
+    dest: /etc/sysconfig/mantl-api
+    state: absent
+  tags:
+    - mesos

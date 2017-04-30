@@ -1,0 +1,68 @@
+# Specify storage driver one wants to use with docker. Default is devicemapper.
+# Other possible options are overlay and "". Empty string means do not do
+# any storage setup.
+#
+STORAGE_DRIVER="{{ docker_storage_driver }}"
+
+# A quoted, space-separated list of devices to be used.  This currently
+# expects the devices to be unpartitioned drives.  If "VG" is not specified,
+# then use of the root disk's extra space is implied.
+#
+# DEVS=/dev/vdb
+
+# The volume group to use for docker storage.  Defaults to the
+# volume group where the root filesystem resides.  If VG is specified and the
+# volume group does not exist, it will be created (which requires that "DEVS"
+# be nonempty, since we don't currently support putting a second partition on
+# the root disk).
+#
+VG="{{ volume_group_name }}"
+
+# The size to which the root filesystem should be grown.
+# Value should be acceptable to -L option of lvextend.
+#
+# ROOT_SIZE=8G
+
+# The desired size for the docker data LV.  It defaults using 60% of all
+# free space.
+#
+# DATA_SIZE can take values acceptable to "lvcreate -L" as well as some
+# values acceptable to to "lvcreate -l". If user intends to pass values
+# acceptable to "lvcreate -l", then only those values which contains "%"
+# in syntax are acceptable.  If value does not contain "%" it is assumed
+# value is suitable for "lvcreate -L".
+#
+DATA_SIZE="{{ docker_lvm_data_volume_size }}"
+
+# MIN_DATA_SIZE specifies the minimum size of data volume otherwise pool
+# creation fails.
+#
+# Value should be a number followed by a optional suffix. "bBsSkKmMgGtTpPeE"
+# are valid suffixes. If no suffix is specified then value will be considered
+# as mebibyte unit.
+#
+# Both upper and lower case suffix represent same unit of size. Use suffix B
+# for Bytes, S for sectors as 512 bytes, K for kibibytes (1024 bytes), M for
+# mebibytes (1024 kibibytes), G for gibibytes, T for tebibytes, P for
+# pebibytes and E for exbibytes.
+#
+MIN_DATA_SIZE="{{ docker_lvm_data_volume_size_min }}"
+
+# Controls the chunk size/block size of thin pool. Value of CHUNK_SIZE
+# be suitable to be passed to --chunk-size option of lvconvert.
+#
+CHUNK_SIZE=512K
+
+# Enable resizing partition table backing root volume group. By default it
+# is disabled until and unless GROWPART=true is specified.
+#
+GROWPART=false
+
+# Enable/disable automatic pool extension using lvm
+AUTO_EXTEND_POOL="{{ docker_lvm_auto_extend_pool }}"
+
+# Auto pool extension threshold (in % of pool size)
+POOL_AUTOEXTEND_THRESHOLD=60
+
+# Extend the pool by specified percentage when threshold is hit.
+POOL_AUTOEXTEND_PERCENT=20

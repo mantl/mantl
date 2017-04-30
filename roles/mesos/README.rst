@@ -10,10 +10,10 @@ can basically think of it as a distributed init system.
 Modes
 -----
 
-Marathon can be run in one of two "modes":
+Mesos can be run in one of two "modes":
 
  - A server mode (called "master" or "leader")
- - A client mode (called "slave" or "follower")
+ - A client mode (called "follower" or "agent". The term "slave" is used but deprecated.)
 
 This project prefers the "leader/follower nomenclature". In addition to the
 "official" modes described below, :data:`mesos_mode` supports running both modes
@@ -35,6 +35,18 @@ Follower nodes need to know where the leaders are, and there can be any number
 of them. You should keep the follower machines free of "heavier" services
 running outside Mesos, as this will cause inaccurate resource availability
 counts in the cluster.
+
+Upgrading
+---------
+
+.. versionadded:: 1.0
+
+If you are running Mantl 0.5.1, you'll need to run the
+``playbooks/upgrade-mesos-marathon.yml`` playbook before reprovisioning your
+cluster to 1.0. The packaging format changed in the 1.0 release, this will
+ensure a smooth upgrade.
+
+Upgrades from releases prior to Mantl 0.5.1 have not been tested.
 
 Variables
 ---------
@@ -73,19 +85,45 @@ You can use these variables to customize your Mesos installation.
 
    default: ``mesos-slave``
 
+.. data:: mesos_isolation
+
+   The isolation level for tasks using the `Mesos containerizer
+   <http://mesos.apache.org/documentation/latest/mesos-containerizer/>`_. See
+   the `Mesos Configuration documentation
+   <http://mesos.apache.org/documentation/latest/configuration/>`_ for more
+   information. If you wish to disable enforcement of cpu and memory resource
+   limits for tasks, set this to ``posix/cpu,posix/mem``.
+
+   default: ``cgroups/cpu,cgroups/mem``
+
+.. data:: mesos_attributes
+   Set attributes for mesos agents.
+   Provide these as a list to set multiple attributes. Format:
+   `` - "key:value"
+      - "key:value"``
+
+   default: ``node_id:{{ inventory_hostname }}``
+
 .. data:: mesos_resources
 
-   Set resources for follower nodes. (useful for setting available ports that
-   applications can be bound to) Format:
-   ``name(role):value;name(role):value...``
+   Set resources for mesos agents. (useful for setting available ports that
+   applications can be bound to). Provide these as a list to set multiple resources. Format:
+   ``- name(role):value
+     - name(role):value...``
 
-   default: ``ports(*):[4000-5000, 31000-32000]``
+   default: ``ports(*):[4000-5000, 7000-8000, 9000-10000, 25000-26000, 31000-32000]``
 
 .. data:: mesos_cluster
 
-   default: ``cluster1``
+   default: ``mantl``
+
+.. data:: mesos_zk_hosts
+   
+   A ZooKeeper connection string in the the ``host:mesos_zk_port`` format, generated from the hosts in ``zookeeper_server_group``. 
 
 .. data:: mesos_zk_dns
+
+   Consul DNS entries for ZooKeeper hosts.  
 
    default: ``zookeeper.service.consul``
 
@@ -94,6 +132,8 @@ You can use these variables to customize your Mesos installation.
    default: ``2181``
 
 .. data:: mesos_zk_chroot
+
+   ZooKeeper znode to use as a base for mesos data.
 
    default: ``mesos``
 
@@ -129,3 +169,9 @@ You can use these variables to customize your Mesos installation.
    The secret to use for follower authentication
 
    default: not set. Set this to enable follower authentication.
+
+.. data:: mesos_logging_level
+
+   The log level for Mesos. This is set for all components.
+
+   Default: ``WARNING``

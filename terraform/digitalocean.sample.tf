@@ -1,28 +1,52 @@
+# All of your resources will be prefixed by this name
+variable "name" { default = "mantl" }
+variable "region" { default = "nyc3" } # Must have metadata support
+
 provider "digitalocean" {
   token = ""
 }
 
 module "do-keypair" {
-	source = "./terraform/digitalocean/keypair"
+  name = "${var.name}"
+  source = "./terraform/digitalocean/keypair"
   public_key_filename = "~/.ssh/id_rsa.pub"
 }
 
-module "do-hosts" {
-  source = "./terraform/digitalocean/hosts"
-  ssh_key = "${module.do-keypair.keypair_id}"
+module "control-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
 
-  region_name = "nyc3" # this must be a region with metadata support
-  control_count = 3
-  worker_count = 3
+  role = "control"
+  count = "3"
 }
 
-# Example setup for DNS with dnsimple;
-# module "dnsimple-dns" {
-#   source = "./terraform/dnsimple/dns"
-#   short_name = "mi"
-#   control_count = 3
-#   worker_count = 3
-#   domain = "example.com"
-#   control_ips = "${module.do-hosts.control_ips}"
-#   worker_ips = "${module.do-hosts.worker_ips}"
-# }
+module "worker-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
+
+  role = "worker"
+}
+
+module "kubeworker-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
+
+  role = "kubeworker"
+}
+
+module "edge-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
+
+  role = "edge"
+  count = "1"
+  size = "2gb"
+}

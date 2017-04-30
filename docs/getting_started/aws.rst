@@ -1,28 +1,54 @@
 Amazon Web Services
 =====================
 
-.. versionadded:: 0.3
+.. versionadded:: 1.0 multi-az support and terraform modularization
 
-As of microservices-infrastructure 0.3 you can bring up Amazon Web Services
-environments using Terraform. microservices-infrastructure uses Terraform to
-provision hosts in OpenStack. You can `download Terraform from terraform.io
-<http://www.terraform.io/downloads.html>`_.
+As of Mantl 0.3 you can bring up Amazon Web Services
+environments using Terraform. You can `download Terraform from terraform.io
+<https://www.terraform.io/downloads.html>`_.
 
 Configuring Amazon Web Services for Terraform
 -----------------------------------------------
 
 Before we can build any servers using Terraform and Ansible, we need to
 configure authentication. We'll be filling in the authentication variables for
-the template located at ``terraform/aws.sample.tf``. It looks like this:
+the template located at ``terraform/aws.sample.tf``. The beginning of it looks like this:
 
-.. this is highlighted as javascript for convenience, but obviously that's not
-   the *real* language.
-.. literalinclude:: ../../terraform/aws.sample.tf
-   :language: javascript
+.. code-block:: json
 
-Copy that file in it's entirety to the root of the project to start
+  variable "control_count" { default = 3 }
+  variable "worker_count" { default = 2 }
+  variable "edge_count" { default = 2 }
+  variable "datacenter" {default = "aws-us-west-2"}
+  variable "region" {default = "us-west-2"}
+  variable "short_name" {default = "mantl"}
+  variable "source_ami" {default ="ami-d440a6e7"}
+  variable "ssh_username" {default = "centos"}
+
+  provider "aws" {
+    access_key = ""
+    secret_key = ""
+    region = "${var.region}"
+  }
+
+
+Copy that *file* in it's entirety to the root of the project as ``aws.tf`` to start
 customization. In the next sections, we'll describe the settings that you need
 to configure.
+
+Do not copy the text contents above into a file, if you do not have the terraform/aws.sample.tf file, you need to clone the mantl repository.
+
+Please note, newer versions of this file do not have "access_key" or "secret_key" lines, we automatically find your AWS credentials from amazon's new "AWS Credentials file" standard.
+
+Store your credentials like below in a file called ``~/.aws/credentials`` on Linux/Mac, or ``%USERPROFILE%\.aws\credentials`` on Windows.
+
+.. code-block:: json
+
+  [default]
+  aws_access_key_id = ACCESS_KEY
+  aws_secret_access_key = SECRET_KEY
+
+If you do not have an AWS access key ID and secret key, then follow the "Creating an IAM user" section below. If you already have working AWS credentials, you can skip this step.
 
 Creating an IAM User
 ^^^^^^^^^^^^^^^^^^^^^
@@ -31,7 +57,7 @@ Before running Terraform, we need to supply it with valid AWS credentials. While
 you could use the credentials for your AWS root account, it is `not recommended
 <http://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html>`_.
 In this section, we'll cover creating an `IAM User
-<http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html>`_
+<http://docs.aws.amazon.com/IAM/latest/UserGuide/id.html>`_
 that has the necessary permissions to build your cluster with Terraform.
 
 .. note:: You'll need to have an existing AWS account with sufficient IAM
@@ -50,9 +76,9 @@ Next, navigate to the "Users" screen and click the "Create New Users" button.
    :alt: Create IAM User
 
 You will be given the opportunity to create 5 different users on the next
-screen. For our purposes, we are just going to create one:
-"microservices-infrastructure". Make sure that you leave the "Generate an access
-key for each user" option checked and click the "Create" button.
+screen. For our purposes, we are just going to create one: "mantl". Make sure
+that you leave the "Generate an access key for each user" option checked and
+click the "Create" button.
 
 .. image:: /_static/aws_iam_create_user.png
    :alt: IAM Create User
@@ -92,6 +118,12 @@ your cluster with Terraform.
           provision a cluster, you can see the custom policy included at the
           bottom of this document.
 
+.. note:: If you want to manage DNS with Route 53, you will need to attach a
+          Route 53 policy as well.
+
+.. image:: /_static/aws_iam_attach_route53_policy.png
+   :alt: IAM User attach route 53 policy
+
 Provider Settings
 ^^^^^^^^^^^^^^^^^^
 
@@ -99,7 +131,9 @@ Provider Settings
 Terraform to interact with resources in your AWS account. AWS credentials can be
 retrieved when creating a new account or IAM user. New keys can be generated and
 retrieved by managing Access Keys in the IAM Web Console. If you don't want to
-commit these values in a file, you can source them from the environment instead:
+commit these values in the Terraform template, you can add them to your `~/.aws/credentials
+<https://blogs.aws.amazon.com/security/post/Tx3D6U6WSFGOK2H/A-New-and-Standardized-Way-to-Manage-Credentials-in-the-AWS-SDKs>`_
+file or source them from the environment instead:
 
 .. envvar:: AWS_ACCESS_KEY_ID
 
@@ -125,10 +159,18 @@ where your cluster will be provisioned. As an alternative to specifying
 
 Basic Settings
 ^^^^^^^^^^^^^^^
+``short_name`` is appended to the name tag and dns (if used) of each of the nodes to help better identify them.
+If you are planning to deploy multiple mantl clusters into the same AWS account, you'll need to change this
+(otherwise AWS items like ssh key names will conflict and the second ```terraform plan``` will fail)
 
-``availability_zone`` is the name of the `availability zone
+* The defaults for the below settings will work out of the box in amazons US-WEST-1 Datacenter, change them if you don't want these defaults, or if you want larger VM's for each of the Mantl nodes *
+
+``region`` is the name of the `region
 <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html>`_
-within the ``region`` where your cluster resources will be provisioned.
+where your cluster resources will be provisioned. As long as your control, worker and edge count is
+greater than 1, your nodes will be spread across the availability zones in your ``region``.
+
+``availability_zones`` are the availability zones in your region that you want to deploy your EC2 instances to.
 
 ``source_ami`` is the EC2 AMI to use for your cluster instances. This must be an
 AMI id that is available in the ``region`` your specified.
@@ -137,19 +179,93 @@ AMI id that is available in the ``region`` your specified.
 This value will be dependent on the ``source_ami`` that you use. Common values
 are ``centos`` or ``ec2-user``.
 
-``control_type`` and ``worker_type`` are used to specify the EC2 instance type
+``datacenter`` is a name to identify your datacenter, this is important if you have more than one datacenter.
+
+``control_count``, ``edge_count`` and ``worker_count`` are the number of EC2 instances that will get deployed for each node type.
+
+``control_type``, ``edge_type`` and ``worker_type`` are used to specify the `EC2 instance type <https://aws.amazon.com/ec2/instance-types/>`_
 for your control nodes and worker nodes and they must be compatible with the
-``source_ami`` you have specified.
+``source_ami`` you have specified. The default EC2 instance type is an m3.medium.
+
+Security Setup
+^^^^^^^^^^^^^^
+
+Mantl doesn't ship with default passwords or ceritificates. For security, we have provided a script to generate
+all the security configuration for your deployment.
+
+Please run ``./security_setup`` from the base of the mantl repository.
+This will generate cetificates and other security tokens needed for the mantl deployment, as well as prompting you for a mantl admin password.
+
+If you get an 'Import' error when running security setup, your local machine lacks certain python modules that the script needs.
+Please try `` pip install pyyaml `` and then re-run ``./security_setup``.
 
 Provisioning
 ------------
 
 Once you're all set up with the provider, customize your modules (for
-``control_count`` and ``worker_count``), run ``terraform get`` to prepare
+``control_count``, ``worker_count``, etc), run ``terraform get`` to prepare
 Terraform to provision your cluster, ``terraform plan`` to see what will be
-created, and ``terraform apply`` to provision the cluster. Afterwards, you can
-use the instructions in :doc:`getting started <index>` to install
-microservices-infrastructure on your new cluster.
+created, and ``terraform apply`` to provision the cluster.
+
+After ``terraform apply`` has completed without errors, you're ready to continue.
+Next, follow the instructions at :doc:`getting started <index>` to install
+Mantl on your new AWS VM's
+
+* The below sections are for more information / customization only. They are not required *
+
+
+Terraform State
+^^^^^^^^^^^^^^^^^^^^^^
+
+
+Terraform stores the `state <https://www.terraform.io/docs/state/index.html>`_ of your
+infrastructure in a file called "terraform.tfstate". This file can be stored locally
+or in a `remote <https://www.terraform.io/docs/state/index.html>`_ location such as S3.
+
+If you use the ``aws.sample.tf`` that is provided, by default the state of all the modules
+are stored in local terraform.tfstate file at the root of this project.
+
+Instead of storing the state for all the modules in one file, you might deploy the modules
+independently and have different terraform.tfstate for each module (either locally or remote).
+
+This can help with blue/green deployments, or making sure you don't accidentally override more static 
+parts of the infrastructure such as a VPC.
+
+In the aws.sample.tf we have included examples of how you would reference a remote state file for VPC variables.
+
+To create ``terraform.tfstate`` locally for the VPC module, you would simply run ``terraform get``, ``terraform plan`` and
+``terraform apply`` in the ``terraform/aws/vpc/`` directory.
+Then in your ``aws.tf`` file you would want to comment out:
+
+.. code-block:: json
+
+  module "vpc" {
+    source ="./terraform/aws/vpc"
+    availability_zones = "${availability_zones}"
+    short_name = "${var.short_name}"
+    region = "${var.region}"
+  }
+
+And uncomment:
+
+.. code-block:: json
+
+  #resource "terraform_remote_state" "vpc" {
+  #  backend = "_local"
+  #  config {
+  #    path = "./vpc/terraform.tfstate"
+  #  }
+  # }
+
+  #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
+  #default_security_group_id = "${terraform_remote_state.vpc.output.default_security_group}"
+  #vpc_id = "${terraform_remote_state.vpc.output.vpc_id}"
+  #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+
+Ideally you would store the state remotely, but configuring that is outside the scope of
+this document. `This <http://blog.mattiasgees.be/2015/07/29/terraform-remote-state/>`_ is a
+good explanation on how to configure and use remote state.
+
 
 Custom IAM Policy
 ^^^^^^^^^^^^^^^^^^
@@ -159,3 +275,46 @@ permissions needed to provision an AWS cluster with Terraform.
 
 .. literalinclude:: /_static/aws_custom_iam_policy.json
    :language: javascript
+
+For managing DNS with Route 53, you can use a policy like the following:
+
+.. literalinclude:: /_static/aws_custom_route53_iam_policy.json
+   :language: javascript
+
+You would replace HOSTED_ZONE_ID with the hosted zone ID of your domain in
+Route 53.
+
+Adding an Elastic Load Balancer (ELB)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Optionally, you can configure your environment to include an Elastic Load
+Balancer (ELB) in front of Mantl UI.
+
+You will need to ensure that your IAM user has the following permissions:
+
+* elasticloadbalancing:AddTags
+* elasticloadbalancing:ApplySecurityGroupsToLoadBalancer
+* elasticloadbalancing:ConfigureHealthCheck
+* elasticloadbalancing:CreateLoadBalancer
+* elasticloadbalancing:CreateLoadBalancerListeners
+* elasticloadbalancing:DeleteLoadBalance
+* elasticloadbalancing:DescribeLoadBalancerAttributes
+* elasticloadbalancing:DescribeLoadBalancers
+* elasticloadbalancing:ModifyLoadBalancerAttributes
+* elasticloadbalancing:RegisterInstancesWithLoadBalancer
+* iam:DeleteServerCertificate
+* iam:GetServerCertificate
+* iam:UploadServerCertificate
+
+In your ``aws.tf``, you will want to uncomment the aws-elb module:
+
+.. code-block:: json
+
+  # Example setup for an AWS ELB
+  module "aws-elb" {
+    source = "./terraform/aws/elb"
+    short_name = "${var.short_name}"
+    instances = "${module.control-nodes.control_ids}"
+    subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
+    security_groups = "${module.control-nodes.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
+  }

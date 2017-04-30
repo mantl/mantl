@@ -1,0 +1,61 @@
+---
+- hosts: all
+  handlers:
+    - include: ../roles/handlers/handlers/main.yml
+    - include: ../roles/nginx/handlers/main.yml
+  tasks:
+    - include_vars: ../roles/handlers/defaults/main.yml
+    - include_vars: ../security.yml
+
+    - name: stop nginx-consul
+      sudo: yes
+      service:
+        name: nginx-consul
+        state: stopped
+        enabled: no
+
+    - name: create nginx template directory
+      sudo: yes
+      file:
+        path: /etc/nginx/templates
+        state: directory
+        mode: 0755
+
+    - name: deploy nginx-consul service
+      sudo: yes
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - src: ../roles/nginx/templates/nginx-consul.service.j2
+          dest: /usr/lib/systemd/system/nginx-consul.service
+        - src: ../roles/nginx/templates/nginx-consul.env.j2
+          dest: /etc/default/nginx-consul.env
+     
+    - include: ../roles/consul/tasks/nginx_proxy.yml
+
+- hosts: role=control
+  handlers:
+    - include: ../roles/handlers/handlers/main.yml
+    - include: ../roles/nginx/handlers/main.yml
+  tasks:
+    - name: stop nginx-mesos service
+      sudo: yes
+      service:
+        name: nginx-mesos-leader
+        state: stopped
+        enabled: no
+
+    - include_vars: ../security.yml
+    - include_vars: ../roles/mesos/defaults/main.yml
+    - include: ../roles/mesos/tasks/nginx-proxy.yml
+
+    - name: stop nginx-marathon service
+      sudo: yes
+      service:
+        name: nginx-marathon
+        state: stopped
+        enabled: no
+
+    - include_vars: ../roles/marathon/defaults/main.yml
+    - include: ../roles/marathon/tasks/nginx-proxy.yml

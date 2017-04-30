@@ -1,4 +1,6 @@
 ---
+- include: "{{ playbook_dir }}/check-requirements.yml"
+
 - hosts: all
   serial: 1
   gather_facts: no

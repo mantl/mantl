@@ -6,6 +6,17 @@ Consul
 `Consul <https://www.consul.io/>`_ is used in the project to coordinate service
 discovery, specifically using the inbuilt DNS server.
 
+Upgrading
+---------
+
+.. versionadded:: 1.0
+
+Mantl 1.0 includes Consul v0.6.3. If you are running Mantl 0.5.1, you'll need to
+run the ``playbooks/upgrade-consul.yml`` playbook before reprovisioning your
+cluster to 1.0 in order to ensure a smooth upgrade.
+
+Upgrades from releases prior to Mantl 0.5.1 have not been tested.
+
 Variables
 ---------
 
@@ -28,7 +39,14 @@ commonly used to least.
 
    Group to configure join IPs from. For example, if this value is
    ``consul_servers``, IPs will be calculated from the hosts in that group and
-   added to the list of servers to join. Defaults to ``all``.
+   added to the list of servers to join. Defaults to ``role=control``.
+
+.. data:: consul_log_level
+
+   The level of logging for the Consul agent. The available log levels are
+   "trace", "debug", "info", "warn", and "err".
+
+   Default: warn
 
 .. data:: consul_gossip_key
 

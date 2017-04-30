@@ -1,0 +1,8 @@
+---
+- name: reload systemd
+  sudo: yes
+  command: systemctl daemon-reload
+
+- name: restart traefik
+  sudo: yes
+  command: systemctl restart traefik

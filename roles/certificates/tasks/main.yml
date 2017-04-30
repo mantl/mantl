@@ -1,0 +1,99 @@
+---
+- name: deploy CA public and private keys
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+  with_items:
+    # CA public key
+    - src: ssl/cacert.pem
+      dest: /etc/pki/CA/ca.cert
+    - src: ssl/cacert.pem
+      dest: /etc/pki/ca-trust/source/cacert.pem
+    - src: ssl/cacert.pem
+      dest: /etc/pki/ca-trust/source/anchors/cacert.pem
+    # CA private key
+    - src: ssl/private/cakey.pem
+      dest: /etc/pki/CA/ca.key
+    - src: ssl/private/cakey.pem
+      dest: /etc/pki/CA/private/cakey.pem
+  notify:
+    - update-ca-trust
+  tags:
+    - certificates
+
+- name: install generate-certificate
+  sudo: yes
+  yum:
+    name: "{{ generate_certificate_package }}"
+    state: present
+  tags:
+    - certificates
+
+- name: create certificate destination directory
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ destination }}"
+    owner: root
+    group: root
+    mode: 0755
+  tags:
+    - certificates
+
+- name: generate certificates
+  sudo: yes
+  command: >
+    generate-certificate
+    --cacert /etc/pki/CA/ca.cert
+    {% if country != "" %} --country "{{ country }}" {% endif %}
+    {% if state != "" %} --state "{{ state }}" {% endif %}
+    {% if locality != "" %} --locality "{{ locality }}" {% endif %}
+    {% if organization != "" %} --organization "{{ organization }}" {% endif %}
+    {% if unit != "" %} --unit "{{ unit }}" {% endif %}
+    {% if email != "" %} --email "{{ email }}" {% endif %}
+    {% if dns != "" %} --dns "{{ dns | unique | join(' ') }}" {% endif %}
+    {% if ip != "" %} --ip "{{ ip | unique | join(' ') }}" {% endif %}
+    --location "{{ location }}"
+    --destination "{{ destination }}"
+  args:
+    creates: "{{ destination }}/{{ prefix }}{% if prefix != '' %}.{% endif %}key"
+  tags:
+    - certificates
+
+- name: create tls group
+  sudo: yes
+  group:
+    name: tls
+    state: present
+  tags:
+    - certificates
+
+- name: set permissions on certificate files
+  sudo: yes
+  file:
+    state: file
+    path: "{{ item.path }}"
+    mode: "{{ item.mode }}"
+    owner: root
+    group: "{{ item.group }}"
+  with_items:
+    - path: /etc/pki/mantl/cert
+      mode: "0644"
+      group: root
+    - path: /etc/pki/mantl/key
+      mode: "0640"
+      group: tls
+  tags:
+    - certificates
+
+- name: remove CA private keys
+  sudo: yes
+  file:
+    state: absent    
+    path: "{{ item.path }}"
+  with_items:
+    - path: /etc/pki/CA/ca.key
+    - path: /etc/pki/CA/private/cakey.pem

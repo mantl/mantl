@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: repos
+  - role: distributive
+    current_role: common

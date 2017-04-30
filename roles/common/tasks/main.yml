@@ -11,23 +11,61 @@
 # add hosts to /etc/hosts
 - name: configure hosts file
   sudo: yes
-  lineinfile:
+  template:
+    src: hosts.j2
     dest: /etc/hosts
-    regexp: "^{{ hostvars[item].private_ipv4 }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain }}{% endif %}$"
-    line: "{{ hostvars[item].private_ipv4 }} {{ item }}{% if use_host_domain %} {{ item }}.{{ host_domain}}{% endif %}"
-    state: present
-  when: hostvars[item].private_ipv4 is defined
-  with_items: groups['all']
+    mode: 0644
+  tags:
+    - common
 
-- name: clean hosts file
+- name: preserve hostname
   sudo: yes
-  lineinfile:
-    dest: /etc/hosts
-    regexp: "{{ item }}"
-    state: absent
+  copy:
+    src: 02_hostname.cfg
+    dest: /etc/cloud/cloud.cfg.d/02_hostname.cfg
+    owner: root
+    group: root
+    mode: 0644
+  when: provider in cloud_init_providers
+  tags:
+    - common
+
+- name: set persistent hostname
+  sudo: yes
+  copy:
+    dest: /etc/hostname
+    content: "{{ inventory_hostname }}"
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - common
+
+# add yum-utils if not already installed
+- name: add yum-config-manager
+  sudo: yes
+  yum:
+    name: yum-utils
+  tags:
+    - bootstrap
+
+- name: increase timeouts in YUM
+  sudo: yes
+  shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
   with_items:
-    - '^127\.0\.0\.1(\s+){{ inventory_hostname }}.*'
-    - '^::1(\s+){{ inventory_hostname }}.*'
+    - option: timeout
+      value: 60.0
+    - option: retries
+      value: 30
+
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+  tags:
+    - bootstrap
 
 - name: install system utilities
   sudo: yes
@@ -39,8 +77,26 @@
     - nc
     - openssh
     - policycoreutils-python
+    - libselinux-python
+    - unzip
+    - jq
+    - java-1.8.0-openjdk
+    - chrony
+    - smlr
+    - zookeepercli
+    - python2-pip
+    - python-pip
+    - bind-utils
+    - nano
   tags:
     - bootstrap
+
+- name: enable chronyd
+  sudo: yes
+  service:
+    name: chronyd
+    enabled: yes
+    state: started
 
 - name: disable firewalld
   sudo: yes
@@ -51,18 +107,6 @@
   register: command_result
   failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"
 
-- name: enable EPEL repo
-  sudo: yes
-  yum:
-    name: epel-release
-    state: latest
-
-- name: install pip
-  sudo: yes
-  yum:
-    name: python-pip
-    state: latest
-
 - name: update setuptools and pip
   sudo: yes
   pip:
@@ -72,13 +116,22 @@
     - name: pip
     - name: setuptools
 
-- name: install distributive
+- name: disable requiretty in sudoers
   sudo: yes
-  yum:
-    name: "https://bintray.com/artifact/download/ciscocloud/rpm/distributive-0.2.1-5.el7.centos.x86_64.rpm"
+  lineinfile:
+    dest: /etc/sudoers
     state: present
-  tags:
-    - distributive
+    regexp: ^.+requiretty$
+    line: "# Defaults	requiretty"
 
-- include: users.yml
-- include: ssl.yml
+- name: configure selinux
+  sudo: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags:
+    - security
+    - bootstrap
+
+- include: ssh.yml
+- include: fail2ban.yml

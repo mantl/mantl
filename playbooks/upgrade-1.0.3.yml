@@ -1,0 +1,95 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: check that the host certificate exists
+      local_action: stat path=../ssl/certs/host.cert.pem
+      register: host_cert
+
+    - name: security-setup required
+      when: not host_cert.stat.exists
+      fail:
+        msg: |
+          You must re-run the security-setup script when upgrading from 1.0.3.
+          See
+          http://docs.mantl.io/en/latest/getting_started/index.html#step-2-run-security-setup
+          for more information.
+
+- include: ./upgrade-nginx-consul.yml
+- include: ./upgrade-consul.yml consul_create_secure_acl=false
+
+- hosts: all
+  serial: "{{ serial | default(1) }}"
+
+  roles:
+    - repos
+
+  tasks:
+
+    - include_vars: ../roles/dnsmasq/defaults/main.yml
+
+    - name: deploy root ca
+      sudo: yes
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+      with_items:
+        - src: ../ssl/cacert.pem
+          dest: /etc/pki/CA/ca.cert
+        - src: ../ssl/cacert.pem
+          dest: /etc/pki/ca-trust/source/anchors/cacert.pem
+        - src: ../ssl/private/cakey.pem
+          dest: /etc/pki/CA/ca.key
+        - src: ../ssl/certs/host.cert.pem
+          dest: /etc/pki/tls/certs/host.cert
+        - src: ../ssl/private/host.key.pem
+          dest: /etc/pki/tls/private/host.key
+
+    - name: update-ca-trust
+      sudo: yes
+      command: update-ca-trust
+
+    - name: remove docker collectd plugin
+      become: yes
+      file:
+        path: /etc/collectd.d/docker.conf
+        state: absent
+      notify: restart collectd
+
+    - name: install mantl-dns
+      sudo: yes
+      yum:
+        name: "mantl-dns-{{ mantl_dns_version }}"
+        state: installed
+
+    - name: update /etc/dnsmasq.d/10-consul if needed
+      sudo: yes
+      shell: stat /etc/dnsmasq.d/10-consul.rpmnew && mv /etc/dnsmasq.d/10-consul.rpmnew /etc/dnsmasq.d/10-consul
+      failed_when: false
+
+    - name: restart nginx-consul
+      become: yes
+      service:
+        name: nginx-consul
+        state: restarted
+
+  handlers:
+
+    - name: restart collectd
+      become: yes
+      service:
+        name: collectd
+        state: restarted
+
+- hosts: role=control
+  serial: "{{ serial | default(1) }}"
+  tasks:
+
+    - name: restart services
+      become: yes
+      service:
+        name: "{{ item }}"
+        state: restarted
+      with_items:
+        - nginx-mantlui

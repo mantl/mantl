@@ -1,9 +1,9 @@
 {
   "args": [
-    "--zk=zk://zookeeper.service.{{ consul_dns_domain }}:2181/mesos"{% if do_consul_ssl %},
-    "--registry-ssl",
-    "--registry-ssl-verify=false"{% endif %},
-    "--registry-token={{ consul_acl_master_token }}",
+    "--zk=zk://{{ marathon_zk_hosts }}/mesos"{% if do_consul_ssl %},
+    "--consul-ssl",
+    "--consul-ssl-verify=false"{% endif %},
+    "--mesos-ip-order=mesos,host",
     "--refresh={{ mesos_consul_refresh }}"
   ],
   "container": {
@@ -13,9 +13,11 @@
       "image": "{{ mesos_consul_image }}:{{ mesos_consul_image_tag }}"
     }
   },
+  "labels": {
+      "traefik.enable": "false"
+  },
   "id": "mesos-consul",
   "instances": 1,
   "cpus": 0.1,
   "mem": 128
 }
-

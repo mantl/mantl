@@ -1,0 +1,6 @@
+# Install chronos. Run this playbook after running the core playbook
+# (sample.yml)
+
+- hosts: role=control
+  roles:
+    - chronos
