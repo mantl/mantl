@@ -53,11 +53,11 @@ Here are some guides specific to each of the platforms that Mantl supports:
 Community-supported platform:
 
 .. toctree::
-   :maxdepth:1
+   :maxdepth: 1
         
-    vsphere.rst
-    softplayer.rst
-    bare-metal.rst
+   vsphere.rst
+   softlayer.rst
+   bare-metal.rst
         
 There are several preparatory steps to provisioning the cloud hosts that are
 common to all providers:

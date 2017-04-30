@@ -55,7 +55,7 @@
   become: yes
   service:
     name: systemd-journald
-    state: reloaded
+    state: restarted
   tags:
     - common
 
