@@ -36,7 +36,7 @@ resource "aws_instance" "instance" {
   count = "${var.count}"
   vpc_security_group_ids = [ "${split(",", var.security_group_ids)}"]
   key_name = "${var.ssh_key_pair}"
-  associate_public_ip_address = "${var.assign_public_ip_address}"
+  associate_public_ip_address = true
   subnet_id = "${element(split(",", var.vpc_subnet_ids), count.index)}"
   iam_instance_profile = "${var.iam_profile}"
   root_block_device {
@@ -76,5 +76,5 @@ output "ec2_ids" {
 }
 
 output "ec2_ips" {
-  value = "${join(\",\", aws_instance.instance.*.public_ip)}"
+  value = "${join(",", aws_instance.instance.*.public_ip)}"
 }

@@ -162,6 +162,7 @@ module "kubeworker-nodes" {
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.worker_security_group}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "route53" {
