@@ -12,7 +12,7 @@
   sudo: yes
   template:
     src: vault.hcl.j2
-    dest: /etc/vault/vault.hcl
+    dest: "{{ vault_config_file }}"
     mode: 0600
     owner: root
     group: root
@@ -46,6 +46,9 @@
 
 - include: bootstrap.yml
 
+
+- include: otp.yml
+  when: vault_otp
 - name: set vault_token fact
   set_fact:
     vault_token: "{{ vault_root_token }}"
