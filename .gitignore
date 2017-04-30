@@ -33,3 +33,5 @@ account.json
 .DS_Store
 
 .idea/
+
+.syncdir/
