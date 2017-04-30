@@ -74,6 +74,13 @@
   tags:
     - etcd
 
+- name: add consul user to tls group
+  sudo: yes
+  user:
+    append: yes
+    name: etcd
+    groups: tls
+
 - name: enable and start etcd
   sudo: yes
   service:
