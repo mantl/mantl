@@ -9,11 +9,10 @@ minion_group_name: role=kubeworker
 # Which type of packages should be used for deployment: stable, testing
 package_channel: stable
 
-kubernetes_package: kubernetes-1.3.0_alpha.1.1977_a1e79e91b9fb6a
+kubernetes_package: kubernetes-1.3.3_consul
 kube_hyperkube_image: ciscocloud/hyperkube-amd64
-# Kubernetes build to use, stable is used by default.
-# Place "testing" here to use latest build available.
-kube_version: v1.3.0-alpha.1.1977-a1e79e91b9fb6a
+# Kubernetes hyperkube image tag to use
+kube_hyperkube_image_tag: v1.3.3-consul
 
 kube2consul_image: ciscocloud/kube2consul-amd64
 kube2consul_image_tag: v1.3.0-alpha.1.1977-a1e79e91b9fb6a
@@ -24,41 +23,18 @@ kube_users:
     pass: "{{ nginx_admin_password }}"
     role: admin
 
-# Select which network manager to use. After choosing, edit kubernetes.yml file and include aproriate roles.
-network: calico
-#network: flannel
-
 # Kubernetes cluster name, also will be used as DNS domain
 cluster_name: cluster.local
 
 # Enable to leverage some unique features of a specific cloud provider.
-enable_cloud_provider: false
-
-# Only OpenStack provider is currently supported.
-cloud_provider: openstack
-
-cloud_provider_config: /etc/kubernetes/cloud-config
+enable_cloud_provider: "{% if provider in ['aws', 'gce'] %}True{% else %}False{% endif %}"
+cloud_provider: "{{ provider }}"
 
 # Kubernetes internal network for services, unused block of space.
 kube_service_addresses: 10.254.0.0/16
 
 # Kubernetes api port
 kube_master_port: 6443
-
-# internal network (optional). When used, it will assign IP
-# addresses from this range to individual pods.
-# This network must be unused in your network infrastructure!
-overlay_network_subnet: 10.10.0.0
-
-# internal network total size (optional). This is the prefix of the
-# entire overlay network.  So the entirety of 4.0.0.0/16 must be
-# unused in your environment.
-overlay_network_prefix: 16
-
-# internal network node size allocation (optional). This is the size allocated
-# to each node on your network.  With these defaults you should have
-# room for 4096 nodes with 254 pods per node.
-overlay_network_host_prefix: 24
 
 # Internal DNS configuration.
 # Kubernetes can create and mainatain its own DNS server to resolve service names
@@ -91,11 +67,8 @@ etcd_client_port: 2379
 # TCP port used for intra-cluster communications
 etcd_peer_port: 2380
 
+# Enable verification of clients and servers using TLS
+etcd_security: true
+
 # Client communication protocol (http/https)
-etcd_url_scheme: http
-
-# Intra-cluster communication protocol (http/https)
-etcd_peer_url_scheme: http
-
-# enable cloud provider integration
-enable_cloud_provider: false
+etcd_url_scheme: "http{% if etcd_security %}s{% endif %}"

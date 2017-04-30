@@ -147,10 +147,6 @@ cert_opts.add_argument(
     '--cert-email',
     default='operations@example.com',
     help='contact email for organizational unit')
-cert_opts.add_argument(
-    '--no-verify-certificates',
-    action='store_true',
-    help='skip verifying certificates as part of setup process')
 
 # mantlui
 mantlui_opts = parser.add_argument_group(
@@ -440,18 +436,6 @@ class Component(object):
 
         return status, out, err
 
-    def openssl_subject(self, common, **overrides):
-        return '/C={country}/ST={state}/L={locality}/O={organization}' \
-               '/OU={unit}/CN={common}/emailAddress={email}'.format(
-            country=overrides.get('country', self.args.cert_country),
-            state=overrides.get('state', self.args.cert_state),
-            locality=overrides.get('locality', self.args.cert_locality),
-            organization=overrides.get('organization', self.args.cert_organization),
-            unit=overrides.get('unit', self.args.cert_unit),
-            common=common,
-            email=overrides.get('email', self.args.cert_email)
-        )
-
     def toggle_boolean(self, inFlag, inValue, inDefault):
         with self.modify_security() as config:
             if inFlag not in config:
@@ -465,31 +449,27 @@ class Certificates(Component):
     def check(self):
         return [self.ca]
 
+    def openssl_subject(self, common, **overrides):
+        return '/C={country}/ST={state}/L={locality}/O={organization}' \
+               '/OU={unit}/CN={common}/emailAddress={email}'.format(
+            country=overrides.get('country', self.args.cert_country),
+            state=overrides.get('state', self.args.cert_state),
+            locality=overrides.get('locality', self.args.cert_locality),
+            organization=overrides.get('organization', self.args.cert_organization),
+            unit=overrides.get('unit', self.args.cert_unit),
+            common=common,
+            email=overrides.get('email', self.args.cert_email)
+        )
+
     def ca(self):
         "certificate authority"
-        serial = posixpath.join(CERT_PATH, 'serial')
-        if posixpath.exists(serial):
-            print('serial already exists')
-        else:
-            with open(serial, 'w') as fh:
-                fh.write('100001')
-
-            print('created serial')
-
-        index = posixpath.join(CERT_PATH, 'index.txt')
-        if posixpath.exists(index):
-            print('index already exists')
-        else:
-            open(index, 'w').close()
-            print('created index')
-
         with self.chdir(CERT_PATH):
-            if posixpath.exists(ROOT_KEY) or posixpath.exists(ROOT_CERT):
+            if posixpath.exists(ROOT_CERT):
                 print('root CA already exists')
             else:
                 self.wrap_call(
                     'openssl req -new -x509 -extensions v3_ca -nodes -subj "{}" '
-                    '-keyout {} -out {} -days 365 -config ./openssl.cnf'.format(
+                    '-keyout {} -out {} -days 3650 -config ./openssl.cnf'.format(
                         self.openssl_subject(
                             "security-setup"), ROOT_KEY, ROOT_CERT))
 

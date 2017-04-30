@@ -14,7 +14,6 @@
     - name: check for compatible Ansible version
       when: >
         ansible_version["string"] | version_compare("1.9.1", "<")
-        or ansible_version["string"] | version_compare("2", ">=")
       fail:
         msg: >
           Your version of Ansible doesn't match the required version. Please
@@ -23,6 +22,14 @@
 - hosts: all
   gather_facts: yes
   tasks:
+    - name: check for accurate date
+      when: "{{ (ansible_date_time['year']|int) < 2016 }}"
+      fail:
+        msg: >
+          Your machines have a misconfigured date. Please run
+          `ansible --become all -a 'date --set="yyyymmdd"'` with the current
+          date before continuing.
+
     - name: check for compatible centos version
       when: ansible_distribution_version | version_compare("7.2", "<")
       fail:

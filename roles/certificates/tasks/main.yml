@@ -88,3 +88,12 @@
       group: tls
   tags:
     - certificates
+
+- name: remove CA private keys
+  sudo: yes
+  file:
+    state: absent    
+    path: "{{ item.path }}"
+  with_items:
+    - path: /etc/pki/CA/ca.key
+    - path: /etc/pki/CA/private/cakey.pem

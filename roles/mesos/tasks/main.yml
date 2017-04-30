@@ -1,4 +1,10 @@
 ---
+- name: remove mesos
+  sudo: yes
+  yum:
+    name: mesos
+    state: absent
+     
 - name: install mesos packages
   sudo: yes
   yum:

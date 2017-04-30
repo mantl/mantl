@@ -85,6 +85,17 @@ You can use these variables to customize your Mesos installation.
 
    default: ``mesos-slave``
 
+.. data:: mesos_isolation
+
+   The isolation level for tasks using the `Mesos containerizer
+   <http://mesos.apache.org/documentation/latest/mesos-containerizer/>`_. See
+   the `Mesos Configuration documentation
+   <http://mesos.apache.org/documentation/latest/configuration/>`_ for more
+   information. If you wish to disable enforcement of cpu and memory resource
+   limits for tasks, set this to ``posix/cpu,posix/mem``.
+
+   default: ``cgroups/cpu,cgroups/mem``
+
 .. data:: mesos_attributes
    Set attributes for mesos agents.
    Provide these as a list to set multiple attributes. Format:
