@@ -1,0 +1,63 @@
+{
+    "template": "logs-*",
+    "order": 10,
+    "settings": {
+        "number_of_shards": 3,
+        "number_of_replicas": 1,
+        "index": {
+            "refresh_interval": "5s"
+        }
+    },
+    "mappings": {
+        "logs": {
+            "_all":                             { "enabled": false },
+            "_source":                          { "enabled": true },
+            "properties": {
+                "@timestamp":                   { "type": "date" },
+                "@version":                     { "type": "integer" },
+                "boot_id":                      { "type": "string" },
+                "cap_effective":                { "type": "string" },
+                "catalog_entry":                { "type": "string" },
+                "cmdline":                      { "type": "string" },
+                "code_file":                    { "type": "string" },
+                "code_function":                { "type": "string", "index": "not_analyzed" },
+                "code_line":                    { "type": "integer" },
+                "comm":                         { "type": "string", "index": "not_analyzed" },
+                "container_id":                 { "type": "string" },
+                "container_id_full":            { "type": "string" },
+                "container_name":               { "type": "string", "index": "not_analyzed" },
+                "container_tag":                { "type": "string" },
+                "cursor":                       { "type": "string" },
+                "exe":                          { "type": "string" },
+                "exit_code":                    { "type": "integer" },
+                "exit_status":                  { "type": "string" },
+                "gid":                          { "type": "integer" },
+                "hostname":                     { "type": "string", "index": "not_analyzed" },
+                "input_type":                   { "type": "string" },
+                "machine_id":                   { "type": "string" },
+                "message":                      { "type": "string" },
+                "message_id":                   { "type": "string" },
+                "monotonic_timestamp":          { "type": "long" },
+                "offset":                       { "type": "long" },
+                "package":                      { "type": "string", "index": "not_analyzed" },
+                "pid":                          { "type": "integer" },
+                "priority":                     { "type": "integer" },
+                "realtime_timestamp":           { "type": "long" },
+                "result":                       { "type": "string" },
+                "selinux_context":              { "type": "string" },
+                "source":                       { "type": "string" },
+                "source_monotonic_timestamp":   { "type": "long" },
+                "source_realtime_timestamp":    { "type": "long" },
+                "syslog_facility":              { "type": "integer" },
+                "syslog_identifier":            { "type": "string", "index": "not_analyzed" },
+                "syslog_pid":                   { "type": "integer" },
+                "systemd_cgroup":               { "type": "string" },
+                "systemd_slice":                { "type": "string" },
+                "systemd_unit":                 { "type": "string", "index": "not_analyzed" },
+                "transport":                    { "type": "string", "index": "not_analyzed" },
+                "uid":                          { "type": "integer" },
+                "unit":                         { "type": "string", "index": "not_analyzed" }
+            }
+        }
+    }
+}
