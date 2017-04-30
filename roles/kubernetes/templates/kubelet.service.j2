@@ -14,7 +14,7 @@ ExecStart=/usr/bin/kubelet \
   {% endif -%}
   {% if calico_image is defined -%}
   --network-plugin=cni \
-  --network-plugin-dir=/etc/cni/net.d \
+  --network-plugin-dir=/etc/kubernetes/cni \
   {% endif -%}
   --allow-privileged=true \
   --api-servers=https://kubernetes.service.consul:{{ kube_master_port }} \

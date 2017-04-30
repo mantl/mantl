@@ -1,0 +1,3 @@
+---
+filebeat_image: tpolekhin/filebeat
+filebeat_image_tag: latest

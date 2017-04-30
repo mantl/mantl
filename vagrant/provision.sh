@@ -11,8 +11,8 @@ fi
 # enable EPEL and get sshpass if it's not already installed
 if ! sshpass; then
   if ! yum list installed epel-release > /dev/null; then
-    curl -f -S -s -O 'http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm'
-    rpm -ivh epel-release-7-6.noarch.rpm
+    curl -f -S -s -O 'http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm'
+    rpm -ivh epel-release-7-9.noarch.rpm
   fi
   yum install -y --enablerepo=epel sshpass
 fi

@@ -1,0 +1,14 @@
+filebeat.prospectors:
+- input_type: log
+  paths:
+    - /mnt/log/*.log
+fields_under_root: true
+fields:
+  hostname: {{ inventory_hostname }}
+output.kafka:
+  hosts: ["broker-1.service.consul:9092","broker-2.service.consul:9092","broker-3.service.consul:9092"]
+  topic: logs
+  client_id: filebeat-{{ inventory_hostname }}
+logging.level: info
+logging.to_syslog: false
+logging.to_files: false

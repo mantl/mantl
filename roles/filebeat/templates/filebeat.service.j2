@@ -1,0 +1,35 @@
+[Unit]
+Description=filebeat
+After=docker.service
+Requires=docker.service
+Requires=dnsmasq.service
+
+[Service]
+Restart=always
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker pull {{ filebeat_image }}:{{ filebeat_image_tag }}
+ExecStartPre=-/usr/bin/docker rm -f filebeat
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=filebeat \
+    --hostname={{ inventory_hostname }} \
+    --log-driver=none \
+    --privileged=true \
+    --volume=/etc/filebeat/filebeat.yml:/etc/filebeat/filebeat.yml \
+{% if 'role=master' in group_names %}
+    --volume=/var/log/mesos/mesos-master.log:/mnt/log/mesos-master.log \
+{% endif %}
+{% if 'role=worker' in group_names %}
+    --volume=/var/log/mesos/mesos-agent.log:/mnt/log/mesos-agent.log \
+{% endif %}
+    --volume=/var/log/docker/docker.log:/mnt/log/docker.log \
+    --volume=/run/containerd/events.log:/mnt/log/events.log \
+    {{ filebeat_image }}:{{ filebeat_image_tag }}
+
+ExecStop=/usr/bin/docker rm -f filebeat
+
+[Install]
+WantedBy=multi-user.target

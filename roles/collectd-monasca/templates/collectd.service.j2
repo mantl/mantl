@@ -1,0 +1,28 @@
+[Unit]
+Description=collectd
+After=docker.service
+Requires=docker.service
+Requires=dnsmasq.service
+
+[Service]
+Restart=always
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker pull {{ collectd_image }}:{{ collectd_image_tag }}
+ExecStartPre=-/usr/bin/docker rm -f collectd
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=collectd \
+    --hostname={{ inventory_hostname }} \
+    --log-driver=none \
+    --privileged=true \
+    --volume=/proc:/mnt/proc \
+    --env="COLLECTD_HOSTNAME={{ inventory_hostname }}" \
+    {{ collectd_image }}:{{ collectd_image_tag }}
+
+ExecStop=/usr/bin/docker rm -f collectd
+
+[Install]
+WantedBy=multi-user.target

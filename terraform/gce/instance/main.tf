@@ -12,6 +12,7 @@ variable "short_name" {}
 variable "ssh_key" {}
 variable "ssh_user" {}
 variable "zones" {}
+variable "service_account_scopes" { default = "compute-rw,monitoring,logging-write,storage-ro,https://www.googleapis.com/auth/ndev.clouddns.readwrite" }
 
 
 # Instances
@@ -59,6 +60,10 @@ resource "google_compute_instance" "instance" {
     ssh_user = "${var.ssh_user}"
   }
 
+  service_account {
+    scopes = ["${split(",", var.service_account_scopes)}"]
+  }
+
   count = "${var.count}"
 
   provisioner "remote-exec" {
@@ -74,7 +79,7 @@ resource "google_compute_instance" "instance" {
 
 
 output "gce_ips" {
-  value = "${join(\",\", google_compute_instance.instance.*.network_interface.0.access_config.0.assigned_nat_ip)}"
+  value = "${join(",", google_compute_instance.instance.*.network_interface.0.access_config.0.assigned_nat_ip)}"
 }
 
 output "instances" {

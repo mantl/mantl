@@ -17,10 +17,12 @@ docker_lvm_backed: "{% if provider in ['gce', 'openstack', 'aws'] %}True{% else 
 docker_log_driver: journald
 
 # Docker options
+docker_selinux_enabled: false
 docker_options:
   - "--dns {{ private_ipv4 }}"
   - "--log-driver={{ docker_log_driver }}"
-  - "{% if docker_selinux_enabled %}--selinux-enabled {% endif %}"
+  - "--disable-legacy-registry"
+  - "{% if docker_selinux_enabled %}--selinux-enabled{% endif %}"
   - "{% if kube_build is defined %}--dns-search {{ cluster_name }}{% endif %}"
 
 docker_tcp: false
@@ -29,6 +31,7 @@ docker_tcp_tls: "{{ docker_tcp }}"
 # Docker network options can be provided as a list
 docker_network_options:
   - "-H unix:///var/run/docker.sock"
+  - "--icc=false" # disable inter-container networking
   - "{% if docker_tcp %}-H tcp://0.0.0.0:2375{% endif %}"
   - "{% if docker_tcp and docker_tcp_tls %}--tlsverify{% endif %}"
   - "{% if docker_tcp and docker_tcp_tls %}--tlscacert=/etc/pki/CA/ca.cert{%- endif %}"
@@ -47,8 +50,6 @@ docker_lvm_data_volume_size: 40%FREE
 docker_lvm_data_volume_size_min: 2G
 
 docker_lvm_auto_extend_pool: yes
-
-docker_selinux_enabled: no
 
 # Settings for Overlayfs/Btrfs
 docker_volume_name: docker

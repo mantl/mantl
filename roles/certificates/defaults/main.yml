@@ -1,3 +1,4 @@
+
 ---
 generate_certificate_package: generate-certificate-0.1.1-1
 
@@ -13,8 +14,8 @@ location: "{{ ansible_hostname }}" # Openssl's "CN" ("Common Name"). Can't be ""
 # generate-certificates always includes DNS:localhost and IP:127.0.0.1.
 dns:
   - "{{ inventory_hostname }}"
-  - "{{ inventory_hostname }}.node.consul"
-  - "*.service.consul"
+  - "{{ inventory_hostname }}.node.consul"l"
+  - "kubernetes.default.svc.{{ cluster_name }}"
 # What IP addresses will this certificate be valid for?
 ip:
   - "{{ public_ipv4 }}"

@@ -84,6 +84,10 @@
     - chrony
     - smlr
     - zookeepercli
+    - python2-pip
+    - python-pip
+    - bind-utils
+    - nano
   tags:
     - bootstrap
 
@@ -102,12 +106,6 @@
     state: stopped
   register: command_result
   failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"
-
-- name: install pip
-  sudo: yes
-  yum:
-    name: python-pip
-    state: latest
 
 - name: update setuptools and pip
   sudo: yes
@@ -135,6 +133,5 @@
     - security
     - bootstrap
 
-- include: users.yml
 - include: ssh.yml
 - include: fail2ban.yml

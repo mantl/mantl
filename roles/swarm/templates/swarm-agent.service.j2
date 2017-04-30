@@ -1,0 +1,35 @@
+[Unit]
+Description=docker swarm (agent)
+After=docker.service
+After=consul.service
+PartOf=docker.service
+Requires=consul.service
+
+[Service]
+Restart=always
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker rm -f swarm-agent
+ExecStartPre=-/usr/bin/docker pull {{ swarm_image }}
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=swarm-agent \
+    --volume=/etc/pki/CA/ca.cert:/etc/pki/CA/ca.cert:ro \
+    --volume={{ host_cert }}:{{ host_cert }}:ro \
+    --volume={{ host_key }}:{{ host_key }}:ro \
+    {{ swarm_image }} join \
+    --advertise {{ private_ipv4 }}:2375 \
+    {% if do_consul_ssl -%}
+    --discovery-opt "kv.cacertfile=/etc/pki/CA/ca.cert" \
+    --discovery-opt "kv.certfile={{ host_cert }}" \
+    --discovery-opt "kv.keyfile={{ host_key }}" \
+    {% endif -%}
+    consul://consul.service.consul:8500/nodes
+
+ExecStop=/bin/bash -c " \
+    /usr/bin/docker kill swarm-agent && \
+    /usr/bin/docker rm -f swarm-agent"
+
+[Install]
+WantedBy=multi-user.target

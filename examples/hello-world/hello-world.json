@@ -1,19 +1,19 @@
 {
-  "container": {
-    "type": "DOCKER",
-    "docker": {
-      "network": "BRIDGE",
-      "image": "keithchambers/docker-hello-world",
-      "portMappings": [
-        {
-          "containerPort": 80,
-          "protocol": "tcp"
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "network": "BRIDGE",
+            "image": "nginx",
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "id": "hello-world",
-  "instances": 2,
-  "cpus": 0.1,
-  "mem": 128
+    },
+    "id": "hello-world",
+    "instances": 1,
+    "cpus": 0.1,
+    "mem": 128
 }

@@ -236,6 +236,7 @@
   * 1.1 upgrade playbook [#1392](https://github.com/CiscoCloud/mantl/pull/1392)
   * add playbook for upgrading a 1.0.3 cluster to 1.1 [#1407](https://github.com/CiscoCloud/mantl/pull/1407)
   * Fix distributive upgrade from Mantl 1.0.3 -> 1.1 [#1296](https://github.com/CiscoCloud/mantl/pull/1296)
+  * fix upgrade playbook for mixed clusters [#1491](https://github.com/CiscoCloud/mantl/pull/1491)
 
 * Spark example app
   * Examples/spark [#1267](https://github.com/CiscoCloud/mantl/pull/1267)
@@ -273,6 +274,7 @@
 * use zookeepercli package from mantl-rpm [#1431](https://github.com/CiscoCloud/mantl/pull/1431)
 * make dns and route53 names consistent with /etc/hosts [#1306](https://github.com/CiscoCloud/mantl/pull/1306)
 * Eliminate a race where a mesos agent could not connect to the master [#1465](https://github.com/CiscoCloud/mantl/pull/1465)
+* provider/openstack: add ssh_user to kubeworker module [#1489](https://github.com/CiscoCloud/mantl/pull/1489)
 
 ## 1.0.3 (March 04, 2016)
 

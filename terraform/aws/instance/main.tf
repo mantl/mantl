@@ -15,6 +15,7 @@ variable "source_ami" {}
 variable "security_group_ids" {}
 variable "vpc_subnet_ids" {}
 variable "ssh_username" {default = "centos"}
+variable "assign_public_ip_address" {default = true}
 
 
 resource "aws_ebs_volume" "ebs" {
@@ -36,7 +37,7 @@ resource "aws_instance" "instance" {
   count = "${var.count}"
   vpc_security_group_ids = [ "${split(",", var.security_group_ids)}"]
   key_name = "${var.ssh_key_pair}"
-  associate_public_ip_address = true
+  associate_public_ip_address = "${var.assign_public_ip_address}"
   subnet_id = "${element(split(",", var.vpc_subnet_ids), count.index)}"
   iam_instance_profile = "${var.iam_profile}"
   root_block_device {
@@ -67,13 +68,20 @@ resource "aws_volume_attachment" "instance-lvm-attachment" {
 
 
 output "hostname_list" {
-  value = "${join(\",\", aws_instance.instance.*.tags.Name)}"
+  value = "${join(",", aws_instance.instance.*.tags.Name)}"
 }
 
 output "ec2_ids" {
-  value = "${join(\",\", aws_instance.instance.*.id)}"
+  value = "${join(",", aws_instance.instance.*.id)}"
 }
 
 output "ec2_ips" {
-  value = "${join(\",\", aws_instance.instance.*.public_ip)}"
+  value = "${join(",", aws_instance.instance.*.public_ip)}"
+<<<<<<< HEAD
+}
+
+output "ec2_private_ips" {
+  value = "${join(",", aws_instance.instance.*.private_ip)}"
+=======
+>>>>>>> master
 }
