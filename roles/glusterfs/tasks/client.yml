@@ -36,7 +36,7 @@
 
 - name: wait for gluster service
   wait_for:
-    host: glusterfs.service.{{ consul_dns_domain }}
+    host: glusterfs.service.consul
     port: 24007
     state: present
   tags:
@@ -49,7 +49,7 @@
     name: "{{ item.mount }}"
     opts: "defaults,_netdev,x-systemd.requires=consul.service,x-systemd.requires=dnsmasq.service"
     fstype: glusterfs
-    src: "glusterfs.service.{{ consul_dns_domain }}:/{{ item.name }}"
+    src: "glusterfs.service.consul:/{{ item.name }}"
   with_items: glusterfs_volumes
   tags:
     - glusterfs

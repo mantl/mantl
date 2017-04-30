@@ -18,3 +18,10 @@
     glusterfs_mode: client
   roles:
     - glusterfs
+
+- hosts: role=kubeworker
+  gather_facts: no
+  vars:
+    glusterfs_mode: client
+  roles:
+    - glusterfs

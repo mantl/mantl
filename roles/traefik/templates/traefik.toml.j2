@@ -4,8 +4,8 @@ logLevel = "ERROR"
 
 [web]
 address = ":8081"
-CertFile = "/etc/pki/tls/certs/host.cert"
-KeyFile = "/etc/pki/tls/private/host.key"
+CertFile = "/etc/pki/mantl/cert"
+KeyFile = "/etc/pki/mantl/key"
 
 [marathon]
 endpoint = "{{ traefik_marathon_endpoint }}"

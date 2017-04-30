@@ -32,6 +32,13 @@
   tags:
     - traefik
 
+- name: add traefik user to tls group
+  sudo: yes
+  user:
+    append: yes
+    name: traefik
+    groups: tls
+
 - name: configure traefik
   sudo: yes
   template:

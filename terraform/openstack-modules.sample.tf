@@ -116,6 +116,7 @@ module "instances-kubeworker" {
   keypair_name = "${module.ssh-key.keypair_name}"
   flavor_name = "${var.kubeworker_flavor_name}"
   image_name = "${var.image_name}"
+  ssh_user = "${var.ssh_user}"
 }
 
 module "instances-edge" {

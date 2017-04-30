@@ -1,4 +1,11 @@
 ---
+- name: create consul acl for mantl-api
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl API ACL Token" --rule='key:mantl-install/apps:write' {{ consul_acl_mantl_api_token }}
+  tags:
+    - marathon
+
 - name: create json files for jobs
   sudo: yes
   template:

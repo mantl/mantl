@@ -30,7 +30,5 @@
           continuing.
 
 - hosts: role=control
-  vars:
-    consul_dns_domain: consul
   roles:
     - iptables

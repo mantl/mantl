@@ -13,7 +13,7 @@ checklist_versions:
   common: 0.2.5-1
   consul: 0.2.4-1
   consul-template: 0.2.4-1
-  dnsmasq: 0.2.5-1
+  dnsmasq: 0.2.6-1
   docker: 0.2.4-1
   etcd: 0.2.4-1
   haproxy: 0.2.4-1

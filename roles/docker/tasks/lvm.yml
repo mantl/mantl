@@ -1,15 +1,4 @@
-
-# dependency for cloud-utils-growpart
-# which is required if we have GROWPART=yes (default) in /etc/sysconfig/docker-storage-setup
-- name: install cloud-utils-growpart package
-  sudo: yes
-  yum:
-    name: "cloud-utils-growpart"
-    state: present
-  tags:
-    - docker
-    - bootstrap
-
+---
 - name: configure lvm for docker
   sudo: yes
   template:

@@ -250,6 +250,7 @@ def main():
             resource=dict(),
             label=dict(),
             server=dict(),
+            api_version=dict(default='v1', choices=['v1', 'v1beta3']),
             force=dict(default=False, type='bool'),
             all=dict(default=False, type='bool'),
             log_level=dict(default=0, type='int'),

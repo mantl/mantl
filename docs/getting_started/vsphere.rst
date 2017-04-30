@@ -11,6 +11,7 @@ Terraform
 
 Install Terraform according to the `guide <https://www.terraform.io/intro/getting-started/install.html>`_.
 
+*Note: Minimum Terraform version of 0.6.16 required to leverage some newer features of the vSphere provider*
 
 VMware template
 ^^^^^^^^^^^^^^^^^
@@ -49,6 +50,10 @@ Basic settings
 
 ``network_label`` is the label of the network assigned to the machines.
 
+``domain`` is the domain name to configure each host with. 
+
+``dns_server1`` & ``dns_server2`` are the dns servers to configure on the hosts.
+
 ``short_name`` is the prefix that will be used for the new virtual machines.
 
 ``ssh_user`` is the username for the further service provisioning. This user has to be in the sudoers group with NOPASSWD option.
@@ -74,22 +79,23 @@ Microservices settings
 Optional settings
 ^^^^^^^^^^^^^^^^^^^
 
-There are several optional settings that can be leveraged in the sample terraform file.  Just uncomment the line and configure the desired value.  
+There are several optional settings that can be leveraged in the sample terraform file.  Just uncomment the line and configure the desired value.
 
-``folder`` set this to the name of a folder to place the new virtual machines into under the Datacenter object.  Folder must exist already.  
+``folder`` set this to the name of a folder to place the new virtual machines into under the Datacenter object.  Folder must exist already.
 
-``control_cpu`` is the number of vCPUs to deploy for control nodes.  
+``control_cpu`` is the number of vCPUs to deploy for control nodes.
 
-``worker_cpu`` is the number of vCPUs to deploy for worker nodes.  
+``worker_cpu`` is the number of vCPUs to deploy for worker nodes.
 
-``edge_cpu`` is the number of vCPUs to deploy for edge nodes.  
+``edge_cpu`` is the number of vCPUs to deploy for edge nodes.
 
-``control_ram`` is the amount of vRAM in MBs to deploy for control nodes.  
+``control_ram`` is the amount of vRAM in MBs to deploy for control nodes.
 
-``worker_ram`` is the number of vRAM in MBs to deploy for worker nodes.  
+``worker_ram`` is the number of vRAM in MBs to deploy for worker nodes.
 
-``edge_ram`` is the number of vRAM in MBs to deploy for edge nodes.  
+``edge_ram`` is the number of vRAM in MBs to deploy for edge nodes.
 
+``linked_clone`` setting this to true will deploy the VMs as linked clones.  Default of false will create standard full clones for each VM.  Note that performance of linked clones is dependent on the underlying servers and storage.  In some cases linked_clone deployments have failed during installation where full clones work fine.  If you get errors during the installation on a linked_clone setup, try using full clones and see if that fixes the error.   
 
 Advanced settings
 ^^^^^^^^^^^^^^^^^^^
@@ -107,4 +113,3 @@ Due to a timing condition when requesting a MAC address from the vsphere server 
 Afterwards, you can
 use the instructions in :doc:`getting started <index>` to install
 Mantl on your new cluster.
-

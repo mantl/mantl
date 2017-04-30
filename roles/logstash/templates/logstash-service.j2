@@ -13,6 +13,7 @@ ExecStartPre=-/usr/bin/docker rm -f logstash
 ExecStartPre=-/usr/bin/docker pull {{ logstash_image }}:{{ logstash_image_tag }}
 
 ExecStart=/usr/bin/docker run \
+    --memory=2G \
     --rm \
     --name=logstash \
     --hostname={{ inventory_hostname }} \
