@@ -15,6 +15,7 @@ variable "source_ami" {}
 variable "security_group_ids" {}
 variable "vpc_subnet_ids" {}
 variable "ssh_username" {default = "centos"}
+variable "user_data" {}
 
 resource "aws_ebs_volume" "ebs" {
   availability_zone = "${element(split(",", var.availability_zones), count.index)}"
