@@ -34,7 +34,7 @@ Variables
 
    The default advertised address for vault, i.e. where Vault will listen.
 
-   default: ``vault_addr: "https://{{ inventory_hostname }}.node.{{ consul_dns_domain }}:{{ vault_default_port }}``
+   default: ``vault_addr: "https://{{ inventory_hostname }}.node.consul:{{ vault_default_port }}``
 
 .. data:: vault_init_json
 
