@@ -5,7 +5,7 @@ LoadPlugin python
   ModulePath "/usr/share/collectd/plugins"
   Import "marathon"
   <Module "marathon">
-    Host "{{ inventory_hostname }}.node.{{ consul_dns_domain }}"
+    Host "{{ inventory_hostname }}.node.consul"
     Port "18080"
     Verbose false
   </Module>

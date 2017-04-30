@@ -1,17 +1,32 @@
-# Jupyter 
-It is rather simple to deploy Jupyter on MANTL. There are some official Docker images that you can use for this purpose (https://github.com/jupyter/docker-stacks). For this example we use the jupyter/minimal-notebook.
+# Jupyter
 
+We'll often use the more general instructions from
+[the README for the examples folder](../README.md). When following these
+instructions, you should replace `<your-app>` with `jupyter`.
 
-We wrapped the Marathon submit REST call in a small script: `deploy.sh`. You can use it to deploy Jupyter on your MANTL cluster.
+We're using the Docker image jupyter/minimal-notebook from
+[the Jupyter team](https://github.com/jupyter/docker-stacks).
 
+## Step 0: Create your cluster
+
+See [the README for the examples folder](../README.md), under "Creating a Mantl
+Cluster".
+
+## Step 1: Figure out the IP address of your control node
+
+See [the README for the examples folder](../README.md), under "IPs and URLs".
+
+## Step 2: Launch your app
+
+See [the README for the examples folder](../README.md), under "Launching Your App".
+
+**Warning** Due to a known issue
+(https://github.com/CiscoCloud/mantl/issues/1142), the Jupyter working directory
+won't be writable on GlusterFS. We can use ansible to fix this:
 ```bash
-./deploy.sh
+ansible --become all -a 'chown centos /mnt/container-volumes/jupyter'
 ```
 
-It takes a while to download the Jupyter image from DockerHub (up to 15 minutes), so please be patient the first time you deploy it. If everything went fine, you should be able to figure out the front end URL of your Jupyter deployment from the Traefik UI. Alternatively, if you deployed MANTL locally, you can even access Jupyter using the back end URL available in the Marathon UI.
+## Step 3: View your app
 
-**Warning** Due to an issue (https://github.com/CiscoCloud/mantl/issues/1142), the Jupyter working directory won't be writable on GlusterFS. To fix this we need to ssh into a node and change the ownership of it. 
-
-```bash
-sudo chown centos /mnt/container-volumes/jupyter/
-```
+See [the README for the examples folder](../README.md), under "Finding your app".

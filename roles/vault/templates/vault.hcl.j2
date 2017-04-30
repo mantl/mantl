@@ -8,6 +8,6 @@ backend "consul" {
 
 listener "tcp" {
 	address = "0.0.0.0:{{ vault_default_port }}"
-	tls_cert_file = "/etc/pki/tls/certs/host.cert"
-	tls_key_file = "/etc/pki/tls/private/host.key"
+	tls_cert_file = "/etc/pki/mantl/cert"
+	tls_key_file = "/etc/pki/mantl/key"
 }

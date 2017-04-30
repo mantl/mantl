@@ -1,5 +1,0 @@
----
-allow_duplicates: yes
-dependencies:
-  - role: distributive
-    current_role: haproxy

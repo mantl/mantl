@@ -14,10 +14,6 @@
 - name: wait for marathon to listen
   command: /usr/bin/smlr http "http://localhost:{{ marathon_port }}/ping"
 
-- name: reload consul
-  sudo: yes
-  command: "{{ consul_bin }} reload"
-
 - name: restart nginx-marathon
   sudo: yes
   command: systemctl restart nginx-marathon

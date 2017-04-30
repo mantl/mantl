@@ -71,7 +71,7 @@ def neutron_public_url(catalog):
     """Get Neutron publicURL"""
 
     for i in catalog['access']['serviceCatalog']:
-        if i['name'] == 'neutron':
+        if i['type'] == 'network':
             for endpoint in i['endpoints']:
                 return endpoint['publicURL']
 
@@ -125,6 +125,8 @@ if __name__ == "__main__":
     catalog = get_catalog()
     token = get_token(catalog)
     public_url = neutron_public_url(catalog)
+    if not public_url.endswith('/'):
+        public_url = public_url + "/"
     ports = list_ports(token, public_url)
 
     exit_code = 0 # no update to port

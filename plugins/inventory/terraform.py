@@ -407,6 +407,10 @@ def aws_host(resource, module_name):
         attrs['ansible_ssh_user'] = raw_attrs['tags.sshUser']
     if 'tags.sshPrivateIp' in raw_attrs:
         attrs['ansible_ssh_host'] = raw_attrs['private_ip']
+    if not attrs['ansible_ssh_host']:
+        attrs['ansible_ssh_host'] = raw_attrs['private_ip']
+    if 'tags.sshCommonArgs' in raw_attrs and raw_attrs['tags.sshCommonArgs']:
+        attrs['ansible_ssh_common_args'] = raw_attrs['tags.sshCommonArgs']
 
     # attrs specific to Mantl
     attrs.update({
@@ -639,6 +643,41 @@ def clc_server(resource, module_name):
     return name, attrs, groups
 
 
+@parses('ucs_service_profile')
+@calculate_mantl_vars
+def ucs_host(resource, module_name):
+    name = resource['primary']['id']
+    raw_attrs = resource['primary']['attributes']
+    groups = []
+
+    # general attrs
+    attrs = {
+        'metadata': parse_dict(raw_attrs, 'metadata'),
+        'provider': 'ucs',
+    }
+
+    # attrs specific to mantl
+    attrs.update({
+        'consul_dc': _clean_dc(attrs['metadata'].get('dc', module_name)),
+        'role': attrs['metadata'].get('role', 'none'),
+    })
+
+    try:
+        attrs.update({
+            'ansible_ssh_host': raw_attrs['vNIC.0.ip'],
+            'public_ipv4': raw_attrs['vNIC.0.ip'],
+            'private_ipv4': raw_attrs['vNIC.0.ip']
+        })
+    except (KeyError, ValueError):
+        attrs.update({'ansible_ssh_host': '', 'publicly_routable': False})
+
+    # add groups based on attrs
+    groups.append('role=' + attrs['role']) #.get('role', 'none'))
+
+    # groups.append('all:children')
+    groups.append('dc=' + attrs['consul_dc'])
+
+    return name, attrs, groups
 
 ## QUERY TYPES
 def query_host(hosts, target):

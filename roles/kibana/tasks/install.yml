@@ -1,0 +1,35 @@
+---
+- name: create packages json
+  sudo: yes
+  template:
+    src: "{{ item.value.template }}"
+    dest: /etc/marathon/apps/{{ item.value.dest }}
+  with_dict: kibana_packages
+  tags:
+    - kibana
+
+- name: check if services are registered
+  sudo: yes
+  shell: "consul-cli catalog-service {{ item.value.service_name }} | jq '.|length'"
+  register: kibana_service_count
+  changed_when: false
+  with_dict: kibana_packages
+  tags:
+    - kibana
+
+- name: install kibana
+  sudo: yes
+  command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/kibana @/etc/marathon/apps/{{ kibana_packages.kibana.dest }}
+  when: "{{ item.stdout|int == 0 and item.item.key == 'kibana' }}"
+  with_items: kibana_service_count.results
+  tags:
+    - kibana
+
+- name: remove packages json
+  sudo: yes
+  file:
+    dest: /etc/marathon/apps/{{ item.value.dest }}
+    state: absent
+  with_dict: kibana_packages
+  tags:
+    - kibana

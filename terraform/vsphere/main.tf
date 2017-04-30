@@ -2,6 +2,7 @@ variable "datacenter" {}
 variable "cluster" {}
 variable "pool" {}
 variable "template" {}
+variable "linked_clone" { default = false }
 variable "ssh_user" {}
 variable "ssh_key" {}
 variable "consul_dc" {}
@@ -27,6 +28,10 @@ variable "control_ram" { default = 4096 }
 variable "worker_ram" { default = 4096 }
 variable "edge_ram" { default = 4096 }
 
+variable "domain" { default = "" }
+variable "dns_server1" { default = "" }
+variable "dns_server2" { default = "" }
+
 resource "vsphere_virtual_machine" "mi-control-nodes" {
   name = "${var.short_name}-control-${format("%02d", count.index+1)}"
   datacenter = "${var.datacenter}"
@@ -36,6 +41,8 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
 
   vcpu = "${var.control_cpu}"
   memory = "${var.control_ram}"
+
+  linked_clone = "${var.linked_clone}"
 
   disk {
     size = "${var.control_volume_size}"
@@ -47,6 +54,9 @@ resource "vsphere_virtual_machine" "mi-control-nodes" {
   network_interface {
     label = "${var.network_label}"
   }
+
+  domain = "${var.domain}"
+  dns_servers = ["${var.dns_server1}", "${var.dns_server2}"]
 
   custom_configuration_parameters = {
     role = "control"
@@ -76,6 +86,8 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
 
   vcpu = "${var.worker_cpu}"
   memory = "${var.worker_ram}"
+  
+  linked_clone = "${var.linked_clone}"
 
   disk {
     size = "${var.worker_volume_size}"
@@ -87,6 +99,9 @@ resource "vsphere_virtual_machine" "mi-worker-nodes" {
   network_interface {
     label = "${var.network_label}"
   }
+
+  domain = "${var.domain}"
+  dns_servers = ["${var.dns_server1}", "${var.dns_server2}"]
 
   custom_configuration_parameters = {
     role = "worker"
@@ -118,6 +133,8 @@ resource "vsphere_virtual_machine" "mi-kubeworker-nodes" {
   vcpu = "${var.worker_cpu}"
   memory = "${var.worker_ram}"
 
+  linked_clone = "${var.linked_clone}"
+
   disk {
     size = "${var.worker_volume_size}"
     template = "${var.template}"
@@ -129,7 +146,10 @@ resource "vsphere_virtual_machine" "mi-kubeworker-nodes" {
     label = "${var.network_label}"
   }
 
-  configuration_parameters = {
+  domain = "${var.domain}"
+  dns_servers = ["${var.dns_server1}", "${var.dns_server2}"]
+
+  custom_configuration_parameters = {
     role = "kubeworker"
     ssh_user = "${var.ssh_user}"
     consul_dc = "${var.consul_dc}"
@@ -158,6 +178,8 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   vcpu = "${var.edge_cpu}"
   memory = "${var.edge_ram}"
 
+  linked_clone = "${var.linked_clone}"
+
   disk {
     size = "${var.edge_volume_size}"
     template = "${var.template}"
@@ -168,6 +190,9 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
   network_interface {
     label = "${var.network_label}"
   }
+
+  domain = "${var.domain}"
+  dns_servers = ["${var.dns_server1}", "${var.dns_server2}"]
 
   custom_configuration_parameters = {
     role = "edge"
@@ -189,17 +214,17 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.0.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-control-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ip_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ipv4_address)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.0.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.0.ipv4_address)}"
 }

@@ -1,0 +1,87 @@
+# collectd
+
+Hostname "{{ inventory_hostname }}"
+Interval 10
+Include "/etc/collectd.d/"
+TypesDB "/usr/share/collectd/types.db"
+
+LoadPlugin "cpu"
+LoadPlugin "disk"
+LoadPlugin "df"
+LoadPlugin "interface"
+LoadPlugin "load"
+LoadPlugin "memory"
+LoadPlugin "syslog"
+
+<Plugin "cpu">
+  ReportByState true
+  ReportByCpu false
+  ValuesPercentage true
+</Plugin>
+
+<Plugin "memory">
+  ValuesPercentage true
+  ValuesAbsolute true
+</Plugin>
+
+<Plugin "df">
+  FSType anon_inodefs
+  FSType bdev
+  FSType cgroup
+  FSType cpuset
+  FSType debugfs
+  FSType devpts
+  FSType devtmpfs
+  FSType ecryptfs
+  FSType fuse
+  FSType fusectl
+  FSType hugetlbfs
+  FSType mqueue
+  FSType nfs
+  FSType nfs4
+  FSType nfsd
+  FSType pipefs
+  FSType proc
+  FSType pstore
+  FSType ramfs
+  FSType rootfs
+  FSType rpc_pipefs
+  FSType securityfs
+  FSType sockfs
+  FSType sysfs
+  FSType tmpfs
+  FSType vboxsf
+  IgnoreSelected true
+  ReportByDevice false
+  ValuesAbsolute true
+  ValuesPercentage true
+  ReportInodes true
+</Plugin>
+
+<Plugin "interface">
+  Interface "/^veth/"
+  IgnoreSelected true
+</Plugin>
+
+<Plugin "syslog">
+  LogLevel "err"
+</Plugin>
+
+{% if collectd_output_network %}
+LoadPlugin "network"
+<Plugin "network">
+  Server "{{ collectd_output_network_server_addr }}" "{{ collectd_output_network_server_port }}"
+</Plugin>
+{% endif %}
+
+{% if collectd_output_kafka %}
+LoadPlugin "write_kafka"
+<Plugin "write_kafka">
+  Property "metadata.broker.list" "{{ collectd_output_kafka_broker_list }}"
+  <Topic "{{ collectd_output_kafka_topic }}">
+    Format {{ collectd_output_kafka_format }}
+  </Topic>
+</Plugin>
+{% endif %}
+
+# EOF

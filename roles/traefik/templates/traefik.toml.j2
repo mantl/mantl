@@ -1,11 +1,22 @@
-port = ":80"
+defaultEntryPoints = ["http", "https"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      CertFile = "/etc/pki/mantl/cert"
+      KeyFile = "/etc/pki/mantl/key"
+
 graceTimeOut = 10
 logLevel = "ERROR"
 
+# Use the REST API configuration backend
 [web]
 address = ":8081"
-CertFile = "/etc/pki/tls/certs/host.cert"
-KeyFile = "/etc/pki/tls/private/host.key"
+CertFile = "/etc/pki/mantl/cert"
+KeyFile = "/etc/pki/mantl/key"
 
 [marathon]
 endpoint = "{{ traefik_marathon_endpoint }}"
@@ -13,3 +24,7 @@ domain = "{{ traefik_marathon_domain }}"
 watch = true
 networkInterface = "{{ ansible_default_ipv4['interface'] }}"
 ExposedByDefault = {{ traefik_marathon_expose_by_default }}
+
+[kubernetes]
+endpoint = "{{ traefik_k8s_endpoint }}"
+namespaces = {{ traefik_k8s_namespaces }}

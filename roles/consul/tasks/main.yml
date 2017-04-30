@@ -12,6 +12,13 @@
     - consul
     - bootstrap
 
+- name: add consul user to tls group
+  sudo: yes
+  user:
+    append: yes
+    name: consul
+    groups: tls
+
 - name: configure consul
   sudo: yes
   template:
@@ -24,6 +31,22 @@
     - acl.json
   notify:
     - restart consul
+  tags:
+    - consul
+
+- name: assert consul restarted
+  sudo: yes
+  command: systemctl restart consul.service
+  notify:
+    - restart consul
+  tags:
+    - consul
+
+- name: assert consul clustering
+  sudo: yes
+  command: consul join {{ item }}
+  with_items: consul_retry_join
+  when: consul_servers_group_override is defined
   tags:
     - consul
 
@@ -52,7 +75,7 @@
   tags:
     - consul
 
-- name: enable consul
+- name: start consul
   sudo: yes
   service:
     name: consul

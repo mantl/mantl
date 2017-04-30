@@ -12,6 +12,7 @@ ExecStartPre=-/usr/bin/docker rm -f skydns
 ExecStartPre=/usr/bin/docker pull skynetservices/skydns:2.5.3a
 
 ExecStart=/usr/bin/docker run \
+    --memory=50M \
     --name=skydns \
     --publish={{ skydns_port }}:53 \
     --publish={{ skydns_port }}:53/udp \

@@ -1,0 +1,37 @@
+---
+- name: create collectd configration dir
+  sudo: yes
+  file:
+    path: /etc/collectd.d
+    state: directory
+  tags:
+    - collectd-monasca
+
+- name: configure collectd
+  sudo: yes
+  template:
+    src: collectd.conf.j2
+    dest: /etc/collectd.conf
+  notify:
+    - restart collectd
+  tags:
+    - collectd-monasca
+
+- name: install collectd systemd service
+  sudo: yes
+  template:
+    src: collectd.service.j2
+    dest: /usr/lib/systemd/system/collectd.service
+  notify:
+    - systemd daemon-reload
+  tags:
+    - collectd-monasca
+
+- name: enable and start collectd
+  sudo: yes
+  service:
+    enabled: yes
+    name: collectd
+    state: started
+  tags:
+    - collectd-monasca

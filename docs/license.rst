@@ -40,8 +40,6 @@ roles/docker: `Apache 2.0 <https://github.com/docker/docker/blob/master/LICENSE>
 
 roles/etcd: `Apache 2.0 <https://github.com/coreos/etcd/blob/master/LICENSE>`__
 
-roles/flannel: `Apache 2.0 <https://github.com/coreos/flannel/blob/master/LICENSE>`__
-
 roles/glusterfs: `GNU GPL 3.0 <http://www.gluster.org/community/documentation/index.php/Gluster_3.2:_Understanding_the_GlusterFS_License>`__
 
 roles/handlers: `Apache 2.0 <https://github.com/CiscoCloud/mantl/blob/master/LICENSE>`__

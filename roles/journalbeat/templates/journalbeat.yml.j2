@@ -1,0 +1,15 @@
+input:
+  seek_position: cursor
+  cursor_seek_fallback: tail
+  write_cursor_state: true
+  cursor_state_file: /var/lib/journalbeat/journalbeat-cursor-state
+  flush_cursor_secs: 3
+  clean_field_names: true
+  convert_to_numbers: false
+output.kafka:
+  hosts: ["broker-1.service.consul:9092","broker-2.service.consul:9092","broker-3.service.consul:9092"]
+  topic: logs
+  client_id: journalbeat-{{ inventory_hostname }}
+logging.level: info
+logging.to_syslog: false
+logging.to_files: false

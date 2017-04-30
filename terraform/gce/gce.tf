@@ -10,10 +10,10 @@ variable "edge_type" {default = "n1-standard-1"}
 variable "edge_count" {default = 2}
 variable "edge_volume_size" {default = "10"} # size is in gigabytes
 variable "edge_data_volume_size" {default = "20"} # size is in gigabytes
-variable "long_name" {default = "microservices-infastructure"}
 variable "network_ipv4" {default = "10.0.0.0/16"}
 variable "region" {default = "us-central1"}
-variable "short_name" {default = "mi"}
+variable "short_name" {default = "mantl"}
+variable "long_name" {default = "mantl"}
 variable "ssh_key" {default = "~/.ssh/id_rsa.pub"}
 variable "ssh_user" {default = "centos"}
 variable "kubeworker_count" {default = 0}
@@ -55,6 +55,10 @@ resource "google_compute_firewall" "mi-firewall-internal" {
   name = "${var.short_name}-firewall-internal"
   network = "${google_compute_network.mi-network.name}"
   source_ranges = ["${google_compute_network.mi-network.ipv4_range}"]
+
+  allow {
+    protocol = "4"
+  }
 
   allow {
     protocol = "tcp"
@@ -198,8 +202,10 @@ resource "google_compute_instance" "mi-worker-nodes" {
   }
 }
 
+
 resource "google_compute_instance" "mi-kubeworker-nodes" {
   name = "${var.short_name}-kubeworker-${format("%03d", count.index+1)}"
+
   description = "${var.long_name} kube worker node #${format("%03d", count.index+1)}"
   machine_type = "${var.worker_type}"
   zone = "${var.zone}"
@@ -293,17 +299,17 @@ resource "google_compute_instance" "mi-edge-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", google_compute_instance.mi-control-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-control-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", google_compute_instance.mi-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-worker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", google_compute_instance.mi-kubeworker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-kubeworker-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", google_compute_instance.mi-edge-nodes.*.network_interface.0.access_config.0.nat_ip)}"
+  value = "${join(",", google_compute_instance.mi-edge-nodes.*.network_interface.0.access_config.0.nat_ip)}"
 }
