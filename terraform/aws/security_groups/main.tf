@@ -1,5 +1,6 @@
 variable "short_name" {}
 variable "vpc_id" {}
+variable "ingress_cidr_blocks" { default = "0.0.0.0/0" }
 
 resource "aws_security_group" "control" {
   name = "${var.short_name}-control"
@@ -14,42 +15,42 @@ resource "aws_security_group" "control" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Mesos
     from_port = 5050
     to_port = 5050
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Marathon
     from_port = 8080
     to_port = 8080
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Chronos
     from_port = 4400
     to_port = 4400
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Consul
     from_port = 8500
     to_port = 8500
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # ICMP
     from_port = -1
     to_port = -1
     protocol = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
 }
@@ -67,21 +68,21 @@ resource "aws_security_group" "ui" {
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # HTTPS
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Consul
     from_port = 8500
     to_port = 8500
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 }
 
@@ -98,21 +99,21 @@ resource "aws_security_group" "edge" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # HTTP
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # HTTPS
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 }
 
@@ -129,49 +130,49 @@ resource "aws_security_group" "worker" {
     from_port = 22
     to_port = 22
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # HTTP
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # HTTPS
     from_port = 443
     to_port = 443
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Mesos
     from_port = 5050
     to_port = 5050
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Marathon
     from_port = 8080
     to_port = 8080
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # Consul
     from_port = 8500
     to_port = 8500
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 
   ingress { # ICMP
     from_port = -1
     to_port = -1
     protocol = "icmp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${split(",",var.ingress_cidr_blocks)}"]
   }
 }
 
