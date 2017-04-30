@@ -41,7 +41,7 @@ spec:
     - --cloud-provider={{ cloud_provider }}
     {% endif -%}
     - --v={{kube_log_level}}
-    - --storage-backend=consul
+    - --storage-backend=etcd3
     ports:
     - containerPort: {{ kube_master_port }}
       hostPort: {{ kube_master_port }}
