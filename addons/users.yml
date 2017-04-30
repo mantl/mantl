@@ -1,0 +1,8 @@
+---
+# Configure additional users. See roles/users/README.rst for more information.
+
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: all
+  roles:
+    - users

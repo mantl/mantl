@@ -9,5 +9,13 @@
 - name: reload nginx-mantlui
   sudo: yes
   command: systemctl daemon-reload
+  notify:
+    - restart nginx-mantlui
   tags:
     - mantlui
+
+- name: restart nginx-consul
+  become: yes
+  service:
+    name: nginx-consul
+    state: restarted

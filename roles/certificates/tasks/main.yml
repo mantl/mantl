@@ -21,12 +21,16 @@
       dest: /etc/pki/CA/private/cakey.pem
   notify:
     - update-ca-trust
+  tags:
+    - certificates
 
 - name: install generate-certificate
   sudo: yes
   yum:
     name: "{{ generate_certificate_package }}"
     state: present
+  tags:
+    - certificates
 
 - name: create certificate destination directory
   sudo: yes
@@ -36,6 +40,8 @@
     owner: root
     group: root
     mode: 0755
+  tags:
+    - certificates
 
 - name: generate certificates
   sudo: yes
@@ -54,12 +60,16 @@
     --destination "{{ destination }}"
   args:
     creates: "{{ destination }}/{{ prefix }}{% if prefix != '' %}.{% endif %}key"
+  tags:
+    - certificates
 
 - name: create tls group
   sudo: yes
   group:
     name: tls
     state: present
+  tags:
+    - certificates
 
 - name: set permissions on certificate files
   sudo: yes
@@ -76,3 +86,14 @@
     - path: /etc/pki/mantl/key
       mode: "0640"
       group: tls
+  tags:
+    - certificates
+
+- name: remove CA private keys
+  sudo: yes
+  file:
+    state: absent    
+    path: "{{ item.path }}"
+  with_items:
+    - path: /etc/pki/CA/ca.key
+    - path: /etc/pki/CA/private/cakey.pem

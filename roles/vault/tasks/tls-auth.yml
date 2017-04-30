@@ -1,0 +1,38 @@
+---
+- name: authenticate with vault
+  sudo: yes
+  run_once: yes
+  command: vault auth {{ vault_command_options | join(' ') }} {{ vault_token }}
+  changed_when: false
+  tags:
+    - vault
+
+- name: enable cert auth backend
+  sudo: yes
+  run_once: yes
+  command: vault auth-enable {{ vault_command_options | join(' ') }} cert
+  register: vault_enable_cert
+  ignore_errors: yes
+  failed_when: >
+    {{ vault_enable_cert.rc != 0
+    and 'path is already in use' not in vault_enable_cert.stderr }}
+  tags:
+    - vault
+
+- name: write ca cert to authorized certificates
+  sudo: yes
+  run_once: yes
+  command: >
+    vault write {{ vault_command_options | join(' ') }}
+    auth/cert/certs/mantl-ca
+    display_name=mantl-ca
+    certificate=@/etc/pki/CA/ca.cert
+  tags:
+    - vault
+
+- name: authenticate with vault using cert
+  sudo: yes
+  command: vault auth {{ vault_command_options | join(' ') }} --method=cert
+  changed_when: false
+  tags:
+    - vault

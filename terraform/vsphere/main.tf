@@ -214,17 +214,17 @@ resource "vsphere_virtual_machine" "mi-edge-nodes" {
 }
 
 output "control_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-control-nodes.*.network_interface.0.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-control-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "worker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-worker-nodes.*.network_interface.0.ipv4_address)}"
 }
 
 output "kubeworker_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-kubeworker-nodes.*.network_interface.ipv4_address)}"
 }
 
 output "edge_ips" {
-  value = "${join(\",\", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.0.ipv4_address)}"
+  value = "${join(",", vsphere_virtual_machine.mi-edge-nodes.*.network_interface.0.ipv4_address)}"
 }

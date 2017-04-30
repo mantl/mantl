@@ -12,7 +12,7 @@ TimeoutStartSec=20m
 
 ExecStartPre=-/usr/bin/docker rm -f calico-node
 EnvironmentFile=/etc/default/calico
-ExecStart=/usr/bin/calicoctl node --ip={{ private_ipv4 }} \
+ExecStart=/usr/bin/calicoctl node run --ip={{ private_ipv4 }} \
                                   --node-image={{ calico_image }}:{{ calico_image_tag }} 
 
 ExecStop=/usr/bin/calicoctl node stop

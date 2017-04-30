@@ -1,5 +1,3 @@
 ---
 dependencies:
-  - role: certificates
-    when: do_marathon_ssl
   - role: handlers

@@ -1,0 +1,37 @@
+---
+# Logstash job configuration
+logstash_artifact_version: 2.3.2
+logstash_artifact_url: https://download.elastic.co/logstash/logstash/logstash-{{logstash_artifact_version}}.tar.gz
+logstash_cpu: 0.2
+logstash_mem: 512
+logstash_instances: 2
+
+# Logstash configuration for Easlticsearch template
+logstash_es_template: false
+logstash_es_template_file: logstash-template.json
+logstash_es_template_url: http://localhost:8500/v1/kv/conf/logstash/logstash-template.json
+
+# Logstash configuration file
+logstash_configuration_file: logstash.conf
+logstash_configuration_url: http://localhost:8500/v1/kv/conf/logstash/logstash.conf
+
+# Logstash input Beats
+# If defined - logstash will accept messages from beats
+# logstash_input_beats:
+#   port: 5044
+
+# Logstash input Kafka
+# If defined - logstash will read messages from Kafka topic
+# logstash_input_kafka:
+#   group_id: "logstash"
+#   topic_id: "logs"
+#   zk_connectd: "zookeeper.service.consul:2181"
+
+# Logstash output Elasticsearch
+# If defined - logstash will send all the messages to elasticsearch cluster
+# logstash_output_elasticsearch:
+#   codec: "json"
+#   hosts: [ "elasticsearch-client-mantl.service.consul:9200" ]
+#   index: "logs-%{+YYYY.MM.dd}"
+#   template: "./logstash-template.json"
+#   template_name: "logs"

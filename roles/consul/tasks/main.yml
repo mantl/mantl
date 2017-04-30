@@ -34,6 +34,22 @@
   tags:
     - consul
 
+- name: assert consul restarted
+  sudo: yes
+  command: systemctl restart consul.service
+  notify:
+    - restart consul
+  tags:
+    - consul
+
+- name: assert consul clustering
+  sudo: yes
+  command: consul join {{ item }}
+  with_items: consul_retry_join
+  when: consul_servers_group_override is defined
+  tags:
+    - consul
+
 - name: register docker with consul
   sudo: yes
   copy:

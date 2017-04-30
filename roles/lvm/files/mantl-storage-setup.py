@@ -2,6 +2,7 @@
 import subprocess
 from ConfigParser import ConfigParser, NoOptionError
 import os
+import time
 import sys
 import re
 from contextlib import closing
@@ -121,8 +122,8 @@ def process_vg(sec, params):
     else:
         subprocess.check_call([VGCREATE_CMD] + vgoptions + ['-s', str(pesize), name] + list(dev_list))
 
-pct_re = re.compile(r'^(\d+)%(PVS|LV|FREE)$')
-size_re = re.compile(r'^(\d+)[bskmgtpe]$')
+pct_re = re.compile(r'^(\d+)%(PVS|VG|FREE)$')
+size_re = re.compile(r'^(\d+)([bskmgtpe])b?$')
 def parse_size(size):
     if size:
         m = pct_re.match(size)
@@ -139,6 +140,15 @@ def parse_size(size):
     fail("size not specified")
 
 
+def wait_for_device(dev):
+    print "--> Wait for device {}".format(dev)
+    for sec in range(0, 60):
+        if os.path.exists(dev):
+            print "--> Device {} appears in {} seconds".format(dev, sec)
+            break
+        time.sleep(1)
+
+
 def process_volume(sec, params):
     lv = params.get(sec, "volume")
     vg = params.get(sec, "group")
@@ -150,7 +160,7 @@ def process_volume(sec, params):
 
     if not this:
         print "--> Create volume {}".format(lv)
-        check_call([LVCREATE_CMD, "-n", lv, "-" + size_opt, str(size) + size_unit, vg])
+        check_call([LVCREATE_CMD, "-W", "y", "-n", lv, "-" + size_opt, str(size) + size_unit, vg])
     else:
         print "--> Do nothing. Volume {} already exists".format(lv)
 
@@ -176,6 +186,7 @@ def process_fs(sec, params):
 
     fstype = params.get(sec, "fstype")
 
+    wait_for_device(dev)
     try:
         exist_fs = check_output(["blkid", "-c", "/dev/null", "-o", "value", "-s", "TYPE", dev]).strip()
     except subprocess.CalledProcessError:
@@ -246,9 +257,9 @@ def process_thin(sec, params):
 
         meta_size = free_space(vg, "s") / 1000 + 1
         print "--> Create meta volume {} for thin pool".format(meta)
-        check_call([LVCREATE_CMD, "-n", meta, "-L",  str(meta_size) + "s", vg])
+        check_call([LVCREATE_CMD, "-W", "y", "-n", meta, "-L",  str(meta_size) + "s", vg])
         print "--> Create data volume {} for thin pool".format(data)
-        check_call([LVCREATE_CMD, "-n", data, "-" + size_opt, str(size) + size_unit, vg])
+        check_call([LVCREATE_CMD, "-W", "y", "-n", data, "-" + size_opt, str(size) + size_unit, vg])
         print "--> Create thin pool {}".format(pool)
         convert = [LVCONVERT_CMD, "-y", "--zero", "n" ]
         if chunk_size:

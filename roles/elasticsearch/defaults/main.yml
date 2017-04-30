@@ -13,6 +13,7 @@ elasticsearch_executor_name: elasticsearch-executor-mantl
 elasticsearch_framework_version: 1.0.1-1
 elasticsearch_framework_name: mantl/elasticsearch
 elasticsearch_framework_ui_port: 31100
+elasticsearch_data_directory: "/mnt/mantldata/elasticsearch"
 
 # elasticsearch client node
 elasticsearch_client_id: mantl/elasticsearch-client

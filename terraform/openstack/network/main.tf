@@ -15,7 +15,7 @@ resource "openstack_networking_subnet_v2" "subnet" {
   network_id = "${openstack_networking_network_v2.network.id}"
   cidr = "${var.subnet_cidr}"
   ip_version = "${var.ip_version}"
-  dns_nameservers = ["${compact(split(\",\", var.dns_nameservers))}"]
+  dns_nameservers = ["${compact(split(",", var.dns_nameservers))}"]
   enable_dhcp = true
 }
 
@@ -31,4 +31,8 @@ resource "openstack_networking_router_interface_v2" "router-interface" {
 
 output "network_uuid" {
   value = "${openstack_networking_network_v2.network.id}"
+}
+
+output "subnet_uuid" {
+  value = "${openstack_networking_router_interface_v2.router-interface.subnet_id}"
 }

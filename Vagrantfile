@@ -7,10 +7,11 @@ config_hash = {
   "kubeworker_count" => 1,
   "control_count" => 1,
   "edge_count" => 1,
-  "kubeworker_ip_start" => "192.168.100.15",
-  "worker_ip_start" => "192.168.100.20",
-  "control_ip_start" => "192.168.100.10",
-  "edge_ip_start" => "192.168.100.25",
+  "kubeworker_ip_start" => "172.20.10.15",
+  "worker_ip_start" => "172.20.10.20",
+  "control_ip_start" => "172.20.10.10",
+  "control_port_start" => "808",
+  "edge_ip_start" => "172.20.10.25",
   "kubeworker_memory" => 1024,
   "worker_memory" => 1024,
   "control_memory" => 1024,
@@ -87,6 +88,7 @@ Vagrant.configure(2) do |config|
   (1..config_hash["control_count"]).each do |c|
     hostname = "control-0#{c}"
     ip = config_hash["control_ip_start"] + "#{c}"
+    port = config_hash["control_port_start"] + "#{c}"
     last = (c >= config_hash["control_count"])
 
     config.vm.define hostname, primary: last do |control|
@@ -96,6 +98,7 @@ Vagrant.configure(2) do |config|
       end
       control.vm.hostname = hostname
       control.vm.network "#{config_hash['network']}_network", :ip => ip
+      control.vm.network "forwarded_port", guest: 80, host: port
       hosts += "#{ip}    #{hostname}\n"
       controls << hostname
       control_hostvars = {
@@ -113,8 +116,17 @@ Vagrant.configure(2) do |config|
         control.vm.synced_folder ".", "/vagrant", type: "rsync",
           rsync__exclude: [
             ".terraform/", ".git/", ".vagrant/", "docs/", "builds/",
-            "packer_cache/"
+            "packer_cache/", "security.yml"
         ]
+        # Don't clobber security.yml, it might have vault tokens
+        # Caution: this causes https://github.com/mitchellh/vagrant/issues/7036
+        # such that no files will be overwritten on `vagrant rsync`
+        control.vm.synced_folder ".", "/vagrant", type: "rsync",
+          rsync__args: [
+            "--verbose", "--archive", "-z", "--copy-links", # defaults
+            "--ignore-existing", "--include=security.yml", "--exclude='*'"
+        ]
+        # Get provisioning dependencies, security-setup
         control.vm.provision "shell" do |s|
           s.path = "vagrant/provision.sh"
           s.args = [hosts]

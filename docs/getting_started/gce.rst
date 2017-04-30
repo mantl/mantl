@@ -5,8 +5,7 @@ Google Compute Engine
 
 As of Mantl 0.3 you can bring up Google Compute Engine environments using
 Terraform. Mantl uses Terraform to provision hosts. You
-can `download Terraform from terraform.io
-<https://www.terraform.io/downloads.html>`_.
+can download Terraform from `terraform.io <https://www.terraform.io/downloads.html>`_.
 
 Configuring Google Compute Engine for Terraform
 -----------------------------------------------
@@ -46,11 +45,11 @@ Basic Settings
 
 ``project``, ``region`` and ``zones`` are unique values for each project in Google Compute
 Engine. ``project`` is available from the project overview page (use the Project
-ID not the Project Name.) You can select which region and zones you want to use from any of the GCE zones (see
-the image below) If you're in the United States, (region) `us-central1` and (zones) `us-central1-a,us-central1-b,us-central1-c` are a good choice.
-If you're in Europe, `europe-west1` and `europe-west1-b,europe-west1-c` might be your best bets. If you haven't
-previously activated Compute Engine for your project, this is a good time to do
-it. 
+ID not the Project Name.) You can select which region and zones you want to use from any of
+the GCE zones (see the image below.) If you're in the United States, (region) `us-central1`
+and (zones) `us-central1-a,us-central1-b,us-central1-c` are good choices.
+If you're in Europe, `europe-west1` and `europe-west1-b,europe-west1-c` might be your best bets.
+If you haven't previously activated Compute Engine for your project, this is a good time to do it. 
 
 .. image:: /_static/gce_zones.png
    :alt: The GCE zones available at Product and Services menu -> Compute Engine -> Zones in their
@@ -143,7 +142,7 @@ are stored in local terraform.tfstate file at the root of this project.
 Instead of storing the state for all the modules in one file, you might deploy the modules
 independently and have different terraform.tfstate for each module (either locally or remote). 
 This can help with blue/green deployments, or making sure you don't accidently override more static
-parts of the infrastructure such as the network. 
+parts of the infrastructure, such as the network. 
 
 In the gce.sample.tf we have included examples of how you would reference a remote state file for network variables. 
 
@@ -157,7 +156,6 @@ Then in your ``gce.tf`` file you would want to comment out:
   #   source = "./terraform/gce/network"
   #   network_ipv4 = "10.0.0.0/16"
   #}
-
 
 and uncomment:
 
@@ -177,8 +175,8 @@ and change all the network_name variables for the nodes to be:
   network_name = "${terraform_remote_state.gce-network.output.network_name}"
 
 Ideally you would store the state remotely, but configuring that is outside the scope of 
-this document. `This <http://blog.mattiasgees.be/2015/07/29/terraform-remote-state/>`_ is a 
-good explanation on how to configure and use remote state. 
+this document. The following blog explains how to configure and use remote state, `Terraform remote state
+<http://blog.mattiasgees.be/2015/07/29/terraform-remote-state/>`_.
 
 Configuring DNS with Google Cloud DNS
 -------------------------------------

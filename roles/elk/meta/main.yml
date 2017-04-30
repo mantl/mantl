@@ -2,4 +2,5 @@
 dependencies:
   - role: elasticsearch
   - role: kibana
-  - { role: logstash, when: "not (elk_uninstall|bool)" }
+  - role: logstash
+    when: "{{ not (elk_uninstall|bool) }}"
