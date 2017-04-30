@@ -3,7 +3,7 @@
   "advertise_addr": "{{ consul_advertise }}",
   "node_name": "{{ inventory_hostname }}",
   "rejoin_after_leave": true,
-  "domain": "{{ consul_dns_domain }}",
+  "domain": "consul",
   "log_level": "{{ consul_log_level }}",
   "retry_join": [ {{ consul_retry_join }} ],
 {% if consul_is_server|bool %}
@@ -14,8 +14,8 @@
   "encrypt": "{{ consul_gossip_key }}",
 {% endif %}
   "ca_file": "/etc/pki/CA/ca.cert",
-  "cert_file": "/etc/pki/tls/certs/host.cert",
-  "key_file": "/etc/pki/tls/private/host.key",
+  "cert_file": "/etc/pki/mantl/cert",
+  "key_file": "/etc/pki/mantl/key",
 {% if provider == "virtualbox" or provider == "vmware_fusion" %}
   {# Used to fix a bad certificate error #}
   "verify_incoming": false,

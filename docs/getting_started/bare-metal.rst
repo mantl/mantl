@@ -1,13 +1,13 @@
 Bare-Metal
 ==========
 
-By bare-metal we mean a set of physical computers that have Centos 7
-installed on them.
+With respect to Mantl, a bare-metal environment means a set of physical
+computers that have Centos 7 installed on them.
 
 If you are using Openstack, VMware, or some other cloud provider,
 Mantl.io has terraform scripts for you. From a Mantl.io perspective,
 this doc is about setting up the inventory file by hand and preparing
-the machines to a state similar to what terraform would have done.
+the machines to a state similar to what Terraform would have done.
 
 The minimum requirements for installing Mantl (based on the AWS sample) are
 edge, control and worker nodes with 1 core and about 4 GB of RAM.  This
@@ -22,14 +22,14 @@ This document explains:
  * Setting up Ansible
 
 Setting Up Centos 7
--------------------
+===================
 
 Thumb Drive Install
 ~~~~~~~~~~~~~~~~~~~
 
-There are much more professional ways of creating your instances, but if
-you are looking for a solution for a couple machines at home, perhaps
-you actually need some tips on how to do it. The least technical way to
+There are more professional ways of creating your instances, but if
+you are looking for a solution for a couple of machines at home,
+you will need some tips on how to do it. The least technical way to
 do this is with a thumb drive.
 
 Create a bootable USB drive with Centos 7. This can be a bit confusing, we
@@ -52,16 +52,16 @@ During installation you will use the defaults except:
    -  These are services machines and won't store many files in home,
       Home should be set to a small partion size leaving you with some
       unpartioned space.
-   -  You will need to leave unformatted space on the drive for docker.
-      Try to leave at least 50 unformated for the docker LVM partion
+   -  You will need to leave unformatted space on the drive for Docker.
+      Try to leave at least 50 unformated for the Docker LVM partion
       that is described in the "Create Partion for Docker LVM" section
       below.
 
 -  Turn on your wired internet connection. It should just be a toggle
-   switch for your device.
--  Once the install starts it asks for a root password and a first user.
--  Having a ``centos`` admin user will match what happens in cloud
-   environments.
+   switch for your device
+-  Once the install starts, it asks for a root password and a first user
+-  Having a ``centos`` admin user will match what happens in the cloud
+   environments
 
 Once rebooted, if you forgot to turn on your internet in the install,
 you can set it up using the following tutorial:
@@ -76,7 +76,7 @@ Chosing a static IP range
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 I chose 172.16.222.x because its unlikely to overlap with any network I
-might move this cluster too.
+might move this cluster to.
 
 Give it a static IP and set DNS and Gateway
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -106,7 +106,7 @@ You should see somethng like:
         inet6 fe80::baae:edff:fe71:6c06/64 scope link
            valid_lft forever preferred_lft forever
 
-from this you can see that eno1 is the ethernet device.
+From this you can see that eno1 is the ethernet device.
 
 Edit ``/etc/sysconfig/network-scripts/ifcfg-eno1``
 
@@ -153,7 +153,7 @@ Create Partion For Docker LVM
 -  please note which partition it is in. So if its partition 5,
    eventually you will need to tell mantl /dev/sda5 for the LVM
 -  you kinda want all your machines to use the same partition because
-   this partition is entered as a system wide variable.
+   this partition is entered as a system wide variable
 -  first sector: default
 -  last sector: +50G
 -  Command: w
@@ -162,7 +162,7 @@ Create Partion For Docker LVM
 
 Don't put a file system on the partion.
 
-Note that I am creating a partion size 50 Gigs, this is for docker. Just
+Note: I am creating a partion size of 50 Gigs, this is for docker. Just
 make it consistent across your cluster.
 
 There are two main types of drives on the market today. The older type
@@ -240,7 +240,7 @@ enter:
 The rest of the options will be discussed below.
 
 Getting Started with Ansible
-----------------------------
+============================
 
 Add your key to all the machines in your inventory
 
@@ -306,7 +306,7 @@ It asks for one admin password. At the end of that run there will be a
 of keys needed for installation.
 
 The playbook you will be running is ``sample.yml``. Since you created
-your own inventory and didn't use terraform, there are a few variables
+your own inventory and didn't use Terraform, there are a few variables
 you need to set for your run.
 
 ::
@@ -358,6 +358,6 @@ The meaning of the parts of this command are as follows:
     Tailing with a -f flag lets you watch the progress as ansible works through
     the rolls accross your inventory.
 
-Once you are done go to the browser and go to the IP address of any
+Once you are done, go to the browser and go to the IP address of any
 control node and you should see the Mantl UI. For the inventory shown
 above, you could go to ``172.16.222.6/ui``.

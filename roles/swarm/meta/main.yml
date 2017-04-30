@@ -1,0 +1,9 @@
+---
+dependencies:
+  - role: handlers
+  - role: certificates
+
+  # Open the Docker socket to the network
+  - role: docker
+    docker_tcp: true
+    docker_tcp_tls: "{{ swarm_tcp_tls }}"

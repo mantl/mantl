@@ -28,7 +28,7 @@
 - name: install chronos addon
   sudo: yes
   run_once: yes
-  command: consul-cli kv-write mantl-install/apps/chronos @/etc/marathon/apps/chronos.json
+  command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/chronos @/etc/marathon/apps/chronos.json
   when: chronos_service_count.stdout|int == 0
   tags:
     - chronos

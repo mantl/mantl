@@ -50,7 +50,7 @@
 - name: probe servers
   sudo: yes
   run_once: true
-  command: gluster peer probe {{ item }}.node.{{ consul_dns_domain }}
+  command: gluster peer probe {{ item }}.node.consul
   with_items: play_hosts
   tags:
     - glusterfs
@@ -175,7 +175,7 @@
 
 - name: wait for gluster service
   wait_for:
-    host: glusterfs.service.{{ consul_dns_domain }}
+    host: glusterfs.service.consul
     port: 24007
     state: present
   tags:

@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube2consul
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: kube2consul
+    image: "{{ kube2consul_image }}:{{ kube2consul_image_tag }}"
+    command:
+    - /kube2consul
+    - --consul-agent=http://127.0.0.1:8500
+    - --domain=cluster.local
+    - --healthz-port=8081
+    - --kube-master-url=http://127.0.0.1:{{ kube_insecure_port }}
+    - --kubecfg-file=/etc/kubernetes/kubeconfig.yml
+    - --log-flush-frequency=5s
+    livenessProbe:
+      httpGet:
+        host: 127.0.0.1
+        path: /readiness
+        port: 8081
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+    volumeMounts:
+    - mountPath: /etc/kubernetes
+      name: etc-kubernetes
+      readOnly: true
+    - mountPath: /etc/pki
+      name: etc-pki
+      readOnly: true
+  volumes:
+  - name: etc-kubernetes
+    hostPath:
+      path: /etc/kubernetes
+  - name: etc-pki
+    hostPath:
+      path: /etc/pki

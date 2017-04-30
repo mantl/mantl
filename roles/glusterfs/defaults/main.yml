@@ -3,9 +3,7 @@
 glusterfs_mode: client
 
 # software sources
-glusterfs_version: 3.7.6
-glusterfs_repo: https://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version.split(".")[:2]|join(".")}}/{{glusterfs_version}}/EPEL.repo/glusterfs-epel.repo
-glusterfs_repo_sha256sum: ee06398d5b09d230fa3ffad4995b83089012a426265741c58a70bf587d14613c.
+glusterfs_repo_package: centos-release-gluster37
 
 # clustering and replication
 glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"

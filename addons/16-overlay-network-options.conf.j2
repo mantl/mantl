@@ -1,0 +1,3 @@
+# /etc/systemd/systemd/docker.service.d/16-overlay-network-options.conf
+[Service]
+Environment='DOCKER_OVERLAY_NETWORK_OPTIONS={{ overlay_options | join (" ") }}'

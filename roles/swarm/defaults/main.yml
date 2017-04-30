@@ -1,0 +1,6 @@
+---
+swarm_image: swarm:1.2.3
+swarm_manager_port: 4000
+
+# This option overrides the Docker role's docker_tcp_tls
+swarm_tcp_tls: true

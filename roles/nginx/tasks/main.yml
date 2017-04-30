@@ -24,6 +24,7 @@
    - src: nginx-consul.env.j2
      dest: /etc/default/nginx-consul.env
   notify:
+    - reload systemd
     - restart nginx-consul
   tags:
     - nginx

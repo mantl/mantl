@@ -17,9 +17,9 @@ resource "aws_elb" "mantl-elb" {
   idle_timeout = 400
   connection_draining = true
   connection_draining_timeout = 400
-  subnets = ["${split(\",\", var.subnets)}"]
-  security_groups = ["${split(\",\", var.security_groups)}"]
-  instances = ["${split(\",\", var.instances)}"]
+  subnets = ["${split(",", var.subnets)}"]
+  security_groups = ["${split(",", var.security_groups)}"]
+  instances = ["${split(",", var.instances)}"]
 
   listener {
     instance_port = 80

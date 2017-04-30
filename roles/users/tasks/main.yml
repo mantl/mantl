@@ -1,0 +1,45 @@
+---
+- name: configure members of wheel group for passwordless sudo
+  sudo: yes
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^%wheel"
+    line: "%wheel ALL=(ALL) NOPASSWD: ALL"
+    state: present
+  tags:
+    - users
+
+- name: create groups
+  sudo: yes
+  group:
+    name: "{{ item.1 }}"
+    state: present
+  with_subelements:
+    - users
+    - groups
+  tags:
+    - users
+
+- name: create os users
+  sudo: yes
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups | join(',') }}"
+    state: "{{ item.state }}"
+    createhome: yes
+    home: "/home/{{ item.name }}"
+    remove: yes
+  with_items: "{{ users }}"
+  tags:
+    - users
+
+- name: set authorized ssh keys for users
+  sudo: yes
+  authorized_key:
+    user: "{{ item.0.name }}"
+    key: "{{ item.1 }}"
+  with_subelements:
+    - users
+    - authorized_keys
+  tags:
+    - users

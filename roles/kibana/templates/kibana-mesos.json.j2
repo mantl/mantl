@@ -1,0 +1,21 @@
+{
+  "name": "kibana-mesos",
+  "config": {
+    "kibana-mesos": {
+      "id": "{{ kibana_mesos_id }}",
+      "framework-name": "{{ kibana_mesos_framework_name }}",
+      "elasticsearch-http": "http://{{ kibana_mesos_elasticsearch_service }}.service.consul:9200",
+      "scheduler": {
+        "cpu": {{ kibana_mesos_scheduler_cpu }},
+        "ram": {{ kibana_mesos_scheduler_ram }}
+      },
+      "executor": {
+        "image": "{{ kibana_mesos_image }}",
+        "cpu": {{ kibana_mesos_executor_cpu }},
+        "ram": {{ kibana_mesos_executor_ram }},
+        "instances": {{ kibana_mesos_instances }},
+        "command": "export ELASTICSEARCH_SERVICE={{ kibana_mesos_elasticsearch_service }}; export KIBANA_SERVICE={{ kibana_mesos_kibana_service }}; export KIBANA_LOGSTASH_CONFIG={{ kibana_logstash_config|to_nice_json }}; {% if do_consul_ssl|bool %}export CONSUL_SSL=true; export CONSUL_SSL_VERIFY=false; {% endif %}tini -s -- /launch.sh"
+      }
+    }
+  }
+}

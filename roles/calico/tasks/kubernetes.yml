@@ -1,19 +1,33 @@
----
-- name: Calico directory for plugins
+- name: Calico ipPool configuration
+  sudo: yes
+  template:
+    src: calico_ippool.yml.j2
+    dest: /etc/calico/calico_ippool.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Calico profile configuration
+  sudo: yes
+  template:
+    src: calico_profile.yml.j2
+    dest: /etc/calico/calico_profile.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Calico directory for cni config
   sudo: yes
   file:
-    path: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/
+    path: /etc/kubernetes/cni
     state: directory
   tags:
     - calico
 
-- name: Get calico-kubernetes plugin
+- name: Calico cni config for kubernetes
   sudo: yes
-  get_url:
-    url: https://github.com/projectcalico/calico-docker/releases/download/v0.5.4/calico_kubernetes
-    dest: /usr/libexec/kubernetes/kubelet-plugins/net/exec/calico/calico
-    mode: 0755
+  template:
+    src: calico-plugin.conf
+    dest: /etc/kubernetes/cni/10-calico.conf
   tags:
     - calico
-
-
