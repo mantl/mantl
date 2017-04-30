@@ -1,0 +1,49 @@
+---
+- name: create logstash conf dir
+  sudo: yes
+  file:
+    path: /etc/logstash
+    state: directory
+  tags:
+    - logstash-monasca
+
+- name: copy logstash configuration
+  sudo: yes
+  template:
+    src: logstash.conf.j2
+    dest: "/etc/logstash/{{logstash_configuration_file}}"
+  tags:
+    - logstash-monasca
+
+- name: copy elasticsearch index template
+  sudo: yes
+  copy:
+    src: "{{logstash_es_template_file}}"
+    dest: "/etc/logstash/{{logstash_es_template_file}}"
+  tags:
+    - logstash-monasca
+
+- name: copy logstash app json
+  sudo: yes
+  template:
+    src: logstash.json.j2
+    dest: /etc/logstash/logstash.json
+  tags:
+    - logstash-monasca
+
+- name: upload logstash configuration and template to consul kv
+  sudo: yes
+  run_once: yes
+  command: "curl -XPUT -d@/etc/logstash/{{item}} http://localhost:8500/v1/kv/conf/logstash/{{item}}"
+  with_items:
+    - "{{logstash_configuration_file}}"
+    - "{{logstash_es_template_file}}"
+  tags:
+    - logstash-monasca
+
+- name: submit logstash app to marathon
+  sudo: yes
+  run_once: yes
+  command: 'curl -XPUT -d@/etc/logstash/logstash.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/logstash'
+  tags:
+    - logstash-monasca

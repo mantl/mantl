@@ -1,3 +1,4 @@
+
 ---
 generate_certificate_package: generate-certificate-0.1.1-1
 
@@ -8,24 +9,22 @@ locality: ""     # Default: Anytown
 organization: "" # Default: Example Company Inc
 unit: ""         # Default: Operations
 email: ""        # Default: operations@example.com
-location: "{{ inventory_hostname }}" # Openssl's "CN" ("Common Name"). Can't be ""
+location: "{{ inventory_hostname | default(ansible_ssh_hostname) }}" # Openssl's "CN" ("Common Name"). Can't be ""
 # What DNS names will this certificate be valid for?
 # generate-certificates always includes DNS:localhost and IP:127.0.0.1.
 dns:
+  - localhost
+  - "{{ ansible_ssh_hostname | default(ansible_hostname) }}"
   - "{{ inventory_hostname }}"
+  - "{{ ansible_ssh_hostname | default(ansible_hostname) }}.node.consul"
   - "{{ inventory_hostname }}.node.consul"
-  - "{{ ansible_hostname }}"
-  - "{{ ansible_hostname }}.node.consul"
   - "*.service.consul"
-  - "kubernetes.default.svc.{{ cluster_name }}"
 # What IP addresses will this certificate be valid for?
 ip:
-  - "{{ ansible_all_ipv4_addresses | join(' ') }}"
-  - "{{ ansible_all_ipv6_addresses | join(' ') }}"
-  # This is the first address in the kube_service_addresses range, aka the
-  # k8s_service_ip. It is used internally by the dashboard and other services.
-  - "{{ kube_service_addresses|ipaddr('net')|ipaddr(1)|ipaddr('address') }}"
-
+  - 127.0.0.1
+  - "{{ public_ipv4 }}"
+  - "{{ private_ipv4 }}"
+  - "{{ ansible_ssh_host }}"
 # Don't change these defaults; many components depend on the expected locations.
 prefix: ""
 destination: /etc/pki/mantl

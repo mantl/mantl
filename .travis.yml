@@ -33,12 +33,36 @@ install:
   - python testing/travis.py install
 
 before_script:
+  - terraform remote config -backend=s3 -backend-config='bucket=mantl-ci-remote-tfstate' -backend-config="key=${PROVIDER}/terraform.tfstate" -backend-config='region=us-west-1'
   - export TERRAFORM_FILE=testing/terraform/${PROVIDER}.tf
   - export CI_HEAD_COMMIT=$(git rev-list -n 1 --no-merges --branches="$(git rev-parse --abbrev-ref HEAD)" master...HEAD)
   - echo $CI_HEAD_COMMIT
+  
+  - docker pull $DOCKER_IMAGE
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python2 docker.py ci-setup"
 
-script:
-  - python testing/travis.py script
-  - python testing/travis.py health_checks
+script: 
+  - python2 testing/test-health-checks.py
+  - docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS $DOCKER_IMAGE "python docker.py ci-build"
 
-after_script: python testing/travis.py after_script
+after_script:
+- docker run $DOCKER_ARGS -v $(pwd)/testing:/local -v $(pwd):/mantl $DOCKER_SECRETS
+  $DOCKER_IMAGE "python docker.py ci-destroy"
+sudo: required
+services:
+- docker
+addons:
+  apt:
+    packages:
+    - unzip
+notifications:
+  slack:
+    secure: eX3VgtKQ48rzKGdXpIZZVYINffI2wbqhqoJFUxHO1Zku6tXzbt0R+r3NVHo37wBID63bkXjYqjZuv+JRUtvf/XO51+QkTqCCZ6iC3lr6IEqRpzxXsmNYf+QPhuN2kvVTSyycHFXdwQLL7sCniFSmEcLdu6xMpobI4PUwi2OvHj4=
+before_install:
+  # TRAVIS_SECURE_ENV_VARS is documented here: https://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
+  # MANTL_CI_FORK_CHECK is read by the ci-setup step, and if it's equals 1, it skips the test altogether with exit code 0 before any deploy steps are run
+  - if [ -z "$TRAVIS_SECURE_ENV_VARS" ]; then MANTL_CI_FORK_CHECK=1; else MANTL_CI_FORK_CHECK=0; fi
+  # the string "openssl ... testing/ci" was copied from the output that I got from using the travis cli to encrypt files
+  # the documentation for encrypting files is here: https://docs.travis-ci.com/user/encrypting-files/
+  # the cli tool will append the whole command as its own item; I wrapped that line with the if statement below
+  - if [ -n "$TRAVIS_SECURE_ENV_VARS" ]; then openssl aes-256-cbc -K $encrypted_6a9d32f3e0bd_key -iv $encrypted_6a9d32f3e0bd_iv -in ci.enc -out testing/ci; else echo "Secrets not available...skipping"; fi

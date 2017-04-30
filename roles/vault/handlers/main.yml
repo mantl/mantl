@@ -5,6 +5,12 @@
   notify:
     - wait for vault to listen
 
+- name: reload sshd
+  become: yes
+  service:
+    name: sshd
+    state: reloaded
+
 - name: restart vault
   sudo: yes
   command: systemctl restart vault

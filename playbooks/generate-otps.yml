@@ -1,0 +1,53 @@
+---
+# Playbook to store as fact and print One Time Passwords for every control host.
+# The variable otp_action should be one of "print", or "store".
+
+- include: "{{ playbook_dir }}/check-requirements.yml"
+
+- hosts: role=control
+  vars:
+    vault_command_options: -tls-skip-verify
+    action: "{{ otp_action | default('print') }}"
+    hosts: "{{ groups['role=control'] }}"
+
+  tasks:
+    - name: authenticate with vault
+      run_once: yes
+      command: vault auth "{{ vault_command_options }}" "{{ vault_root_token }}"
+
+    - name: collect OTPs
+      run_once: yes
+      command: >
+        vault ssh "{{ vault_command_options }}"
+        -no-exec -format=json
+        -role=otp_key_role
+        "{{ ansible_ssh_user }}@{{ hostvars[item]['public_ipv4'] }}"
+      register: otp_cmdline
+      with_items:
+        - "{{ hosts | sort }}"
+
+    # Take the vault command stdout and parse it into Python dict objects
+    - name: decode JSON output
+      run_once: yes
+      set_fact:
+        otp_output_dicts: "{{ otp_cmdline.results|map(attribute='stdout')|map('from_json')|list }}"
+
+    # This is pretty hacky, we construct a hash by using templates to make a
+    # valid Python dict literal, and Ansible automatically parses that.
+    - name: construct map of IPs -> keys
+      run_once: yes
+      set_fact:
+        otp_output_dicts: >
+          {{ "{" }}{% for d in otp_output_dicts %}
+          "{{ d["data"]["ip"] }}":"{{ d["data"]["key"] }}",
+          {% endfor %}{{ "}" }}
+      with_items:
+        - otp_output_json.results
+
+    - name: print OTPs
+      run_once: yes
+      changed_when: no
+      when: "{{ action == 'print' }}"
+      debug:
+        msg: "{{ ansible_ssh_user }}@{{ item[0] }}: {{ item[1] }}"
+      with_items: "{{ otp_output_dicts.iteritems()|list }}"

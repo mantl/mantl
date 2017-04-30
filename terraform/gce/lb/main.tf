@@ -10,10 +10,22 @@ resource "google_compute_http_health_check" "default" {
   timeout_sec = 1
 }
 
-resource "google_compute_forwarding_rule" "default" {
-  name = "${var.short_name}-www-forwarding-rule"
+resource "google_compute_address" "edge-lb" {
+  name = "lb"
+}
+
+resource "google_compute_forwarding_rule" "http" {
+  name = "${var.short_name}-http-forwarding-rule"
   target = "${google_compute_target_pool.default.self_link}"
+  ip_address = "${google_compute_address.edge-lb.address}"
   port_range = "80"
+}
+
+resource "google_compute_forwarding_rule" "https" {
+  name = "${var.short_name}-https-forwarding-rule"
+  target = "${google_compute_target_pool.default.self_link}"
+  ip_address = "${google_compute_address.edge-lb.address}"
+  port_range = "443"
 }
 
 resource "google_compute_target_pool" "default" {
@@ -23,5 +35,5 @@ resource "google_compute_target_pool" "default" {
 }
 
 output "public_ip" {
-  value = "${google_compute_forwarding_rule.default.ip_address}"
+  value = "${google_compute_address.edge-lb.address}"
 }

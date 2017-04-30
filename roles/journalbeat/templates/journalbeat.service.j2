@@ -1,0 +1,30 @@
+[Unit]
+Description=journalbeat
+After=docker.service
+Requires=docker.service
+Requires=dnsmasq.service
+
+[Service]
+Restart=always
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker pull {{ journalbeat_image }}:{{ journalbeat_image_tag }}
+ExecStartPre=-/usr/bin/docker rm -f journalbeat
+
+ExecStart=/usr/bin/docker run \
+    --rm \
+    --name=journalbeat \
+    --hostname={{ inventory_hostname }} \
+    --log-driver=none \
+    --privileged=true \
+    --volume=/etc/journalbeat/journalbeat.yml:/etc/journalbeat/journalbeat.yml \
+    --volume=/run/systemd/journal/socket:/run/systemd/journal/socket \
+    --volume=/run/log/journal:/run/log/journal \
+    --volume=/etc/machine-id:/etc/machine-id \
+    {{ journalbeat_image }}:{{ journalbeat_image_tag }}
+
+ExecStop=-/usr/bin/docker rm -f journalbeat
+
+[Install]
+WantedBy=multi-user.target

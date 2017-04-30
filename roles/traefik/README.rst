@@ -11,7 +11,9 @@ manage its configuration automatically and dynamically.
 Traefik is used as the only work role on the edge nodes. You should customize
 ``traefik_marathon_domain`` to set a domain (for example
 ``apps.yourdomain.com``) and then set an A record for each of the edge servers
-to ``*.apps.yourdomain.com``.
+to ``*.apps.yourdomain.com``. Traefik also serves as a ingress controller for
+kubernetes. Set the ``traefik.frontend.rule.type`` parameter in your ingress
+resources to override the default frontend rule type.
 
 
 
@@ -41,6 +43,18 @@ You can use these variables to customize your Traefik installation.
    Automatically expose Marathon applications in traefik.
 
    The traefik default is ``false``, or not forward traffic.
-  
+
    The mantl default is set to ``true``.
- 
+
+-- data:: traefik_k8s_endpoint
+
+  The endpoint that Kubernetes talks to. Do not change this unless you are using
+  non-default security settings (namely, if you have iptables disabled)
+
+  default: ``https://kubernetes.service.consul:6443``
+
+-- data:: traefik_k8s_namespaces
+
+  The kubernetes nambespaces that this ingress controller should be used with.
+
+  default:: ``["kube-system", "default"]``

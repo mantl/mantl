@@ -1,0 +1,11 @@
+{
+ "id": "/logstash",
+ "cpus": {{logstash_cpu}},
+ "mem": {{logstash_mem}},
+ "instances": {{logstash_instances}},
+ "uris": [ "{{logstash_artifact_url}}" ],
+ "cmd": "export HOME=$MESOS_DIRECTORY && \
+         {% if logstash_es_template %}curl -s {{logstash_es_template_url}}?raw > {{logstash_es_template_file}} && \{% endif %}
+         curl -s {{logstash_configuration_url}}?raw > {{logstash_configuration_file}} && \
+         logstash-{{logstash_artifact_version}}/bin/logstash -f {{logstash_configuration_file}}"
+}

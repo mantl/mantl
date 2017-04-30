@@ -47,7 +47,6 @@
     mesos_mode: leader
     zookeeper_server_group: role=control
   roles:
-    - common
     - vault
     - zookeeper
     - mesos
@@ -68,19 +67,19 @@
     mesos_mode: follower
     zookeeper_server_group: role=control
   roles:
-    - common
     - mesos
     - calico
+    - disk
 
 # The kubeworker role is similar to the worker role but are intended for
 # Kubernetes workloads.
 - hosts: role=kubeworker
   gather_facts: yes
   roles:
-    - common
     - calico
     - kubernetes
     - kubernetes-node
+    - disk
 
 # The edge role exists solely for routing traffic into the cluster. Firewall
 # settings should be such that web traffic (ports 80 and 443) is exposed to the
@@ -96,5 +95,12 @@
     # and format as `haproxy_domain`.
     traefik_marathon_domain: marathon.localhost
   roles:
-    - common
     - traefik
+
+# Temporary workaround for https://github.com/mantl/mantl/issues/1922
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+    - name: update json healthchecks
+      replace: dest=/etc/distributive.d/distributive-common.json regexp='python-pip' replace='python2-pip'

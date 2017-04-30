@@ -1,0 +1,3 @@
+---
+journalbeat_image: tpolekhin/journalbeat
+journalbeat_image_tag: latest
