@@ -158,4 +158,3 @@ module "instances-edge" {
   ssh_user = "${var.ssh_user}"
   security_groups = "${ module.secgroup.secgroup_common },${ module.secgroup.secgroup_web }"
 }
-

@@ -32,3 +32,7 @@ resource "openstack_networking_router_interface_v2" "router-interface" {
 output "network_uuid" {
   value = "${openstack_networking_network_v2.network.id}"
 }
+
+output "subnet_uuid" {
+  value = "${openstack_networking_router_interface_v2.router-interface.subnet_id}"
+}
