@@ -24,7 +24,7 @@ items:
   metadata:
     labels:
       app: kubernetes-dashboard
-      version: v1.0.1
+      version: v1.6.0
     name: kubernetes-dashboard
     namespace: kube-system
   spec:
