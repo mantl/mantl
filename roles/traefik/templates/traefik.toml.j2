@@ -13,3 +13,7 @@ domain = "{{ traefik_marathon_domain }}"
 watch = true
 networkInterface = "{{ ansible_default_ipv4['interface'] }}"
 ExposedByDefault = {{ traefik_marathon_expose_by_default }}
+
+[kubernetes]
+endpoint = "{{ traefik_k8s_endpoint }}"
+namespaces = {{ traefik_k8s_namespaces }}
