@@ -96,6 +96,7 @@ module "control-nodes" {
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.ui_security_group},${module.security-groups.control_security_group}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "edge-nodes" {
@@ -115,6 +116,7 @@ module "edge-nodes" {
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.edge_security_group}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "worker-nodes" {
@@ -137,6 +139,7 @@ module "worker-nodes" {
   #availability_zones = "${terraform_remote_state.vpc.output.availability_zones}"
   #security_group_ids = "${terraform_remote_state.vpc.output.default_security_group},${module.security-groups.worker_security_group}"
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
+  user_data = "${template_file.cloud-config.rendered}"
 }
 
 module "kubeworker-nodes" {
@@ -175,4 +178,12 @@ module "route53" {
   worker_ips = "${module.worker-nodes.ec2_ips}"
   kubeworker_count = "${var.kubeworker_count}"
   kubeworker_ips = "${module.kubeworker-nodes.ec2_ips}"
+}
+
+resource "template_file" "cloud-config" {
+	template = "${file("${path.module}/terraform/cloud-config.tpl")}"
+	vars {
+		timezone = "Etc/UTC"
+		repo_url = "https://bintray.com/asteris/mantl-rpm/rpm"
+	}
 }

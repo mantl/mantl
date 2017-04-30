@@ -15,8 +15,7 @@ variable "source_ami" {}
 variable "security_group_ids" {}
 variable "vpc_subnet_ids" {}
 variable "ssh_username" {default = "centos"}
-variable "assign_public_ip_address" {default = true}
-
+variable "user_data" {}
 
 resource "aws_ebs_volume" "ebs" {
   availability_zone = "${element(split(",", var.availability_zones), count.index)}"
@@ -45,6 +44,7 @@ resource "aws_instance" "instance" {
     volume_size = "${var.ebs_volume_size}"
     volume_type = "${var.ebs_volume_type}"
   }
+  user_data = "${var.user_data}"
 
 
   tags {
@@ -76,12 +76,5 @@ output "ec2_ids" {
 }
 
 output "ec2_ips" {
-  value = "${join(",", aws_instance.instance.*.public_ip)}"
-<<<<<<< HEAD
-}
-
-output "ec2_private_ips" {
-  value = "${join(",", aws_instance.instance.*.private_ip)}"
-=======
->>>>>>> master
+  value = "${join(\",\", aws_instance.instance.*.public_ip)}"
 }
