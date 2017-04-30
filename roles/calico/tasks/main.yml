@@ -88,6 +88,9 @@
 - include: kubernetes.yml
   when: kube_hyperkube_image_tag is defined
 
+- include: mesos.yml
+  when: mesos_version is defined
+
 - include: calico-configure.yml
 
 - name: reload calico systemd file
