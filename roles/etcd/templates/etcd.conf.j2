@@ -1,7 +1,7 @@
 {% macro initial_cluster() -%}
 {% for host in groups['all'] -%}
 {% if hostvars[host]['inventory_hostname'] != 'localhost' -%}
-{{ hostvars[host]['inventory_hostname'] }}={{ etcd_peer_url_scheme }}://{{ hostvars[host]['inventory_hostname'] }}:{{ etcd_peer_port }},
+{{ hostvars[host]['inventory_hostname'] }}={{ etcd_url_scheme }}://{{ hostvars[host]['inventory_hostname'] }}:{{ etcd_peer_port }},
 {%- endif -%}
 {% endfor -%}
 {% endmacro -%}
