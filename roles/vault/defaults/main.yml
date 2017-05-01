@@ -3,7 +3,7 @@ vault_package: vault-0.6.0
 vault_default_port: 8200
 vault_command_options: -tls-skip-verify
 vault_config_file: /etc/vault/vault.hcl
-vault_addr: "https://{{ inventory_hostname }}.node.{{ consul_dns_domain }}:{{ vault_default_port }}"
+vault_addr: "https://{{ inventory_hostname }}.node.consul:{{ vault_default_port }}"
 
 vault_init_json: '{
 	"secret_shares": 5,
