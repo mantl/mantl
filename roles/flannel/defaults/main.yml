@@ -1,5 +1,5 @@
 ---
-flannel_version: 0.6.0
+flannel_version: 0.5.5-2.el7.x86_64
 
 overlay_network_subnet: 192.168.0.0
 overlay_network_prefix: 16

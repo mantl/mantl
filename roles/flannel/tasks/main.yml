@@ -19,8 +19,6 @@
   template:
     src: flanneld.j2
     dest: /etc/sysconfig/flanneld
-  notify:
-    - restart flannel
   tags:
     - flannel
 
