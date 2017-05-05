@@ -11,7 +11,7 @@ ETCD_NAME={{ inventory_hostname }}
 ETCD_LISTEN_PEER_URLS={{ etcd_listen_peer_urls }}
 {% else %}
 ETCD_NAME=default
-{% endif %}
+{% endif %}{% endif %}
 ETCD_DATA_DIR={{ etcd_data_dir }}
 #ETCD_SNAPSHOT_COUNTER="10000"
 #ETCD_HEARTBEAT_INTERVAL="100"
