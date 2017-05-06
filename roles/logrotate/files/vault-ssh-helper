@@ -1,4 +1,4 @@
-/var/log/secure/vault-ssh-helper.log {
+/var/log/vault-ssh-helper/vault-ssh-helper.log {
         daily
         rotate 7
         create
