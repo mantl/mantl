@@ -1,9 +1,12 @@
 ---
 - name: make sure that /var/log/vault-ssh-helper/archive is present
+  become: yes
   file:
     path: /var/log/vault-ssh-helper/archive
     state: directory
     mode: 0755
+    owner: root
+    group: root
 
 - name: authenticate with vault
   become: yes
