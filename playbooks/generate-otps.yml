@@ -23,7 +23,7 @@
       become: yes
       run_once: yes
       command: >
-        vault ssh {{ vault_command_options | join(' ') }} {{ vault_root_token }}
+        vault ssh {{ vault_command_options | join(' ') }}
         -no-exec -format=json
         -role=otp_key_role
         "{{ ansible_ssh_user }}@{{ hostvars[item]['public_ipv4'] }}"
