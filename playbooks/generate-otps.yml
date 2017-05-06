@@ -8,17 +8,19 @@
   vars:
     vault_command_options:
       - "-ca-cert=/etc/pki/CA/ca.cert"
-      - "-client-cert={{ host_cert }}"
-      - "-client-key={{ host_key }}"
+      - "-client-cert=/etc/pki/mantl/cert"
+      - "-client-key=/etc/pki/mantl/key"
     action: "{{ otp_action | default('print') }}"
     hosts: "{{ groups['role=control'] }}"
 
   tasks:
     - name: authenticate with vault
+      become: yes
       run_once: yes
       command: vault auth {{ vault_command_options | join(' ') }} {{ vault_root_token }}
 
     - name: collect OTPs
+      become: yes
       run_once: yes
       command: >
         vault ssh {{ vault_command_options | join(' ') }} {{ vault_root_token }}
