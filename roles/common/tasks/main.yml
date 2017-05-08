@@ -42,6 +42,24 @@
   tags:
     - common
 
+- name: change journald storage to persistent
+  become: yes
+  lineinfile:
+    dest: /etc/systemd/journald.conf
+    regexp: "^Storage=auto"
+    line: Storage=persistent
+  tags:
+    - common
+
+- name: restart journald service
+  become: yes
+  service:
+    name: systemd-journald
+    state: restarted
+  tags:
+    - common
+
+
 # add yum-utils if not already installed
 - name: add yum-config-manager
   sudo: yes
