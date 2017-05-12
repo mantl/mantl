@@ -61,7 +61,32 @@
             "playbook_file": "{{user `root`}}/sample.yml",
             "staging_directory": "{{user `staging`}}",
             "extra_arguments": [ "--tags", "bootstrap", "--extra-vars=\"provider=vagrant\"" ],
-            "inventory_groups": "role=control,role=worker"
+            "inventory_groups": "role=control,role=worker",
+            "role_paths": [
+                "roles/calico",
+                "roles/certificates",
+                "roles/common",
+                "roles/consul-template",
+                "roles/consul",
+                "roles/distributive",
+                "roles/dnsmasq",
+                "roles/docker",
+                "roles/etcd",
+                "roles/handlers",
+                "roles/kubernetes-master",
+                "roles/kubernetes-node",
+                "roles/kubernetes",
+                "roles/logrotate",
+                "roles/lvm",
+                "roles/mantlui",
+                "roles/marathon",
+                "roles/mesos",
+                "roles/nginx",
+                "roles/repos",
+                "roles/traefik",
+                "roles/vault",
+                "roles/zookeeper"
+            ]
         },
         {
             "type": "shell",
@@ -81,11 +106,12 @@
             "headless": false,
             "http_directory": "{{template_dir}}/kickstarts",
             "iso_urls": [
-                "iso/CentOS-7-x86_64-Minimal-1511.iso",
-                "http://centos.mirrors.hoobly.com/7/isos/x86_64/CentOS-7-x86_64-Minimal-1511.iso"
+                "iso/CentOS-7-x86_64-Minimal-1611.iso",
+                "file:///Users/Shared/CentOS-7-x86_64-Minimal-1611.iso",
+                "http://centos.mirrors.hoobly.com/7/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso"
             ],
             "iso_checksum_type": "sha256",
-            "iso_checksum": "f90e4d28fa377669b2db16cbcb451fcb9a89d2460e3645993e30e137ac37d284",
+            "iso_checksum": "27bd866242ee058b7a5754e83d8ee8403e216b93d130d800852a96f41c34d86a",
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "ssh_port": 22,
