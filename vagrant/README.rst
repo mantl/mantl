@@ -17,8 +17,8 @@ Getting Started
 Simply run ``vagrant up``. If you'd like to customize your build futher, you
 can create a vagrant-config.yml file in the project's root directory with
 variables as defined in the "Variables" section below.
-To mounta shared folder with any version of VirtualBox You need to install VBoxGuestAdditions.
-You also need to install a plugin to compile these at .vagrant up' time.
+To mount a shared folder with any version of VirtualBox you need to install VBoxGuestAdditions.
+You also need to install a plugin to compile these at `'vagrant up'` time.
 ``vagrant plugin install vagrant-vbguest``
 
 Variables
