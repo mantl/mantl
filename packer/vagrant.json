@@ -61,32 +61,7 @@
             "playbook_file": "{{user `root`}}/sample.yml",
             "staging_directory": "{{user `staging`}}",
             "extra_arguments": [ "--tags", "bootstrap", "--extra-vars=\"provider=vagrant\"" ],
-            "inventory_groups": "role=control,role=worker",
-            "role_paths": [
-                "roles/calico",
-                "roles/certificates",
-                "roles/common",
-                "roles/consul-template",
-                "roles/consul",
-                "roles/distributive",
-                "roles/dnsmasq",
-                "roles/docker",
-                "roles/etcd",
-                "roles/handlers",
-                "roles/kubernetes-master",
-                "roles/kubernetes-node",
-                "roles/kubernetes",
-                "roles/logrotate",
-                "roles/lvm",
-                "roles/mantlui",
-                "roles/marathon",
-                "roles/mesos",
-                "roles/nginx",
-                "roles/repos",
-                "roles/traefik",
-                "roles/vault",
-                "roles/zookeeper"
-            ]
+            "inventory_groups": "role=control,role=worker"
         },
         {
             "type": "shell",
