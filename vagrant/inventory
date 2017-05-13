@@ -1,0 +1,25 @@
+
+[local]
+localhost ansible_connection=local
+
+[mantl:children]
+control
+edge
+kubeworker
+worker
+
+[control]
+control-01 ansible_ssh_host=172.20.10.101
+
+[edge]
+edge-01 ansible_ssh_host=172.20.10.25
+
+[kubeworker]
+kubeworker-01 ansible_ssh_host=172.20.10.15
+
+[worker]
+worker-01 ansible_ssh_host=172.20.10.20
+
+[mantl:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
