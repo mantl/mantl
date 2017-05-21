@@ -225,7 +225,7 @@ repo](https://github.com/CiscoCloud/mantl-universe).
 - [x] [IBM Softlayer](http://www.softlayer.com/)
 - [x] [VMware vSphere](http://www.vmware.com/products/vsphere/)
 
-Please see [milestones](https://github.com/CiscoCloud/mantl/milestones) for
+Please see [milestones](https://github.com/mantl/mantl/milestones) for
 more details on the roadmap.
 
 ## Development
@@ -237,9 +237,25 @@ build the docs, enter the `docs` directory and run `make html`. The docs will
 be output to `_build/html`.
 
 Good issues to start with are marked with the [low hanging
-fruit](https://github.com/CiscoCloud/mantl/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22)
+fruit](https://github.com/mantl/mantl/issues?q=is%3Aopen+is%3Aissue+label%3A%22low+hanging+fruit%22)
 tag.
 
+To keep your fork up to date.
+
+### 1. Clone your fork:
+
+    git clone git@github.com:YOUR-USERNAME/mantl.git
+
+### 2. Add remote from original repository in your forked repository: 
+
+    cd into/cloned/fork-repo
+    git remote add upstream git://github.com/mantl/mantl.git
+    git fetch upstream
+
+### 3. Updating your fork from original repo to keep up with their changes:
+
+    git pull upstream master
+    
 ## Getting Support
 
 If you encounter any issues, please open a [Github
