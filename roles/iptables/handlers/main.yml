@@ -1,4 +1,0 @@
----
-- name: reload consul-template
-  sudo: yes
-  command: systemctl reload consul-template

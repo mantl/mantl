@@ -1,5 +1,0 @@
----
-dependencies:
-  - role: handlers
-  - role: distributive
-    current_role: consul

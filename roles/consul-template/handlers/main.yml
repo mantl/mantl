@@ -1,4 +1,0 @@
----
-- name: restart consul-template
-  sudo: yes
-  command: systemctl restart consul-template

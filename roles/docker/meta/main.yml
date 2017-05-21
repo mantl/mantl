@@ -1,4 +1,0 @@
----
-dependencies:
-  - role: lvm
-  - role: handlers

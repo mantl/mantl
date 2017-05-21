@@ -1,4 +1,0 @@
----
-dependencies:
-  - role: certificates
-  - role: handlers

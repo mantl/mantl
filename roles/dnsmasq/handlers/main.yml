@@ -1,4 +1,0 @@
----
-- name: restart dnsmasq
-  sudo: yes
-  command: systemctl restart dnsmasq

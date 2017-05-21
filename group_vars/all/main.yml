@@ -1,6 +1,0 @@
----
-cloud_init_providers:
-  - aws
-  - gce
-  - digitalocean
-  - openstack
