@@ -1,0 +1,20 @@
+---
+- name: reload glusterfs
+  sudo: yes
+  command: "{{ item }}"
+  with_items:
+    - systemctl daemon-reload
+    - systemctl restart glusterd
+    - systemctl restart glusterfsd
+
+- name: reload consul
+  sudo: yes
+  command: "consul reload"
+
+- name: reload systemd units
+  sudo: yes
+  command: "systemctl daemon-reload"
+
+- name: restart glusterd
+  sudo: yes
+  command: "systemctl restart glusterd"

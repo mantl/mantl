@@ -1,0 +1,36 @@
+---
+- include: "{{ playbook_dir }}/check-requirements.yml"
+
+- hosts: consul_servers
+  tasks:
+
+  - name: check port 8300 open between all consul servers
+    wait_for:
+      host: "{{ hostvars[item].ansible_default_ipv4.address }}"
+      port: 8300
+      timeout: 10
+    with_items: groups['consul_servers']
+
+  - name: check port 8302 open between all consul servers
+    wait_for:
+      host: "{{ hostvars[item].ansible_default_ipv4.address }}"
+      port: 8302
+      timeout: 10
+    with_items: groups['consul_servers']
+
+  - name: get list of consul servers that are wan gossip pool members
+    sudo: yes
+    shell: consul members -wan | awk '$4 == "server" { print $2 }' | cut -f1 -d":"
+    register: members
+    changed_when: no
+
+  - name: get list of all consul servers for wan gossip pool
+    set_fact: servers="{% for host in groups['consul_servers'] %}{{ hostvars[host].ansible_default_ipv4.address }}{% if not loop.last %} {% endif %}{% endfor %}"
+
+  - name: get count of consul servers that are not wan gossip pool members
+    set_fact: non_member_count="{{ servers.split(' ') | difference(members.stdout_lines | list) | length }}"
+
+  - name: join all consul servers to wan gossip pool
+    sudo: yes
+    command: consul join -wan "{{ servers }}"
+    when: non_member_count != "0"

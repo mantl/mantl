@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Simple Consul script to check if Calico node is running
+
+echo | nc 127.0.0.1 2377 2>/dev/null
+exit $?

@@ -1,0 +1,182 @@
+---
+- name: install glusterfs-server
+  sudo: yes
+  yum:
+    name: glusterfs-server
+    state: present
+  tags:
+    - glusterfs
+
+- name: install glusterd.service
+  sudo: yes
+  copy:
+    src: glusterd.service
+    dest: /etc/systemd/system/glusterd.service
+    mode: 0644
+  tags:
+    - glusterfs
+
+- name: enable services
+  sudo: yes
+  service:
+    enabled: yes
+    name: "{{ item }}"
+  with_items:
+    - glusterd
+    - glusterfsd
+  tags:
+    - glusterfs
+
+- name: start services
+  sudo: yes
+  service:
+    state: started
+    name: "{{ item }}"
+  with_items:
+    - glusterd
+    - glusterfsd
+  tags:
+    - glusterfs
+
+- name: wait for glusterd port
+  wait_for:
+    port: 24007
+    state: present
+  tags:
+    - glusterfs
+
+# set up clustering
+
+- name: probe servers
+  sudo: yes
+  run_once: true
+  command: gluster peer probe {{ item }}.node.consul
+  with_items: play_hosts
+  tags:
+    - glusterfs
+
+- name: make sure the number of connected hosts is correct
+  sudo: yes
+  run_once: yes
+  shell: 'gluster peer status | grep -q "Number of Peers: {{ (play_hosts|count) - 1 }}"'
+  changed_when: no
+  tags:
+    - glusterfs
+
+# bricks
+
+- name: create volume for brick
+  sudo: yes
+  lvol:
+    vg: "{{ volume_group_name }}"
+    lv: "{{ glusterfs_brick_volume_name }}"
+    size: "{{ glusterfs_brick_volume_size }}"
+  when: volume_group_name != ""
+  tags:
+    - glusterfs
+    - disk
+
+- name: format brick volume
+  sudo: yes
+  filesystem:
+    dev: "{{ glusterfs_brick_device }}"
+    fstype: xfs
+    opts: "-i size=512"
+  when: volume_group_name != ""
+  tags:
+    - glusterfs
+    - disk
+
+- name: create mount point for brick volume
+  sudo: yes
+  file:
+    state: directory
+    name: "{{ glusterfs_brick_mount }}"
+    mode: 0755
+  when: volume_group_name != ""
+  tags:
+    - glusterfs
+    - disk
+
+- name: mount brick disk
+  sudo: yes
+  mount:
+    state: mounted
+    name: "{{ glusterfs_brick_mount }}"
+    fstype: xfs
+    src: "{{ glusterfs_brick_device }}"
+    dump: 1
+    passno: 2
+  when: volume_group_name != ""
+  tags:
+    - glusterfs
+    - disk
+
+- name: ensure brick location is present
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ glusterfs_brick_location }}"
+  tags:
+    - glusterfs
+
+# volumes
+- name: create gluster_volume script
+  sudo: yes
+  template:
+    src: gluster_volume.sh.j2
+    dest: /etc/glusterfs/gluster_volume.sh
+    mode: 0755
+  tags:
+    - glusterfs
+
+- name: create volumes
+  run_once: true
+  sudo: yes
+  command: /etc/glusterfs/gluster_volume.sh {{ item.name }}
+  with_items: glusterfs_volumes
+  tags:
+    - glusterfs
+
+- name: start volumes
+  sudo: yes
+  run_once: true
+  gluster_volume:
+    name: "{{ item.name }}"
+    state: started
+  with_items: glusterfs_volumes
+  tags:
+    - glusterfs
+
+# consul services
+
+- name: let consul use glusterfs commands for health checking
+  sudo: yes
+  template:
+    src: consul-gluster-healthchecks.j2
+    dest: /etc/sudoers.d/consul-gluster-healthchecks
+  tags:
+    - glusterfs
+
+- name: create consul services and healthchecks
+  sudo: yes
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/consul/{{ item }}
+  notify:
+    - reload consul
+  with_items:
+    - glusterfs.json
+    - glusterfs-volumes.json
+  tags:
+    - glusterfs
+
+- meta: flush_handlers
+
+- name: wait for gluster service
+  wait_for:
+    host: glusterfs.service.consul
+    port: 24007
+    state: present
+  tags:
+    - glusterfs

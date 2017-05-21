@@ -1,0 +1,166 @@
+---
+- name: install netcat
+  sudo: yes
+  yum:
+    name: nmap-ncat
+    state: present
+  tags:
+    - zookeeper
+    - bootstrap
+
+- name: install zookeeper scripts
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/bin
+    mode: 0755
+  with_items:
+    - zookeeper_check.sh
+    - zookeeper-wait-for-listen.sh
+    - zookeeper_digest.sh
+    - zookeeper-update-mantl-0.5-0.6.sh
+  tags:
+    - zookeeper
+
+- name: create zookeeper user
+  sudo: yes
+  user:
+    name: "{{ zookeeper_os_user }}"
+    state: present
+  tags:
+    - zookeeper
+
+# Upgrade script MUST run between user creation and rpm installation
+- name: run zookeeper upgrade procedure, if applicable
+  sudo: yes
+  shell: "/usr/local/bin/zookeeper-update-mantl-0.5-0.6.sh {{ zookeeper_os_user }}"
+  tags:
+    - zookeeper
+
+- name: create zookeeper service override directory
+  sudo: yes
+  file:
+    path: /etc/systemd/system/zookeeper.service.d
+    state: directory
+  tags:
+    - zookeeper
+
+# Override should be created before any other action trigger start/restart of zk
+# otherwise we get some files in zookeeper's dir with wrong permissions
+- name: create local docker service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/zookeeper.service.d/user.conf
+    content: |
+      [Service]
+      User={{ zookeeper_os_user }}
+  notify:
+    - reload systemd daemon
+    - restart zookeeper
+  tags:
+    - zookeeper
+
+- name: install zookeeper package
+  sudo: yes
+  yum:
+    name: http://repos.mesosphere.io/el/7/x86_64/RPMS/mesosphere-zookeeper-3.4.6-0.1.20141204175332.centos7.x86_64.rpm
+    state: present
+  tags:
+    - zookeeper
+
+- name: create missing 'conf' symlink
+  sudo: yes
+  file:
+    state: link
+    src: /etc/zookeeper/conf
+    dest: /opt/mesosphere/zookeeper/conf
+  tags:
+    - zookeeper
+
+- name: create zookeeper auth digest
+  sudo: yes
+  shell: "/usr/local/bin/zookeeper_digest.sh  {{ zk_super_user }}:{{ zk_super_user_secret }}"
+  register: zookeeper_auth_digest
+  changed_when: no
+  when: zk_super_user is defined and zk_super_user_secret is defined
+  tags:
+    - zookeeper
+
+- name: create auth digest file
+  sudo: yes
+  copy:
+    dest: /etc/zookeeper/conf/zookeeper-env.sh
+    content: |
+      JVMFLAGS="-Dzookeeper.DigestAuthenticationProvider.superDigest={{ zookeeper_auth_digest.stdout }} $JVMFLAGS"
+  when: zk_super_user is defined and zk_super_user_secret is defined
+  notify:
+    - restart zookeeper
+  tags:
+    - zookeeper
+
+- name: create zookeeper log directory
+  sudo: yes
+  file:
+    path: /var/log/zookeeper
+    state: directory
+    mode: 0600
+    owner: "{{ zookeeper_os_user }}"
+    recurse: true
+    setype: svirt_sandbox_file_t
+  tags:
+    - zookeeper
+
+- name: create zookeeper data directory
+  sudo: yes
+  file:
+    path: /var/lib/zookeeper/version-2
+    state: directory
+    mode: 0700
+    owner: "{{ zookeeper_os_user }}"
+  tags:
+    - zookeeper
+
+- name: generate zookeeper consul services
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: zk-consul.json.j2
+      dest: /etc/consul/zk-consul.json
+  notify:
+    - reload consul
+  tags:
+    - zookeeper
+
+- name: generate zookeeper id
+  sudo: yes
+  template:
+    src: myid.j2
+    dest: /var/lib/zookeeper/myid
+  tags:
+    - zookeeper
+
+- name: generate zookeeper config
+  sudo: yes
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/zookeeper/conf/{{ item }}
+  with_items:
+    - zoo.cfg
+    - log4j.properties
+  notify:
+    - restart zookeeper
+  tags:
+    - zookeeper
+
+- name: register zookeeper service
+  sudo: yes
+  service:
+    enabled: yes
+    name: "{{ zookeeper_service }}"
+    state: started
+  tags:
+    - zookeeper
+
+- meta: flush_handlers

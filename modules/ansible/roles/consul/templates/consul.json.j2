@@ -1,0 +1,39 @@
+{
+  "datacenter": "{{ consul_dc }}",
+  "advertise_addr": "{{ consul_advertise }}",
+  "node_name": "{{ inventory_hostname }}",
+  "rejoin_after_leave": true,
+  "domain": "consul",
+  "log_level": "{{ consul_log_level }}",
+  "retry_join": [ {{ consul_retry_join }} ],
+{% if consul_is_server|bool %}
+  "server": true,
+  "bootstrap_expect": {{ consul_bootstrap_expect }},
+{% endif %}
+{% if consul_gossip_key is defined %}
+  "encrypt": "{{ consul_gossip_key }}",
+{% endif %}
+  "ca_file": "/etc/pki/CA/ca.cert",
+  "cert_file": "/etc/pki/mantl/cert",
+  "key_file": "/etc/pki/mantl/key",
+{% if provider == "virtualbox" or provider == "vmware_fusion" %}
+  {# Used to fix a bad certificate error #}
+  "verify_incoming": false,
+  "verify_outgoing": false,
+  {# The hostnames will not include the datacenter #}
+  "verify_server_hostname": false,
+{% else %}
+  "verify_incoming": {{ consul_verify_incoming| to_nice_json }},
+  "verify_outgoing": {{ consul_verify_outgoing| to_nice_json }},
+{% endif %}
+  "data_dir": "/var/lib/consul",
+  "ui_dir": "/usr/share/consul-ui",
+  "disable_remote_exec": {{ consul_disable_remote_exec|to_nice_json }},
+  "http_api_response_headers": {
+    "Access-Control-Allow-Origin": "*"
+  },
+  "dns_config": {
+    "allow_stale": {{ consul_allow_stale|to_nice_json }},
+    "max_stale": "{{ consul_max_stale }}"
+  }
+}

@@ -1,0 +1,46 @@
+---
+mesos_version: 0.28.2
+
+mesos_package: "mesos-{{ mesos_version }}"
+mesos_master_package: "mesos-master-{{ mesos_version }}"
+mesos_agent_package: "mesos-agent-{{ mesos_version }}"
+
+mesos_mode: follower
+mesos_log_dir: /var/log/mesos
+mesos_logging_level: WARNING
+mesos_work_dir: /var/lib/mesos
+mesos_leader_port: 15050
+mesos_leader_proxy_port: 5050
+mesos_follower_port: 5051
+mesos_leader_cmd: mesos-master
+mesos_follower_cmd: mesos-slave
+mesos_executor_registration_timeout: 10mins
+mesos_isolation: cgroups/cpu,cgroups/mem
+
+mesos_resources:
+  - "ports(*):[4000-5000, 7000-8000, 9000-10000, 25000-26000, 31000-32000]"
+
+mesos_attributes:
+  - "node_id:{{ inventory_hostname }}"
+
+mesos_cluster: mantl
+
+mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
+mesos_zk_dns: "zookeeper.service.consul"
+mesos_zk_hosts: "{% for host in groups[zookeeper_server_group] %}{{ host }}:{{mesos_zk_port}}{% if not loop.last %},{% endif %}{% endfor %}"
+mesos_zk_port: 2181
+mesos_zk_chroot: mesos
+mesos_zk: "zk://{{ mesos_zk_auth }}{{ mesos_zk_hosts }}/{{ mesos_zk_chroot }}"
+mesos_leaders_group: role=control
+
+mesos_zk_acl_world: "world:anyone:r"
+mesos_zk_acl: "{% if zk_mesos_user_secret is defined %}digest:{{ zk_mesos_user }}:{{ zk_mesos_user_secret_digest}}:cdraw{% endif %}"
+
+mesos_zk_acl_cmd: "zookeepercli -servers localhost:{{ mesos_zk_port }} -auth_usr='super' -auth_pwd='{{ zk_super_user_secret }}' -force -c setacl /{{ mesos_zk_chroot }} '{{ mesos_zk_acl_world }},{{ mesos_zk_acl }}'"
+
+# authentication options
+mesos_credentials: []
+mesos_authenticate_frameworks: "{{ mesos_credentials|length > 0 }}"
+mesos_authenticate_followers: "{{ mesos_follower_secret != '' }}"
+mesos_follower_principal: follower
+mesos_follower_secret: ""

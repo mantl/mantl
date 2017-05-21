@@ -1,0 +1,82 @@
+---
+- name: wait for zookeeper service to be registered
+  wait_for:
+    host: "{{ marathon_zk_dns }}"
+    port: "{{ marathon_zk_port }}"
+    delay: 10
+    timeout: 300
+    state: present
+  tags:
+    - marathon
+
+- name: wait for zookeeper to listen
+  command: "/usr/local/bin/zookeeper-wait-for-listen.sh localhost"
+
+- name: create zookeeper acl
+  sudo: yes
+  command: "{{ marathon_zk_acl_cmd }}"
+  notify:
+    - restart marathon
+  when: zk_marathon_user_secret is defined
+  run_once: true
+  register: zk_acl_marathon
+  until: zk_acl_marathon.rc == 0
+  retries: 5
+  delay: 10
+  tags:
+    - marathon
+
+- name: write marathon config file
+  sudo: yes
+  template:
+    src: marathon.sysconfig.j2
+    dest: /etc/sysconfig/marathon
+    mode: 0600
+  notify:
+    - restart marathon
+  tags:
+    - marathon
+
+- name: create marathon directory
+  sudo: yes
+  file:
+    dest: /etc/marathon
+    state: directory
+    mode: 0755
+  tags:
+    - marathon
+
+- name: create marathon store directory
+  sudo: yes
+  file:
+    dest: /etc/marathon/store
+    state: directory
+    mode: 0600
+  tags:
+    - marathon
+
+- name: create marathon apps directory
+  sudo: yes
+  file:
+    dest: /etc/marathon/apps
+    state: directory
+    mode: 0600
+  tags:
+    - marathon
+
+- include: framework_auth.yml
+
+- name: check keystore consistency
+  fail: msg="cannot set keystore path without keystore password"
+  when: marathon_keystore_path != "" and marathon_keystore_password == ""
+
+- name: copy ssl keystore
+  when: marathon_keystore_path != ""
+  sudo: yes
+  copy:
+    src: "{{ marathon_keystore_path }}"
+    dest: /etc/sysconfig/marathon-keystore.jks
+  notify:
+    - restart marathon
+  tags:
+    - marathon

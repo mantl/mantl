@@ -1,0 +1,13 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: wait for ssh to become available
+      local_action: wait_for
+                    port=22
+                    host="{{ ansible_ssh_host | default(inventory_hostname) }}"
+                    search_regex=OpenSSH
+                    delay=10
+    - name: ensure that hosts are responding
+      command: echo hello
+      register: result
+      until: result.stdout.find("hello") != -1

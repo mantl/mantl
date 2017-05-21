@@ -1,0 +1,88 @@
+---
+- name: install marathon package
+  sudo: yes
+  yum:
+    name: "{{ marathon_package }}"
+    state: present
+  tags:
+    - marathon
+    - bootstrap
+
+- name: create consul acl for marathon
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Marathon ACL Token" --rule='key:marathon:write' {{ consul_acl_marathon_token }}
+  tags:
+    - marathon
+
+- include: conf.yml
+
+- name: configure marathon unit file
+  sudo: yes
+  replace:
+    dest: /etc/systemd/system/marathon.service
+    regexp: "=network.target"
+    replace: '=mesos-master.service'
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
+
+- name: configure marathon to wait for zookeeper before starting
+  sudo: yes
+  lineinfile:
+    dest: /etc/systemd/system/marathon.service
+    line: "ExecStartPre=/usr/local/bin/zookeeper-wait-for-listen.sh {{ marathon_zk_dns }}"
+    insertbefore: "^ExecStart="
+    state: present
+  notify:
+    - reload marathon
+    - restart marathon
+  tags:
+    - marathon
+
+- name: generate marathon consul service
+  sudo: yes
+  template:
+    src: marathon-consul.j2
+    dest: "{{ consul_dir }}/marathon.json"
+  notify:
+    - reload consul
+  tags:
+    - marathon
+
+- meta: flush_handlers
+
+- include: nginx-proxy.yml
+
+- name: write iptables configuration
+  run_once: true
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/marathon/ip_tables {{ do_marathon_iptables }}
+  tags:
+    - marathon
+
+- name: deploy iptables configuration
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: marathon-consul.cfg
+      dest: /etc/consul-template/config.d
+    - src: marathon-iptables.tmpl
+      dest: /etc/consul-template/templates
+  notify:
+    - reload consul-template
+  tags:
+    - marathon
+
+- name: ensure consul.d is present
+  sudo: yes
+  file:
+    path: "{{ consul_dir }}"
+    state: directory
+  tags:
+    - marathon
+
+- include: jobs.yml

@@ -1,0 +1,123 @@
+---
+- name: install calico
+  sudo: yes
+  yum:
+    name: calico-{{ calico_version}}
+    state: present
+  tags:
+    - calico
+    - bootstrap
+
+- name: ensure calico docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ calico_image }}:{{ calico_image_tag }}
+  notify:
+    - restart calico
+  tags:
+    - calico
+    - bootstrap
+
+- name: set calico environment
+  sudo: yes
+  template:
+    src: calico.env.j2
+    dest: /etc/default/calico
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart calico
+  tags:
+    - calico
+
+- name: generate systemd unit file
+  sudo: yes
+  template:
+    src: calico.service.j2
+    dest: /usr/lib/systemd/system/calico.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart calico
+  tags:
+    - calico
+
+- name: install consul check script
+  sudo: yes
+  copy:
+    src: consul-check-calico-node
+    dest: /usr/local/bin
+    mode: 0755
+  when: consul_dc_group is defined
+  tags:
+    - calico
+
+- name: register calico with consul
+  sudo: yes
+  copy:
+    src: calico-service.json
+    dest: /etc/consul
+  when: consul_dc_group is defined
+  notify:
+    - reload consul
+  tags:
+    - calico
+
+- name: calico etc directory
+  sudo: yes
+  file:
+    path: /etc/calico
+    state: directory
+  tags:
+    - calico
+
+- name: put calico-mesos integration file
+  sudo: yes
+  copy:
+    src: modules.json
+    dest: /etc/calico/modules.json
+  tags:
+    - calico
+
+- include: openstack.yml
+  when: provider == 'openstack'
+
+- include: kubernetes.yml
+  when: kube_hyperkube_image_tag is defined
+
+- include: calico-configure.yml
+
+- name: reload calico systemd file
+  sudo: yes
+  command: "systemctl daemon-reload"
+  tags:
+    - calico
+
+- name: enable and start calico
+  sudo: yes
+  service:
+    name: calico
+    enabled: yes
+    state: started
+  tags:
+    - calico
+
+- name: ensure mesos-slave directory exists
+  sudo: yes
+  file:
+    path: /etc/mesos-slave/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: check if mesos agent is running
+  sudo: yes
+  command: systemctl is-active mesos-slave
+  register: mesos_agent_active
+  failed_when: false
+  changed_when: false
+
+- meta: flush_handlers

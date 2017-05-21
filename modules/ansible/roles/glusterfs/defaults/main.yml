@@ -1,0 +1,27 @@
+---
+# installation mode
+glusterfs_mode: client
+
+# software sources
+glusterfs_repo_package: centos-release-gluster37
+
+# clustering and replication
+glusterfs_replication: "{{ groups[glusterfs_server_group] | count }}"
+glusterfs_server_group: role=control
+
+# brick storage
+glusterfs_brick_mount: /mnt/glusterfs
+glusterfs_brick_volume_group: "{{ volume_group_name }}"
+glusterfs_brick_volume_name: glusterfs
+
+# refer to lvcreate manmake to accepted size syntax
+# 100%FREE mean all space remain from docker volumes
+glusterfs_brick_volume_size: "100%FREE"
+glusterfs_brick_device: "/dev/{{ volume_group_name }}/{{ glusterfs_brick_volume_name }}"
+glusterfs_volume_force: "{% if volume_group_name != '' %}no{% else %}yes{% endif %}"
+glusterfs_brick_location: "{% if volume_group_name != '' %}{{ glusterfs_brick_mount }}{% else %}/etc/glusterfs/data{% endif %}"
+
+# volumes
+glusterfs_volumes:
+  - name: container-volumes
+    mount: /mnt/container-volumes

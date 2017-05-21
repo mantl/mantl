@@ -1,0 +1,56 @@
+---
+- hosts: all
+  vars:
+    - tmp_dir: /tmp/packages
+  tasks:
+    - name: create tmp directory for host package manifest file
+      file:
+        path: "{{ tmp_dir }}"
+        state: directory
+      delegate_to: localhost
+      run_once: yes
+
+    - name: get list of existing files in tmp directory
+      shell: ls -1 {{ tmp_dir }}
+      register: files
+      changed_when: no
+      delegate_to: localhost
+      run_once: yes
+
+    - name: purge existing files
+      file:
+        path: "{{ tmp_dir }}/{{ item }}"
+        state: absent
+      with_items: files.stdout_lines
+      when: files.stdout_lines|count > 0
+      delegate_to: localhost
+      run_once: yes
+
+    - name: get list of packages installed on host
+      shell: rpm -qa | sort -V
+      register: packages
+      changed_when: no
+      tags:
+        - skip_ansible_lint
+
+    - name: write package manifest for host to tmp directory
+      local_action:
+        module: copy
+        content: "{{ packages.stdout }}"
+        dest: "{{ tmp_dir }}/{{ inventory_hostname }}"
+
+    - name: check for inconsitent packages across hosts
+      shell: shasum * | awk '{print $2, $1}' | sort -k 2 | uniq -f1 -c | sort
+      args:
+        chdir: "{{ tmp_dir }}"
+      register: diff
+      changed_when: diff.stdout_lines|count > 1
+      delegate_to: localhost
+      run_once: yes
+
+    - name: print instances of inconsitent packages across hosts
+      debug:
+        var: "{{ diff.stdout_lines }}"
+      when: diff.changed
+      delegate_to: localhost
+      run_once: yes

@@ -1,0 +1,33 @@
+---
+- name: create consul acl for mantl-api
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl API ACL Token" --rule='key:mantl-install/apps:write' {{ consul_acl_mantl_api_token }}
+  tags:
+    - marathon
+
+- name: create json files for jobs
+  sudo: yes
+  template:
+    src: '{{ item }}.json.j2'
+    dest: /etc/marathon/apps/{{ item }}.json
+    mode: 0600
+  with_items:
+    - mesos-consul
+    - mantl-api
+  tags:
+    - marathon
+
+- name: start jobs
+  run_once: true
+  sudo: yes
+  command: 'curl -X PUT -d@/etc/marathon/apps/{{ item }}.json -H "Content-Type: application/json" http://localhost:18080/v2/apps/{{ item }}'
+  changed_when: false
+  failed_when: "'deploymentId' not in result.stdout"
+  register: result
+  with_items:
+    - mesos-consul
+    - mantl-api
+  tags:
+    - marathon
+    - skip_ansible_lint

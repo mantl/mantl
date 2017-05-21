@@ -1,0 +1,4 @@
+---
+- name: restart fail2ban
+  sudo: yes
+  command: systemctl restart fail2ban

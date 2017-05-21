@@ -1,0 +1,15 @@
+{
+    "services": [
+        {
+            "name": "glusterfs",
+            "port": 24007,
+            "id": "24007:glusterfs-{{ inventory_hostname }}",
+            "checks": [
+                {
+                    "script": "sudo /usr/sbin/gluster pool list | grep localhost | grep Connected",
+                    "interval": "10s"
+                }
+            ]
+        }
+    ]
+}

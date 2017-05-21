@@ -1,0 +1,6 @@
+---
+- name: restart consul
+  sudo: yes
+  command: /usr/local/bin/consul-rolling-restart.sh {{ consul_acl_master_token }}
+  notify:
+    - wait for consul to listen

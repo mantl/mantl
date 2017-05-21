@@ -1,0 +1,37 @@
+# Kubernetes services logging level, integer from 0 to 4, where 4 is most
+# verbose. Applies to all services globally. Be carefull with highest log level,
+# log sizes grow quickly even without a real workload.
+kube_log_level: 0
+
+# The port the API Server will be listening on.
+kube_master_port: 443
+kube_insecure_port: 8085
+
+# This is where all of the bearer tokens will be stored
+kube_token_dir: "/etc/kubernetes/tokens"
+
+# This is where to save basic auth file
+kube_users_dir: "/etc/kubernetes/users"
+
+# This is where you can drop yaml/json files and the kubelet will run those
+# pods on startup
+kube_manifest_dir: "/etc/kubernetes/manifests"
+
+# This is where manifests for podmaster will be stored
+kube_podmaster_dir: "/srv/kubernetes/manifests"
+
+dns_domain: "{{ cluster_name }}"
+
+# IP address of the DNS server. Kubernetes will create a pod with several
+# containers, serving as the DNS server and exposing it at this IP address. The
+# IP address must be from the range specified in kube_service_addresses. This
+# magic will actually pick the 10th ip address in the kube_service_addresses
+# range and use that.
+dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(253)|ipaddr('address') }}"
+
+# OpenStack cloud provider authentication variables.
+os_auth_url: "{{ lookup('env','OS_AUTH_URL') }}"
+os_username: "{{ lookup('env','OS_USERNAME') }}"
+os_password: "{{ lookup('env','OS_PASSWORD') }}"
+os_region_name: "{{ lookup('env','OS_REGION_NAME') }}"
+os_tenant_id: "{{ lookup('env','OS_TENANT_ID') }}"

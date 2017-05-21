@@ -1,0 +1,23 @@
+{
+  "args": [
+    "--zk=zk://{{ marathon_zk_hosts }}/mesos"{% if do_consul_ssl %},
+    "--consul-ssl",
+    "--consul-ssl-verify=false"{% endif %},
+    "--mesos-ip-order=mesos,host",
+    "--refresh={{ mesos_consul_refresh }}"
+  ],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "network": "BRIDGE",
+      "image": "{{ mesos_consul_image }}:{{ mesos_consul_image_tag }}"
+    }
+  },
+  "labels": {
+      "traefik.enable": "false"
+  },
+  "id": "mesos-consul",
+  "instances": 1,
+  "cpus": 0.1,
+  "mem": 128
+}

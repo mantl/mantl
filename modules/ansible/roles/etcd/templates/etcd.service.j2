@@ -1,0 +1,38 @@
+[Unit]
+Description=etcd
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=on-failure
+RestartSec=20
+TimeoutStartSec=20m
+
+ExecStartPre=-/usr/bin/docker rm -f etcd
+ExecStartPre=/usr/bin/docker pull {{ etcd_image }}:{{ etcd_image_tag }}
+
+ExecStart=/usr/bin/docker run \
+    --name=etcd \
+    --publish={{ etcd_client_port }}:{{ etcd_client_port }} \
+    --publish={{ etcd_peer_port }}:{{ etcd_peer_port }} \
+    {{ etcd_image }}:{{ etcd_image_tag }} \
+    --name {{ inventory_hostname }} \
+    --listen-peer-urls http://0.0.0.0:{{ etcd_peer_port }} \
+    --listen-client-urls http://0.0.0.0:{{ etcd_client_port }} \
+    --initial-advertise-peer-urls http://{{ inventory_hostname }}:{{ etcd_peer_port }} \
+    --initial-cluster-state new \
+    --advertise-client-urls http://{{ inventory_hostname }}:{{ etcd_client_port }} \
+{# Generate string like: 'member1=http://host1:port,member2=http://host2:port' #}
+    --initial-cluster {% for item in groups['all'] -%}
+                        {% if item != 'localhost' -%}
+                          {{ hostvars[item].inventory_hostname }}=http://{{ hostvars[item].inventory_hostname }}:{{ etcd_peer_port }}
+                          {%- if not loop.last %},{% endif -%}
+                        {%- endif -%}
+                      {% endfor %}
+
+
+ExecStop=/usr/bin/docker stop etcd
+ExecStopPost=-/usr/bin/docker rm -f etcd
+
+[Install]
+WantedBy=multi-user.target

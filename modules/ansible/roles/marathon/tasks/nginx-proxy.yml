@@ -1,0 +1,46 @@
+---
+- name: create nginx configuration directories
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/templates
+  tags:
+    - marathon
+
+- name: copy nginx configuration
+  sudo: yes
+  copy:
+    src: marathon.nginx
+    dest: /etc/nginx/templates
+  notify:
+    - reload nginx
+  tags:
+    - marathon
+
+- name: write nginx config vars to the consul k/v
+  run_once: yes
+  command: >
+    consul-cli kv-write --token={{ consul_acl_secure_token }}
+    "{{ item.path }}" "{{ item.content }}"
+  with_items:
+    - path: secure/marathon/nginx/do_ssl
+      content: "{{ do_marathon_ssl }}"
+    - path: secure/marathon/nginx/do_auth
+      content: "{{ do_marathon_auth }}"
+  tags:
+    - marathon
+
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/proxy_port {{ marathon_proxy_port }}
+  tags:
+    - marathon
+
+- name: write nginx config vars
+  run_once: yes
+  command: consul-cli kv-write --token={{consul_acl_secure_token}} secure/marathon/port {{ marathon_port }}
+  tags:
+    - marathon

@@ -1,0 +1,151 @@
+---
+# Workaround for https://github.com/CiscoCloud/mantl/issues/161
+- name: install latest device-mapper-libs
+  sudo: yes
+  yum:
+    name: device-mapper-libs
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+
+- name: enable Docker, Inc. yum repo
+  sudo: yes
+  copy:
+    src: docker.repo
+    dest: /etc/yum.repos.d/docker.repo
+  tags:
+    - docker
+  when: docker_package_source is defined and docker_package_source == "docker"
+
+- name: remove old docker package
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ docker_package_to_remove }}"
+    - "{{ docker_package_to_remove }}-common"
+    - "{{ docker_package_to_remove }}-selinux"
+  tags:
+    - docker
+    - bootstrap
+
+- name: create rsyslog.d
+  sudo: yes
+  file:
+    dest: /etc/rsyslog.d
+    state: directory
+  tags:
+    - docker
+
+- name: create docker entry for syslogd
+  sudo: yes
+  copy:
+    dest: /etc/rsyslog.d/10-docker.conf
+    content: |
+      # Docker logging
+      :syslogtag, isequal, "docker:"  /var/log/docker/docker.log
+      & ~
+  notify:
+    - restart rsyslog
+  tags:
+    - docker
+
+
+- name: create directory for systemd drop-ins
+  sudo: yes
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: 0755
+  tags:
+    - docker
+
+# We have to restart docker when these files have changed, otherwise the updated
+# configuration won't come into effect.
+- name: systemd drop-in for options
+  sudo: yes
+  template:
+    src:  "{{ item }}.j2"
+    dest: "/etc/systemd/system/docker.service.d/{{ item }}"
+  with_items:
+    - 10-options.conf
+    - 12-network-options.conf
+  notify:
+    - reload docker
+  tags:
+    - docker
+
+- name: systemd drop-in for ExecStart
+  sudo: yes
+  copy:
+    src: 20-ExecStart.conf.j2
+    dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
+  notify:
+    - reload docker
+  tags:
+    - docker
+
+- name: install docker packages
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ docker_package }}"
+    - "{{ docker_package }}-selinux"
+  tags:
+    - docker
+    - bootstrap
+
+- name: ensure docker config dir exists
+  sudo: yes
+  file:
+    path: /root/.docker
+    state: directory
+  tags:
+    - docker
+
+- name: setup private docker registry credentials
+  sudo: yes
+  when: do_private_docker_registry
+  template:
+    src: config.json.j2
+    dest: /root/.docker/config.json
+  tags:
+    - docker
+  register: docker_registry_credentials
+
+- name: add docker registry credentials to /etc/
+  sudo: yes
+  when: do_private_docker_registry and docker_registry_credentials.changed
+  command: tar cvzf /etc/docker.tar.gz .docker
+  args:
+    chdir: /root
+  tags:
+    - docker
+    - skip_ansible_lint
+
+- include: lvm.yml
+  when: docker_lvm_backed|bool
+
+- name: enable docker
+  sudo: yes
+  service:
+    name: docker
+    enabled: yes
+    state: started
+  tags:
+    - docker
+    - bootstrap # needed to install Docker images during bootstrap
+
+- name: install docker-gc
+  sudo: yes
+  yum:
+    name: docker-gc
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+  when: docker_gc_install is defined and docker_gc_install|bool

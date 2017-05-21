@@ -1,0 +1,72 @@
+input {
+{% if 'role=control' in group_names %}
+  file {
+    path => "/logs/mesos/mesos-master.log"
+    type => "mesos-master-logs"
+  }
+  http {
+    codec => json
+    port => 5678
+    type => "marathon-logs"
+  }
+  file {
+    path => "/logs/zookeeper/*"
+    type => zookeeper
+  }
+{% endif %}
+{% if 'role=worker' in group_names %}
+  file {
+    path => "/logs/mesos/mesos-agent.log"
+    type => "mesos-agent-logs"
+  }
+  file {
+    path => [ "/logs/slaves/*/frameworks/*/executors/*/runs/*/stdout", "/logs/slaves/*/frameworks/*/executors/*/runs/*/stderr" ]
+    type => "mesos-framework-logs"
+  }
+{% endif %}
+  syslog {
+    port => 1514
+    type => syslog
+  }
+  udp {
+    port => 8125
+    type => statsd
+  }
+{% if logstash_input_log4j %}
+  log4j {
+    mode => "server"
+    port => {{ logstash_log4j_port }}
+    type => "log4j"
+  }
+{% endif %}
+}
+
+filter {
+  if [type] == "syslog" {
+    mutate {
+      replace => { "host" => "{{ inventory_hostname }}" }
+    }
+  }
+}
+
+output {
+{% if logstash_output_elasticsearch is defined %}
+  elasticsearch {
+  {% for key, val in logstash_output_elasticsearch.iteritems() %}
+    {{ key }} => {{ val | to_nice_json }}
+  {% endfor %}
+  }
+{% endif %}
+{% if logstash_output_kafka is defined %}
+  kafka {
+  {% for key, val in logstash_output_kafka.iteritems() %}
+    {{ key }} => {{ val | to_nice_json }}
+  {% endfor %}
+  }
+{% endif %}
+{% if logstash_output_stdout %}
+  stdout {
+    codec => rubydebug
+  }
+{% endif %}
+}

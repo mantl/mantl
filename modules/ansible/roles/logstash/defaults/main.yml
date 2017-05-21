@@ -1,0 +1,23 @@
+---
+# Docker logstash container image
+logstash_image: ciscocloud/logstash
+logstash_image_tag: 1.5.3
+
+# Stdout
+logstash_output_stdout: no
+
+# Log4j
+logstash_input_log4j: no
+logstash_log4j_port: 4560
+
+# Logstash output Elasticsearch
+# If defined - logstash will send all the messages to elasticsearch cluster
+# logstash_output_elasticsearch:
+#   host: "elasticsearch.example.com"
+#   protocol: "http"
+
+# Logstash output Kafka
+# If defined - logstash will send all the messages to configured kafka brokers
+# logstash_output_kafka:
+#   broker_list: "broker1:port,broker2:port,..."
+#   topic_id: "logstash"

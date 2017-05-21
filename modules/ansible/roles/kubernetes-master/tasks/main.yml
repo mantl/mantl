@@ -1,0 +1,103 @@
+---
+# Consul must be available when kubelet stores the manifests in the k/v.
+- name: wait for leader
+  command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
+    - master
+    - kubernetes
+
+- name: generate kubernetes manifests
+  sudo: yes
+  template:
+    src: "{{ item }}.yml"
+    dest: "{{ kube_manifest_dir }}/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - kube-apiserver
+    - kube-podmaster
+    - kube-system
+    - kube2consul
+  notify:
+    - restart kubelet
+  tags:
+    - master
+    - kubernetes
+
+- name: generate kubernetes consul services
+  sudo: yes
+  template:
+    src: kubernetes-consul.json
+    dest: /etc/consul/kubernetes-consul.json
+    owner: consul
+    group: consul
+    mode: 0644
+  notify:
+    - reload consul
+  tags:
+    - master
+    - kubernetes
+
+- meta: flush_handlers
+  tags:
+    - kubernetes
+
+- name: generate kubernetes podmaster manifests
+  sudo: yes
+  template:
+    src: "{{ item }}.yml"
+    dest: "/srv/kubernetes/manifests/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - kube-scheduler
+    - kube-controller-manager
+  tags:
+    - master
+    - kubernetes
+
+- name: wait for apiserver to come up
+  wait_for:
+    port: "{{ kube_insecure_port }}"
+    timeout: 90
+  tags:
+    - kubernetes
+
+- name: create kube-system namespace
+  sudo: yes
+  kube:
+    resource: namespace
+    name: kube-system
+    filename: "{{ kube_manifest_dir }}/kube-system.yml"
+    server: "http://127.0.0.1:{{ kube_insecure_port }}/"
+    state: present
+  run_once: true
+  tags:
+    - master
+    - kubernetes
+
+- name: configure kubectl
+  sudo: no
+  command: "/bin/kubectl {{ item }}"
+  with_items:
+    - config set-cluster mantl --server="http://127.0.0.1:{{ kube_insecure_port }}"
+    - config set-context mantl --cluster=mantl --namespace=kube-system
+    - config use-context mantl
+  tags:
+    - kubernetes
+
+- name: wait for k8 to settle down
+  pause: seconds=30
+
+- include: skydns.yml
+  when: dns_setup
+  tags:
+    - kubernetes
+
+- include: dashboard.yml
+  when: enable_ui
+  tags:
+    - kubernetes

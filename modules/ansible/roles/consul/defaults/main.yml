@@ -1,0 +1,25 @@
+---
+consul_package: consul-0.6.4
+consul_ui_package: consul-ui-0.6.4
+consul_cli_package: consul-cli-0.3.1
+consul_dc: dc1
+consul_dc_group: dc={{ consul_dc }}
+consul_servers_group: role=control
+consul_service_ip: 127.0.0.1:8500
+consul_log_level: "warn"
+consul_is_server: "{{ consul_servers_group in group_names }}"
+consul_advertise: "{{ private_ipv4 }}"
+consul_retry_join: "{% for host in groups[consul_servers_group] | intersect(groups[consul_dc_group]) %}\"{{ hostvars[host].private_ipv4 }}\"{% if not loop.last %}, {% endif %}{% endfor %}"
+consul_bootstrap_expect: "{{ groups[consul_servers_group] | intersect(groups[consul_dc_group]) | length }}"
+consul_disable_remote_exec: yes
+consul_ca_file: ca.cert
+consul_cert_file: consul.cert
+consul_key_file: consul.key
+consul_acl_master_token: "89ff9d38-534a-41aa-a3a6-e4985bcd11c0"
+consul_acl_datacenter: "{{ consul_dc }}"
+consul_acl_default_policy: "deny"
+consul_acl_down_policy: "allow"
+consul_verify_incoming: true
+consul_verify_outgoing: true
+consul_allow_stale: true
+consul_max_stale: 5s

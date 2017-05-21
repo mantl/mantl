@@ -1,0 +1,10 @@
+---
+- name: reload systemd
+  sudo: yes
+  command: systemctl --system daemon-reload
+
+- name: restart kubelet
+  sudo: yes
+  service:
+    name: kubelet
+    state: restarted

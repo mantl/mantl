@@ -1,0 +1,94 @@
+---
+- name: install consul
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ consul_package }}"
+    - "{{ consul_ui_package }}"
+    - "{{ consul_cli_package }}"
+  tags:
+    - consul
+    - bootstrap
+
+- name: add consul user to tls group
+  sudo: yes
+  user:
+    append: yes
+    name: consul
+    groups: tls
+
+- name: configure consul
+  sudo: yes
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/consul/{{ item }}
+    owner: consul
+    group: consul
+  with_items:
+    - consul.json
+    - acl.json
+  notify:
+    - restart consul
+  tags:
+    - consul
+
+- name: register docker with consul
+  sudo: yes
+  copy:
+    src: docker-service.json
+    dest: /etc/consul
+    owner: consul
+    group: consul
+  notify:
+    - reload consul
+  tags:
+    - consul
+
+- name: install scripts
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: /usr/local/bin/
+    mode: 0755
+  with_items:
+    - consul-wait-for-leader.sh
+    - consul-rolling-restart.sh
+    - check-service-active
+  tags:
+    - consul
+
+- name: start consul
+  sudo: yes
+  service:
+    name: consul
+    enabled: yes
+    state: started
+  tags:
+    - consul
+
+# Give consul time to elect a leader
+- name: wait for leader
+  command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
+
+- meta: flush_handlers
+  tags:
+    - consul
+
+- name: create secure acl
+  sudo: yes
+  run_once: yes
+  command: consul-cli acl-update --token={{ consul_acl_master_token }} --name="Mantl Secure Token" --rule='key:secure:write' --rule='service::write' {{ consul_acl_secure_token }}
+  tags:
+    - consul
+
+- include: acl.yml
+
+- meta: flush_handlers
+  tags:
+    - consul
+
+- include: nginx_proxy.yml

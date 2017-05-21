@@ -1,0 +1,89 @@
+---
+- name: install etcd
+  sudo: yes
+  yum:
+    name: etcd-{{ etcd_version }}
+    state: present
+  tags:
+    - etcd
+
+- name: generate systemd environment file
+  sudo: yes
+  template:
+    src: etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart etcd
+  tags:
+    - etcd
+
+- name: install etcd launch script
+  sudo: yes
+  copy:
+    src: etcd-service-start.sh
+    dest: /usr/local/bin
+    mode: 0755
+  notify:
+    - restart etcd
+  tags:
+    - etcd
+
+- name: create etcd.service.d
+  sudo: yes
+  file:
+    dest: /etc/systemd/system/etcd.service.d
+    state: directory
+  tags:
+    - etcd
+
+- name: create local etcd service override
+  sudo: yes
+  copy:
+    dest: /etc/systemd/system/etcd.service.d/local.conf
+    content: |
+      [Service]
+      ExecStart=
+      ExecStart=/usr/local/bin/etcd-service-start.sh
+  notify:
+    - restart etcd
+  tags:
+    - etcd
+
+- name: install consul check script
+  sudo: yes
+  template:
+    src: consul-check-etcd-member
+    dest: /usr/local/bin
+    mode: 0755
+  when: consul_dc_group is defined
+  tags:
+    - etcd
+
+- name: register etcd with consul
+  sudo: yes
+  copy:
+    src: etcd-service.json
+    dest: /etc/consul
+  when: consul_dc_group is defined
+  notify:
+    - reload consul
+  tags:
+    - etcd
+
+- name: enable and start etcd
+  sudo: yes
+  service:
+    name: etcd
+    enabled: yes
+    state: started
+  tags:
+    - etcd
+
+- include: skydns.yml
+  when: dns_setup is defined
+
+- meta: flush_handlers

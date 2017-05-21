@@ -1,0 +1,137 @@
+---
+# default is etc/utc in build 20141129 [http://cloud.centos.org/centos/7/images/]
+- name: set timezone to etc/utc
+  sudo: yes
+  file:
+    src: /usr/share/zoneinfo/Etc/UTC
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+# add hosts to /etc/hosts
+- name: configure hosts file
+  sudo: yes
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    mode: 0644
+  tags:
+    - common
+
+- name: preserve hostname
+  sudo: yes
+  copy:
+    src: 02_hostname.cfg
+    dest: /etc/cloud/cloud.cfg.d/02_hostname.cfg
+    owner: root
+    group: root
+    mode: 0644
+  when: provider in cloud_init_providers
+  tags:
+    - common
+
+- name: set persistent hostname
+  sudo: yes
+  copy:
+    dest: /etc/hostname
+    content: "{{ inventory_hostname }}"
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - common
+
+# add yum-utils if not already installed
+- name: add yum-config-manager
+  sudo: yes
+  yum:
+    name: yum-utils
+  tags:
+    - bootstrap
+
+- name: increase timeouts in YUM
+  sudo: yes
+  shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
+  with_items:
+    - option: timeout
+      value: 60.0
+    - option: retries
+      value: 30
+
+- name: enable EPEL repo
+  sudo: yes
+  yum:
+    name: epel-release
+    state: latest
+  tags:
+    - bootstrap
+
+- name: install system utilities
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpd-tools
+    - nc
+    - openssh
+    - policycoreutils-python
+    - libselinux-python
+    - unzip
+    - jq
+    - java-1.8.0-openjdk
+    - chrony
+    - smlr
+    - zookeepercli
+    - python2-pip
+    - python-pip
+    - bind-utils
+    - nano
+  tags:
+    - bootstrap
+
+- name: enable chronyd
+  sudo: yes
+  service:
+    name: chronyd
+    enabled: yes
+    state: started
+
+- name: disable firewalld
+  sudo: yes
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+  register: command_result
+  failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"
+
+- name: update setuptools and pip
+  sudo: yes
+  pip:
+    name: "{{ item.name }}"
+    state: latest
+  with_items:
+    - name: pip
+    - name: setuptools
+
+- name: disable requiretty in sudoers
+  sudo: yes
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: ^.+requiretty$
+    line: "# Defaults	requiretty"
+
+- name: configure selinux
+  sudo: yes
+  selinux:
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags:
+    - security
+    - bootstrap
+
+- include: ssh.yml
+- include: fail2ban.yml

@@ -1,0 +1,16 @@
+---
+- name: reload vault
+  sudo: yes
+  command: systemctl reload vault
+  notify:
+    - wait for vault to listen
+
+- name: restart vault
+  sudo: yes
+  command: systemctl restart vault
+  notify:
+    - wait for vault to listen
+
+- name: wait for vault to listen
+  wait_for:
+    port: "{{ vault_default_port }}"

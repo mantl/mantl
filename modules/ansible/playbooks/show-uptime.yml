@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: get uptime
+    shell: awk '{ print $1 }' /proc/uptime
+    register: uptime
+    changed_when: no
+
+  - name: print uptime
+    debug:
+      msg: "{{ uptime.stdout | int // 3600 }} hours uptime"

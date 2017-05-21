@@ -1,0 +1,43 @@
+---
+- name: check if chronos is already installed
+  sudo: yes
+  run_once: yes
+  shell: "consul-cli catalog-service chronos | jq '.|length'"
+  register: chronos_service_count
+  changed_when: false
+  tags:
+    - chronos
+
+- name: notify that chronos is already installed
+  run_once: yes
+  when: chronos_service_count.stdout|int > 0
+  debug:
+    msg: You already have chronos running in your cluster.
+  tags:
+    - chronos
+
+- name: create chronos application json
+  sudo: yes
+  template:
+    src: chronos.json.j2
+    dest: /etc/marathon/apps/chronos.json
+  when: chronos_service_count.stdout|int == 0
+  tags:
+    - chronos
+
+- name: install chronos addon
+  sudo: yes
+  run_once: yes
+  command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/chronos @/etc/marathon/apps/chronos.json
+  when: chronos_service_count.stdout|int == 0
+  tags:
+    - chronos
+
+- name: remove chronos application json
+  sudo: yes
+  file:
+    dest: /etc/marathon/apps/chronos.json
+    state: absent
+  when: chronos_service_count.stdout|int == 0
+  tags:
+    - chronos

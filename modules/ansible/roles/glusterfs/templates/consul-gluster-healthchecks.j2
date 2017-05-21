@@ -1,0 +1,4 @@
+consul	ALL=(ALL)	NOPASSWD:	/usr/sbin/gluster pool list
+{% for volume in glusterfs_volumes %}consul	ALL=(ALL)	NOPASSWD:	/usr/sbin/gluster volume info {{volume.name}}
+{% endfor %}
+

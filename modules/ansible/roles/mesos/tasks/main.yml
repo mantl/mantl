@@ -1,0 +1,48 @@
+---
+- name: remove mesos
+  sudo: yes
+  yum:
+    name: mesos
+    state: absent
+     
+- name: install mesos packages
+  sudo: yes
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ mesos_package }}"
+    - cyrus-sasl-md5
+  tags:
+    - mesos
+    - bootstrap
+
+- name: ensure consul.d is present
+  sudo: yes
+  file:
+    path: "{{ consul_dir }}"
+    state: directory
+  tags:
+    - mesos
+
+- name: create mesos entries for syslogd
+  sudo: yes
+  copy:
+    dest: /etc/rsyslog.d/20-mesos.conf
+    content: |
+      # Mesos logging
+      :syslogtag, isequal, "mesos-slave:"  /var/log/mesos/mesos-agent.log
+      :syslogtag, isequal, "mesos-master:"  /var/log/mesos/mesos-master.log
+      & ~
+  notify:
+    - restart rsyslog
+  tags:
+    - mesos
+
+- meta: flush_handlers
+
+- include: leader.yml
+  when: mesos_mode == "leader" or mesos_mode == "mixed"
+
+- include: follower.yml
+  when: mesos_mode == "follower" or mesos_mode == "mixed"

@@ -1,0 +1,23 @@
+---
+chronos_cassandra_port: 9042
+chronos_cassandra_ttl: 31536000
+chronos_cpus: 1.0
+chronos_instances: 1
+chronos_decline_offer_duration: 5000
+chronos_disable_after_failures: 0
+chronos_failover_timeout: 604800
+chronos_failure_retry: 60000
+chronos_framework_name: "chronos"
+chronos_graphite_reporting_interval: 60
+chronos_hostname: "$HOST"
+chronos_id: "/chronos"
+chronos_mem: 1024.0
+chronos_mesos_task_cpu: 0.1
+chronos_mesos_task_disk: 256.0
+chronos_mesos_task_mem: 128.0
+chronos_min_revive_offers_interval: 5000
+chronos_reconciliation_interval: 600
+chronos_revive_offers_for_new_jobs: false
+chronos_schedule_horizon: 60
+chronos_task_epsilon: 60
+chronos_zk_timeout: 10000

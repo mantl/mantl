@@ -1,0 +1,54 @@
+---
+# This playbook traces all Consul WAN traffic.
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: create local directory for sniffer traces
+      file:
+        path: /tmp/traces
+        state: directory
+
+- hosts: consul_servers
+  tasks:
+    - name: get list of installed packages before installing wireshark
+      command: rpm -qa
+      register: packages_before
+      changed_when: no
+      tags:
+        - skip_ansible_lint
+
+    - name: install wireshark
+      sudo: yes
+      yum:
+        name: wireshark
+        state: present
+
+    - name: get list of installed packages after installing wireshark
+      command: rpm -qa
+      register: packages_after
+      changed_when: no
+      tags:
+        - skip_ansible_lint
+
+    - name: capture sniffer trace (for 2 minutes)
+      sudo: yes
+      command:
+        tshark -n
+        -a duration:120
+        -f "port 8300"
+        -f "port 8302"
+        -w "/tmp/wan-gossip.pcap"
+
+    - name: fetch sniffer trace from host to local directory /tmp/traces/
+      sudo: yes
+      fetch:
+        src: /tmp/wan-gossip.pcap
+        dest: "/tmp/traces/{{ ansible_default_ipv4.address }}-wan-gossip.pcap"
+        flat: yes
+
+    - name: uninstall wireshark and dependencies
+      sudo: yes
+      yum:
+        name: "{{ item }}"
+        state: absent
+      with_items: "{{ packages_after.stdout_lines | difference(packages_before.stdout_lines) }}"

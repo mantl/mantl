@@ -1,0 +1,90 @@
+---
+- name: create kubernetes config directories
+  sudo: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "/etc/kubernetes"
+    - "/srv/kubernetes"
+    - "{{ kube_manifest_dir }}"
+    - "{{ kube_podmaster_dir }}"
+    - "{{ kube_users_dir }}"
+  tags:
+    - kubernetes
+
+- name: generate kube-proxy manifest
+  sudo: yes
+  template:
+    src: "kube-proxy.yml"
+    dest: "{{ kube_manifest_dir }}/kube-proxy.yml"
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - kubernetes
+
+- name: install kubernetes binaries
+  sudo: yes
+  yum:
+    name: "{{ kubernetes_package }}"
+    state: present
+  tags:
+    - kubernetes
+
+- name: generate kubelet systemd unit
+  sudo: yes
+  template:
+    src: kubelet.service.j2
+    dest: /usr/lib/systemd/system/kubelet.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - kubernetes
+
+# Consul must be available when kubelet stores the manifests in the k/v.
+- name: wait for leader
+  command: /usr/local/bin/consul-wait-for-leader.sh
+  tags:
+    - consul
+    - kubernetes
+
+- name: generate kubelet kubeconfig
+  sudo: yes
+  template:
+    src: "kubeconfig.yml.j2"
+    dest: "/etc/kubernetes/kubeconfig.yml"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart kubelet
+  tags:
+    - kubernetes
+
+- name: pull hyperkube docker image
+  sudo: yes
+  command: "docker pull {{ kube_hyperkube_image }}:{{ kube_hyperkube_image_tag }}"
+  register: docker_pull_result
+  changed_when: docker_pull_result.stdout.find('newer') > -1
+  tags:
+    - kubernetes
+
+- include: secrets.yml
+  tags:
+    - secrets
+    - kubernetes
+
+- name: enable and start kubelet service
+  sudo: yes
+  service:
+    name: kubelet
+    enabled: yes
+    state: started
+  tags:
+    - kubernetes

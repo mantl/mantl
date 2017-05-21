@@ -1,0 +1,58 @@
+---
+- name: install follower configuration
+  sudo: yes
+  yum:
+    name: "{{ mesos_agent_package }}"
+    state: present
+  tags:
+    - mesos
+    - bootstrap
+
+- name: configure mesos-agent
+  sudo: yes
+  template:
+    src: mesos-agent.sysconfig.j2
+    dest: /etc/sysconfig/mesos-agent
+  notify: remove mesos follower metadata
+  tags:
+    - mesos
+
+- name: write credential
+  when: do_mesos_follower_auth|bool
+  sudo: yes
+  copy:
+    dest: /etc/sysconfig/mesos-agent-credential
+    content: "{{ mesos_follower_principal }} {{ mesos_follower_secret }}"
+    mode: 0600
+  notify: restart mesos follower
+  tags:
+    - mesos
+
+- name: delete credential
+  when: not do_mesos_follower_auth|bool
+  sudo: yes
+  file:
+    dest: /etc/sysconfig/mesos-agent-credential
+    state: absent
+  notify: restart mesos follower
+  tags:
+    - mesos
+
+- name: write mantl-api credential
+  when: do_mesos_framework_auth|bool
+  sudo: yes
+  template:
+    src: mantl-api-credential.j2
+    dest: /etc/sysconfig/mantl-api
+    mode: 0600
+  tags:
+    - mesos
+
+- name: delete mantl-api credential
+  when: not do_mesos_framework_auth|bool
+  sudo: yes
+  file:
+    dest: /etc/sysconfig/mantl-api
+    state: absent
+  tags:
+    - mesos

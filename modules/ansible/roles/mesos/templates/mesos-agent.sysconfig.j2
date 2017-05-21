@@ -1,0 +1,29 @@
+# common configuration
+MESOS_PORT={{ mesos_follower_port }}
+MESOS_HOSTNAME={{ mesos_hostname | default(inventory_hostname + ".node.consul") }}
+MESOS_LOG_DIR={{ mesos_log_dir }}
+MESOS_EXTERNAL_LOG_FILE=/var/log/mesos/mesos-agent.log
+MESOS_LOGGING_LEVEL={{ mesos_logging_level }}
+
+# agent configuration
+
+# required
+MESOS_MASTER={{ mesos_zk }}
+
+# optional
+MESOS_ATTRIBUTES={{ mesos_attributes | join (";") }}
+MESOS_RESOURCES={{ mesos_resources | join (";") }}
+MESOS_CONTAINERIZERS=docker,mesos
+MESOS_EXECUTOR_REGISTRATION_TIMEOUT={{ mesos_executor_registration_timeout }}
+MESOS_WORK_DIR={{ mesos_work_dir }}
+MESOS_ISOLATION={{ mesos_isolation }}
+
+# authentication
+{% if not (do_mesos_follower_auth|bool) %}# {% endif %}MESOS_CREDENTIAL=file:///etc/sysconfig/mesos-agent-credential
+
+EXTRA_OPTS="{% if calico_etcdaddr is defined %}--modules=file:///etc/calico/modules.json --isolation={{ mesos_isolation }},com_mesosphere_mesos_NetworkIsolator --hooks=com_mesosphere_mesos_NetworkHook {% endif %}"
+
+# calico integration
+{% if calico_etcdaddr is defined %}
+ETCD_AUTHORITY={{ calico_etcdaddr }}
+{% endif %}

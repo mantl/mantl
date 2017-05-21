@@ -1,0 +1,44 @@
+---
+- name: reload systemd daemon
+  sudo: yes
+  command: systemctl daemon-reload
+  tags:
+    - logstash
+
+- name: enable and start logstash
+  sudo: yes
+  service:
+    name: logstash
+    enabled: yes
+    state: started
+  tags:
+    - logstash
+
+- name: restart logstash
+  sudo: yes
+  service:
+    name: logstash
+    state: restarted
+  tags:
+    - logstash
+
+- name: restart rsyslog
+  sudo: yes
+  service:
+    name: rsyslog
+    state: restarted
+  tags:
+    - logstash
+
+- name: reload consul
+  sudo: yes
+  command: systemctl is-active consul && systemctl reload consul
+  failed_when: false
+  tags:
+    - logstash
+
+- name: reload consul-template
+  sudo: yes
+  command: systemctl reload consul-template
+  tags:
+    - logstash

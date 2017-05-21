@@ -1,0 +1,63 @@
+---
+# Workaround for https://github.com/CiscoCloud/mantl/161
+- name: install latest device-mapper-libs
+  sudo: yes
+  yum:
+    name: device-mapper-libs
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+    - lvm
+
+- name: install LVM tools
+  sudo: yes
+  yum:
+    name: lvm2
+    state: latest
+  tags:
+    - docker
+    - bootstrap
+    - lvm
+
+- name: enable lvmetad service
+  sudo: yes
+  service:
+    name: lvm2-lvmetad
+    enabled: yes
+    state: started
+  tags:
+    - docker
+    - lvm
+
+- name: create directory for volume configs
+  sudo: yes
+  file:
+    state: directory
+    path: /etc/mantl/filesystems.d
+    mode: 755
+  tags:
+    - docker
+    - lvm
+
+- name: put volume configuration file
+  sudo: yes
+  template:
+    src: mantl-volume-group.conf.j2
+    dest: /etc/mantl/filesystems.d/10-volume-group.conf
+  tags:
+    - docker
+    - lvm
+
+- name: install mantl-storage-setup
+  sudo: yes
+  yum: 
+    name: mantl-storage-setup
+  when: not debug_storage_setup
+  tags:
+    - docker
+    - lvm
+
+- name: install mantl-storage-setup (development)
+  include: debug.yml
+  when: debug_storage_setup

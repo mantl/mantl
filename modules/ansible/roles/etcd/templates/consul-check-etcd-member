@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Simple Consul script to check an etcd member
+
+client_port={{ etcd_client_port }}
+check_key='monitoring/healthcheck'
+
+curl -s -L http://localhost:${client_port}/v2/keys/${check_key} -XPUT -d value="1"
+curl -s -L http://localhost:${client_port}/v2/keys/${check_key} | grep -w 'value.:.1'
+
+if [ $? != 0 ]; then
+    exit 2
+fi
+
+exit 0

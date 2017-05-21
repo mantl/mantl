@@ -1,0 +1,23 @@
+---
+- name: reload marathon
+  sudo: yes
+  command: systemctl daemon-reload
+  notify:
+    - wait for marathon to listen
+
+- name: restart marathon
+  sudo: yes
+  command: systemctl restart marathon
+  notify:
+    - wait for marathon to listen
+
+- name: wait for marathon to listen
+  command: /usr/bin/smlr http "http://localhost:{{ marathon_port }}/ping"
+
+- name: restart nginx-marathon
+  sudo: yes
+  command: systemctl restart nginx-marathon
+
+- name: reload nginx-marathon
+  sudo: yes
+  command: systemctl daemon-reload

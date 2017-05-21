@@ -1,0 +1,13 @@
+---
+calico_version: 1.1.1
+
+calico_image: calico/node
+calico_image_tag: v{{ calico_version }}
+
+etcd_client_port: 2379
+
+calico_etcdaddr: "{{ private_ipv4 }}:{{ etcd_client_port }}"
+
+calico_network: 192.168.0.0/16
+
+calico_profile: dev

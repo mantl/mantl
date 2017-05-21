@@ -1,0 +1,81 @@
+---
+- name: create configuration directory
+  sudo: yes
+  file:
+    path: /etc/logstash.d
+    state: directory
+    mode: 0755
+  tags:
+    - logstash
+
+- name: configure logstash
+  sudo: yes
+  template:
+    src: logstash.conf.j2
+    dest: /etc/logstash.d/logstash.conf
+  notify:
+    - restart logstash
+  tags:
+    - logstash
+
+- name: ensure logstash docker image is present
+  sudo: yes
+  command: /usr/bin/docker pull {{ logstash_image }}:{{ logstash_image_tag }}
+  tags:
+    - logstash
+    - bootstrap
+
+- name: generate systemd service file
+  sudo: yes
+  template:
+    src: logstash-service.j2
+    dest: /usr/lib/systemd/system/logstash.service
+  notify:
+    - reload systemd daemon
+    - enable and start logstash
+  tags:
+    - logstash
+
+- name: check if logstash syslog port is authorized
+  sudo: yes
+  shell: semanage port --list | grep "^syslogd_port_t.*tcp.*1514"
+  register: selinux_syslog_port_check
+  failed_when: no
+  changed_when: no
+  when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
+  tags:
+    - logstash
+
+- name: authorize logstash syslog port
+  sudo: yes
+  shell: semanage port -a -t syslogd_port_t -p tcp 1514
+  when: selinux_syslog_port_check.rc is defined and selinux_syslog_port_check.rc != 0
+  tags:
+    - logstash
+
+- name: forward all logs from rsyslog to logstash
+  sudo: yes
+  lineinfile:
+    dest: /etc/rsyslog.conf
+    line: '*.* @@localhost:1514'
+  notify:
+    - restart rsyslog
+  tags:
+    - logstash
+
+- name: deploy logstash consul-template configuration
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: logstash-elasticsearch.cfg
+      dest: /etc/consul-template/config.d
+    - src: logstash-elasticsearch.tmpl
+      dest: /etc/consul-template/templates/logstash-elasticsearch.tmpl
+  notify:
+    - reload consul-template
+  tags:
+    - logstash
+
+- meta: flush_handlers

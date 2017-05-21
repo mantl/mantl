@@ -1,0 +1,17 @@
+# Complete the ELK stack. Run this playbook after running the core playbook
+# (sample.yml)
+
+# CHECK SECURITY - when customizing you should leave this in. If you take it out
+# and forget to specify security.yml, security could be turned off on components
+# in your cluster!
+- include: "{{ playbook_dir }}/../playbooks/check-requirements.yml"
+
+- hosts: all
+  vars:
+    elk_uninstall: false
+    kibana_uninstall: "{{ elk_uninstall|bool }}"
+    elasticsearch_uninstall: "{{ elk_uninstall|bool }}"
+    elasticsearch_remove_data: false
+    kibana_logstash_config: true
+  roles:
+    - elk

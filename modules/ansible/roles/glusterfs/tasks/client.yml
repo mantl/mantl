@@ -1,0 +1,72 @@
+---
+- name: install glusterfs-fuse
+  sudo: yes
+  yum:
+    name: glusterfs-fuse
+    state: present
+  tags:
+    - glusterfs
+
+- name: install mount helper unit
+  sudo: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest}}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - src: mount-monitor.sh
+      dest: /usr/local/bin/mount-monitor.sh
+      mode: u=rwx,g=rx,o=rx
+    - src: mount-monitor@.service
+      dest: /etc/systemd/system/mount-monitor@.service
+      mode: u=rw,g=r,o=r
+  tags:
+    - glusterfs
+
+- name: create mount points for volumes
+  sudo: yes
+  file:
+    state: directory
+    name: "{{ item.mount }}"
+    recurse: yes
+    mode: 0755
+  with_items: glusterfs_volumes
+  tags:
+    - glusterfs
+
+- name: wait for gluster service
+  wait_for:
+    host: glusterfs.service.consul
+    port: 24007
+    state: present
+  tags:
+    - glusterfs
+
+- name: mount volumes
+  sudo: yes
+  mount:
+    state: mounted
+    name: "{{ item.mount }}"
+    opts: "defaults,_netdev,x-systemd.requires=consul.service,x-systemd.requires=dnsmasq.service"
+    fstype: glusterfs
+    src: "glusterfs.service.consul:/{{ item.name }}"
+  with_items: glusterfs_volumes
+  tags:
+    - glusterfs
+
+- name: enable mount helper
+  sudo: yes
+  shell: "systemctl enable mount-monitor@$(systemd-escape {{ item.mount }})"
+  with_items: glusterfs_volumes
+  tags:
+    - glusterfs
+
+- name: create consul healthchecks
+  sudo: yes
+  template:
+    src: glusterfs-mounts.json.j2
+    dest: /etc/consul/glusterfs-mounts.json
+  notify:
+    - reload consul
+  tags:
+    - glusterfs

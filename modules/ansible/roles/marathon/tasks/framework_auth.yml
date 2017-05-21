@@ -1,0 +1,21 @@
+---
+- name: create secret file
+  sudo: yes
+  when: do_mesos_framework_auth|bool
+  copy:
+    dest: /etc/sysconfig/marathon-mesos-authentication-secret
+    content: "{{ marathon_secret }}"
+  notify:
+    - restart marathon
+  tags:
+    - marathon
+
+# remove if options become unset
+- name: remove secret file
+  sudo: yes
+  when: not do_mesos_framework_auth|bool
+  file:
+    dest: /etc/marathon/mesos_authentication_secret
+    state: absent
+  notify:
+    - restart marathon

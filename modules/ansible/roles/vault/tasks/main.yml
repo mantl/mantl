@@ -1,0 +1,56 @@
+---
+- name: install vault
+  sudo: yes
+  yum:
+    name: "{{ vault_package }}"
+    state: present
+  tags:
+    - vault
+    - bootstrap
+
+- name: configure vault
+  sudo: yes
+  template:
+    src: vault.hcl.j2
+    dest: /etc/vault/vault.hcl
+    mode: 0600
+    owner: root
+    group: root
+  tags:
+    - vault
+
+- name: enable vault
+  sudo: yes
+  service:
+    name: vault
+    enabled: yes
+    state: started
+  tags:
+    - vault
+
+- name: wait for vault port
+  wait_for:
+    port: 8200
+  tags:
+    - vault
+
+- name: deregister vault service in consul
+  command: consul-cli service-deregister vault
+
+- name: register vault service in consul
+  command: >
+    consul-cli service-register
+    --port=8200
+    --check='script:15s:test "$(curl -s -1 https://localhost:8200/v1/sys/seal-status | jq .sealed) == false"'
+    vault
+
+- include: bootstrap.yml
+
+- name: set vault_token fact
+  set_fact:
+    vault_token: "{{ vault_root_token }}"
+  when: >
+    {{ vault_root_token is defined
+    and 'Vault is already initialized' in vault_init_output.stdout }}
+
+- include: tls-auth.yml

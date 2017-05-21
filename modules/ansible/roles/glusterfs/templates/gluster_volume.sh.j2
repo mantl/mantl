@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -ex
+name=$1
+
+if ! gluster volume list | grep -q "$name"; then
+  gluster volume create "$name" \
+    {% if glusterfs_replication|int > 1 %} replica {{ glusterfs_replication }} {% endif %} \
+    {% for server in groups[glusterfs_server_group] %}{{ server }}.node.consul:{{ glusterfs_brick_location }}/$name {% endfor %}{% if glusterfs_volume_force == "yes" %}force{% endif %};
+else
+    echo "volume already created";
+fi;

@@ -1,0 +1,26 @@
+---
+distributive_package: distributive-0.2.5-1
+distributive_interval: 1m
+distributive_timeout: 30s
+
+checklist_versions:
+  calico: 0.2.4-1
+  chronos: 0.2.4-1
+  collectd: 0.2.4-1
+  collectd-docker: 0.2.4-1
+  collectd-marathon: 0.2.4-1
+  collectd-zookeeper: 0.2.4-1
+  common: 0.2.5-1
+  consul: 0.2.4-1
+  consul-template: 0.2.4-1
+  dnsmasq: 0.2.6-1
+  docker: 0.2.4-1
+  etcd: 0.2.4-1
+  haproxy: 0.2.4-1
+  logrotate: 0.2.4-1
+  logstash: 0.2.5-1
+  mantlui: 0.2.5-1
+  marathon: 0.2.4-1
+  mesos: 0.2.4-1
+  vault: 0.2.4-1
+  zookeeper: 0.2.4-1

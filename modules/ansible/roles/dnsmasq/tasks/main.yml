@@ -1,0 +1,38 @@
+---
+- name: install mantl-dns
+  sudo: yes
+  yum:
+    name: "mantl-dns-{{ mantl_dns_version }}"
+    state: installed
+  tags:
+    - dnsmasq
+    - bootstrap
+
+- name: remove consul from list of search domains
+  sudo: yes
+  command: sed -i'' 's/consul *//g' /etc/resolv.conf.masq
+  tags:
+    - dnsmasq
+
+- name: remove localhost from list of resolvers
+  sudo: yes
+  lineinfile:
+    dest: /etc/resolv.conf.masq
+    regexp: nameserver 127.0.0.1
+    state: absent
+  tags:
+    - dnsmasq
+
+- name: configure dnsmasq for Kubernetes
+  sudo: yes
+  template:
+    src: 20-kubernetes
+    dest: /etc/dnsmasq.d/20-kubernetes
+    mode: 0755
+  when: cluster_name is defined
+  notify:
+    - restart dnsmasq
+  tags:
+    - dnsmasq
+
+- meta: flush_handlers

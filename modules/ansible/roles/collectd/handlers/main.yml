@@ -1,0 +1,8 @@
+---
+- name: restart collectd
+  sudo: yes
+  service:
+    name: collectd
+    state: restarted
+  tags:
+    - collectd

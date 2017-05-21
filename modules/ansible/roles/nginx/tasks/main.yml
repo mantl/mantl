@@ -1,0 +1,30 @@
+---
+- name: encrypt admin password
+  sudo: yes
+  shell: htpasswd -Bnb admin {{ nginx_admin_password | quote }} | cut -f 2 -d ':'
+  register: nginx_admin_password_encrypted
+  changed_when: no
+  tags:
+    - nginx
+
+- name: set admin password variable
+  set_fact:
+    nginx_admin_password_encrypted: "{{ nginx_admin_password_encrypted.stdout }}"
+  tags:
+    - nginx
+
+- name: deploy nginx service
+  sudo: yes
+  template:
+   src: "{{ item.src }}"
+   dest: "{{ item.dest }}"
+  with_items:
+   - src: nginx-consul.service.j2
+     dest: /usr/lib/systemd/system/nginx-consul.service
+   - src: nginx-consul.env.j2
+     dest: /etc/default/nginx-consul.env
+  notify:
+    - reload systemd
+    - restart nginx-consul
+  tags:
+    - nginx

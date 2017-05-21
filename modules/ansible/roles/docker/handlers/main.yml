@@ -1,0 +1,18 @@
+---
+- name: restart docker
+  sudo: yes
+  service:
+    name: docker
+    state: restarted
+
+- name: restart rsyslog
+  sudo: yes
+  service:
+    name: rsyslog
+    state: restarted
+
+- name: reload docker
+  sudo: yes
+  command: systemctl daemon-reload
+  notify:
+    - restart docker

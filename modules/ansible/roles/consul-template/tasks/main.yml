@@ -1,0 +1,28 @@
+---
+- name: install consul-template
+  sudo: yes
+  yum:
+    name: consul-template-0.15.0
+    state: present
+  tags:
+    - consul-template
+    - bootstrap
+
+- name: configure consul-template
+  sudo: yes
+  template:
+    src: consul.cfg.j2
+    dest: /etc/consul-template/config.d/consul.hcl
+  notify:
+    - reload consul-template
+  tags:
+    - consul-template
+
+- name: enable consul-template
+  sudo: yes
+  service:
+    name: consul-template
+    enabled: yes
+    state: started
+  tags:
+    - consul-template

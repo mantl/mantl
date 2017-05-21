@@ -1,0 +1,5 @@
+---
+use_host_domain: false
+host_domain: novalocal
+selinux_policy: targeted
+selinux_state: permissive

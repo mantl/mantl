@@ -1,0 +1,32 @@
+---
+- name: add calico ip-ip pool if required
+  sudo: yes
+  shell: calicoctl apply -f /etc/calico/calico_ippool.yml
+  environment:
+    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  run_once: True
+  when: provider != 'openstack'
+  tags:
+    - calico
+
+- name: check if calico profile already exists
+  sudo: yes
+  shell: calicoctl get profile|grep -w "{{ calico_profile }}"
+  environment:
+    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  register: check_result
+  changed_when: False
+  failed_when: check_result.stderr
+  run_once: True
+  tags:
+    - calico
+
+- name: create calico profile
+  sudo: yes
+  shell: calicoctl apply -f /etc/calico/calico_profile.yml
+  environment:
+    ETCD_AUTHORITY: "{{ calico_etcdaddr }}"
+  when: check_result.stdout == ""
+  run_once: True
+  tags:
+    - calico

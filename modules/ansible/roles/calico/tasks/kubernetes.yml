@@ -1,0 +1,33 @@
+- name: Calico ipPool configuration
+  sudo: yes
+  template:
+    src: calico_ippool.yml.j2
+    dest: /etc/calico/calico_ippool.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Calico profile configuration
+  sudo: yes
+  template:
+    src: calico_profile.yml.j2
+    dest: /etc/calico/calico_profile.yml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Calico directory for cni config
+  sudo: yes
+  file:
+    path: /etc/cni/net.d
+    state: directory
+  tags:
+    - calico
+
+- name: Calico cni config for kubernetes
+  sudo: yes
+  template:
+    src: calico-plugin.conf
+    dest: /etc/cni/net.d/10-calico.conf
+  tags:
+    - calico

@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "zookeeper",
+    "tags": [ "{{ zookeeper_ensemble }}" ],
+    "id": "2181:zkid-{{ zookeeper_id }}",
+    "port": 2181,
+    "check": {
+      "script": "/usr/local/bin/zookeeper_check.sh {{ inventory_hostname }}",
+      "interval": "10s",
+      "timeout": "2s"
+    }
+  }
+}

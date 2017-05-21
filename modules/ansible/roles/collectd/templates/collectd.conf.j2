@@ -1,0 +1,78 @@
+# collectd
+
+Hostname "{{ inventory_hostname }}"
+FQDNLookup false
+Interval 10
+Include "/etc/collectd.d/"
+TypesDB "/usr/share/collectd/types.db"
+
+LoadPlugin "cpu"
+LoadPlugin "disk"
+LoadPlugin "df"
+LoadPlugin "interface"
+LoadPlugin "load"
+LoadPlugin "memory"
+LoadPlugin "network"
+LoadPlugin "processes"
+LoadPlugin "swap"
+LoadPlugin "syslog"
+LoadPlugin "uptime"
+LoadPlugin "users"
+
+<Plugin "cpu">
+  ReportByState true
+  ReportByCpu true
+  ValuesPercentage true
+</Plugin>
+
+<Plugin "memory">
+  ValuesPercentage true
+</Plugin>
+
+<Plugin "df">
+  FSType anon_inodefs
+  FSType bdev
+  FSType cgroup
+  FSType cpuset
+  FSType debugfs
+  FSType devpts
+  FSType devtmpfs
+  FSType ecryptfs
+  FSType fuse
+  FSType fusectl
+  FSType hugetlbfs
+  FSType mqueue
+  FSType nfs
+  FSType nfs4
+  FSType nfsd
+  FSType pipefs
+  FSType proc
+  FSType pstore
+  FSType ramfs
+  FSType rootfs
+  FSType rpc_pipefs
+  FSType securityfs
+  FSType sockfs
+  FSType sysfs
+  FSType tmpfs
+  FSType vboxsf
+  IgnoreSelected true
+  ReportByDevice false
+  ValuesAbsolute true
+  ReportInodes true
+</Plugin>
+
+<Plugin "interface">
+  Interface "/^veth/"
+  IgnoreSelected true
+</Plugin>
+
+<Plugin "syslog">
+  LogLevel "err"
+</Plugin>
+
+<Plugin "network">
+  Server "localhost" "25826"
+</Plugin>
+
+# EOF

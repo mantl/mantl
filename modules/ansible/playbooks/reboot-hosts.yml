@@ -1,0 +1,32 @@
+---
+- include: "{{ playbook_dir }}/check-requirements.yml"
+
+- hosts: all
+  serial: 1
+  gather_facts: no
+  tasks:
+
+  - name: set consul maintenance enable
+    command: consul maint -enable -reason "{{ lookup('env', 'USER') }} initiated reboot"
+
+  - name: reboot host
+    sudo: yes
+    shell: nohup bash -c "sleep 2s && reboot" &
+    register: reboot
+
+  - name: wait for host boot
+    local_action:
+      module: wait_for
+      host: "{{ ansible_ssh_host }}"
+      port: 22
+      search_regex: OpenSSH
+      delay: 90
+      timeout: 300
+      state: started
+
+  - name: wait for consul to listen
+    wait_for:
+      port: 8500
+
+  - name: set consul maintenance disable
+    command: consul maint -disable

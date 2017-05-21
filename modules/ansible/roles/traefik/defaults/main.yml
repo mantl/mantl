@@ -1,0 +1,7 @@
+---
+traefik_package: traefik-1.0.0
+traefik_marathon_endpoint: http://marathon.service.consul:18080
+traefik_marathon_domain: marathon.localhost
+
+# Do Marathon apps automatically get exposed (traefik default is false)
+traefik_marathon_expose_by_default: "true"

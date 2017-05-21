@@ -1,0 +1,15 @@
+port = ":80"
+graceTimeOut = 10
+logLevel = "ERROR"
+
+[web]
+address = ":8081"
+CertFile = "/etc/pki/mantl/cert"
+KeyFile = "/etc/pki/mantl/key"
+
+[marathon]
+endpoint = "{{ traefik_marathon_endpoint }}"
+domain = "{{ traefik_marathon_domain }}"
+watch = true
+networkInterface = "{{ ansible_default_ipv4['interface'] }}"
+ExposedByDefault = {{ traefik_marathon_expose_by_default }}

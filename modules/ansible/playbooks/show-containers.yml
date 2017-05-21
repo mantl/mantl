@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+  - name: get list of running containers
+    shell: sudo docker ps | awk '$2 != "ID" {print $2}' | sort
+    register: containers
+    changed_when: no
+
+  - name: print list of running containers
+    debug:
+      msg: "{{ containers.stdout_lines }}"

@@ -1,0 +1,12 @@
+---
+vault_package: vault-0.6.0
+vault_default_port: 8200
+vault_command_options:
+  - "--ca-cert=/etc/pki/CA/ca.cert"
+  - "--client-cert={{ host_cert }}"
+  - "--client-key={{ host_key }}"
+
+vault_init_json: '{
+	"secret_shares": 5,
+	"secret_threshold": 3
+}' # ansible lint doesn't like the line split between curly braces

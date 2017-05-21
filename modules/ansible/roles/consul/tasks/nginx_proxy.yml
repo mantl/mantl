@@ -1,0 +1,53 @@
+---
+- name: create nginx configuration directories
+  sudo: yes
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - /etc/nginx
+    - /etc/nginx/templates
+  tags:
+    - consul
+
+- name: deploy nginx template
+  sudo: yes
+  copy:
+    src: consul.nginx
+    dest: /etc/nginx/templates/consul.nginx
+  notify:
+    - reload nginx
+  tags:
+    - consul
+
+- name: write nginx config vars to the consul k/v
+  run_once: yes
+  command: >
+    consul-cli kv-write --token={{ consul_acl_secure_token }}
+    "{{ item.path }}" "{{ item.content }}"
+  with_items:
+    - path: secure/consul/nginx/do_ssl
+      content: "{{ do_consul_ssl }}"
+    - path: secure/consul/nginx/do_auth
+      content: "{{ do_consul_auth }}"
+  tags:
+    - consul
+
+- name: install nginx admin password
+  sudo: yes
+  run_once: yes
+  command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/auth/users/admin '{{ nginx_admin_password_encrypted }}'
+  when: nginx_admin_password_encrypted is defined
+  tags:
+    - consul
+
+- name: enable nginx-consul
+  sudo: yes
+  service:
+    name: nginx-consul
+    enabled: yes
+    state: started
+  notify:
+    - restart nginx-consul
+  tags:
+    - consul

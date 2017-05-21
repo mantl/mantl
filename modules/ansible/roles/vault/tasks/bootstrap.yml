@@ -1,0 +1,56 @@
+---
+- name: initialize vault
+  sudo: yes
+  run_once: yes
+  changed_when: no
+  command: curl -1 -X PUT -d '{{ vault_init_json }}' -k https://localhost:8200/v1/sys/init
+  register: vault_init_output
+  tags:
+    - vault
+    - skip_ansible_lint
+
+- name: extract keys
+  sudo: yes
+  run_once: yes
+  changed_when: no
+  when: "'Vault is already initialized' not in vault_init_output.stdout"
+  set_fact:
+    vault_keys: "{{ (vault_init_output.stdout|from_json)['keys'] }}"
+  tags:
+    - vault
+
+- name: extract root token
+  sudo: yes
+  run_once: yes
+  changed_when: no
+  when: "'Vault is already initialized' not in vault_init_output.stdout"
+  set_fact:
+    vault_token: "{{ (vault_init_output.stdout|from_json)['root_token'] }}"
+  tags:
+    - vault
+
+- name: create unseal script
+  sudo: yes
+  when: "'Vault is already initialized' not in vault_init_output.stdout"
+  template:
+    src: vault.unseal.j2
+    dest: /usr/local/bin/vault-unseal.sh
+    mode: 0700
+  notify:
+    - restart vault
+  tags:
+    - vault
+
+- name: update security.yml with token
+  connection: local
+  run_once: yes
+  when: "'Vault is already initialized' not in vault_init_output.stdout"
+  lineinfile:
+    dest: "{{ playbook_dir }}/security.yml"
+    line: 'vault_root_token: {{ vault_token }}'
+    regexp: '^vault_root_token:.*'
+    insertbefore: "^zk_marathon_user:"
+  tags:
+    - vault
+
+- meta: flush_handlers

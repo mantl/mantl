@@ -1,0 +1,21 @@
+---
+- name: reload systemd
+  sudo: yes
+  command: systemctl daemon-reload
+
+- name: reload consul
+  sudo: yes
+  command: systemctl reload consul
+  notify:
+    - wait for consul to listen
+
+- name: wait for consul to listen
+  command: /usr/local/bin/consul-wait-for-leader.sh
+
+- name: reload consul-template
+  sudo: yes
+  command: systemctl reload consul-template
+
+- name: reload nginx
+  sudo: yes
+  command: systemctl reload nginx-consul

@@ -1,0 +1,3 @@
+- include: rolling-upgrade-packages.yml
+  vars:
+    serial: 0

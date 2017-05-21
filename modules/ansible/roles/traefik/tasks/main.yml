@@ -1,0 +1,64 @@
+---
+- name: install traefik
+  sudo: yes
+  yum:
+    name: "{{ traefik_package }}"
+    state: present
+  tags:
+    - traefik
+    - bootstrap
+
+- name: create directory for local traefik service override
+  sudo: yes
+  file:
+    dest: /etc/systemd/system/traefik.service.d
+    state: directory
+    mode: 0755
+  tags:
+    - traefik
+    - bootstrap
+
+- name: create local traefik service override
+  sudo: yes
+  template:
+    src: marathon.conf.j2
+    dest: /etc/systemd/system/traefik.service.d/marathon.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart traefik
+  tags:
+    - traefik
+
+- name: add traefik user to tls group
+  sudo: yes
+  user:
+    append: yes
+    name: traefik
+    groups: tls
+
+- name: configure traefik
+  sudo: yes
+  template:
+    src: traefik.toml.j2
+    dest: /etc/traefik/traefik.toml
+    owner: traefik
+    group: traefik
+    mode: 0644
+    backup: yes
+  notify:
+    - restart traefik
+  tags:
+    - traefik
+
+- name: generate traefik consul service
+  sudo: yes
+  copy:
+    src: 'traefik-consul.json'
+    dest: '/etc/consul/traefik.json'
+  notify:
+    - reload consul
+  tags:
+    - traefik

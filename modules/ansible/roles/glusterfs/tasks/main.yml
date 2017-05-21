@@ -1,0 +1,13 @@
+---
+- name: install glusterfs repo package
+  sudo: yes
+  yum:
+    name: "{{ glusterfs_repo_package }}"
+    state: present
+  tags:
+    - glusterfs
+
+- include: server.yml
+  when: glusterfs_mode == "server"
+
+- include: client.yml
