@@ -2,10 +2,10 @@
 # values are redhat or docker
 docker_package_source: docker
 
-docker_package: '{% if docker_package_source == "docker" %}docker-engine{% else %}docker{% endif %}'
+docker_package: 'docker'
 
 # inversion of docker_package for upgrade/transition code path
-docker_package_to_remove: '{% if docker_package_source == "docker" %}docker{% else %}docker-engine{% endif %}'
+docker_package_to_remove: 'docker'
 
 # Install the docker_gc package (prunes docker containers, images, and volumes)
 docker_gc_install: true
