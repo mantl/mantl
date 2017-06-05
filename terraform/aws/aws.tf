@@ -23,6 +23,8 @@ variable "worker_count" {default = "1"}
 variable "kubeworker_count" {default = "0"}
 variable "worker_type" {default = "m3.medium"}
 variable "worker_volume_size" {default = "20"} # size is in gigabytes
+variable "control_iam_profile" {default = "" }
+variable "worker_iam_profile" {default = "" }
 
 module "iam-profiles" {
   source = "./iam"
