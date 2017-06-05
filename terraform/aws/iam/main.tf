@@ -2,7 +2,7 @@ variable "short_name" {default = "mantl"}
 
 resource "aws_iam_instance_profile" "control_profile" {
   name = "mantl-control-profile"
-  role = "mantl-control-role"
+  role = ${aws_iam_role.role.name}
 }
 
 resource "aws_iam_role_policy" "control_policy" {
