@@ -1,5 +1,5 @@
 ---
-mesos_version: 0.28.2
+mesos_version: 1.0.0
 
 mesos_package: "mesos-{{ mesos_version }}"
 mesos_master_package: "mesos-master-{{ mesos_version }}"
@@ -9,6 +9,7 @@ mesos_mode: follower
 mesos_log_dir: /var/log/mesos
 mesos_logging_level: WARNING
 mesos_work_dir: /var/lib/mesos
+mesos_lvm_data_volume_size: 20%FREE
 mesos_leader_port: 15050
 mesos_leader_proxy_port: 5050
 mesos_follower_port: 5051
@@ -27,7 +28,7 @@ mesos_cluster: mantl
 
 mesos_zk_auth: "{% if zk_mesos_user_secret is defined %}{{ zk_mesos_user }}:{{ zk_mesos_user_secret }}@{% endif %}"
 mesos_zk_dns: "zookeeper.service.consul"
-mesos_zk_hosts: "{% for host in groups[zookeeper_server_group] %}{{ host }}:{{mesos_zk_port}}{% if not loop.last %},{% endif %}{% endfor %}"
+mesos_zk_hosts: "{% if zookeeper_hosts_override is not defined %}{% for host in groups[zookeeper_server_group] %}{{ host }}:{{mesos_zk_port}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}{% if zookeeper_hosts_override is defined %}{% for host in zookeeper_hosts_override %}{{ host }}:{{mesos_zk_port}}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}"
 mesos_zk_port: 2181
 mesos_zk_chroot: mesos
 mesos_zk: "zk://{{ mesos_zk_auth }}{{ mesos_zk_hosts }}/{{ mesos_zk_chroot }}"
