@@ -4,7 +4,7 @@
 
 [![Join the chat at https://gitter.im/CiscoCloud/mantl](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CiscoCloud/mantl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://img.shields.io/travis/mantl/mantl.svg)](https://travis-ci.org/mantl/mantl)
-[![Stories in Ready](https://badge.waffle.io/mantl/mantl.svg?label=InProgress&title=In Progress)](http://waffle.io/mantl/mantl)
+[![Stories in Progress](https://badge.waffle.io/mantl/mantl.svg?label=InProgress&title=InProgress)](http://waffle.io/mantl/mantl)
 
 Mantl is a modern, batteries included platform for rapidly deploying globally
 distributed services
