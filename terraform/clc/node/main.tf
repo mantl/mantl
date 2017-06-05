@@ -70,11 +70,11 @@ resource "clc_public_ip" "ip" {
 }
 
 output "server_id" {
-  value = "${join(\",\", clc_server.node.*.id)}"
+  value = "${join(",", clc_server.node.*.id)}"
 }
 output "private_ip" {
-  value = "${join(\",\", clc_server.node.*.private_ip_address)}"
+  value = "${join(",", clc_server.node.*.private_ip_address)}"
 }
 output "public_ip" {
-  value = "${join(\",\", clc_server.node.*.public_ip_address)}"
+  value = "${join(",", clc_server.node.*.public_ip_address)}"
 }

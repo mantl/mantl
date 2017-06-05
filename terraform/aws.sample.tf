@@ -77,12 +77,18 @@ module "security-groups" {
   vpc_id = "${module.vpc.vpc_id}"
 }
 
+module "iam-profiles" {
+  source = "./terraform/aws/iam"
+  short_name = "${var.short_name}"
+}
+
 module "control-nodes" {
   source = "./terraform/aws/instance"
   count = "${var.control_count}"
   datacenter = "${var.datacenter}"
   role = "control"
   ec2_type = "${var.control_type}"
+  iam_profile = "${module.iam-profiles.control_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"
@@ -123,6 +129,7 @@ module "worker-nodes" {
   data_ebs_volume_size = "100"
   role = "worker"
   ec2_type = "${var.worker_type}"
+  iam_profile = "${module.iam-profiles.worker_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"
@@ -144,6 +151,7 @@ module "kubeworker-nodes" {
   data_ebs_volume_size = "100"
   role = "kubeworker"
   ec2_type = "${var.kubeworker_type}"
+  iam_profile = "${module.iam-profiles.worker_iam_instance_profile}"
   ssh_username = "${var.ssh_username}"
   source_ami = "${lookup(var.amis, var.region)}"
   short_name = "${var.short_name}"
@@ -157,28 +165,6 @@ module "kubeworker-nodes" {
   #vpc_subnet_ids = "${terraform_remote_state.vpc.output.subnet_ids}"
 }
 
-module "aws-elb" {
-  source = "./terraform/aws/elb"
-  short_name = "${var.short_name}"
-  instances = "${module.control-nodes.ec2_ids}"
-  subnets = "${module.vpc.subnet_ids}"
-  security_groups = "${module.security-groups.ui_security_group},${module.vpc.default_security_group}"
-  ## uncomment below it you want to use remote state for vpc variables
-  ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
-  ##security_groups = "${module.security-groups.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
-}
-
-module "traefik-elb" {
-  source = "./terraform/aws/elb/traefik"
-  instances = "${module.edge-nodes.ec2_ids}"
-  short_name = "${var.short_name}"
-  subnets = "${module.vpc.subnet_ids}"
-  security_groups = "${module.security-groups.ui_security_group},${module.vpc.default_security_group}"
-  ## uncomment below it you want to use remote state for vpc variables
-  ##subnets = "${terraform_remote_state.vpc.output.subnet_ids}"
-  ##security_groups = "${module.security-groups.ui_security_group},${terraform_remote_state.vpc.output.default_security_group}"
-}
-
 module "route53" {
   source = "./terraform/aws/route53/dns"
   control_count = "${var.control_count}"
@@ -186,12 +172,9 @@ module "route53" {
   domain = "${var.dns_domain}"
   edge_count = "${var.edge_count}"
   edge_ips = "${module.edge-nodes.ec2_ips}"
-  elb_fqdn = "${module.aws-elb.fqdn}"
   hosted_zone_id = "${var.dns_zone_id}"
   short_name = "${var.short_name}"
   subdomain = "${var.dns_subdomain}"
-  traefik_elb_fqdn = "${module.traefik-elb.fqdn}"
-  traefik_zone_id = "${module.traefik-elb.zone_id}"
   worker_count = "${var.worker_count}"
   worker_ips = "${module.worker-nodes.ec2_ips}"
   kubeworker_count = "${var.kubeworker_count}"

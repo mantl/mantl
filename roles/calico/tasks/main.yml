@@ -85,7 +85,7 @@
   when: provider == 'openstack'
 
 - include: kubernetes.yml
-  when: kube_version is defined
+  when: kube_hyperkube_image_tag is defined
 
 - include: calico-configure.yml
 

@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: security-setup required
+      when: consul_acl_mantl_api_token is not defined
+      fail:
+        msg: |
+          You must re-run the security-setup script when upgrading from 1.1.
+          See
+          http://docs.mantl.io/en/latest/getting_started/index.html#step-2-run-security-setup
+          for more information.
+
+- hosts: all
+  roles:
+    - repos
+  tasks:
+    - name: clean yum
+      sudo: yes
+      command: yum clean all
+      tags:
+        - skip_ansible_lint
+
+    - name: refresh yum cache
+      sudo: yes
+      command: yum makecache
+      tags:
+        - skip_ansible_lint
+
+- include: ./upgrade-consul.yml consul_create_secure_acl=false package_state=latest

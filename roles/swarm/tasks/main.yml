@@ -1,0 +1,15 @@
+---
+- name: create systemd service for managing swarm
+  sudo: yes
+  template:
+    dest: "/usr/lib/systemd/system/swarm-{{ swarm_role }}.service"
+    src: "swarm-{{ swarm_role }}.service.j2"
+  notify:
+    - reload systemd
+
+- name: enable and start swarm-agent
+  sudo: yes
+  service:
+    name: "swarm-{{ swarm_role }}"
+    enabled: yes
+    state: started
