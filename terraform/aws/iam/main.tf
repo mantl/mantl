@@ -2,11 +2,11 @@ variable "short_name" {default = "mantl"}
 
 resource "aws_iam_instance_profile" "control_profile" {
   name = "mantl-control-profile"
-  role = ${aws_iam_role.role.name}
+  role = "mantl-control-profile"
 }
 
 resource "aws_iam_role_policy" "control_policy" {
-  name = "${var.short_name}-control-policy"
+  name = "mantl-control-policy"
   role = "${aws_iam_role.control_role.id}"
   policy = <<EOF
 {
@@ -33,7 +33,7 @@ EOF
 }
 
 resource "aws_iam_role" "control_role" {
-  name = "${var.short_name}-control-role"
+  name = "mantl-control-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -53,12 +53,12 @@ output "control_iam_instance_profile" {
 }
 
 resource "aws_iam_instance_profile" "worker_profile" {
-  name = "${var.short_name}-worker-profile"
+  name = "mantl-worker-profile"
   role = "${aws_iam_role.worker_role.name}"
 }
 
 resource "aws_iam_role_policy" "worker_policy" {
-  name = "${var.short_name}-worker-policy"
+  name = "mantl-worker-policy"
   role = "${aws_iam_role.worker_role.id}"
   policy = <<EOF
 {
@@ -103,7 +103,7 @@ EOF
 }
 
 resource "aws_iam_role" "worker_role" {
-  name = "${var.short_name}-worker-role"
+  name = "mantl-worker-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
