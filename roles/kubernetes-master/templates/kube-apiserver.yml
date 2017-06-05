@@ -22,7 +22,7 @@ spec:
 
     # Security
     - --allow-privileged=true
-    - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+    - --admission-control=NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
     - --basic-auth-file={{ kube_users_dir }}/known_users.csv
     - --client-ca-file=/etc/pki/CA/ca.cert
     - --kubelet-certificate-authority=/etc/pki/CA/ca.cert
