@@ -1,5 +1,6 @@
 # All of your resources will be prefixed by this name
 variable "name" { default = "mantl" }
+variable "region" { default = "nyc3" } # Must have metadata support
 
 provider "digitalocean" {
   token = ""
@@ -11,14 +12,41 @@ module "do-keypair" {
   public_key_filename = "~/.ssh/id_rsa.pub"
 }
 
-module "do-hosts" {
+module "control-nodes" {
+  source = "./terraform/digitalocean/instance"
   name = "${var.name}"
-  source = "./terraform/digitalocean/hosts"
-  ssh_key = "${module.do-keypair.keypair_id}"
-  region_name = "nyc3" # this must be a region with metadata support
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
 
-  control_count = 3
-  worker_count = 4
-  kubeworker_count = 2
-  edge_count = 2
+  role = "control"
+  count = "3"
+}
+
+module "worker-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
+
+  role = "worker"
+}
+
+module "kubeworker-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
+
+  role = "kubeworker"
+}
+
+module "edge-nodes" {
+  source = "./terraform/digitalocean/instance"
+  name = "${var.name}"
+  region = "${var.region}"
+  keypair_id = "${module.do-keypair.keypair_id}"
+
+  role = "edge"
+  count = "1"
+  size = "2gb"
 }

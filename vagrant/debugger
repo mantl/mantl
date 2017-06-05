@@ -1,0 +1,68 @@
+#!/usr/bin/env ansible-playbook -i inventory
+
+# Usage: ./debugger --tags common,logrotate -l control-01
+
+- name: Common tasks
+  hosts: all:!localhost
+  vars:
+    consul_servers_group: role=control
+  roles:
+    - { role: common, tags: 'common' }
+    - { role: certificates, tags: 'certificates' }
+    - { role: lvm, tags: 'lvm' }
+    - { role: docker, tags: 'docker' }
+    - { role: logrotate, tags: 'logrotate' }
+    - { role: consul-template, tags: 'consul-template' }
+    - { role: nginx, tags: 'nginx' }
+    - { role: etcd, tags: 'etcd' }
+    - { role: dnsmasq, tags: 'dnsmasq' }
+
+- name: control tasks
+  hosts: role=control
+  gather_facts: yes
+  vars:
+    consul_servers_group: role=control
+    mesos_leaders_group: role=control
+    mesos_mode: leader
+    zookeeper_server_group: role=control
+  roles:
+    - { role: common, tags: 'vault' }
+    - { role: common, tags: 'zookeeper' }
+    - { role: common, tags: 'mesos' }
+    - { role: common, tags: 'calico' }
+    - { role: common, tags: 'marathon' }
+    - { role: common, tags: 'mantlui' }
+    - { role: common, tags: 'kubernetes' }
+    - { role: common, tags: 'kubernetes-master' }
+
+
+
+- hosts: role=worker
+  gather_facts: no
+  vars:
+    mesos_mode: follower
+    zookeeper_server_group: role=control
+  roles:
+    - mesos
+    - calico
+
+- hosts: role=kubeworker
+  gather_facts: yes
+  roles:
+    - { role: common, tags: 'calico' }
+    - { role: common, tags: 'kubernetes' }
+    - { role: common, tags: 'kubernetes-node' }
+
+- hosts: role=edge
+  gather_facts: yes
+  vars:
+    traefik_marathon_domain: marathon.localhost
+  roles:
+    - { role: traefik, tags: 'traefik' }
+
+- hosts: all
+  gather_facts: no
+  become: true
+  tasks:
+    - name: update json healthchecks
+      replace: dest=/etc/distributive.d/distributive-common.json regexp='python-pip' replace='python2-pip'

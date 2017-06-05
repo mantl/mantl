@@ -9,7 +9,6 @@ roles. Specifically:
 - sets timezone to UTC
 - configures hosts for simple name resolution (before Consul DNS is set up)
 - installs common software like pip
-- adds :doc:`users </getting_started/ssh_users>`.
 - adds SSL certificates created by :doc:`security-setup
   </security/security_setup>` to the root CA store
 - does various workarounds for cloud providers

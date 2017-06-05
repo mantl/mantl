@@ -32,7 +32,7 @@ marathon_secret: ""
 
 # jobs
 mesos_consul_image: ciscocloud/mesos-consul
-mesos_consul_image_tag: v0.3.2
+mesos_consul_image_tag: v0.4.0
 mesos_consul_refresh: "7s"
 marathon_consul_image: ciscocloud/marathon-consul
 marathon_consul_image_tag: 0.2

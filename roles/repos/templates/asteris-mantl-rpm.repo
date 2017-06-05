@@ -3,3 +3,10 @@ name=asteris-mantl-rpm
 baseurl=https://dl.bintray.com/shippedrepos/mantl-{{ mantl_version }}
 gpgcheck=0
 enabled=1
+
+[bintraybintray-mantl-rpm-packages]
+name=bintray-mantl-rpm-packages
+baseurl=https://dl.bintray.com/mantl/rpm-packages
+gpgcheck=0
+repo_gpgcheck=0
+enabled=1

@@ -66,7 +66,6 @@
 
 - name: create zookeeper acl
   sudo: yes
-  run_once: yes
   command: "{{ mesos_zk_acl_cmd }}"
   notify:
     - restart mesos leader

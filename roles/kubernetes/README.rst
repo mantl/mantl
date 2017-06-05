@@ -18,11 +18,19 @@ integrates into the workflow.)
 nodes. Please refer to the `Kubernetes getting started documentation
 <http://kubernetes.io/docs/hellonode/>`_ for how to use Kubernetes.
 
-To talk to the services launched inside Kubernetes, launch them with the
-``NodePort`` service type (`more on what service types are available
-<https://aster.is/blog/2016/03/11/the-hamburger-of-kubernetes-service-types/>`_),
-then connect on the assigned port on any Kubernetes worker node. Consul service
-integration will happen in a future release.
+Exposing Services
+-----------------
+
+To talk to the services launched inside Kubernetes, you can either launch them
+with the ``NodePort`` service type (all platforms), or the ``LoadBalancer``
+service type (see the section on "Cloud Provider Integration" below). You can
+find out more about service types on `the Asteris blog
+<https://aster.is/blog/2016/03/11/the-hamburger-of-kubernetes-service-types/>`_).
+
+Your exposed Kubernetes services will automatically be registered in Consul, but
+they currently do not have valid DNS names (see `the issue on Mustwin's fork of
+Kubernetes <https://github.com/MustWin/kubernetes/issues/7>`_ for details).
+
 
 Running kubectl Remotely
 ------------------------
@@ -45,16 +53,17 @@ cluster.
 Cloud Provider Integration
 --------------------------
 
-As of 1.3, when you install Mantl on an AWS cluster, Kubernetes cloud provider
-integration will be enabled by default. Kubernetes will be able to natively
-manage some AWS resources (such as ELBs or EBS persistent volumes). If you wish
-to disable cloud provider integration, set the variable
-``enable_cloud_provider`` to ``false`` when building your cluster.
+Cloud provider integration is enabled by default for AWS and GCE clusters
+starting in Mantl 1.3. This means that Kubernetes can manage cloud-specific
+resources such as disk volumes and load balancers. If you wish to disable cloud
+provider integration, set the variable ``enable_cloud_provider`` to ``false``
+when building your cluster.
 
 .. note:: If you are planning on destroying your cluster with terraform, you
           should first use ``kubectl`` or the Kubernetes API to delete your
-          Kubernetes-managed AWS resources. Otherwise, it can cause your
-          ``terraform destroy`` command to fail.
+          Kubernetes-managed resources. Otherwise, it is possible that they will
+          interfere with your ability to successfully ``terraform destroy`` your
+          cluster.
 
 DNS Outline
 -----------

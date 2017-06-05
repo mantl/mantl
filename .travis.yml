@@ -16,7 +16,7 @@ cache:
 env:
   global:
   - TF_VAR_build_number=${TRAVIS_JOB_NUMBER/./-}
-  - TERRAFORM_VERSION=0.7.0-rc2
+  - TERRAFORM_VERSION=0.7.0
   matrix:
   # These providers have a full battery of Terraform+Ansible tests
   - PROVIDER=aws DOCKER_SECRETS='-e AWS_SECRET_ACCESS_KEY -e AWS_ACCESS_KEY_ID'
@@ -24,9 +24,9 @@ env:
   - PROVIDER=gce DOCKER_SECRETS='-e GOOGLE_CREDENTIALS'
   # These providers are only linted using `terraform plan`, and have no secrets
   # Secrets are available for CLC, but the build times out.
-  - PROVIDER=clc DOCKER_SECRETS='-e CLC_USERNAME -e CLC_PASSWORD'
-  - PROVIDER=softlayer
-  - PROVIDER=triton
+  #- PROVIDER=clc DOCKER_SECRETS='-e CLC_USERNAME -e CLC_PASSWORD'
+  #- PROVIDER=softlayer
+  #- PROVIDER=triton
 
 install:
   - eval $(ssh-agent)
