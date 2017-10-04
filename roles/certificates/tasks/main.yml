@@ -86,6 +86,9 @@
     - path: /etc/pki/mantl/key
       mode: "0640"
       group: tls
+    - path: /etc/pki/CA/ca.cert
+      mode: "0644"
+      group: root
   tags:
     - certificates
 
