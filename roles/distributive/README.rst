@@ -3,8 +3,8 @@ Distributive
 
 .. versionadded:: 1.1
 
-`Distributive <https://www.consul.io/>`_ is used in Mantl to run detailed,
-granular health checks for various services.
+`Distributive <https://github.com/mantl/distributive>`_ is used in Mantl to
+run detailed, granular health checks for various services.
 
 This role is run several times as a dependency for other roles.
 
